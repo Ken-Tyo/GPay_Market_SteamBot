@@ -1,0 +1,50 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding: 29px 53px 48px;
+
+    overflow-y: auto;
+    height: 619px;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .logGroup {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 21px;
+
+        .title {
+            color: #FFFFFF;
+            font-size: 16px;
+            line-height: 16px;
+            margin-bottom: 1px;
+        }
+
+        .expanderWrapper {
+            margin-top: 8px;
+
+            .link,
+            .name {
+                color: #D836E7;
+            }
+
+            .link {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    flex: 0 1 123px;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,39 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    $padding-left: 15px;
+    $padding-right: 15px;
+
+    width: 226px;
+    height: 51px;
+
+    border-radius: 15px;
+    background-color: #512068;
+
+    input {
+        height: 100%;
+        width: 100%;
+
+        font-size: 14px;
+        line-height: 14px;
+
+        background-color: #512068;
+        color: $white-1;
+        border-radius: 15px;
+        border: none;
+
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-right: $padding-right;
+        padding-left: $padding-left;
+
+        &:focus {
+            border: none;
+            outline: none;
+        }
+
+        &::-webkit-input-placeholder {
+            color: #B3B3B3;
+        }
+    }
+}

@@ -1,0 +1,190 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.priceHierarchyWrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        background: $purple-5;
+        width: 100%;
+        height: 59px;
+        border-radius: 34px 34px 0px 0px;
+
+        flex-shrink: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        color: $white-1;
+
+        .left {
+            display: flex;
+            align-items: center;
+
+            .backBut {
+                padding-left: 35px;
+
+                .but {
+                    height: 38px;
+                    width: 32px;
+                    border-radius: 12px;
+                }
+            }
+
+            .title {
+                display: flex;
+                align-items: center;
+                padding-left: 61px;
+                font-size: 22px;
+                line-height: 22px;
+
+                .gameName {
+                    color: $white-3;
+                    font-size: 20px;
+                    line-height: 20px;
+                    padding-left: 24px;
+                }
+            }
+        }
+
+        .right {
+            padding-right: 46px;
+            font-size: 16px;
+            line-height: 16px;
+            text-decoration-line: underline;
+        }
+    }
+
+    .content {
+        background: #632C7D;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+
+        &::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #7D5292;
+            margin-top: 30px;
+            //box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .hierarchy {
+            font-size: 16px;
+            line-height: 18px;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            height: 100%;
+            width: 100%;
+
+            .level {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .prices {
+                    display: flex;
+                    justify-content: center;
+
+                    .priceItemWrapper {
+                        display: flex;
+
+                        .priceItem {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            margin-left: 15px;
+                            margin-right: 15px;
+                            width: 255px;
+
+                            .nameRow {
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                margin-bottom: 5px;
+
+                                .dot {
+                                    width: 10px;
+                                    height: 10px;
+                                    border-radius: 50%;
+                                    background-color: #B1A9A9;
+                                    margin-right: 10px;
+                                }
+
+                                .currName {
+                                    color: #FFFFFF;
+                                }
+                            }
+
+                            .priceRow {
+                                display: flex;
+                                align-items: center;
+
+                                .warn {
+                                    margin-right: 7px;
+                                }
+
+                                .price {
+                                    color: #D4D4D4;
+                                }
+
+                                .editBut {
+                                    cursor: pointer;
+                                    margin-left: 6px;
+                                }
+                            }
+                        }
+
+                        .percent {
+                            width: 50px;
+                            color: #FFFFFF;
+                            font-size: 12px;
+                            line-height: 18px;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            padding: 0 5px;
+
+                            .line {
+                                height: 1px;
+                                background-color: #FFFFFF;
+                                width: 55px;
+                                //margin: 10px 14px;
+                            }
+                        }
+                    }
+
+                }
+
+                .lineWrapper {
+                    display: flex;
+                    align-items: center;
+
+                    .line {
+                        width: 1px;
+                        background-color: #FFFFFF;
+                        height: 45px;
+                        margin: 10px 14px;
+                    }
+
+                    .percent {
+                        width: 50px;
+                        color: #FFFFFF;
+                        font-size: 12px;
+                        line-height: 18px;
+                    }
+                }
+            }
+
+
+        }
+    }
+}

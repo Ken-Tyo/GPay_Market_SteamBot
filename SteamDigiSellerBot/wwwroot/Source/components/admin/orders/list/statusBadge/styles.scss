@@ -1,0 +1,29 @@
+.wrapper {
+    font-size: 14px;
+    line-height: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: 238px;
+    height: 35px;
+    background-color: #512068;
+    border-radius: 24px;
+
+    .nameText {
+        padding-left: 14px;
+        text-align: left;
+        max-width: 165px;
+    }
+
+    .historyWrapper {
+        height: 35px;
+        width: 54px;
+        background: #5D2577;
+        border-radius: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,119 @@
+﻿@model LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>GPay Market</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <link href="../assets/css/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="wrapper">
+    <div class="bg"></div>
+    <div class="bg-gradient"></div>
+    <div class="wrapperLogin">
+
+        <div class="loginForm">
+            <div class="logo">
+                <img src="/assets/img/login/gpaylogo.png" />
+            </div>
+            <form method="post" >
+                    <input id="IsCaptchaPassed" name="IsCaptchaPassed" hidden />
+                <div>
+                    <input asp-for="UserName" class="form-control text name" placeholder="Логин" required />
+                </div>
+                <div>
+                    @* <input asp-for="Password" class="form-control text pass" placeholder="Пароль" type="password" required /> *@
+                    <input name="Password" id="Password" type="password" class="form-control text pass" value="@Model.Password" placeholder="Пароль" type="password" required />
+                </div>
+                @if(Model.IsRobotCheck)
+                {
+                    <div class="wrapperCaptcha">
+                        <div id="dvCaptcha"></div>
+                    </div>
+                }
+                @if(Model.ErrorCode == LoginError.credentialErr)
+                {
+                    <div class="loginErr">Проверьте корректность введенных данных</div>
+                }
+                @if(Model.ErrorCode == LoginError.captchaEmpty)
+                {
+                        <div class="loginErr">Подтвердите что вы не робот.</div>
+                }
+                @* @if(Model.ErrorCode == LoginError.captchaInсorrect)
+                {
+                    <div class="loginErr">...</div>
+                } *@
+                <div class="buttons">
+                    <button type="submit" class="loginBtn">Войти</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="cooperation">
+            <div class="info">По попросам сотрудничества: @@GPay_Admin</div>
+        </div>
+
+    </div>
+</div>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async defer></script>
+    <script type="text/javascript">
+        var onloadCallback = function () {
+            grecaptcha.render('dvCaptcha', {
+                'sitekey': '6Lel764kAAAAAIhSZK3QvwBRgLeYrMKds7FdgCa9',
+                'callback': function (response) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/AjaxMethod",
+                        data: {response: response },
+                        success: function (r) {
+                            console.log(r);
+                            var captchaResponse = r;//jQuery.parseJSON(r.Response);
+                            console.log(captchaResponse);
+                            if (captchaResponse.success) {
+                                $("#IsCaptchaPassed").val(captchaResponse.success);
+                            } else {
+                                $("#IsCaptchaPassed").val("");
+                            }
+                        }
+                    });
+                }
+            });
+        };
+        $(function () {
+            let Password = '@Model.Password';
+            $('Password').attr("value", Password);
+        });
+    </script>
+</body>
+</html>

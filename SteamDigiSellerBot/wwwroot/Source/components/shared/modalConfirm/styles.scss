@@ -1,0 +1,18 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+
+    display: flex;
+    justify-content: center !important;
+
+    margin-bottom: 26px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    padding-bottom: 34px !important;
+}

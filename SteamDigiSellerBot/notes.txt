@@ -1,0 +1,91 @@
+https://www.figma.com/file/7SuBkSVRIMUFw0yZUmRVNg/SteamGifts-%D0%92%D0%B5%D1%80%D1%81%D1%82%D0%BA%D0%B0?node-id=0%3A1
+
+https://trello.com/b/H9mDBG8U/steamgifts
+
+https://blog.webdevsimplified.com/2022-07/react-router/
+
+https://techexpert.tips/postgresql/postgresql-docker-installation/
+docker run -d --name postgres-server -p 5432:5432 -v postgres-data:/var/lib/postgresql/data -e "POSTGRES_PASSWORD=1234" postgres
+ALTER USER postgres WITH PASSWORD '1g5s4dg45fd54h15df1GJDHGKNDKNG5gdj14fg1551fdb15';
+
+тестовый сервер
+185.229.66.95
+root
+muWG1Y7NCM52
+
+git pass
+https://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@github.com/pivazi209/SteamDigiSellerBot.git
+
+Реквизиты доступа в личный кабинет Digiseller:
+
+Логин:beatboy209
+Пароль:537F79D7D0
+
+
+стим
+Логин:beatboy209
+Пароль:Myl.........
+
+тест бот
+spitzmaus1986
+4584fd5s4f54ds45f5454
+46.8.192.158:3000:ECh1p8:5vSHG0CTnJ
+
+
+canabia861:544f5ds45f5sd4545
+bchardy:445456fs45df45sd45f45sdf54
+linky1:48777745f45dsf4545
+jumpstyle86:4545f45sd455454
+vacationsender:454545fsd45f45d4545
+midnigth1224:45f45ds5fsd45f45ds4
+45.147.193.108:3000:ECh1p8:5vSHG0CTnJ
+
+jingisukan555:45fgsd4g45fd4SD5h45dfh
+109.172.100.193:63342:AwJyXm9A:hcnnkmGv
+
+meggod:45fds45f45dsg45sdg54
+
+magatop:45fsd45g45ds45gds45
+176.126.115.112:64206:AwJyXm9A:hcnnkmGv
+
+dennisbreuckmann:4565f5ds54fds4545
+154.7.207.23:64486:AwJyXm9A:hcnnkmGv
+
+uoggwdugseilbt:KJHBgtuthb4875
+45.140.54.163:3000:ECh1p8:5vSHG0CTnJ
+
+merni77:6tyguhijo
+178.130.61.59:63372:AwJyXm9A:hcnnkmGv
+
+5.183.130.126:3000:ECh1p8:5vSHG0CTnJ
+109.248.167.196:3000:ECh1p8:5vSHG0CTnJ
+
+
+Рабочий аккаунт без лимита:
+zuevazlt1996:OUg8u645o87ysrdfgh
+
+Аккаунт с постоянным лимитом на отправку:
+igelhelm1:45fsd45f45sd4f545
+
+Аккаунт, куда например можно пробовать отправить игры:
+bdtfgbe:%TG*&UJDCFVGH
+
+
+
+6609B78CD3A9466C
+ID товара: 3184975
+
+uniquecode=2DDBCAB0C9BA421D&seller_id=678945&_dga=null
+uniquecode=6609B78CD3A9466C&seller_id=678945&_dga=null
+
+
+
+варианты ссылок
+https://steamcommunity.com/profiles/76561198020600546
+https://steamcommunity.com/id/123456789
+https://steamcommunity.com/user/phj-gccf
+
+проверить
+аппид - 1677280
+сабид - 808785
+EUR

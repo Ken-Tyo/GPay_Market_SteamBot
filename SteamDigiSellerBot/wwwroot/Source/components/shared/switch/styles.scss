@@ -1,0 +1,35 @@
+@import '../../../containers/admin/library';
+
+.wrapper {
+    .track {
+        position: relative;
+        width: 65px;
+        height: 29px;
+        border-radius: 34px;
+        background-color: $purple-2;
+        cursor: pointer;
+
+        .thumb {
+            position: absolute;
+            left: 8px;
+            top: 4.5px;
+
+            width: 21px;
+            height: 20px;
+            border-radius: 34px;
+            background-color: #722F92;
+            transition-duration: 300ms;
+
+            &.checked {
+                background-color: #AED88D;
+
+                transform: translateX(29px);
+                transition-duration: 300ms;
+            }
+        }
+
+        &.checked {
+            background-color: #4B9252;
+        }
+     }
+}

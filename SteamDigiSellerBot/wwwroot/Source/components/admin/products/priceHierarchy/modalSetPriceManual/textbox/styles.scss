@@ -1,0 +1,71 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    $padding-left: 15px;
+    $padding-right: 0px;
+
+    width: 154px; // - $padding-left - $padding-right;
+
+
+    .inputControl {
+        height: 51px;
+        width: 100%;
+
+        .inputArea {
+            display: flex;
+            height: 100%;
+            width: 100%;
+
+            //background-color: transparent;
+            border-radius: 15px;
+            background-color: #512068;
+
+            input {
+                height: 100%;
+                width: 125px;
+
+                font-size: 14px;
+                line-height: 14px;
+
+                background-color: #512068;
+                color: $white-1;
+                border-radius: 15px;
+                border: none;
+
+                padding-top: 0;
+                padding-bottom: 0;
+                padding-right: $padding-right;
+                padding-left: $padding-left;
+
+                &:focus {
+                    border: none;
+                    outline: none;
+                }
+            }
+
+            .cymbol {
+                height: 100%;
+                //width: 15%;
+
+                font-size: 16px;
+                line-height: 16px;
+                color: $white-3;
+                padding-left: 4px;
+
+                display: flex;
+                justify-content: left;
+                align-items: center;
+            }
+        }
+
+    }
+
+
+
+    .hint {
+        font-size: 14px;
+        line-height: 16px;
+        padding: 9px 7.5px;
+        color: $white-2;
+    }
+}

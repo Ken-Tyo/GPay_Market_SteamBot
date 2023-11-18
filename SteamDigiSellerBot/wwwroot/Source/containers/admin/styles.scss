@@ -1,0 +1,62 @@
+@import './library';
+
+@font-face {
+    font-family: 'Igra Sans';
+    src: local('IgraSans'), url(../../fonts/IgraSans.otf) format('woff');
+}
+
+html,
+body,
+#root,
+.wrapper {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Igra Sans';
+    font-weight: 400;
+    overflow-x: hidden;
+}
+
+.wrapper {
+
+    background-color: $purple-6;
+    position: relative;
+
+    .bg {
+        background: url('../../img/Background-admin.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .wrapperBackground {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+        position: relative;
+    }
+}
+
+input,
+textarea {
+    box-sizing: border-box;
+    font-family: 'Igra Sans';
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Igra Sans' !important;
+}

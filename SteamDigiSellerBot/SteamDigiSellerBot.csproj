@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>fa8ad9fb-35c3-4e22-b7f1-216f51f306fb</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\assets\vendors\**" />
+    <Content Remove="wwwroot\assets\vendors\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendors\**" />
+    <None Remove="wwwroot\assets\vendors\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="5.0.17" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SteamAuthCore\SteamAuthCore\SteamAuthCore.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Database\SteamDigiSellerBot.Database.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Network\SteamDigiSellerBot.Network.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Services\SteamDigiSellerBot.Services.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ProxySocket">
+      <HintPath>..\ProxySocket.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamKit2">
+      <HintPath>..\SteamKit2.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\img\login\" />
+  </ItemGroup>
+
+</Project>

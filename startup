@@ -1,0 +1,21 @@
+#!/bin/bash
+export CUSTOMCONNSTR_DefaultConnection="Host=192.168.1.64;Port=5432;Database=SteamDigiSellerBot;Username=postgres;Password=1234"
+export CUSTOMCONNSTR_DefaultDebugConnection="Host=192.168.1.64;Port=5432;Database=SteamDigiSellerBot;Username=postgres;Password=1234"
+export adminID=""
+
+echo "======================= VARIABLES ================"
+echo $CUSTOMCONNSTR_DefaultDebugConnection
+echo $adminID
+echo "=================================================="
+
+if [ ! -d "SteamDigiSellerBot" ]; then
+        git clone https://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@github.com/pivazi209/SteamDigiSellerBot.git
+fi
+
+cd SteamDigiSellerBot/
+git pull
+docker-compose build
+docker rm -f steamdigisellerbot_front_1
+docker-compose up -d
+
+

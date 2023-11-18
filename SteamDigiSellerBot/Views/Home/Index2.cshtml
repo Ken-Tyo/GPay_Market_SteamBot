@@ -1,0 +1,58 @@
+﻿@model string
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="login-content">
+    @if (string.IsNullOrWhiteSpace(Model))
+    {
+        <form method="GET" class="margin-bottom-0">
+            <div class="form-group m-b-20">
+                <input name="uniquecode" type="text" class="form-control form-control-lg" placeholder="Ключ" required />
+            </div>
+            <div class="login-buttons">
+                <button type="submit" class="btn btn-success btn-block btn-lg">Получить информацию по ключу</button>
+            </div>
+        </form>
+        <br />
+        @*<button type="submit" onclick="showWarnings('testGame', 'testUrl', 'uniqueCode', 'Ru');" class="btn btn-success btn-block btn-lg">ShowSwal</button>*@
+    }
+    else
+    {
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                    <a href="javascript:window.location.href=window.location.href;" class="btn btn-xs btn-icon btn-circle btn-success"><i class="fa fa-redo"></i></a>
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+                    @*<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>*@
+                </div>
+                <h4 class="panel-title">Your key: @Model</h4>
+            </div>
+            <div class="panel-body" id="panel">
+                @{
+                    string message = ViewBag.Message;
+
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        string[] lines = message.Split('\n');
+
+                        foreach (string line in lines)
+                        {
+                            <b style="color:black">@line</b><br />
+                        }
+                    }
+                }
+            </div>
+        </div>
+        {
+            ActivationGameSession model = ViewBag.ActivationViewModel as ActivationGameSession;
+
+            if (model?.ShowModals ?? false)
+            {
+                <script>
+                enterSteamProfileUrl('@(model.GameName)', '@(model.SteamProfileUrl)', '@(Model)', '@(model.ActivationCountry.ToString())');
+                </script>
+            }
+        }
+    }
+</div>

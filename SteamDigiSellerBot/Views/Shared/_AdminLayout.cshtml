@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>GPay Market</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="../assets/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <link href="../assets/plugins/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/plugins/font-awesome/5.0/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link href="../assets/plugins/ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="../assets/plugins/animate/animate.min.css" rel="stylesheet" />
+    <link href="../assets/css/apple/style.min.css" rel="stylesheet" />
+    <link href="../assets/css/apple/style-responsive.min.css" rel="stylesheet" />
+    <link href="../assets/css/apple/theme/default.css" rel="stylesheet" id="theme" />
+    <!-- ================== END BASE CSS STYLE ================== -->
+    <!-- ================== BEGIN PAGE LEVEL CSS STYLE ================== -->
+    <link href="../assets/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" />
+    <link href="../assets/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" />
+    <link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
+    <link href="../assets/plugins/powerange/powerange.min.css" rel="stylesheet" />
+    <!-- ================== END PAGE LEVEL CSS STYLE ================== -->
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="../assets/plugins/pace/pace.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body>
+    <!-- begin #page-loader -->
+    <div id="page-loader" class="fade show"><span class="spinner"></span></div>
+    <!-- end #page-loader -->
+    <!-- begin #page-container -->
+    <div id="page-container" class="page-container fade page-sidebar-fixed page-header-fixed">
+        <!-- begin #header -->
+        <div id="header" class="header navbar-inverse">
+            <!-- begin navbar-header -->
+            <div class="navbar-header">
+                <a href="/Admin" class="navbar-brand"><span class="navbar-logo"><i class="ion-ios-cloud"></i></span> <b>SteamDigiSellerBot</b> Admin</a>
+                <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- end navbar-header -->
+            <!-- begin header-nav -->
+            <ul class="navbar-nav navbar-right">
+                <li class="dropdown navbar-user">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="d-none d-md-inline">@User.Identity.Name</span> <b class="caret"></b>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        @*<a href="javascript:;" class="dropdown-item">Setting</a>
+                        <div class="dropdown-divider"></div>*@
+                        <a href="/Admin/Logout" class="dropdown-item">Выход</a>
+                    </div>
+                </li>
+            </ul>
+            <!-- end header navigation right -->
+        </div>
+        <!-- end #header -->
+        <!-- begin #sidebar -->
+        <div id="sidebar" class="sidebar sidebar-transparent">
+            <!-- begin sidebar scrollbar -->
+            <div data-scrollbar="true" data-height="100%">
+                <!-- begin sidebar nav -->
+                <ul class="nav">
+                    <li class="nav-header">Меню</li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret"></b>
+                            <i class="ion-ios-pulse bg-gradient-blue"></i>
+                            <span>Боты</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="/Bots/AddBot">Добавить Бота</a></li>
+                            <li><a href="/Bots">Просмотр Ботов</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret"></b>
+                            <i class="ion-ios-upload-outline bg-gradient-red"></i>
+                            <span>Товары</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="/Items/AddItem">Добавить Товар</a></li>
+                            <li><a href="/Items">Просмотр Товаров</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret"></b>
+                            <i class="ion-ios-game-controller-b-outline bg-gradient-orange-dark"></i>
+                            <span>Игры</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="/GameSessions/AddGameSession">Добавить Сессию</a></li>
+                            <li><a href="/GameSessions">Просмотр Сессий</a></li>
+                            <li><a href="/GameSessions/AddGame">Добавить Игру</a></li>
+                            <li><a href="/GameSessions/Games">Просмотр Игр</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret"></b>
+                            <i class="ion-ios-albums-outline bg-green-darker"></i>
+                            <span>Данные</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="/Proxy/LoadProxy">Добавить Прокси Steam</a></li>
+                            <li><a href="/Proxy">Просмотр Прокси Steam</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-sub">
+                        <a href="javascript:;">
+                            <b class="caret"></b>
+                            <i class="ion-ios-gear-outline"></i>
+                            <span>Настройки</span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li><a href="/Admin/ChangePassword">Сменить пароль</a></li>
+                        </ul>
+                    </li>
+                    <!-- begin sidebar minify button -->
+                    <li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="ion-ios-arrow-left"></i> <span>Спрятать</span></a></li>
+                    <!-- end sidebar minify button -->
+                </ul>
+                <!-- end sidebar nav -->
+            </div>
+            <!-- end sidebar scrollbar -->
+        </div>
+        <div class="sidebar-bg"></div>
+        <!-- end #sidebar -->
+        <!-- begin #content -->
+        <div id="content" class="content">
+            <div class="panel-body">
+                @RenderBody()
+            </div>
+        </div>
+        <!-- end #content -->
+        <!-- begin scroll to top btn -->
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+        <!-- end scroll to top btn -->
+    </div>
+    <!-- end page container -->
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="../assets/plugins/jquery/jquery-3.2.1.min.js"></script>
+    <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../assets/plugins/bootstrap/4.1.0/js/bootstrap.bundle.min.js"></script>
+    <!--[if lt IE 9]>
+        <script src="../assets/crossbrowserjs/html5shiv.js"></script>
+        <script src="../assets/crossbrowserjs/respond.min.js"></script>
+        <script src="../assets/crossbrowserjs/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="../assets/plugins/js-cookie/js.cookie.js"></script>
+    <script src="../assets/js/theme/apple.min.js"></script>
+    <script src="../assets/js/apps.min.js"></script>
+    <script src="../js/site.js"></script>
+    <!-- ================== END BASE JS ================== -->
+    <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    <script src="../assets/plugins/switchery/switchery.min.js"></script>
+    <script src="../assets/plugins/powerange/powerange.min.js"></script>
+    <script src="../assets/js/demo/form-slider-switcher.demo.min.js"></script>
+    <!-- ================== END PAGE LEVEL JS ================== -->
+
+    <script>
+        $(document).ready(function () {
+            App.init();
+            FormSliderSwitcher.init();
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,86 @@
+{
+  "lastOrders": {
+    "bought": "bought",
+    "for": "for"
+  },
+  "checkCode": {
+    "title": "Enter a unique order code",
+    "inputPlaceholder": "Enter a unique code",
+    "inputAcceptBut": "Сonfirm",
+    "errors": {
+      "1": "",
+      "2": "Incorrect order code entered. Check the code again.",
+      "3": "Confirm that you are not a robot.",
+      "4": "Error, invalid captcha."
+    }
+  },
+  "orderState": {
+    "title": "Order state",
+    "steamUrlInfo1": "1. You can enter a quick invite link or a friend code to your Steam account, in which case the deal will go faster. You can find her in the Steam tabs: \"Friends\" > \"Add as Friend\"",
+    "steamUrlInfo2": "2. You can enter a link to your Steam profile, for this you need to open your profile, right-click on the free field in the profile, then click \"copy link address\" in the drop-down list",
+    "inputPlaceholder": "Link entered",
+    "inputAcceptBut": "Сonfirm",
+    "linkIncorrectErr": "Invalid profile link entered. Check again.",
+    "yourSteamName": "Your Steam nickname",
+    "thisMyAccBut": "This is my account",
+    "changeAccountBut": "Change account",
+    "requestSent": "Friend request sent",
+    "requestSentInfo": "You have been sent a request to add friends on Steam. You need to accept our bot with the nickname {{botName}} as a friend. Then the purchased item will be sent to you."
+  },
+  "dlc": {
+    "info": "This product is an addition to the main game. Without the presence of the main game, you will not be able to activate the DLC"
+  },
+  "timer": {
+    "title": "Time to activate",
+    "expInfoTooltip": "After this time, the order will be impossible to receive. Either an additional payment will be required, or any conditions of the order will change, perhaps now this product is on sale."
+  },
+  "activationTimeExpires": {
+    "error": "Error",
+    "message": "Unfortunately, you did not manage to get the game before the end of discounts (sales) for this game and your order became inactive. Please contact the seller to resolve this issue.",
+    "contactTheSeller": "Contact the seller"
+  },
+  "invitationRefused": {
+    "error": "Error",
+    "youRefused": "You have rejected the application of our bot!",
+    "info": "You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.",
+    "iSentInvitation": "I sent a friend request",
+    "tryWithBot": "Repeat request from another bot"
+  },
+  "gameExists": {
+    "error": "Error",
+    "info": "You already have this game/add-on on your Steam account. Specify another account that does not contain this product. If you have a free (temporary) version of the game, delete it {{- link}} and try again!",
+    "repeatSendGame": "Retry",
+    "hereClick": "here (clickable)"
+  },
+  "gameSendInProgress": {
+    "title": "The game is sent",
+    "info1": "The game is being sent, please wait...",
+    "info2": "The procedure usually takes about 3 minutes..."
+  },
+  "gameSended": {
+    "title": "A good buy",
+    "info": "Thank you for shopping in our store! We would love to hear from you, please contact us again!",
+    "homeBut": "Home",
+    "feedbackBut": "Leave feedback"
+  },
+  "gameInQueue": {
+    "queue": "Queue",
+    "info1": "At the moment, all bots of this heading are occupied. Your turn: ",
+    "info2": "Approximate waiting time: ",
+    "info3": "You can contact the seller to clarify the possibility of speeding up the waiting time..."
+  },
+  "regionError": {
+    "error": "Error",
+    "info": "The region of the recipient of the game is different from the one purchased. It is impossible to deliver a game to a region where the game is more expensive than the cost of the selected region. Please specify another account with the correct region, or contact us to resolve the issue!"
+  },
+  "orderClosed": {
+    "closed": "Order closed",
+    "message": "Unfortunately, this order was closed by the seller. Contact for details about this"
+  },
+  "error": {
+    "info": "There was an unexpected tech. error. Please contact the seller"
+  },
+  "common": {
+    "order": "Order"
+  }
+}

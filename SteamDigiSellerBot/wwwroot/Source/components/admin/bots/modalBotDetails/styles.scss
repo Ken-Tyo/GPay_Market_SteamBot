@@ -1,0 +1,85 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding-top: 24px;
+    margin-bottom: 40px;
+    overflow-y: auto;
+    max-height: 505px;
+
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .boxes {
+        display: flex;
+        justify-content: center;
+
+        .infoarea {
+            color: $white-1;
+            display: block;
+            background: #702C88;
+            border-radius: 15px;
+            font-size: 14px;
+            height: 505px;
+            width: 501px;
+
+            .item {
+                margin-top: 48px;
+                padding-left: 22px;
+                padding-right: 23px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .name {
+                    font-size: 22px;
+                    line-height: 22px;
+                }
+
+                .val {
+                    width: 260px;
+                    font-size: 16px;
+                    line-height: 20px;
+                    color: $white-3;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    .botState {
+                        display: flex;
+                        align-items: center;
+
+                        .dot {
+                            height: 12px;
+                            width: 12px;
+                            border-radius: 50%;
+                            margin-right: 11px;
+                        }
+
+                        .stateName {
+                            font-size: 16px;
+                            line-height: 20px;
+                        }
+                    }
+                }
+
+                .copyable {
+                    cursor: pointer;
+
+                    &:active {
+                        color: #ab3768;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    flex: 0 1 123px;
+}

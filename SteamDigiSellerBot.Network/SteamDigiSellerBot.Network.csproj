@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="protobuf-net" Version="3.0.73" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SteamDigiSellerBot.Database\SteamDigiSellerBot.Database.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ProxySocket">
+      <HintPath>..\ProxySocket.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamKit2">
+      <HintPath>..\SteamKit2.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    $padding-left: 15px;
+    $padding-right: 0px;
+
+    width: 302px; // - $padding-left - $padding-right;
+
+    .hint {
+        font-size: 14px;
+        line-height: 16px;
+        padding: 9px 7.5px;
+        color: $white-2;
+    }
+}

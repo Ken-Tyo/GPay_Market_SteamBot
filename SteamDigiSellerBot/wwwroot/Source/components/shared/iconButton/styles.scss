@@ -1,0 +1,16 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.button {
+  background-color: $purple-2;
+  height: 49px;
+  width: 59px;
+  border-radius: 23px;
+  cursor: pointer;
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+}

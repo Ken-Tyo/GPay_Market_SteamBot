@@ -1,0 +1,17 @@
+@import '../../../containers/admin/library';
+
+.wrapper {
+    background-color: #C14378;
+    border-radius: 23px;
+    font-size: 26px;
+    line-height: 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $white-1;
+}
+
+.pointer {
+    cursor: pointer;
+}

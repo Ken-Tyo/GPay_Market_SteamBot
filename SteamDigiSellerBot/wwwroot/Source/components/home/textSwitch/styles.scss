@@ -1,0 +1,81 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    position: relative;
+
+    .track {
+        width: 96px;
+        height: 41px;
+        border-radius: 15px;
+        border: 1px solid white;
+        background-color: transparent;
+        cursor: pointer;
+
+        .thumb {
+            width: 48px;
+            height: 41px;
+            border-radius: 13px;
+            background-color: #FFFFFF;
+            transition-duration: 500ms;
+
+
+            &.checked {
+                transform: translateX(48px);
+            }
+
+            transition-duration: 200ms;
+        }
+
+        .options {
+            position: absolute;
+            z-index: 1;
+            color: #FFFFFF;
+            font-size: 14px;
+            line-height: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+            width: 100%;
+            height: 100%;
+
+            div:first-child {
+                color: #8615BC;
+            }
+
+            &.checked {
+                div:first-child {
+                    color: #FFFFFF;
+                }
+
+                div:last-child {
+                    color: #8615BC;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .track {
+            width: 72px;
+            height: 31px;
+            border-radius: 11px;
+
+            .thumb {
+                width: 36px;
+                height: 31px;
+                border-radius: 9px;
+
+                &.checked {
+                    transform: translateX(36px);
+                }
+            }
+
+            .options {
+                font-size: 11px;
+                line-height: 14px;
+            }
+        }
+    }
+}

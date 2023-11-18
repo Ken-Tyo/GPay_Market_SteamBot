@@ -1,0 +1,98 @@
+.wrapper {
+    //max-width: 600px;
+    margin: auto;
+    padding: 20px 0;
+
+    .itemsWrap {
+        position: relative;
+        display: flex;
+        overflow: hidden;
+        user-select: none;
+        gap: 20px;
+
+        .marquee {
+            animation: scroll 160s linear infinite;
+        }
+
+        &:hover .marquee {
+            animation-play-state: paused;
+        }
+
+        .items {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 24px;
+
+            flex-shrink: 0;
+            display: flex;
+            gap: 20px;
+            counter-reset: item;
+            justify-content: space-around;
+            min-width: 100%;
+
+            .item {
+                background: #FFFFFF;
+                flex: 0 0 auto;
+                //width: 100px;
+                height: 72px;
+                padding: 0 50px;
+                counter-increment: item;
+                border-radius: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #000000;
+                margin: 10px 0;
+                transition: all 0.1s ease-in-out;
+
+                &:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                }
+
+                // &:before {
+                //     content: counter(item);
+                // }
+
+                &:nth-child(even) {
+                    background: transparent;
+                    color: white;
+                    border: 1px solid #FFFFFF;
+                }
+
+                .gameName,
+                .price {
+                    color: #B721FF;
+                }
+            }
+        }
+    }
+
+    // .reverce {
+    //     animation-direction: reverse;
+    // }
+
+    @keyframes scroll {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(calc(-100% - 20px));
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .itemsWrap {
+            .items {
+                .item {
+                    height: 41px;
+                    font-size: 10px;
+                    line-height: 12px;
+                    border-radius: 12px;
+                }
+            }
+        }
+    }
+}

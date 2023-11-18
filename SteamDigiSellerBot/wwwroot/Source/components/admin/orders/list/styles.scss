@@ -1,0 +1,60 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    .cell {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        color: $white-3;
+        font-size: 16px;
+        line-height: 16px;
+
+        .id {
+            padding-left: 10px;
+        }
+
+        .uniqueId {
+            display: flex;
+
+            .ref {
+                margin-left: 9px;
+                cursor: pointer;
+            }
+        }
+
+        .comment {
+            background: #512068;
+            border-radius: 24px;
+            width: 46px;
+            height: 35px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .info {
+            .secondRow {
+                display: flex;
+
+                .profileRef a {
+                    margin-left: 9px;
+                    color: #875BE2;
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            }
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+
+            .btnWrapper {
+                margin-right: 13px;
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    background-color: #5E227A;
+    border-radius: 15px;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 19px 30px 18px 21px;
+        cursor: pointer;
+    }
+
+    .content {
+        padding: 0 21px 13px 21px;
+    }
+}

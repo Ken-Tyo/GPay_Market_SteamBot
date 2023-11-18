@@ -1,0 +1,104 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    position: relative;
+
+    table {
+        text-align: left;
+        position: relative;
+        border-collapse: collapse;
+        width: 100%;
+
+        thead {
+            height: 59px;
+
+            & th {
+                background-color: #332142 !important;
+                padding: 0;
+                //background: transparent;
+                position: sticky;
+                top: 0;
+                /* Don't forget this, required for the stickiness */
+                //box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+                z-index: 1;
+            }
+
+            & th div {
+                height: 59px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: $purple-5;
+                font-size: 20px;
+                line-height: 20px;
+                color: $white-1;
+                font-weight: 400;
+            }
+
+            & th div.first {
+                border-radius: 34px 0px 0px 0px;
+            }
+
+            & th div.last {
+                border-radius: 0px 34px 0px 0px;
+            }
+        }
+
+        tbody {
+            td {
+                padding: 0; //0.25rem;
+            }
+
+            tr {
+                height: 73px;
+
+                &:nth-of-type(odd) {
+                    background-color: #6B3087
+                }
+
+                &:nth-of-type(even) {
+                    background-color: #632C7D
+                }
+            }
+        }
+    }
+
+    .dump {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        height: 100%;
+        background-color: $purple-4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 28px;
+        line-height: 28px;
+
+        color: $white-1;
+
+        .loader {
+            margin-bottom: 75px;
+        }
+    }
+
+    // @media (max-width: 2000px) {
+
+    //     table {
+    //         width: 100% !important;
+    //         overflow-x: scroll;
+
+    //         th,
+    //         td {
+    //             min-width: 80px !important;
+    //             background-color: red
+    //         }
+    //     }
+
+    // }
+}

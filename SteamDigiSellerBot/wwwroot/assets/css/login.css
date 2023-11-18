@@ -1,0 +1,147 @@
+﻿@font-face {
+    font-family: 'SF Pro Display';
+    src: local('SF Pro Display'), url('../../Source/fonts/SFPRODISPLAYREGULAR.OTF') format('woff');
+
+}
+
+html,
+body,
+.wrapper {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'SF Pro Display';
+    font-weight: 400;
+    overflow-x: hidden;
+}
+
+input:focus {
+    outline-width: 0;
+    background-color: #512068;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: #ffffff;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.wrapper {
+    background-color: #332142;
+    position: relative;
+}
+
+.bg {
+    background: url('../img/login/bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.bg-gradient {
+    background: linear-gradient(#931DDB12 7%, #9741CB0D 5%);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
+.wrapperLogin {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm .logo {
+    margin-bottom: 57px;
+}
+
+.form-control {
+
+}
+
+.form-control.text {
+    width: 445px;
+    font-size: 16px;
+    line-height: 16px;
+    border-radius: 16px;
+    border: none;
+    background-color: #512068;
+    padding: 22px 25px 19px 24px;
+    color: #fff;
+}
+
+.form-control.text.name {
+    margin-bottom: 27px;
+}
+
+.form-control.text.pass {
+    margin-bottom: 8px;
+}
+
+input.form-control.text::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #888888CC;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.loginBtn {
+    width: 290px;
+    height: 56px;
+    color: #fff;
+    line-height: 20px;
+    font-size: 20px;
+    background-color: #8333A9;
+    border-radius: 23px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-top: 29px;
+}
+
+.loginErr {
+    font-size: 14px;
+    line-height: 14px;
+    color: #C54848D9;
+    text-align: center;
+    margin-top: 6px;
+}
+
+.wrapperCaptcha {
+    display: flex;
+    justify-content: center;
+}
+
+.cooperation {
+    position: absolute;
+    bottom: 29px;
+    font-size: 14px;
+    color: #D4D4D4D9;
+}

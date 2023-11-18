@@ -1,0 +1,96 @@
+@import './library';
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src: local('SF Pro Display'), url(../../fonts/SFPRODISPLAYREGULAR.OTF) format('woff');
+}
+
+html,
+body,
+#root,
+.wrapper {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'SF Pro Display';
+    font-weight: 400;
+    overflow-x: hidden;
+}
+
+.wrapper {
+    //display: flex;
+    //flex-direction: column;
+    background-color: black;
+    position: relative;
+
+    .bg {
+        background: url('../../img/Background.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        opacity: 0.5;
+    }
+
+    .wrapperBackground {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+
+        display: flex;
+        flex-direction: column;
+
+        .footer {
+            display: flex;
+            justify-content: end;
+            flex: 0 1 auto;
+            padding-right: 87px;
+            padding-top: 30px;
+            padding-bottom: 40px;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .bg {
+            background: url('../../img/Background-mob.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0.5;
+        }
+
+        .wrapperBackground {
+            .footer {
+                justify-content: center;
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+input,
+textarea {
+    box-sizing: border-box;
+    font-family: 'SF Pro Display';
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'SF Pro Display' !important;
+}

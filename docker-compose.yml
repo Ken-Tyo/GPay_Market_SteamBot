@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  front:
+    build:
+      context: .
+      dockerfile: SteamDigiSellerBot/Dockerfile
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      #CUSTOMCONNSTR_DefaultConnection: Host=185.229.66.95;Port=5432;Database=SteamDigiSellerBot;Username=postgres;Password=1234;
+      #CUSTOMCONNSTR_DefaultDebugConnection: Host=185.229.66.95;Port=5432;Database=SteamDigiSellerBot;Username=postgres;Password=1234;
+      CUSTOMCONNSTR_DefaultConnection: ${CUSTOMCONNSTR_DefaultConnection}
+      CUSTOMCONNSTR_DefaultDebugConnection: ${CUSTOMCONNSTR_DefaultDebugConnection}
+      adminID: ${adminID}
+      digiSellerEnable: "true"
+    volumes:
+      - /bin/digi/logs:/app/Logs      

@@ -1,0 +1,42 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    margin-top: 19px;
+
+    .botStats {
+        background-color: $purple-4;
+        padding-left: 39px;
+        padding-top: 19px;
+        color: $white-1;
+        height: 139px;
+        width: 254px;
+        box-sizing: border-box;
+        border-radius: 34px;
+
+        .statItem {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 17px;
+
+            .dot {
+                height: 13px;
+                width: 13px;
+                border-radius: 50%;
+                margin-right: 14px;
+            }
+
+            .name {
+                display: flex;
+                width: 175px;
+                font-size: 12px;
+                line-height: 12px;
+                justify-content: space-between;
+
+                .count {
+                    width: 30px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+@import '/wwwroot/Source/containers/home/library';
+
+.wrapper {
+    height: 52px;
+    width: 233px;
+    background-color: #571676;
+    border-radius: 20px;
+    font-size: 22px;
+    line-height: 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $white-1;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 500px) {
+    .wrapper {
+        width: 163px;
+        height: 41px;
+        font-size: 14px;
+        line-height: 17px;
+    }
+}

@@ -1,0 +1,29 @@
+@import '../../../../containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding-top: 8px;
+    
+    overflow-y: auto;
+    height: 619px;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .boxes {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 31px;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    flex: 0 1 123px;
+    padding-bottom: 27px;
+}
