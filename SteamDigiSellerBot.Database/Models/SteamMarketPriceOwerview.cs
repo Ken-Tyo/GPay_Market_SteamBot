@@ -72,7 +72,7 @@ namespace SteamDigiSellerBot.Database.Models
                 Debug.WriteLine($"{str} ---> {number}");
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Debug.WriteLine($"err parse - {str} -> {newStr}");
 
