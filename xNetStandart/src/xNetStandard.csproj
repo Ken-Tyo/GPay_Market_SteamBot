@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>xNetStandard</RootNamespace>
     <Authors>Alex Fedorus</Authors>
     <Description>Alternative http client based on xNet library with .net Core support and fixed bugs</Description>
