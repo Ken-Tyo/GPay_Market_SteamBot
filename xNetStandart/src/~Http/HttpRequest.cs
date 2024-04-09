@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Resources;
 using System.Diagnostics;
+using System.Net.Mime;
 
 namespace xNet
 {
@@ -1086,7 +1087,6 @@ namespace xNet
             {
                 ContentType = contentType
             };
-
             return Raw(HttpMethod.POST, address, content);
         }
 

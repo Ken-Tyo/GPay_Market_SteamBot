@@ -230,6 +230,7 @@ namespace SteamDigiSellerBot.Controllers
                         User = user,
                         Item = item,
                         DigiSellerDealId = soldItem.DealId.ToString(),
+                        DigiSellerDealPriceUsd = (decimal)soldItem.AmountUsd,
                         IsSteamMonitoring = true,
                         UniqueCode = uniquecode,
                         StatusId = 12,//не указан профиль
@@ -245,7 +246,7 @@ namespace SteamDigiSellerBot.Controllers
                 }
             }
             else
-                isCorrectCode = false; //товар в диги не найден
+                isCorrectCode = false; //товар в Digiseller не найден
 
             return (isCorrectCode, gs);
         }

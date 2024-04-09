@@ -317,6 +317,8 @@ namespace SteamDigiSellerBot.Network.Services
                     string s = request.Get("https://store.steampowered.com/app/" + appId + "?cc=ru").ToString();
                     string[] editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
 
+                    // Избегаем попадать в лимит при обращении к серверу
+                    Thread.Sleep(TimeSpan.FromMilliseconds(200));
 
                     if (s.Contains("id=\"error_box\"") || editions.Length == 0)
                     //Данный товар недоступен в вашем регионе
@@ -413,7 +415,7 @@ namespace SteamDigiSellerBot.Network.Services
                 }
                 catch (HttpException ex)
                 {
-                    _logger.LogError(default, ex, $"[{DateTime.UtcNow}] SteamGame {appId}");
+                    _logger.LogWarning(default, ex, $"At the current time [{DateTime.UtcNow}] the server can't HTTP GET 'SteamGame' {appId}");
                 }
                 catch (Exception ex)
                 {

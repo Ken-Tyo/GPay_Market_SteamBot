@@ -104,7 +104,17 @@ namespace SteamDigiSellerBot.Controllers
                 CurrencyData currencyData = await _currencyDataService.GetCurrencyData();
                 List<VacGame> vacCheckList = await _vacGamesRepository.ListAsync();
 
-                var superBot = new SuperBot(bot);
+                SuperBot superBot;
+
+                try
+                {
+                    superBot = new SuperBot(bot);
+                }
+                catch (Exception)
+                {
+                    return createBadRequest();
+                }
+
                 superBot.Login();
                 var botAuthOK = superBot.IsOk();
                 if (!model.Id.HasValue)
@@ -129,7 +139,7 @@ namespace SteamDigiSellerBot.Controllers
                 
                 if (!botAuthOK)
                 {
-                    ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam " + bot.Result.ToString());
+                    ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + bot.Result.ToString());
                     return createBadRequest();
                 }
 
@@ -183,7 +193,17 @@ namespace SteamDigiSellerBot.Controllers
 
             CurrencyData currencyData = await _currencyDataService.GetCurrencyData();
 
-            var superBot = new SuperBot(bot);
+            SuperBot superBot;
+
+            try
+            {
+                superBot = new SuperBot(bot);
+            }
+            catch (NotImplementedException )
+            {
+                return this.CreateBadRequest();
+            }
+
             superBot.Login();
             superBot.UpdateBotWithRegionProblem(currencyData, bot);
 
@@ -195,7 +215,7 @@ namespace SteamDigiSellerBot.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam " + bot.Result.ToString());
+                ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + bot.Result.ToString());
             }
 
             return this.CreateBadRequest();

@@ -5,6 +5,7 @@ using SteamDigiSellerBot.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using xNet;
@@ -33,21 +34,22 @@ namespace SteamDigiSellerBot.Network.Helpers
                 .Replace("\n", "")
                 .Replace("\t", "")
                 .Replace("\\", "")
-                .Substrings("<td class=\"wht_date\">", $"<td class=\"wht_wallet_change")
+                .Substrings("<td class=\"wht_date\">", $"<td class=\"wht_wallet_change wallet_column")
                 .Select(x => x
                     //.Replace("\r", "")
                     //.Replace("\n", "")
                     //.Replace("\t", "")
                     //.Replace("\\", "")
                     .Replace("<div>", "")
-                    .Replace("</div>", "")
-                    .Replace("wht_refunded", ""))
+                    .Replace("</div>", ""))
+                    //.Replace("wht_refunded", ""))
                 .ToList();
-
+            //File.WriteAllText("C://Temp/AllParserTransactions.txt", transactions.ToArray().ToString() + "\n\n\n"); // debug
             List<string> purchases = transactions.Where(predicate).ToList();
+            //File.WriteAllText("C://Temp/AllParserPurchases.txt", purchases.ToArray().ToString() + "\n\n\n"); // debug
 
             //var t = string.Join("\r\n\r\n", purchases);
-            List<BotTransaction> purchasesPrices = GetSteamHistoryPrices(purchases, currencyData,transactionType);
+            List<BotTransaction> purchasesPrices = GetSteamHistoryPrices(purchases, currencyData, transactionType);
 
             return purchasesPrices;//.Sum();
         }
@@ -70,7 +72,11 @@ namespace SteamDigiSellerBot.Network.Helpers
             {
                 try
                 {
-                    string priceAndSymbol = purchase.Substring("<td class=\"wht_total \">", "<");//.Split(' ');
+                    string priceAndSymbol = string.Empty;
+                    if (purchase.Contains("<td class=\"wht_total wht_refunded\">")) {
+                        priceAndSymbol = purchase.Substring("<td class=\"wht_total wht_refunded\">", "<");//.Split(' ');
+                    } else priceAndSymbol = purchase.Substring("<td class=\"wht_total \">", "<");
+                    
                     SteamHelper.TryGetPriceAndSymbol(priceAndSymbol, out decimal price, out string symbol);
 
                     Currency currency = currencyData.Currencies
@@ -93,6 +99,7 @@ namespace SteamDigiSellerBot.Network.Helpers
 
                     //price /= currency.Value;
                     prices.Add(tran);
+                    
                 }
                 catch { }
             }

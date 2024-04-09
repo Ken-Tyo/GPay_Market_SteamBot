@@ -16,7 +16,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Org.Mentalis.Network;
+using Org.Mentalis.Network.ProxySocket.Models;
 using SteamKit2.Discovery;
 
 namespace SteamKit2.Internal
@@ -221,7 +221,9 @@ namespace SteamKit2.Internal
                     newConnection.NetMsgReceived += NetMsgReceived;
                     newConnection.Connected += Connected;
                     newConnection.Disconnected += Disconnected;
-                    Proxy proxy3 = proxy ?? Configuration.Proxy;
+                    Proxy proxy3;
+                    if (proxy != null) proxy3 = proxy;
+                    else proxy3 = Configuration.Proxy;
                     newConnection.Connect( record.EndPoint, proxy3, ( int )ConnectionTimeout.TotalMilliseconds );
                 }, TaskContinuationOptions.ExecuteSynchronously ).ContinueWith( t =>
                 {

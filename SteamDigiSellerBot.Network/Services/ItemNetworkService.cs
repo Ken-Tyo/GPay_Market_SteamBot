@@ -108,6 +108,9 @@ namespace SteamDigiSellerBot.Network.Services
             }
         }
 
+        /// <summary>
+        /// This method performs a number of operations to set prices for goods and update information in the database.
+        /// </summary>
         private async Task SetPrices(
             string appId,
             HashSet<string> items,
@@ -119,6 +122,7 @@ namespace SteamDigiSellerBot.Network.Services
             var currencyData = db.CurrencyData.FirstOrDefault();
 
             var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
+            // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
             var dbItems = db.Items.Include(i => i.GamePrices).Where(i => i.AppId == appId && items.Contains(i.SubId)).ToList();
 
             var currencyForParse = allCurrencies;
@@ -132,7 +136,7 @@ namespace SteamDigiSellerBot.Network.Services
 
             await _steamNetworkService.SetSteamPrices(appId, items, currencyForParse, db, 5);
 
-            //before update digisaller price
+            //before update Digiseller price
             var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
             var itemsToDigisellerUpdate = new List<Item>();
             foreach (Item item in dbItems)
@@ -149,7 +153,7 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         var diffPriceInPercent = (digiSellerPriceWithAllSales * 100) / currentSteamPriceRub;
                         //новое значение активности товара
-                        //вычисляется в зависимости от меньше ли фиксирвоанная цена диги в процентах минимального порога
+                        //вычисляется в зависимости от меньше ли фиксированная цена Digiseller в процентах минимального порога
                         //если да - активировать товар
                         //иначе - деактивировать
                         var newActive = !(diffPriceInPercent < item.MinActualThreshold);
@@ -168,7 +172,7 @@ namespace SteamDigiSellerBot.Network.Services
                                 }
                             }
 
-                            //если изменение всё же произошло и апи запросы к диги включены
+                            //если изменение всё же произошло и API запросы к Digiseller включены
                             if (digiSellerEnable && item.Active == newActive)
                             {
                                 await _digiSellerNetworkService.SetDigiSellerItemsCondition(
@@ -180,6 +184,7 @@ namespace SteamDigiSellerBot.Network.Services
                     if (item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales && currentSteamPrice > 0)
                     {
                         item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
+                        item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
                         itemsToDigisellerUpdate.Add(item);
                         db.Entry(item).State = EntityState.Modified;
                     }
@@ -192,6 +197,7 @@ namespace SteamDigiSellerBot.Network.Services
                     if (item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub && currentSteamPrice > 0)
                     {
                         item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
+                        item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
                         itemsToDigisellerUpdate.Add(item);
                         db.Entry(item).State = EntityState.Modified;
                     }
@@ -199,12 +205,14 @@ namespace SteamDigiSellerBot.Network.Services
 
                 if (digiSellerEnable && setName)
                 {
+                    // Здесь делаем запросы к Digiseller, иногда входим в лимит
                     var digiItem = await _digiSellerNetworkService
                        .GetItem(item.DigiSellerIds.FirstOrDefault(), aspNetUserId);
 
                     item.Name = digiItem.Product?.Name;
                     db.Entry(item).State = EntityState.Modified;
                 }
+                // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
 
                 db.SaveChanges();
             }

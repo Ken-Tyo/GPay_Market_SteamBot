@@ -7,7 +7,7 @@
 
 using System;
 using System.Net;
-using Org.Mentalis.Network;
+using Org.Mentalis.Network.ProxySocket.Models;
 
 namespace SteamKit2
 {

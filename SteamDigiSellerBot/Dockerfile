@@ -15,10 +15,10 @@ RUN dotnet restore "SteamDigiSellerBot/SteamDigiSellerBot.csproj"
 COPY . .
 WORKDIR "/src/SteamDigiSellerBot"
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
-RUN npm i
-RUN npm run build
+#RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+#RUN apt-get install -y nodejs
+#RUN npm i
+#RUN npm run build
 
 RUN dotnet build "SteamDigiSellerBot.csproj" -c Release -o /app/build
 

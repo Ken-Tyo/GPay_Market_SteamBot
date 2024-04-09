@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
+using SteamAuthCore;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Enums;
 using SteamDigiSellerBot.Database.Extensions;
@@ -7,14 +9,18 @@ using SteamDigiSellerBot.Network.Models;
 using SteamDigiSellerBot.Utilities;
 using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
+using SteamKit2.Authentication;
+using SteamKit2.Internal;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -28,7 +34,7 @@ namespace SteamDigiSellerBot.Network
     public class SuperBot
     {
         private Bot _bot { get; set; }
-
+        
         private SteamClient _steamClient { get; set; }
 
         private SteamUser _steamUser { get; set; }
@@ -36,8 +42,16 @@ namespace SteamDigiSellerBot.Network
         private CallbackManager _manager { get; set; }
 
         private bool _isRunning { get; set; }
+        private string code = string.Empty;
+        private string accessToken = string.Empty;
+        private string refreshToken = string.Empty;
         private string engUrlParam = "l=english";
         private string cartUrlStr => $"https://store.steampowered.com/cart?{engUrlParam}";
+
+        /// <summary>
+        /// Randomly-generated device ID. Should only be generated once per linker.
+        /// </summary>
+        public string _deviceID { get; private set; } = "android:" + Guid.NewGuid().ToString(); // TODO: from maFile
 
         //private readonly ICurrencyDataRepository _currencyDataRepository;
         //private readonly IVacGameRepository _vacGameRepository;
@@ -69,6 +83,7 @@ namespace SteamDigiSellerBot.Network
 
             _steamUser = _steamClient.GetHandler<SteamUser>();
 
+            
             _manager.Subscribe<SteamClient.ConnectedCallback>(OnConnected);
             _manager.Subscribe<SteamClient.DisconnectedCallback>(OnDisconnected);
             _manager.Subscribe<SteamUser.LoggedOnCallback>(OnLoggedOn);
@@ -206,21 +221,54 @@ namespace SteamDigiSellerBot.Network
             //SetBotState();
         }
 
-        private void OnConnected(SteamClient.ConnectedCallback callback)
+        private async void OnConnected(SteamClient.ConnectedCallback callback)
         {
-            var logOnDetails = new SteamUser.LogOnDetails
-            {
-                Username = _bot.UserName,
-                Password = _bot.Password,
-                TwoFactorCode = _bot.SteamGuardAccount.GenerateSteamGuardCode()
-            };
+            Console.WriteLine("Connected to Steam! Logging in '{0}'...", _bot.UserName);
 
-            _steamUser.LogOn(logOnDetails);
+            // Begin authenticating via credentials
+            try
+            {
+                var authSession = await _steamClient.Authentication.BeginAuthSessionViaCredentialsAsync(new AuthSessionDetails
+                {
+                    Username = _bot.UserName,
+                    Password = _bot.Password,
+                    IsPersistentSession = false,
+                    //PlatformType = EAuthTokenPlatformType.k_EAuthTokenPlatformType_MobileApp,
+                    //ClientOSType = EOSType.Android9,
+                    Authenticator = new UserConsoleAuthenticator(),
+                });
+
+                code = _bot.SteamGuardAccount.GenerateSteamGuardCode();
+                // Starting polling Steam for authentication response
+                var authSessionViaCredentials = authSession.CredentialsAuthSession;
+                var pollResponse = await authSessionViaCredentials.PollingWaitForResultAsync(code);
+
+                // Logon to Steam with the access token we have received
+                // Note that we are using RefreshToken for logging on here
+                _steamUser.LogOn(new SteamUser.LogOnDetails
+                {
+                    Username = pollResponse.AccountName,
+                    AccessToken = pollResponse.RefreshToken,
+                });
+
+                //_bot.State = BotState.active; // TODO: test
+
+                // AccessToken can be used as the steamLoginSecure cookie
+                // RefreshToken is required to generate new access tokens
+                accessToken = pollResponse.AccessToken;
+                refreshToken = pollResponse.RefreshToken;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Упала авторизация и аутентификация бота");
+                //throw new NotImplementedException();
+            }
         }
 
-        private void OnLoggedOn(SteamUser.LoggedOnCallback callback)
+        private async void OnLoggedOn(SteamUser.LoggedOnCallback callback)
         {
             _bot.Result = callback.Result;
+
             isOk = callback.Result == EResult.OK;
 
             bool isSteamGuard = callback.Result == EResult.AccountLogonDenied;
@@ -251,13 +299,35 @@ namespace SteamDigiSellerBot.Network
                 return;
             }
 
-            string key = callback.WebAPIUserNonce;
+            // The access token expires in 24 hours (at the time of writing) so you will have to renew it.
+            // Parse this token with a JWT library to get the expiration date and set up a timer to renew it.
+            // To renew you will have to call this:
+            // When allowRenewal is set to true, Steam may return new RefreshToken
+            var newTokens = await _steamClient.Authentication.GenerateAccessTokenForAppAsync(callback.ClientSteamID, refreshToken, allowRenewal: false);
 
-            _bot.SteamCookies = GetWebCookies(key);
+            accessToken = newTokens.AccessToken;
+
+            if (!string.IsNullOrEmpty(newTokens.RefreshToken))
+            {
+                refreshToken = newTokens.RefreshToken;
+            }
+            
+            string key = callback.WebAPIUserNonce; // depricated ???
+
+            CookieDictionary cookies = new CookieDictionary
+                        {
+                            { "steamLogin", _bot.UserName },
+                            { "steamLoginSecure", ulong.Parse(_steamClient.SteamID.ConvertToUInt64().ToString()) + "%7C%7C" + accessToken },
+                            { "Steam_Language", "english" },
+                            { "birthtime", "943995601" }
+                        };
+
+            //_bot.SteamCookies = GetWebCookiesAsync().GetAwaiter().GetResult();
+            _bot.SteamCookies = cookies;
 
             System.Diagnostics.Trace.WriteLine("Login Successful!");
 
-            _isRunning = false;
+            //_isRunning = false;
         }
 
         private void OnDisconnected(SteamClient.DisconnectedCallback callback)
@@ -265,7 +335,7 @@ namespace SteamDigiSellerBot.Network
             System.Diagnostics.Trace.WriteLine("Disconnected from Steam");
         }
 
-        private CookieDictionary GetWebCookies(string myLoginKey)
+        private CookieDictionary GetWebCookiesNonce(string myLoginKey) // depricated
         {
             if (_steamClient.SteamID is null)
                 return null;
@@ -274,20 +344,26 @@ namespace SteamDigiSellerBot.Network
             {
                 try
                 {
-                    HttpRequest request = _bot.SteamHttpRequest;
+                    using HttpRequest request = _bot.SteamHttpRequest;
+
+                    request.CharacterSet = Encoding.GetEncoding("UTF-8");
 
                     byte[] sessionKey = CryptoHelper.GenerateRandomBlock(32);
 
-                    RSACrypto rsa = new RSACrypto(KeyDictionary.GetPublicKey(EUniverse.Public));
+                    byte[] encryptedSessionKey;
 
-                    byte[] cryptedSessionKey = rsa.Encrypt(sessionKey);
+                    // ... which is then encrypted with RSA using the Steam system's public key
+                    using (var rsa = new RSACrypto(KeyDictionary.GetPublicKey(_steamClient.Universe)!))
+                    {
+                        encryptedSessionKey = rsa.Encrypt(sessionKey);
+                    }
 
-                    byte[] cryptedLoginKey = CryptoHelper.SymmetricEncrypt(Encoding.ASCII.GetBytes(myLoginKey), sessionKey);
+                    var cryptedLoginKey = CryptoHelper.SymmetricEncrypt(Encoding.ASCII.GetBytes(myLoginKey), sessionKey);
 
-                    string data = $"steamid={_steamClient.SteamID.ConvertToUInt64()}&sessionkey={HttpUtility.UrlEncode(cryptedSessionKey)}&encrypted_loginkey={HttpUtility.UrlEncode(cryptedLoginKey)}";
+                    string data = $"steamid={_steamClient.SteamID.ConvertToUInt64()}&sessionkey={HttpUtility.UrlEncode(encryptedSessionKey)}&encrypted_loginkey={HttpUtility.UrlEncode(cryptedLoginKey)}";
 
-                    string s = request.Post("https://api.steampowered.com/ISteamUserAuth/AuthenticateUser/v0001/", data, "application/x-www-form-urlencoded").ToString();
-
+                    string s = request.Post("http://api.steampowered.com/ISteamUserAuth/AuthenticateUser/v1/", data, "application/x-www-form-urlencoded").ToString();
+                    
                     SteamWebCookies steamWebCookies = JsonConvert.DeserializeObject<SteamWebCookies>(s);
 
                     if (steamWebCookies != null && steamWebCookies.AuthenticateUser != null)
@@ -295,7 +371,7 @@ namespace SteamDigiSellerBot.Network
                         CookieDictionary cookies = new CookieDictionary
                         {
                             { "steamLogin", steamWebCookies.AuthenticateUser.Token },
-                            { "steamLoginSecure", steamWebCookies.AuthenticateUser.TokenSecure },
+                            { "steamLoginSecure", steamWebCookies.AuthenticateUser.TokenSecure }, //ulong.Parse(GetBotSteamID().Item2) + "%7C%7C" + accessToken },
                             { "Steam_Language", "english" },
                             { "birthtime", "943995601" }
                         };
@@ -304,17 +380,39 @@ namespace SteamDigiSellerBot.Network
 
                         _bot.SteamCookies = cookies;
 
-                        return cookies;
-                        //if (IsValidSteamSession())
-                        //{
-                        //    return cookies;
-                        //}
+                        //return cookies;
+                        if (IsValidSteamSession())
+                        {
+                            return cookies;
+                        }
                     }
                 }
-                catch (Exception ex)
-                { 
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
+                catch (HttpException ex)
+                {
+                    Console.WriteLine("Произошла ошибка при работе с HTTP-сервером: {0}", ex.Message);
+
+                    switch (ex.Status)
+                    {
+                        case HttpExceptionStatus.Other:
+                            Console.WriteLine("Неизвестная ошибка");
+                            break;
+
+                        case HttpExceptionStatus.ProtocolError:
+                            Console.WriteLine("Код состояния: {0}", (int)ex.HttpStatusCode);
+                            break;
+
+                        case HttpExceptionStatus.ConnectFailure:
+                            Console.WriteLine("Не удалось соединиться с HTTP-сервером.");
+                            break;
+
+                        case HttpExceptionStatus.SendFailure:
+                            Console.WriteLine("Не удалось отправить запрос HTTP-серверу.");
+                            break;
+
+                        case HttpExceptionStatus.ReceiveFailure:
+                            Console.WriteLine("Не удалось загрузить ответ от HTTP-сервера.");
+                            break;
+                    }
                 }
 
                 Thread.Sleep(TimeSpan.FromSeconds(5));
@@ -408,6 +506,7 @@ namespace SteamDigiSellerBot.Network
             public decimal MaxSendedGiftsSum;
             public DateTime MaxSendedGiftsUpdateDate;
         }
+
         public (bool success, GetMaxSendedGiftsSumResult res) GetMaxSendedGiftsSum(
             CurrencyData currencyData, Bot botData)
         {
@@ -433,6 +532,8 @@ namespace SteamDigiSellerBot.Network
                     if (getHpSuccess && !string.IsNullOrEmpty(getHpRes.html))
                     {
                         html = getHpRes.html;
+                        //Console.WriteLine(html); // debug 
+                        //File.WriteAllText("C://Temp/GetMaxSendedGiftsSum.txt", html); // debug 
                         break;
                     }
                 }
@@ -450,11 +551,15 @@ namespace SteamDigiSellerBot.Network
                          && !x.Contains("Wallet Credit")
                          && !x.Contains("Steam Link"),
                         BotTransactionType.Purchase);
+                //Console.WriteLine(purchases.Count); // debug 
+
                 var refunded =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, 
                         currencyData, x => x.Contains("Refund"),
                         BotTransactionType.Refund);
+                //Console.WriteLine(refunded.Count); // debug 
+
                 var giftRefunded =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, 
@@ -462,6 +567,8 @@ namespace SteamDigiSellerBot.Network
                         x => x.Contains("Gift Purchase") 
                           && x.Contains("wht_refunded"),
                         BotTransactionType.GiftPurchaseRefund);
+                //Console.WriteLine(giftRefunded.Count); // debug 
+
 
                 //проверяем на проблемный регион
                 //юани или иены
@@ -555,7 +662,9 @@ namespace SteamDigiSellerBot.Network
                     var (getHpSuccess, getHpRes) = GetHistoryPageHtml().Result;
                     if (getHpSuccess && !string.IsNullOrEmpty(getHpRes.html))
                     {
-                        html = getHpRes.html;
+                        html = getHpRes.html; 
+                        //Console.WriteLine(html); // debug 
+                        //File.WriteAllText("C://Temp/GetSendedGiftsSum.txt", html); // debug
                         break;
                     }
                 }
@@ -566,6 +675,7 @@ namespace SteamDigiSellerBot.Network
                 var sendedGifts =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, currencyData, x => x.Contains("Gift Purchase"), BotTransactionType.GiftPurchase);
+                //Console.WriteLine(sendedGifts.Count); // debug 
 
                 //если есть настройки для проблемных регионов, взять дату с которой считать покупки
                 //var dateFrom = _bot.BotRegionSetting?.CreateDate ?? DateTime.MinValue;
@@ -725,26 +835,38 @@ namespace SteamDigiSellerBot.Network
             {
                 try
                 {
+                    HtmlDocument doc = new HtmlDocument();
                     HttpRequest request = _bot.SteamHttpRequest;
                     string url = $"https://store.steampowered.com/account/?{engUrlParam}";
                     string s = request.Get(url).ToString();
+                    //File.AppendAllText("C://Temp/html.txt", s);
                     request.Referer = url;
 
-                    string country = s.Substring("<div class=\"country_settings\">\r\n\t\t\t\t\t\t\t<p>", "</span>")
-                            .Substring("Country:\t\t\t\t\t\t\t\t<span class=\"account_data_field\">").Trim();
+                    //string country = s.Substring("<div class=\"country_settings\">\r\n\t\t\t\t\t\t\t<p>", "</span>")
+                    //        .Substring("Country:\t\t\t\t\t\t\t\t<span class=\"account_data_field\">").Trim();
+
+                    doc.LoadHtml(s);
+
+                    var page = doc.DocumentNode;
+                    var config = page.SelectSingleNode("//div[contains(@data-config, 'COUNTRY')]").OuterHtml;
+                    
+                    string pattern = @"&quot;COUNTRY&quot;:&quot;(\w+)&quot;";
+                    Match match = Regex.Match(config, pattern);
+                    string country = match.Groups[1].Value;
 
                     if (string.IsNullOrEmpty(country))
                     {
                         Console.WriteLine($"BOT {_bot.UserName} - error parse region - value: {country}");
                         return (false, "", false);
                     }
+                    else Console.WriteLine($"BOT {_bot.UserName} - parsed region - value: {country}");
 
-                    var codes = JsonConvert.DeserializeObject<SteamCountryCodes>(File.ReadAllText("./SteamCountryCodes.json"));
-                    var code = codes.Countries.FirstOrDefault(c => c.Name == country.Trim())?.Code;
+                    //var codes = JsonConvert.DeserializeObject<SteamCountryCodes>(File.ReadAllText("./SteamCountryCodes.json"));
+                    //var code = codes.Countries.FirstOrDefault(c => c.Name == country.Trim())?.Code;
 
-                    var res = code;
+                    var res = country;
                     var isProblemRegion = false;
-                    if (SteamHelper.IsEuropianCode(code))
+                    if (SteamHelper.IsEuropianCode(country))
                         res = "EU";
 
                     if (res == "JP" || res == "CN")
@@ -999,7 +1121,12 @@ namespace SteamDigiSellerBot.Network
 
                 return s.Contains("Logout");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine($"BOT {_bot.UserName} with invalid session");
+            }
 
             return false;
         }

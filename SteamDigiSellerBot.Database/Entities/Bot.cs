@@ -21,6 +21,7 @@ namespace SteamDigiSellerBot.Database.Entities
         public decimal Balance { get; set; }
 
         public string UserName { get; set; }
+
         public string PersonName { get; set; }
 
         public string Password { get; set; }

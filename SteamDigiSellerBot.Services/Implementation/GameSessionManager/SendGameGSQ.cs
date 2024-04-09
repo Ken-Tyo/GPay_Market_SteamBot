@@ -50,18 +50,21 @@ namespace SteamDigiSellerBot.Services.Implementation
                             //    SendToManager(new Untracked { gsId = gs.Id });
                             //    continue;
                             //}
-                            if (new int[] { 1, 15 }.Contains(gs.StatusId))
+                            if (new int[] {3, 17 }.Contains(gs.StatusId))
                             {
                                 SendToManager(new ToFixStage { gsId = gs.Id });
                                 continue;
                             }
 
 
-                            var (sendRes, readyState) = await gss.SendGame(gs.Id);
-                            SendToManager(sendRes == SendGameStatus.sended
-                                ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
-                                : new SendFailed { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
-                                );
+                            //var (sendRes, readyState) = await gss.SendGame(gs.Id);
+                            //SendToManager(sendRes == SendGameStatus.sended
+                            //    ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
+                            //    : new SendFailed { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
+                            //    );
+
+                            //!!!!!!!!!!!!!!!!
+                            //РАСКОМЕНТИТЬ, КАК ТОЛЬКО ПОЧИНИТЬСЯ ОТПРАВКА
                             continue;
                         }
                         catch (Exception ex)

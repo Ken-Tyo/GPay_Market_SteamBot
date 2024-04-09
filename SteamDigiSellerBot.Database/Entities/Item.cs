@@ -13,6 +13,10 @@ namespace SteamDigiSellerBot.Database.Entities
         public bool IsDeleted { get; set; }
 
         public decimal CurrentDigiSellerPrice { get; set; }
+
+        [NotMapped]
+        public decimal CurrentDigiSellerPriceUsd { get; set; }
+
         public decimal? FixedDigiSellerPrice { get; set; }
 
         public List<string> DigiSellerIds { get; set; }
@@ -33,17 +37,21 @@ namespace SteamDigiSellerBot.Database.Entities
         [ForeignKey("LastSendedRegionId")]
         public virtual SteamCountryCode LastSendedRegion { get; set; }
 
-
+        /// <summary>
+        /// Определяется свойство, которое представляет цену товара в Digiseller с учетом всех скидок и наценок.
+        /// </summary>
         [NotMapped]
         public decimal DigiSellerPriceWithAllSales
         {
             get
             {
+                // Получается цена игры из GamePrices для указанной валюты, если она доступна,
+                // иначе создается новый объект GamePrice с нулевыми ценами.
                 GamePrice gamePrice = this.GamePrices
                         .FirstOrDefault(gp => gp.SteamCurrencyId == this.SteamCurrencyId) ?? 
                         new GamePrice() {  CurrentSteamPrice = 0, OriginalSteamPrice = 0 };
 
-                if (IsFixedPrice)
+                if (IsFixedPrice) // Проверяется, является ли цена фиксированной в форме на front-end.
                 {
                     if (!FixedDigiSellerPrice.HasValue 
                      || gamePrice.CurrentSteamPrice == 0 
@@ -56,12 +64,28 @@ namespace SteamDigiSellerBot.Database.Entities
                 }
                 else
                 {
+                    // Рассчитывается цена на основе текущей цены игры в Steam, процента скидки и дополнительной наценки.
                     decimal price = Math.Round(
                             gamePrice.CurrentSteamPrice -
                             Helpers.Utilities.CalculatePriceMinusPercent(gamePrice.CurrentSteamPrice, SteamPercent) + AddPrice);
 
                     return price > 0 ? price : 100000;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Определяется свойство вне базы данных, которое представляет цену товара в Steam.
+        /// </summary>
+        [NotMapped]
+        public decimal GameSessionSteamPrice
+        {
+            get
+            {
+                GamePrice gamePrice = this.GamePrices
+                        .FirstOrDefault(gp => gp.SteamCurrencyId == this.SteamCurrencyId) ??
+                        new GamePrice() { CurrentSteamPrice = 0, OriginalSteamPrice = 0 };
+                return gamePrice.CurrentSteamPrice;
             }
         }
 

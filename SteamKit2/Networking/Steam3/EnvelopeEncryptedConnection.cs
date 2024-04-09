@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using Org.Mentalis.Network;
+using Org.Mentalis.Network.ProxySocket.Models;
 using SteamKit2.Internal;
 
 namespace SteamKit2

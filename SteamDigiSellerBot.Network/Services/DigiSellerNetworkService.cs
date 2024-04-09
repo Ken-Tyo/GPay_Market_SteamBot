@@ -7,6 +7,7 @@ using SteamDigiSellerBot.Utilities.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using xNet;
@@ -19,6 +20,9 @@ namespace SteamDigiSellerBot.Network.Services
 
         Task<bool> SetDigiSellerItemsCondition(List<string> digiSellerIds, bool condition, string aspNetUserId);
 
+        /// <summary>
+        /// Getting product information using the Digiseller API
+        /// </summary>
         Task<DigiSellerItem> GetItem(string digiSellerId, string aspNetUserId);
 
         Task<DigiSellerSoldItem> GetSoldItemFromCode(string uniqueCode, string aspNetUserId);
@@ -78,6 +82,9 @@ namespace SteamDigiSellerBot.Network.Services
 
                                     string s = request.Post("https://api.digiseller.ru/api/product/edit/base/" + dsId + "?token=" + token, priceParams, "application/json").ToString();
 
+                                    // Избегаем попадать в лимит при обращении к серверу
+                                    Thread.Sleep(TimeSpan.FromMilliseconds(200));
+
                                     if (s.Contains("\"status\":\"Success\""))
                                     {
                                         break;
@@ -107,12 +114,19 @@ namespace SteamDigiSellerBot.Network.Services
             return false;
         }
 
+        /// <summary>
+        /// Getting product information using the Digiseller API
+        /// </summary>
+        /// <param name="digiSellerId">идентификатор товара</param>
+        /// <param name="aspNetUserId">идентификатор пользователя</param>
+        /// <returns>digiSellerItem</returns>
         public async Task<DigiSellerItem> GetItem(string digiSellerId, string aspNetUserId)
         {
             if (!string.IsNullOrEmpty(digiSellerId))
             {
                 for (int t = 0; t < _triesCount; t++)
                 {
+                    // Получается токен (авторизационный ключ) для доступа к API Digiseller
                     string token = await GetDigisellerToken(aspNetUserId);
 
                     if (!string.IsNullOrWhiteSpace(token))
@@ -129,6 +143,9 @@ namespace SteamDigiSellerBot.Network.Services
 
                             string s = request.Get("https://api.digiseller.ru/api/products/" + digiSellerId + "/info?token=" + token + "&currency=RUR").ToString();
 
+                            // Избегаем попадать в лимит при обращении к серверу
+                            Thread.Sleep(TimeSpan.FromSeconds(1));
+
                             DigiSellerItem digiSellerItem = JsonConvert.DeserializeObject<DigiSellerItem>(s);
 
                             return digiSellerItem;
@@ -136,7 +153,7 @@ namespace SteamDigiSellerBot.Network.Services
                         catch (HttpException ex)
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(5));
-                            _logger.LogError(default, ex, "DigiSellerGetItem");
+                            _logger.LogError(default, ex, $"HttpRequest can't 'GetItem' from Digiseller with ID: {digiSellerId}");
                         }
                     }
                 }
@@ -163,8 +180,11 @@ namespace SteamDigiSellerBot.Network.Services
                         Cookies = new CookieDictionary(),
                         UserAgent = Http.ChromeUserAgent()
                     };
-
+                    // Поиск и проверка платежа по уникальному коду
                     string s = request.Get("https://api.digiseller.ru/api/purchases/unique-code/" + uniqueCode + "?token=" + token).ToString();
+
+                    // Избегаем попадать в лимит при обращении к серверу
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
 
                     DigiSellerSoldItem soldItem = JsonConvert.DeserializeObject<DigiSellerSoldItem>(s);
 
@@ -201,6 +221,14 @@ namespace SteamDigiSellerBot.Network.Services
                 }
             }
         }
+
+        /// <summary>
+        /// The method represents the logic of setting the price in rubles for a product in the Digiseller system
+        /// </summary>
+        /// <param name="digiSellerId"></param>
+        /// <param name="price"></param>
+        /// <param name="token"></param>
+        /// <returns>If the request contains Success</returns>
         private bool SetRubPrice(string digiSellerId, decimal price, string token)
         {
             try
@@ -225,19 +253,22 @@ namespace SteamDigiSellerBot.Network.Services
 
                                 string s = request.Post("https://api.digiseller.ru/api/product/edit/base/" + digiSellerId + "?token=" + token, priceParams, "application/json").ToString();
 
+                                // Избегаем попадать в лимит при обращении к серверу
+                                Thread.Sleep(TimeSpan.FromMilliseconds(200));
+
                                 return s.Contains("Success");
                             }
                         }
                         catch (HttpException ex)
                         {
-                            _logger.LogError(default, ex, "DigiSellerGetItem");
+                            _logger.LogError(default, ex, $"HttpRequest can't 'SetRubPrice' to Digiseller with ID: {digiSellerId}");
                         }
 
                         Thread.Sleep(TimeSpan.FromSeconds(5));
                     }
                 }
             }
-            catch (HttpException ex)
+            catch (Exception ex)
             {
                 _logger.LogError(default, ex, "DigiSellerSetRubPrice");
             }
@@ -264,6 +295,9 @@ namespace SteamDigiSellerBot.Network.Services
 
                 var res = request.Post(
                     "https://api.digiseller.ru/api/debates/v2/?token=" + token + "&id_i=" + digisellerDealId, body, "application/json");
+
+                // Избегаем попадать в лимит при обращении к серверу
+                Thread.Sleep(TimeSpan.FromMilliseconds(150));
 
                 return res.IsOK;
             }

@@ -5,7 +5,7 @@
 
 
 using System;
-using Org.Mentalis.Network;
+using Org.Mentalis.Network.ProxySocket.Models;
 using SteamKit2.Discovery;
 
 namespace SteamKit2

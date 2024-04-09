@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting.Server;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SteamDigiSellerBot.Database;
@@ -66,6 +67,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             this._gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             _logger = logger;
         }
+
         public async Task SetSteamContact(GameSession gs, params Option[] opts)
         {
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
@@ -197,28 +199,46 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             return gs;
         }
-    
+
+        /// <summary>
+        /// This array contains the state numbers before the expiration time.
+        /// </summary>
         public static int[] BeforeExpStatuses = new int[] { 16, 14, 13, 12, 9, 8, 7, 6, 5, 4, 3, 17, 18, 19 };
+
+        /// <summary>
+        /// This method allow to check game session expired for further handling.
+        /// </summary>
         public async Task<bool> CheckGameSessionExpiredAndHandle(GameSession gs)
         {
             if (!BeforeExpStatuses.Contains(gs.StatusId))
                 return false;
 
-            var newStatus = gs.StatusId;
-            var res = false;
+            Item item = gs.Item;
+            _logger.LogInformation($"Test in GS ID {gs.Id} for gs.DigiSellerDealPriceUsd = {gs.DigiSellerDealPriceUsd} " +
+                $"and item.CurrentDigiSellerPriceUsd = {item.CurrentDigiSellerPriceUsd}");
+
+            int newStatus = gs.StatusId;
+            bool res = false;
             var nowUtc = DateTime.UtcNow.ToUniversalTime();
             if (gs.Item.IsDiscount && gs.Item.DiscountEndTimeUtc != DateTime.MinValue)
             {
                 var exp = gs.Item.DiscountEndTimeUtc;
                 res = nowUtc > exp;
-                newStatus = 11;//Просрочено (скидки)
+                newStatus = 11; //Просрочено (скидки)
+            }
+            else if (gs.DigiSellerDealPriceUsd < item.CurrentDigiSellerPriceUsd * 0.98m)
+            {
+                //res = true;
+                //newStatus = 11; //Просрочено (скидки)
+                _logger.LogInformation(
+                    $"GS ID {gs.Id} took price {gs.DigiSellerDealPriceUsd} that is less than {item.CurrentDigiSellerPriceUsd} by more than 2%");
             }
             //если ручная сессия 
             else if (String.IsNullOrEmpty(gs.DigiSellerDealId))
             {
                 var exp = gs.ActivationEndDate?.ToUniversalTime();
                 res = exp.HasValue && nowUtc > exp;
-                newStatus = 10;//Просрочено (таймер)
+                newStatus = 10; //Просрочено (таймер)
             }
 
             if (res)
@@ -641,7 +661,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             var (checkFriendErr, friendExists) = await superBot.CheckFriend(profileData.url);
             if (checkFriendErr != null)
-                _logger.LogError(checkFriendErr);
+                _logger.LogError($"CheckFriendErr: {checkFriendErr}");
 
             if (friendExists == true)
             {
@@ -850,7 +870,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     (string acceptErr, bool acceptRes) = await sbot.AcceptFriend(gs.SteamProfileUrl);
                     if (!string.IsNullOrEmpty(acceptErr))
                     {
-                        _logger.LogError(acceptErr);
+                        _logger.LogError($"AcceptErr: {acceptErr}");
                         await updateGsStatus(gs, new ValueJson
                         {
                             message = $"Ошибка при парсинге данных пользователя ботом - {sbot.Bot.UserName}{Environment.NewLine} " +
@@ -866,7 +886,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var (checkFriendErr, checkFriendRes) = await sbot.CheckFriend(gs.SteamProfileUrl);
                     if (!string.IsNullOrEmpty(checkFriendErr))
                     {
-                        _logger.LogError(checkFriendErr);
+                        _logger.LogError($"CheckFriendErr: {checkFriendErr}");
                         gs.StatusId = 7; //Неизвестная ошибка
                         await updateGsStatus(gs, new ValueJson
                         {
@@ -972,9 +992,13 @@ namespace SteamDigiSellerBot.Services.Implementation
             var newPriorityPriceRub = await _currencyDataService
                     .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
 
+            _logger.LogInformation($"GS ID {gs.Id}: Code passed CheckGameSessionExpiredAndHandle and gone to GameReadyToSendStatus.priceChanged, " +
+                $"is it really {newPriorityPriceRub} higher than {gs.PriorityPrice} ???");
+
             //если цена изменилась в большую сторону
             if (newPriorityPriceRub > gs.PriorityPrice)
             {
+                _logger.LogInformation($"GS ID {gs.Id}: if (newPriorityPriceRub > gs.PriorityPrice) is True");
                 var percentDiffMax = gs.MaxSellPercent ?? 3;
                 var percentDiff = ((decimal)(newPriorityPriceRub * 100) / gs.PriorityPrice) - 100;
                 if (percentDiff > percentDiffMax)

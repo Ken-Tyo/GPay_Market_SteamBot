@@ -165,7 +165,7 @@ namespace SteamDigiSellerBot.Controllers
                 User user = await _userManager.GetUserAsync(User);
                 Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
 
-                if (oldItem == null)
+                if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
                     await _itemRepository.AddAsync(item);
                 }

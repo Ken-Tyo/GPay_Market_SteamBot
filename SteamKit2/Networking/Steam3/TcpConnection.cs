@@ -9,8 +9,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Org.Mentalis.Network;
 using Org.Mentalis.Network.ProxySocket;
+using Org.Mentalis.Network.ProxySocket.Models;
 
 namespace SteamKit2
 {
