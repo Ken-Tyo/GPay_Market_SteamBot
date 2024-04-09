@@ -57,11 +57,11 @@ namespace SteamDigiSellerBot.Services.Implementation
                             }
 
 
-                            //var (sendRes, readyState) = await gss.SendGame(gs.Id);
-                            //SendToManager(sendRes == SendGameStatus.sended
-                            //    ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
-                            //    : new SendFailed { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
-                            //    );
+                            var (sendRes, readyState) = await gss.SendGame(gs.Id);
+                            SendToManager(sendRes == SendGameStatus.sended
+                                ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
+                                : new SendFailed { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
+                                );
 
                             //!!!!!!!!!!!!!!!!
                             //РАСКОМЕНТИТЬ, КАК ТОЛЬКО ПОЧИНИТЬСЯ ОТПРАВКА

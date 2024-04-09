@@ -429,10 +429,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                 * Не забываем учитывать игры: CSGO / DayZ / Rust / RainbowSix / Hunt: Showdown - 
                 * в этом случае отправляем с того аккаунта, где нет ограничений на эту игру (Где нет VAC)
                 */
-                var vacFilteredBots = diffFilteredBots.Where(b => !b.VacGames
+                var vacFilteredBots = diffFilteredBots.Where(b => !(b.VacGames?
                                                     .Any(vg => vg.AppId == gs.Item.AppId
                                                             && vg.SubId == gs.Item.SubId
-                                                            && vg.HasVac == true))
+                                                            && vg.HasVac == true) ?? false))
                                             .ToList();
 
                 _logger.LogInformation(
@@ -1142,9 +1142,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return (SendGameStatus.otherError, readyState);
             }
 
-            var sendRes = await sbot.SendGame(
-                gs.Item.AppId,
-                gs.Item.SubId,
+            var sendRes = await sbot.SendGameProto(
+                uint.Parse(gs.Item.AppId),
+                uint.Parse(gs.Item.SubId),
                 gs.Item.IsBundle,
                 gs.SteamProfileGifteeAccountID,
                 gs.SteamProfileName,

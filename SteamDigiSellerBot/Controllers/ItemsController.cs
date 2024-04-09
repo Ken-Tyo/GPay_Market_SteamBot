@@ -121,7 +121,7 @@ namespace SteamDigiSellerBot.Controllers
                     var bots = allBots
                         .Where(b => b.Region == currCountryCode
                                  || (b.Region == "EU" && SteamHelper.IsEuropianCode(currCountryCode)))
-                        .Where(b => !b.VacGames.Any(vg => vg.AppId == appId && vg.SubId == subId && vg.HasVac))
+                        .Where(b => !(b.VacGames?.Any(vg => vg.AppId == appId && vg.SubId == subId && vg.HasVac) ?? false))
                         .ToList();
 
                     itemView.PriceHierarchy[levelNum].Add(new GamePriceViewModel

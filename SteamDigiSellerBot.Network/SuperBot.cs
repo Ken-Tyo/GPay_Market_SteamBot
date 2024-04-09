@@ -11,6 +11,7 @@ using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
 using SteamKit2.Internal;
+using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -24,6 +25,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using ProtoBuf;
 using xNet;
 using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
@@ -31,7 +33,7 @@ using HttpRequest = xNet.HttpRequest;
 
 namespace SteamDigiSellerBot.Network
 {
-    public class SuperBot
+    public partial class SuperBot
     {
         private Bot _bot { get; set; }
         
@@ -44,6 +46,7 @@ namespace SteamDigiSellerBot.Network
         private bool _isRunning { get; set; }
         private string code = string.Empty;
         private string accessToken = string.Empty;
+        public bool Connected => !string.IsNullOrEmpty(accessToken);
         private string refreshToken = string.Empty;
         private string engUrlParam = "l=english";
         private string cartUrlStr => $"https://store.steampowered.com/cart?{engUrlParam}";
@@ -82,7 +85,6 @@ namespace SteamDigiSellerBot.Network
             //_vacGameRepository = vacGameRepository;
 
             _steamUser = _steamClient.GetHandler<SteamUser>();
-
             
             _manager.Subscribe<SteamClient.ConnectedCallback>(OnConnected);
             _manager.Subscribe<SteamClient.DisconnectedCallback>(OnDisconnected);
@@ -238,7 +240,7 @@ namespace SteamDigiSellerBot.Network
                     Authenticator = new UserConsoleAuthenticator(),
                 });
 
-                code = _bot.SteamGuardAccount.GenerateSteamGuardCode();
+                code = _bot.SteamGuardAccount?.GenerateSteamGuardCode();
                 // Starting polling Steam for authentication response
                 var authSessionViaCredentials = authSession.CredentialsAuthSession;
                 var pollResponse = await authSessionViaCredentials.PollingWaitForResultAsync(code);
@@ -959,13 +961,9 @@ namespace SteamDigiSellerBot.Network
             }
         }
 
-        private async Task<(string cartId, string sessionId)> AddToCart(string appId, string subId, bool isBundle = false)
+        public async Task<(string cartId, string sessionId)> AddToCart(string appId, string subId, bool isBundle = false)
         {
-            HttpRequest request = _bot.SteamHttpRequest;
-            var gameUrl = $"https://store.steampowered.com/app/{appId}";
-            (string html, _) = await GetPageHtml(gameUrl);
-
-            string sessionId = html.Substring("var g_sessionID = \"", "\"");
+            var sessionId = await GetSessiondId();
             if (string.IsNullOrWhiteSpace(sessionId))
                 return (null, null);
 
@@ -990,7 +988,7 @@ namespace SteamDigiSellerBot.Network
             }
 
             var cartUrl = new Uri(cartUrlStr);
-            var reqMes = new HttpRequestMessage(HttpMethod.Post, cartUrl);
+            var reqMes = new HttpRequestMessage(HttpMethod.Post, $"https://store.steampowered.com/app/413150");
             reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
 
             var cookies = new Dictionary<string, string>() { 
@@ -998,7 +996,7 @@ namespace SteamDigiSellerBot.Network
                 { "wants_mature_content", "1" }
             };
             using var client = GetDefaultHttpClientBy(cartUrlStr, out HttpClientHandler handler, cookies);
-            using var response = client.Send(reqMes);
+            using var response = await client.SendAsync(reqMes);
             var s = await response.Content.ReadAsStringAsync();
             
             IEnumerable<Cookie> responseCookies = handler.CookieContainer.GetCookies(cartUrl).Cast<Cookie>();
@@ -1018,7 +1016,6 @@ namespace SteamDigiSellerBot.Network
             }
 
             var vacBanByVacGameIdDict = new Dictionary<string, VacGame>();
-
             foreach (var game in vacCheckList)
             {
                 if (game.AppId == "359550") //Tom Clancy's Rainbow Six Siege
@@ -1026,7 +1023,7 @@ namespace SteamDigiSellerBot.Network
                     if (region == "RU" || region == "BY")
                         continue;
                 }
-
+                
                 //vacBanByVacGameIdDict[game.Name] = false;
                 try
                 {
@@ -1099,11 +1096,12 @@ namespace SteamDigiSellerBot.Network
             }
 
             var handler = new HttpClientHandler();
-            handler.Proxy = new WebProxy()
-            {
-                Address = _bot.Proxy.GetProxy(null),
-                Credentials = new NetworkCredential(_bot.Proxy.UserName, _bot.Proxy.Password)
-            };
+            if (_bot.Proxy != null)
+                handler.Proxy = new WebProxy()
+                {
+                    Address = _bot.Proxy.GetProxy(null),
+                    Credentials = new NetworkCredential(_bot.Proxy.UserName, _bot.Proxy.Password)
+                };
             handler.CookieContainer.Add(reqCookies);
 
             var hc = new System.Net.Http.HttpClient(handler);
@@ -1421,19 +1419,20 @@ namespace SteamDigiSellerBot.Network
             return set.Length < 100 && set.Contains(userName);
         }
 
-        private async Task<InitTranResponse> InitSendGameTransaction(
+        private async Task<(InitTranResponse,string)> InitSendGameTransaction(
             string gidShoppingCart, string sessionId, string gifteeAccountId, 
             string receiverName, string comment, string wishes, string signature,
             string countryCode)
         {
             if (string.IsNullOrWhiteSpace(sessionId))
-                return null;
+                return (null,null);
 
             var initTranUrl = "https://checkout.steampowered.com/checkout/inittransaction/";
             var formParams = new RequestParams
             {
                 ["gidShoppingCart"] = gidShoppingCart,
                 ["gidReplayOfTransID"] = -1,
+                ["bUseAccountCart"]= 1,
                 ["PaymentMethod"] = "steamaccount",
                 ["abortPendingTransactions"] = 0,
                 ["bHasCardInfo"] = 0,
@@ -1495,7 +1494,7 @@ namespace SteamDigiSellerBot.Network
             var respObj = JsonConvert.DeserializeObject<InitTranResponse>(s);
             respObj.sessionId = sessionId;
 
-            return respObj;
+            return (respObj,s);
         }
 
         public async Task<(bool, string)> CheckTransactionFinalPrice(
@@ -1527,7 +1526,7 @@ namespace SteamDigiSellerBot.Network
             return (response.StatusCode == System.Net.HttpStatusCode.OK, s);
         }
 
-        public async Task<FinalTranResponse> FinalizeTransaction(
+        public async Task<(FinalTranResponse,string)> FinalizeTransaction(
             string tranId, string sessionId, string beginCheckoutCart)
         {
             var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
@@ -1553,7 +1552,7 @@ namespace SteamDigiSellerBot.Network
             Console.WriteLine(s);
             var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
             
-            return finalTranResp;
+            return (finalTranResp,s);
         }
 
         public async Task<bool> ForgetCart(string sessionId, string beginCheckoutCart)
@@ -1592,36 +1591,61 @@ namespace SteamDigiSellerBot.Network
             [72] = "Подарок невозможно отправить, так как цена в регионе получателя значительно отличается от вашей цены.",
         };
 
+
+        private Semaphore BusyState = new Semaphore(1, 1);
+
         public async Task<SendGameResponse> SendGame(
             string appId, string subId, bool isBundle, string gifteeAccountId, string receiverName, string comment,
             string countryCode)
         {
-            var res = new SendGameResponse();
-
-            //добаляем в корзину
-            var (gidShoppingCart, sessionId) = await AddToCart(appId, subId, isBundle);
-            res.gidShoppingCart = gidShoppingCart;
-            res.sessionId = sessionId;
-
-            if (!string.IsNullOrEmpty(receiverName))
+            if (BusyState.WaitOne())
             {
-                //проверяем что игры такой у пользователя нет
-                var gameExists = await CheckIfGameExists(gidShoppingCart, gifteeAccountId, receiverName);
-                if (gameExists)
+                try
                 {
-                    //проверка что это не исключение
-                    if (appId != "730" && appId != "302670")
+                    var res = new SendGameResponse();
+
+                    //добаляем в корзину
+                    var (gidShoppingCart, sessionId) = await AddToCart(appId, subId, isBundle);
+                    res.gidShoppingCart = gidShoppingCart;
+                    res.sessionId = sessionId;
+
+                    if (!string.IsNullOrEmpty(receiverName))
                     {
-                        res.result = SendeGameResult.gameExists;
-                        return res;
+                        //проверяем что игры такой у пользователя нет
+                        var gameExists = await CheckIfGameExists(gidShoppingCart, gifteeAccountId, receiverName);
+                        if (gameExists)
+                        {
+                            //проверка что это не исключение
+                            if (appId != "730" && appId != "302670")
+                            {
+                                res.result = SendeGameResult.gameExists;
+                                return res;
+                            }
+                        }
                     }
+                    return await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, gidShoppingCart,
+                        sessionId, res);
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    BusyState.Release();
                 }
             }
+            throw new Exception("Не удалось дождаться очереди");
+        }
 
-            var initResp = await InitSendGameTransaction(
+        private async Task<SendGameResponse> StartTransaction(string gifteeAccountId, string receiverName, string comment, string countryCode,
+            string gidShoppingCart, string sessionId, SendGameResponse res)
+        {
+            SendGameResponse sendGame;
+            var (initResp, rI) = await InitSendGameTransaction(
                 gidShoppingCart,
                 sessionId,
-                gifteeAccountId, 
+                gifteeAccountId,
                 receiverName,
                 comment: comment,
                 wishes: "Счастливой игры",
@@ -1640,20 +1664,29 @@ namespace SteamDigiSellerBot.Network
                 res.result = SendeGameResult.error;
                 res.errCode = res.initTranRes.purchaseresultdetail;
                 res.errMessage = mes;
-                return res;
+                if (initResp.purchaseresultdetail == 0)
+                    res.errMessage += "\n\n" + rI;
+                {
+                    sendGame = res;
+                    return sendGame;
+                }
             }
 
-            var (checkFinalPrice, checkRespStr) = await CheckTransactionFinalPrice(initResp.transid, gidShoppingCart);
+            var (checkFinalPrice, checkRespStr) =
+                await CheckTransactionFinalPrice(initResp.transid, gidShoppingCart);
             res.checkFinalPrice = checkFinalPrice;
             res.checkRespStr = checkRespStr;
 
             if (!checkFinalPrice)
             {
                 res.result = SendeGameResult.error;
-                return res;
+                {
+                    sendGame = res;
+                    return sendGame;
+                }
             }
 
-            var finalTranRes = await FinalizeTransaction(
+            var (finalTranRes, fI) = await FinalizeTransaction(
                 initResp.transid, initResp.sessionId, gidShoppingCart);
             res.finalizeTranRes = finalTranRes;
 
@@ -1665,15 +1698,21 @@ namespace SteamDigiSellerBot.Network
                 //Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
                 res.result = SendeGameResult.error;
                 res.errMessage = mes;
+                if (initResp.purchaseresultdetail == 0)
+                    res.errMessage += "\n\n" + fI;
                 res.errCode = finalTranRes.purchaseresultdetail;
-                return res;
+                {
+                    sendGame = res;
+                    return sendGame;
+                }
             }
 
             var forgerCartRes = await ForgetCart(sessionId, gidShoppingCart);
             res.IsCartForgot = forgerCartRes;
 
             res.result = SendeGameResult.sended;
-            return res;
+            sendGame = res;
+            return sendGame;
         }
 
         public async Task<string> CreateInvitatinoLink()
