@@ -11,6 +11,7 @@ import ModalDigisellerEdit from './modalDigisellerEdit';
 import ModalChangePassword from './modalChangePassword';
 import ModalExchangeRates from './modalExchangeRates';
 import EditBotModal from '../bots/modalEdit';
+import OrderCreationInfoModal from '../orders/modalShowInfoList';
 import EditOrderModal from '../orders/modalEdit';
 import Paggination from '../../shared/paggination';
 import {
@@ -28,6 +29,7 @@ import {
   toggleEditBotModal,
   toggleEditOrderModal,
   toggleFilterOrdersModal,
+  toggleOrderCreationInfoModal,
   updateGameSessionsFilter,
   setSelectedBot,
   setStateProp,
@@ -45,6 +47,7 @@ const leftMenu = () => {
     bots,
     editBotModalIsOpen,
     editOrderModalIsOpen,
+    orderCreationInfoIsOpen,
     selectedBot,
     editBotResponse,
     editOrderResponse,
@@ -206,6 +209,18 @@ const leftMenu = () => {
           apiAddGameSession(val);
         }}
       />
+
+      <OrderCreationInfoModal
+        isOpen={orderCreationInfoIsOpen}
+        title={"Список заказов"}
+        onOk={{
+          label: 'OK',
+          action: () => {
+            toggleOrderCreationInfoModal(false)
+          },
+        }}
+      />
+
       <EditBotModal
         isOpen={editBotModalIsOpen}
         value={selectedBot}

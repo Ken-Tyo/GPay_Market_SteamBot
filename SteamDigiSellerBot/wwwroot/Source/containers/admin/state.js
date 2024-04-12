@@ -583,7 +583,14 @@ export const toggleEditItemModal = async (isOpen) => {
   });
 };
 
-export const apiChangeItemBulk = async (SteamPercent, Ids) => {
+export const toggleOrderCreationInfoModal = async(isOpen) => {
+    state.set((value) => {
+        return {
+            ...value,
+            orderCreationInfoIsOpen: isOpen,
+        };
+    });
+};
   setItemsLoading(true);
   let res = await fetch(`/items/bulk/change`, {
     method: 'POST',
@@ -769,4 +776,16 @@ export const apiAddGameSession = async (data) => {
     loading: false,
     errors: errors,
   });
+
+    if (res.ok) {
+        var newUniqueCodes = await res.json();
+        console.log(newUniqueCodes);
+        state.set((value) => {
+            return {
+                ...value,
+                newUniqueCodes: newUniqueCodes,
+            };
+        });
+        toggleOrderCreationInfoModal(true);
+    }
 };
