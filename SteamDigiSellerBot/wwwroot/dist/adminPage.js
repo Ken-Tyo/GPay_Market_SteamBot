@@ -26173,6 +26173,7 @@ var state = es_entity({
     digisellerApiKey: ''
   },
   activeMenuLink: '',
+  newUniqueCodes: [],
   items: [],
   gameSessions: [],
   gameSessionsTotal: 0,
@@ -26231,7 +26232,6 @@ var state = es_entity({
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
   orderCreationInfoIsOpen: false,
-  newUniqueCodes: [],
   wsconn: null
 });
 var initAdmin = /*#__PURE__*/function () {
@@ -54400,8 +54400,6 @@ var modalShowInfoList = function modalShowInfoList(_ref) {
     onOk = _ref.onOk,
     width = _ref.width,
     height = _ref.height;
-  //const initialVal = { newUniqueCodes: [] };
-  //const [val, setVal] = useState(initialVal);
   var _state$use = state.use(),
     newUniqueCodes = _state$use.newUniqueCodes;
   return /*#__PURE__*/react.createElement(ModalBase, {
