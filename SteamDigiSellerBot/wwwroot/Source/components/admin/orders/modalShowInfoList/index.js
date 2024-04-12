@@ -26,7 +26,8 @@ const modalShowInfoList = ({
        <div className={css.content}>
         <div className={css.boxes}>
           <div>
-            <textarea readonly
+            <textarea 
+              readOnly={true}
               rows="18"
               class={css.textarea}
               defaultValue={newUniqueCodes.map(e => getUniqueCodeHref(e)).join("\n")}

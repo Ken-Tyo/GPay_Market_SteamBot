@@ -54412,7 +54412,7 @@ var modalShowInfoList = function modalShowInfoList(_ref) {
   }, /*#__PURE__*/react.createElement("div", {
     className: modalShowInfoList_styles.boxes
   }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
-    readonly: true,
+    readOnly: true,
     rows: "18",
     "class": modalShowInfoList_styles.textarea,
     defaultValue: newUniqueCodes.map(function (e) {
