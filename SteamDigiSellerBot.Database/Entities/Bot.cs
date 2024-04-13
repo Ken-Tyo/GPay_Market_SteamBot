@@ -134,14 +134,14 @@ namespace SteamDigiSellerBot.Database.Entities
         }
 
         [NotMapped]
-        public List<DateTime> Attempts { get; set; }
+        public List<DateTimeOffset> Attempts { get; set; }
 
         private void Attempt_SetArray()
         {
             if (Attempts == null)
             {
                 if (!string.IsNullOrEmpty(SendGameAttemptsArray))
-                    Attempts = System.Text.Json.JsonSerializer.Deserialize<List<DateTime>>(SendGameAttemptsArray);
+                    Attempts = System.Text.Json.JsonSerializer.Deserialize<List<DateTimeOffset>>(SendGameAttemptsArray);
                 else
                     Attempts ??= new();
             }
@@ -153,7 +153,7 @@ namespace SteamDigiSellerBot.Database.Entities
             SendGameAttemptsCount = Attempts.Count;
             return SendGameAttemptsCount;
         }
-        public int Attempt_Add(DateTime tryTime)
+        public int Attempt_Add(DateTimeOffset tryTime)
         {
             Attempt_SetArray();
             Attempts.Add(tryTime);
