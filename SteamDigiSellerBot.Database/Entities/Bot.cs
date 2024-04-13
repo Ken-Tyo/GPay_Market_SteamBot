@@ -7,6 +7,7 @@ using SteamKit2;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -17,6 +18,7 @@ namespace SteamDigiSellerBot.Database.Entities
         public BotState? State { get; set; }
         public DateTimeOffset TempLimitDeadline { get; set; }
         public int SendGameAttemptsCount { get; set; }
+        public string SendGameAttemptsArray { get; set; } = "[]";
 
         public decimal Balance { get; set; }
 
@@ -129,6 +131,41 @@ namespace SteamDigiSellerBot.Database.Entities
         public Bot()
         {
             UserAgent = Http.ChromeUserAgent();
+        }
+
+        [NotMapped]
+        public List<DateTime> Attempts { get; set; }
+
+        private void Attempt_SetArray()
+        {
+            if (Attempts == null)
+            {
+                if (!string.IsNullOrEmpty(SendGameAttemptsArray))
+                    Attempts = System.Text.Json.JsonSerializer.Deserialize<List<DateTime>>(SendGameAttemptsArray);
+                else
+                    Attempts ??= new();
+            }
+            Attempts = Attempts.Where(x => x >= DateTime.Now.AddHours(-1)).ToList();
+        }
+        public int Attempt_Count()
+        {
+            Attempt_SetArray();
+            SendGameAttemptsCount = Attempts.Count;
+            return SendGameAttemptsCount;
+        }
+        public int Attempt_Add(DateTime tryTime)
+        {
+            Attempt_SetArray();
+            Attempts.Add(tryTime);
+            SendGameAttemptsArray= System.Text.Json.JsonSerializer.Serialize(Attempts);
+            SendGameAttemptsCount=Attempts.Count;
+            return SendGameAttemptsCount;
+        }
+        public void Attempt_Reset()
+        {
+            Attempts = new();
+            SendGameAttemptsArray = "[]";
+            SendGameAttemptsCount = 0;
         }
 
         public class VacGame
