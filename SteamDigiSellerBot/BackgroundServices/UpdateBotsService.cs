@@ -101,6 +101,8 @@ namespace SteamDigiSellerBot.Services
                         {
                             (bool stateParsed, BotState state) = //, DateTimeOffset tempLimitDeadline, int count) =
                                        sb.GetBotState(bot);
+                            if (bot.State == BotState.active && bot.TempLimitDeadline > DateTimeOffset.UtcNow.ToUniversalTime())
+                                bot.State = BotState.tempLimit;
                             if (stateParsed)
                             {
                                 bot.State = state;
