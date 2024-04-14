@@ -145,7 +145,7 @@ namespace SteamDigiSellerBot.Database.Entities
             //        Attempts ??= new();
             //}
             SendGameAttemptsArray ??= new();
-            SendGameAttemptsArray = SendGameAttemptsArray.Where(x => x >= DateTime.Now.AddHours(-1)).ToList();
+            SendGameAttemptsArray = SendGameAttemptsArray.Where(x => x >= DateTimeOffset.UtcNow.ToUniversalTime().AddHours(-1)).ToList();
         }
         public int Attempt_Count()
         {
