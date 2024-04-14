@@ -1160,7 +1160,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 //ошибка стима
                 //За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.
-                gs.Bot.TempLimitDeadline = gs.Bot.Attempts.Min().AddHours(1);
+                gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
                 //gs.Bot.Attempt_Reset();
                 gs.Bot.State = BotState.tempLimit;
             }
@@ -1168,7 +1168,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 if (attemptsCount >= 10)
                 {
-                    gs.Bot.TempLimitDeadline = gs.Bot.Attempts.Min().AddHours(1);
+                    gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
                     gs.Bot.State = BotState.tempLimit;
                 }
             }
