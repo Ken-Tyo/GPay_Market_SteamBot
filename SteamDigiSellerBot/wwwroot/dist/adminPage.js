@@ -25433,6 +25433,7 @@ if (true) {
 
 var map = {
 	"./AR.svg": 6569,
+	"./AU.svg": 1334,
 	"./BR.svg": 772,
 	"./CN.svg": 8119,
 	"./CO.svg": 8582,
@@ -25448,7 +25449,8 @@ var map = {
 	"./UA.svg": 1710,
 	"./US.svg": 2172,
 	"./UY.svg": 4758,
-	"./VN.svg": 7375
+	"./VN.svg": 7375,
+	"./default.svg": 1695
 };
 
 
@@ -25478,6 +25480,14 @@ webpackContext.id = 9642;
 
 "use strict";
 module.exports = __webpack_require__.p + "21a07caf2995ef2b021b.svg";
+
+/***/ }),
+
+/***/ 1334:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "99e8e016c7f4e197e924.svg";
 
 /***/ }),
 
@@ -25606,6 +25616,14 @@ module.exports = __webpack_require__.p + "253f5e2df86880111674.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "57b7451cc6a447c1275b.svg";
+
+/***/ }),
+
+/***/ 1695:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "31c51e2457afb4182aa9.svg";
 
 /***/ })
 
@@ -51673,7 +51691,14 @@ var currenciesSymbol = {
 //иконки взяты тут https://icon666.com/ru/search?q=%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F+%D0%97%D0%B5%D0%BB%D0%B0%D0%BD%D0%B4%D0%B8%D1%8F
 var getFlagByRegionCode = function getFlagByRegionCode(code) {
   if (!code) return '';
-  return __webpack_require__(9642)("./".concat(code, ".svg"));
+  var result;
+  try {
+    result = __webpack_require__(9642)("./".concat(code, ".svg"));
+  } catch (_unused) {
+    console.error("\u0418\u043A\u043E\u043D\u043A\u0430 \u0434\u043B\u044F \u0441\u0442\u0440\u0430\u043D\u044B ".concat(code, ".svg \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430. \u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u043B\u0430\u0433"));
+    result = __webpack_require__(1695);
+  }
+  return result;
 };
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalRegionSettingsEdit/textbox/styles.scss
 // extracted by mini-css-extract-plugin

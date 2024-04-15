@@ -25,5 +25,15 @@ export const currenciesSymbol = {
 //иконки взяты тут https://icon666.com/ru/search?q=%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F+%D0%97%D0%B5%D0%BB%D0%B0%D0%BD%D0%B4%D0%B8%D1%8F
 export const getFlagByRegionCode = (code) => {
   if (!code) return '';
-  return require(`../../../icons/flags/${code}.svg`);
+  var result;
+  try{
+    result = require(`../../../icons/flags/${code}.svg`);
+  }
+  catch
+  {
+    console.error(`Иконка для страны ${code}.svg не найдена. Использован нейтральный флаг`);
+    result = require(`../../../icons/flags/default.svg`);
+  }
+  
+  return result;
 };
