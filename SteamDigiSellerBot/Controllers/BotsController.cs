@@ -92,7 +92,8 @@ namespace SteamDigiSellerBot.Controllers
                 bot.IsON = oldBot.IsON;
                 bot.State = oldBot.State;
                 bot.TempLimitDeadline = oldBot.TempLimitDeadline;
-                bot.SendGameAttemptsCount = oldBot.SendGameAttemptsCount;
+                bot.SendGameAttemptsCount = oldBot.Attempt_Count();
+                bot.SendGameAttemptsArray = oldBot.SendGameAttemptsArray;
             }
 
             if (ModelState.ErrorCount > 0)
