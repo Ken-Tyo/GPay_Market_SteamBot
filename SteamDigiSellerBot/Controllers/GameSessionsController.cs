@@ -253,6 +253,8 @@ namespace SteamDigiSellerBot.Controllers
                     .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
 
             var count = Math.Min(req.CopyCount ?? 1, 50);
+
+            var respUniqueCodes = new List<string>();
             for (int i = 0; i < count; i++)
             {
                 var gs = _mapper.Map<GameSession>(req);
@@ -267,9 +269,10 @@ namespace SteamDigiSellerBot.Controllers
                 };
 
                 await _gameSessionRepository.AddAsync(gs);
+                respUniqueCodes.Add(gs.UniqueCode);
             }
 
-            return Ok();
+            return Ok(respUniqueCodes);
         }
 
         [HttpPost, Route("gamesession/steamcontact"), ValidationActionFilter]
