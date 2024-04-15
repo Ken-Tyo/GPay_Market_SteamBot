@@ -25443,6 +25443,7 @@ var map = {
 	"./IN.svg": 4981,
 	"./KW.svg": 6022,
 	"./KZ.svg": 8979,
+	"./NO.svg": 2181,
 	"./NZ.svg": 280,
 	"./RU.svg": 2763,
 	"./TR.svg": 3822,
@@ -25560,6 +25561,14 @@ module.exports = __webpack_require__.p + "01c4cd075863dfe2bdcd.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "5a93e3dfb6c4311bb75a.svg";
+
+/***/ }),
+
+/***/ 2181:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "9c74d639067150dc2d77.svg";
 
 /***/ }),
 
