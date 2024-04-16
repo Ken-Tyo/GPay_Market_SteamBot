@@ -614,11 +614,7 @@ namespace SteamDigiSellerBot.Network
                 decimal maxSendedGiftsSum = (totalPurchaseSum + purchaseCNY + purchaseJPY) - (refundedSum + giftRefundedSum);
 
                 var currency = currencyData.Currencies
-                    .FirstOrDefault(c =>
-                    {
-                        return botData.Region == c.CountryCode
-                            || (botData.Region == "EU" && SteamHelper.IsEuropianCode(c.CountryCode));
-                    });
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryFilter(botData.Region,c.CountryCode));
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
@@ -688,11 +684,7 @@ namespace SteamDigiSellerBot.Network
                         : ToUsdSum(sendedGifts, DateTime.MinValue, currencyData);
 
                 var currency = currencyData.Currencies
-                    .FirstOrDefault(c =>
-                    {
-                        return region == c.CountryCode
-                            || (region == "EU" && SteamHelper.IsEuropianCode(c.CountryCode));
-                    });
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryFilter(region, c.CountryCode));
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
@@ -868,8 +860,8 @@ namespace SteamDigiSellerBot.Network
 
                     var res = country;
                     var isProblemRegion = false;
-                    if (SteamHelper.IsEuropianCode(country))
-                        res = "EU";
+
+                    res = SteamHelper.MapCountryCode(country);
 
                     if (res == "JP" || res == "CN")
                     {

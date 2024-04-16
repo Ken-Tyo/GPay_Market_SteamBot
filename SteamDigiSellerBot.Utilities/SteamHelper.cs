@@ -2,6 +2,7 @@
 using SteamDigiSellerBot.Utilities.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,16 +67,37 @@ namespace SteamDigiSellerBot.Utilities
             number = decimal.Parse(newStr);
             return true;
         }
-
-        public static bool IsEuropianCode(string code)
+        public static bool CurrencyCountryFilter(string region, string countryCode)
         {
-            var europianCodes = new string[] { "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
-                    "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI",
-                    "SK", "FI", "SE"};
-
-            return europianCodes.Contains(code);
+            return region == countryCode
+                             || (region == "EU" && IsEuropianCode(countryCode))
+                             || (region == "CIS$" && cisDollarCodes.Contains(countryCode));
         }
 
+       
+        public static bool IsEuropianCode(string code)
+        {
+            return europianCodes.Contains(code);
+        }
+        private static readonly string[] europianCodes = new string[] { "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
+                    "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI",
+                    "SK", "FI", "SE"};
+        private static readonly string[] cisDollarCodes = new string[] { "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY" };
+
+        public static string MapCountryCode(string code) => code switch
+        {
+            _ when europianCodes.Contains(code) => "EU",
+            _ when cisDollarCodes.Contains(code) => "CIS$",
+            _ => code
+        };
+
+        public static string MapCountryName(string code) => code switch
+        {
+            "EU" => "European Union",
+            "CIS$" => "CIS US Dollar",
+            _ => null
+        };
+            
         public static ProfileDataRes ParseProfileData(string prPage)
         {
             ProfileDataRes profileData = GetProfileDataProfilePage(prPage);

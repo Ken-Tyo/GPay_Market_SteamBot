@@ -1,5 +1,7 @@
 @import '/wwwroot/Source/containers/admin/library';
-
+.scrollableDiv{
+    overflow-y: scroll;
+}
 .priceHierarchyWrapper {
     height: 100%;
     display: flex;

@@ -400,8 +400,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 currCountryName = steamCountries.First(cc => cc.Code == currCountryCode).Name;
 
                 var priceRegionFilteredBots = botFilterRes
-                    .Where(b => b.Region == currCountryCode
-                         || (b.Region == "EU" && SteamHelper.IsEuropianCode(currCountryCode)))
+                    .Where(b => SteamHelper.CurrencyCountryFilter(b.Region, currCountryCode))
                     .ToList();
 
                 _logger.LogInformation(
@@ -561,8 +560,9 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         private string GetBotRegionName(Bot bot)
         {
-            return SteamHelper.IsEuropianCode(bot.Region)
-                ? "European Union"
+            var mapResult = SteamHelper.MapCountryCode(bot.Region);
+            return bot.Region != mapResult
+                ? SteamHelper.MapCountryName(mapResult)
                 : _steamCountryCodeRepository.GetByPredicateAsync(scc => scc.Code == bot.Region).Result?.Name;
         }
 

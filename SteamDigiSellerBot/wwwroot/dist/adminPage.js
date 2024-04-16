@@ -25435,6 +25435,7 @@ var map = {
 	"./AR.svg": 6569,
 	"./AU.svg": 1334,
 	"./BR.svg": 772,
+	"./CIS$.svg": 9709,
 	"./CN.svg": 8119,
 	"./CO.svg": 8582,
 	"./EU.svg": 6850,
@@ -25497,6 +25498,14 @@ module.exports = __webpack_require__.p + "99e8e016c7f4e197e924.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "bcc82b02d812598618ea.svg";
+
+/***/ }),
+
+/***/ 9709:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "847a940358458ad0bc8c.svg";
 
 /***/ }),
 
@@ -42497,7 +42506,7 @@ var products = function products() {
 /* harmony default export */ const products_list = (products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const priceHierarchy_styles = ({"priceHierarchyWrapper":"styles__priceHierarchyWrapper--BPA1u","header":"styles__header--WABmM","left":"styles__left--wqDZS","backBut":"styles__backBut--VZwkZ","but":"styles__but--QgSJV","title":"styles__title--kIZV8","gameName":"styles__gameName--ip3bx","right":"styles__right--NdjV0","content":"styles__content--K8KmI","hierarchy":"styles__hierarchy--md2XP","level":"styles__level--axTIP","prices":"styles__prices--r9iN7","priceItemWrapper":"styles__priceItemWrapper--UXLit","priceItem":"styles__priceItem--zjeK0","nameRow":"styles__nameRow--ohWpB","dot":"styles__dot--SZ5eQ","currName":"styles__currName--cBDtZ","priceRow":"styles__priceRow--ag2f5","warn":"styles__warn--CxOy5","price":"styles__price--TMUwY","editBut":"styles__editBut--Cpua0","percent":"styles__percent--Itd3M","line":"styles__line--oUzUW","lineWrapper":"styles__lineWrapper--_a0US"});
+/* harmony default export */ const priceHierarchy_styles = ({"scrollableDiv":"styles__scrollableDiv--HZ430","priceHierarchyWrapper":"styles__priceHierarchyWrapper--BPA1u","header":"styles__header--WABmM","left":"styles__left--wqDZS","backBut":"styles__backBut--VZwkZ","but":"styles__but--QgSJV","title":"styles__title--kIZV8","gameName":"styles__gameName--ip3bx","right":"styles__right--NdjV0","content":"styles__content--K8KmI","hierarchy":"styles__hierarchy--md2XP","level":"styles__level--axTIP","prices":"styles__prices--r9iN7","priceItemWrapper":"styles__priceItemWrapper--UXLit","priceItem":"styles__priceItem--zjeK0","nameRow":"styles__nameRow--ohWpB","dot":"styles__dot--SZ5eQ","currName":"styles__currName--cBDtZ","priceRow":"styles__priceRow--ag2f5","warn":"styles__warn--CxOy5","price":"styles__price--TMUwY","editBut":"styles__editBut--Cpua0","percent":"styles__percent--Itd3M","line":"styles__line--oUzUW","lineWrapper":"styles__lineWrapper--_a0US"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/left.svg
 const left_namespaceObject = __webpack_require__.p + "1f8b30c7208d1f199375.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/warning.svg
@@ -44693,6 +44702,8 @@ var priceHierarchy = function priceHierarchy() {
   }, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.name))), /*#__PURE__*/react.createElement("div", {
     className: priceHierarchy_styles.right
   }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u0438\u043B\u0430")), /*#__PURE__*/react.createElement("div", {
+    className: "scrollableDiv"
+  }, /*#__PURE__*/react.createElement("div", {
     className: priceHierarchy_styles.content
   }, /*#__PURE__*/react.createElement(TransformWrapper, {
     initialScale: 1,
@@ -44791,7 +44802,7 @@ var priceHierarchy = function priceHierarchy() {
     }), /*#__PURE__*/react.createElement("div", {
       className: priceHierarchy_styles.percent
     }, "(", percentDiff[items[items.length - 1].id].toFixed(1), "%)")));
-  }))))), /*#__PURE__*/react.createElement(modalSetPriceManual, {
+  })))))), /*#__PURE__*/react.createElement(modalSetPriceManual, {
     isOpen: isOpen,
     value: selectedPrice,
     onCancel: function onCancel() {

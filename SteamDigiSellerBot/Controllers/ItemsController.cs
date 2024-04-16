@@ -120,8 +120,7 @@ namespace SteamDigiSellerBot.Controllers
                     var appId = itemView.AppId;
                     var subId = itemView.SubId;
                     var bots = allBots
-                        .Where(b => b.Region == currCountryCode
-                                 || (b.Region == "EU" && SteamHelper.IsEuropianCode(currCountryCode)))
+                        .Where(b => SteamHelper.CurrencyCountryFilter(b.Region, currCountryCode))
                         .Where(b => !(b.VacGames?.Any(vg => vg.AppId == appId && vg.SubId == subId && vg.HasVac) ?? false))
                         .ToList();
 
