@@ -235,8 +235,8 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [HttpGet, Route("items/bulk/reupdate"), ValidationActionFilter]
-        public async Task<IActionResult> BulkChangeAction()
+        [HttpGet, Route("items/bulk/reupdate"), AllowAnonymous]
+        public async Task<IActionResult> BulkReupdateAction()
         {
             
             HashSet<int> idHashSet = new();
