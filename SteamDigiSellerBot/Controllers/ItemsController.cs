@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using SteamDigiSellerBot.ActionFilters;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
@@ -230,6 +231,22 @@ namespace SteamDigiSellerBot.Controllers
 
             await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(
                 items, user.Id);
+
+            return Ok();
+        }
+
+        [HttpGet, Route("items/bulk/reupdate"), ValidationActionFilter]
+        public async Task<IActionResult> BulkChangeAction()
+        {
+            
+            HashSet<int> idHashSet = new();
+            List<Item> items = await _itemRepository
+                .ListAsync(i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
+
+            User user = await _userManager.GetUserAsync(User);
+
+            await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(
+                items, user.Id, reUpdate:true);
 
             return Ok();
         }

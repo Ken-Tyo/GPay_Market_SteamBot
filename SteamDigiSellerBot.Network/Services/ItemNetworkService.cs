@@ -7,6 +7,7 @@ using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Repositories;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +16,10 @@ namespace SteamDigiSellerBot.Network.Services
 {
     public interface IItemNetworkService
     {
-        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId);
+        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
-            bool setName = false, bool onlyBaseCurrency = false);
+            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
     }
 
     public class ItemNetworkService : IItemNetworkService
@@ -51,13 +52,13 @@ namespace SteamDigiSellerBot.Network.Services
 
         public async Task SetPrices(
             string appId, List<Item> items, string aspNetUserId, 
-            bool setName = false, bool onlyBaseCurrency = false)
+            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller=true)
         {
             var itemsSet = items.Select(i => i.SubId).ToHashSet();
-            await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency);
+            await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
-        public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId)
+        public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false)
         {
             var groupedItems =
                 items
@@ -86,16 +87,18 @@ namespace SteamDigiSellerBot.Network.Services
             {
                 var tasks = new List<Task>();
                 var i = 0;
+                ConcurrentBag<Item> toUpdate = new();
                 foreach (var group in chunk)
                 {
                     var gr = group;
-                    tasks.Add(Task.Factory.StartNew(async () => await SetPrices(gr.AppId, gr.Items, aspNetUserId)));
+                    tasks.Add(Task.Factory.StartNew(async () => (await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false, reUpdate: reUpdate)).ForEach(x=> toUpdate.Add(x))));
                     i++;
                     if (i % 10 == 0)
-                        await Task.Delay(10000);
+                        await Task.Delay(1000);
                 }
 
                 await Task.WhenAll(tasks.ToArray());
+                await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
 
                 skipNum += chunkSize;
                 chunk = groupedItems.Skip(skipNum).Take(chunkSize);
@@ -111,12 +114,14 @@ namespace SteamDigiSellerBot.Network.Services
         /// <summary>
         /// This method performs a number of operations to set prices for goods and update information in the database.
         /// </summary>
-        private async Task SetPrices(
+        private async Task<List<Item>> SetPrices(
             string appId,
             HashSet<string> items,
             string aspNetUserId,
             bool setName = false,
-            bool onlyBaseCurrency = false)
+            bool onlyBaseCurrency = false,
+            bool sendToDigiSeller = true,
+            bool reUpdate = false)
         {
             using var db = _contextFactory.CreateDbContext();
             var currencyData = db.CurrencyData.FirstOrDefault();
@@ -181,7 +186,7 @@ namespace SteamDigiSellerBot.Network.Services
                         }
                     }
 
-                    if (item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales && currentSteamPrice > 0)
+                    if ((item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales || reUpdate ) && currentSteamPrice > 0)
                     {
                         item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
                         item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
@@ -194,7 +199,7 @@ namespace SteamDigiSellerBot.Network.Services
                     var digiPriceWithAllSalesInRub =
                         allCurrencies.ConvertToRUB(digiSellerPriceWithAllSales, item.SteamCurrencyId);
 
-                    if (item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub && currentSteamPrice > 0)
+                    if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate) && currentSteamPrice > 0)
                     {
                         item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
                         item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
@@ -218,7 +223,13 @@ namespace SteamDigiSellerBot.Network.Services
             }
 
             if (digiSellerEnable)
-                await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);
+            {
+                if (sendToDigiSeller)
+                    await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);
+                return itemsToDigisellerUpdate;
+            }
+            else
+                return new();
         }
 
 
