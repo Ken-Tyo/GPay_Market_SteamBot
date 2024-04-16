@@ -353,7 +353,7 @@ namespace SteamDigiSellerBot.Network.Services
                             else
                                 _logger.LogError(default,
                                     new Exception($"Ошибка ответа получения ответа обновления цен"),
-                                    $"HttpRequest can't 'SetRubPrice' to Digiseller with answer: " + answer);
+                                    $"HttpRequest failed 'SetRubPriceArrayUpdate' to Digiseller with answer: " + answer);
                         }
                         else
                             _logger.LogError(default, new Exception("Ошибка обновления цен"),
@@ -362,7 +362,7 @@ namespace SteamDigiSellerBot.Network.Services
                     catch (HttpException ex)
                     {
                         _logger.LogError(default, ex,
-                            $"HttpRequest can't 'SetRubPriceArrayUpdate' to Digiseller with IDs: {array.Select(x => x.ProductId.ToString()).Aggregate((a, b) => a + "," + b)}");
+                            $"HttpRequest error {ex.GetType()} {ex.Message} in 'SetRubPriceArrayUpdate' to Digiseller with IDs: {array.Select(x => x.ProductId.ToString()).Aggregate((a, b) => a + "," + b)}");
                     }
 
                     Thread.Sleep(TimeSpan.FromSeconds(30));
@@ -370,7 +370,7 @@ namespace SteamDigiSellerBot.Network.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(default, ex, "SetRubPriceArrayUpdate");
+                _logger.LogError(default, ex, $"Error {ex.GetType()} {ex.Message} in SetRubPriceArrayUpdate");
             }
         }
 
