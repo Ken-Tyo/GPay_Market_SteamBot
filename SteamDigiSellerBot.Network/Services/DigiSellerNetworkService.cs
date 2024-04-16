@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using xNet;
@@ -39,7 +40,7 @@ namespace SteamDigiSellerBot.Network.Services
         private const int _triesCount = 10;
 
         public DigiSellerNetworkService(
-            ILogger<DigiSellerNetworkService> logger, 
+            ILogger<DigiSellerNetworkService> logger,
             ICryptographyUtilityService cryptographyUtilityService,
             IUserDBRepository userDBRepository)
         {
@@ -192,7 +193,7 @@ namespace SteamDigiSellerBot.Network.Services
                 }
             }
             catch (Exception ex)
-            { 
+            {
                 _logger.LogError(default, ex, "GetSoldItemFromCode");
             }
 
@@ -204,22 +205,25 @@ namespace SteamDigiSellerBot.Network.Services
         {
             if (items.Count == 0)
                 return;
-                
+
             string token = await GetDigisellerToken(aspNetUserId);
 
-            foreach (Item item in items)
-            {
-                var it = item;
-                foreach (string digiSellerId in it.DigiSellerIds)
-                {
-                    var currentDigiSellerPrice = it.CurrentDigiSellerPrice;
-                    var dsId = digiSellerId;
-                    await Task.Factory.StartNew(() =>
-                    {
-                        SetRubPrice(dsId, currentDigiSellerPrice, token);
-                    });
-                }
-            }
+            //foreach (Item item in items)
+            //{
+            //    var it = item;
+            //    foreach (string digiSellerId in it.DigiSellerIds)
+            //    {
+            //        var currentDigiSellerPrice = it.CurrentDigiSellerPrice;
+            //        var dsId = digiSellerId;
+            //        await Task.Factory.StartNew(() =>
+            //        {
+            //            SetRubPrice(dsId, currentDigiSellerPrice, token);
+            //        });
+            //    }
+                
+            //}
+
+            await SetRubPriceArrayUpdate(items.SelectMany(x=> x.DigiSellerIds.Select(y => new DigiPriceUpdateArrayItem(long.Parse(y), x.CurrentDigiSellerPrice ))).ToList(), token);
         }
 
         /// <summary>
@@ -276,6 +280,128 @@ namespace SteamDigiSellerBot.Network.Services
             return false;
         }
 
+        async Task SetRubPriceArrayUpdate(List<DigiPriceUpdateArrayItem> array, string token)
+        {
+            try
+            {
+                _logger.LogInformation($"Update prices 'SetRubPriceArrayUpdate' to Digiseller with {array.Count} IDs");
+                array = array.Where(x => x.Price > 0).ToList();
+                if (array.Count == 0)
+                    return;
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    _logger.LogError(default, new Exception("Не указан токет DigiSeler"), $"");
+                    return;
+                }
+                for (int t = 0; t < _triesCount; t++)
+                {
+                    try
+                    {
+                        HttpRequest request = new HttpRequest()
+                        {
+                            Cookies = new CookieDictionary(),
+                            UserAgent = Http.ChromeUserAgent()
+                        };
+
+                        request.AddHeader(HttpHeader.Accept, "application/json");
+
+                        string priceParams = System.Text.Json.JsonSerializer.Serialize(array);
+
+                        var response = request.Post("https://api.digiseller.ru/api/product/edit/prices?token=" + token,
+                            priceParams, "application/json");
+                        if (response.IsOK)
+                        {
+                            var answer = response.ToString();
+                            if (Guid.TryParse(answer, out _))
+                            {
+                                Thread.Sleep(TimeSpan.FromSeconds(20));
+                                while (true)
+                                {
+                                    HttpRequest checkStatus = new HttpRequest()
+                                    {
+                                        Cookies = request.Cookies,
+                                        UserAgent = request.UserAgent
+                                    };
+                                    checkStatus.AddHeader(HttpHeader.Accept, "application/json");
+                                    var statusAnswer =
+                                        System.Text.Json.JsonSerializer.Deserialize<DigiUpdatePriceStatus>(
+                                            checkStatus
+                                                .Get(
+                                                    "\t\r\nhttps://api.digiseller.ru/api/product/edit/UpdateProductsTaskStatus?taskId=" +
+                                                    answer + "&token=" + token).ToString());
+                                    switch (statusAnswer.Status)
+                                    {
+                                        case 0:
+                                            break;
+                                        case 1:
+                                            break;
+                                        case 2:
+                                            _logger.LogError(default, new Exception("Ошибка обновления цен"),
+                                                $"Проблемные товары:\n" + statusAnswer.ErrorsDescriptions
+                                                    .Select(x => x.Key + "   " + x.Value)
+                                                    .Aggregate((a, b) => a + "\n" + b));
+                                            return;
+                                        case 3:
+                                            _logger.LogInformation(
+                                                $"Successed update prices 'SetRubPriceArrayUpdate' to Digiseller with IDs: {array.Select(x => x.ProductId.ToString()).Aggregate((a, b) => a + "," + b)}");
+                                            return;
+                                    }
+
+                                    Thread.Sleep(TimeSpan.FromSeconds(10));
+                                }
+                            }
+                            else
+                                _logger.LogError(default,
+                                    new Exception($"Ошибка ответа получения ответа обновления цен"),
+                                    $"HttpRequest can't 'SetRubPrice' to Digiseller with answer: " + answer);
+                        }
+                        else
+                            _logger.LogError(default, new Exception("Ошибка обновления цен"),
+                                $"Failed send prices 'SetRubPriceArrayUpdate' to Digiseller with IDs: {array.Select(x => x.ProductId.ToString()).Aggregate((a, b) => a + "," + b)}");
+                    }
+                    catch (HttpException ex)
+                    {
+                        _logger.LogError(default, ex,
+                            $"HttpRequest can't 'SetRubPriceArrayUpdate' to Digiseller with IDs: {array.Select(x => x.ProductId.ToString()).Aggregate((a, b) => a + "," + b)}");
+                    }
+
+                    Thread.Sleep(TimeSpan.FromSeconds(30));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(default, ex, "SetRubPriceArrayUpdate");
+            }
+        }
+
+        public class DigiPriceUpdateArrayItem
+        {
+            public DigiPriceUpdateArrayItem(long id, decimal price)
+            {
+                ProductId = id;
+                Price = price;
+            }
+
+            public long ProductId { get; set; }
+            public decimal Price { get; set; }
+        }
+
+
+        public class DigiUpdatePriceStatus
+        {
+            public string TaskId { get; set; }
+            public int Status { get; set; }
+            public int SuccessCount { get; set; }
+            public int ErrorCount { get; set; }
+            public int TotalCount { get; set; }
+            public DigiUpdatePriceStatusErrors[] ErrorsDescriptions { get; set; }
+        }
+
+        public class DigiUpdatePriceStatusErrors
+        {
+            public string Key { get; set; }
+            public string Value { get; set; }
+        }
 
         public async Task<bool> SendOrderChatMessage(string digisellerDealId, string message, string aspNetUserId)
         {
