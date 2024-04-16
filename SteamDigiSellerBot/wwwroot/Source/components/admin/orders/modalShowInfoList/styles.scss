@@ -1,0 +1,52 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding-top: 8px;
+    margin-bottom: 23px;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .boxes {
+        display: flex;
+        justify-content: center;
+
+        .textarea {
+            color: $white-1;
+            display: block;
+            width: 600px;
+            padding: 20px;
+            background: #512068;
+            border-radius: 15px;
+            border: 0;
+            outline: 0;
+            font-size: 14px;
+            height: 330px;
+
+            resize:none;
+            
+
+            &::-webkit-scrollbar {
+                width: 14px
+            }
+            &::-webkit-scrollbar-thumb {
+                border: 6px solid transparent;
+                background-clip: padding-box;
+                border-radius: 9999px;
+                background-color: #83409b
+            }
+
+            
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    flex: 0 1 123px;
+}

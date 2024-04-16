@@ -225,5 +225,6 @@ ALTER TABLE "Bots" ADD "GameSendLimitAddParam" int not null default 0;
 ALTER TABLE "Bots" ADD "SteamCurrencyId" int null references "Currencies"("SteamId");
 ALTER TABLE "Bots" ADD "MaxSendedGiftsUpdateDate" timestamp without time zone not null default now();
 
-
+14.04
+alter table "Bots" ADD "SendGameAttemptsArray" JSON null
 

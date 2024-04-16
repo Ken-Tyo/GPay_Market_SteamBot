@@ -472,7 +472,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             filterParams.SelectedRegion = $"{currCountryName} ({currCountryCode})";
             filterParams.WithMaxBalance = gs.Item.CurrentDigiSellerPrice >= 1000;
 
-            return (filterParams, res.OrderBy(b => b.SendGameAttemptsCount).ToList());
+            return (filterParams, res.OrderBy(b => b.Attempt_Count()).ToList());
         }
 
         public async Task<Bot> GetFirstBotByItemCriteration(GameSession gs, IEnumerable<Bot> botFilterRes)
@@ -500,8 +500,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 //то отправляем заявку с того аккаунта,
                 //где меньше всего ПОПЫТОК отправленных игр по лимиту за час
-                botFilterRes = botFilterRes
-                    .OrderBy(b => b.SendGameAttemptsCount);
+                botFilterRes = botFilterRes.OrderBy(b => b.Attempt_Count());
             }
 
             _logger.LogInformation(
@@ -1156,32 +1155,21 @@ namespace SteamDigiSellerBot.Services.Implementation
             var now = timeForTest ?? DateTimeOffset.UtcNow.ToUniversalTime();
 
             //обновляем состояние бота
+            var attemptsCount= gs.Bot.Attempt_Add(now);
             if (sendRes.initTranRes != null && sendRes.initTranRes.purchaseresultdetail == 53)
             {
                 //ошибка стима
                 //За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.
-                gs.Bot.TempLimitDeadline = now.AddHours(1);
-                gs.Bot.SendGameAttemptsCount = 0;
+                gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
+                //gs.Bot.Attempt_Reset();
                 gs.Bot.State = BotState.tempLimit;
             }
             else
             {
-                gs.Bot.SendGameAttemptsCount += 1;
-                if (gs.Bot.SendGameAttemptsCount == 1)
+                if (attemptsCount >= 10)
                 {
-                    gs.Bot.TempLimitDeadline = now.AddHours(1);
-                }
-                else if (gs.Bot.SendGameAttemptsCount == 10)
-                {
-                    gs.Bot.SendGameAttemptsCount = 0;
-                    if (now <= gs.Bot.TempLimitDeadline)
-                    {
-                        gs.Bot.State = BotState.tempLimit;
-                    }
-                    else
-                    {
-                        gs.Bot.State = BotState.active;
-                    }
+                    gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
+                    gs.Bot.State = BotState.tempLimit;
                 }
             }
 
@@ -1329,7 +1317,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var attemptsLeftForActiveBots = 0;
             if (activeBots.Any())
             {
-                attemptsLeftForActiveBots = (activeBots.Count() * 10) - activeBots.Sum(b => b.SendGameAttemptsCount);
+                attemptsLeftForActiveBots = (activeBots.Count() * 10) - activeBots.Sum(b => b.Attempt_Count());
                 if (position <= attemptsLeftForActiveBots)
                 {
                     gs.QueuePosition = position;
@@ -1348,7 +1336,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (limitBots.Count() == 1)
             {
-                var attemptsLeftForTempLimitBots = (limitBots.Count() * 10) - limitBots.Sum(b => b.SendGameAttemptsCount);
+                var attemptsLeftForTempLimitBots = (limitBots.Count() * 10) - limitBots.Sum(b => b.Attempt_Count());
                 var timeLeft = limitBots
                         .OrderBy(b => b.TempLimitDeadline)
                         .First().TempLimitDeadline.ToUniversalTime() - DateTimeOffset.UtcNow.ToUniversalTime();

@@ -13,6 +13,7 @@ import comment from '../../../../icons/comment.svg';
 import check from '../../../../icons/check.svg';
 import retry from '../../../../icons/retry.svg';
 import stop from '../../../../icons/stop.svg';
+import { getUniqueCodeHref } from '../../../../utils/common';
 import {
   state,
   apiSetGameSessionStatus,
@@ -63,7 +64,7 @@ const products = () => {
                     <div>{i.uniqueCode}</div>
                     <div className={css.ref}>
                       <a
-                        href={`${origin}?uniquecode=${i.uniqueCode}`}
+                        href={getUniqueCodeHref(i.uniqueCode)}
                         target="_blank"
                       >
                         <img src={referArrow} />

@@ -101,9 +101,13 @@ namespace SteamDigiSellerBot.Services
                         {
                             (bool stateParsed, BotState state) = //, DateTimeOffset tempLimitDeadline, int count) =
                                        sb.GetBotState(bot);
+                            
                             if (stateParsed)
                             {
+                           
                                 bot.State = state;
+                                if (bot.State == BotState.active && bot.TempLimitDeadline > DateTimeOffset.UtcNow.ToUniversalTime())
+                                    bot.State = BotState.tempLimit;
                                 await botRepository.UpdateFieldAsync(bot, b => b.State);
                             }
                             else
@@ -175,7 +179,7 @@ namespace SteamDigiSellerBot.Services
         {
             var deadline = bot.TempLimitDeadline.ToUniversalTime();
             var now = DateTimeOffset.UtcNow.ToUniversalTime();
-            if (now > deadline)
+            if (now > deadline && bot.Attempt_Count()<= 6)
             {
                 //bot.State = BotState.active;
                 return true;

@@ -6,6 +6,7 @@ const signalR = require('@microsoft/signalr');
 export const state = entity({
   user: { digisellerId: '', digisellerApiKey: '' },
   activeMenuLink: '',
+  newUniqueCodes:[],
   items: [],
   gameSessions: [],
   gameSessionsTotal: 0,
@@ -51,6 +52,7 @@ export const state = entity({
   botRegionSetEditModalIsOpen: false,
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
+  orderCreationInfoIsOpen:false,
   wsconn: null,
 });
 
@@ -583,6 +585,15 @@ export const toggleEditItemModal = async (isOpen) => {
   });
 };
 
+export const toggleOrderCreationInfoModal = async(isOpen) => {
+    state.set((value) => {
+        return {
+            ...value,
+            orderCreationInfoIsOpen: isOpen,
+        };
+    });
+};
+
 export const apiChangeItemBulk = async (SteamPercent, Ids) => {
   setItemsLoading(true);
   let res = await fetch(`/items/bulk/change`, {
@@ -769,4 +780,16 @@ export const apiAddGameSession = async (data) => {
     loading: false,
     errors: errors,
   });
+
+    if (res.ok) {
+        var newUniqueCodes = await res.json();
+        console.log(newUniqueCodes);
+        state.set((value) => {
+            return {
+                ...value,
+                newUniqueCodes: newUniqueCodes,
+            };
+        });
+        toggleOrderCreationInfoModal(true);
+    }
 };
