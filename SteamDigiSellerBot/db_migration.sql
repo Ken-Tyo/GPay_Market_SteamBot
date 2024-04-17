@@ -226,5 +226,7 @@ ALTER TABLE "Bots" ADD "SteamCurrencyId" int null references "Currencies"("Steam
 ALTER TABLE "Bots" ADD "MaxSendedGiftsUpdateDate" timestamp without time zone not null default now();
 
 14.04
-alter table "Bots" ADD "SendGameAttemptsArray" JSON null
+alter table "Bots" ADD "SendGameAttemptsArray" JSON null;
 
+17.04
+ALTER TABLE "Items" ADD "CurrentDigiSellerPriceNeedAttention" boolean default false;

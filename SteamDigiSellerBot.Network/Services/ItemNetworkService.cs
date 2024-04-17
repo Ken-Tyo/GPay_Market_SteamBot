@@ -189,9 +189,18 @@ namespace SteamDigiSellerBot.Network.Services
 
                     if ((item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales || reUpdate ) && currentSteamPrice > 0)
                     {
-                        item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
-                        item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
-                        itemsToDigisellerUpdate.Add(item);
+                        if (digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice < 0.1M)
+                        {
+                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} со скидкой в {(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 10):0.0}%");
+                            item.CurrentDigiSellerPriceNeedAttention = true;
+                        }
+                        else
+                        {
+                            item.CurrentDigiSellerPriceNeedAttention = false;
+                            item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
+                            item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
+                            itemsToDigisellerUpdate.Add(item);
+                        }
                         db.Entry(item).State = EntityState.Modified;
                     }
                 }
@@ -202,9 +211,18 @@ namespace SteamDigiSellerBot.Network.Services
 
                     if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate) && currentSteamPrice > 0)
                     {
-                        item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
-                        item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
-                        itemsToDigisellerUpdate.Add(item);
+                        if (digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice < 0.1M)
+                        {
+                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} со скидкой в {(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 10):0.0}%");
+                            item.CurrentDigiSellerPriceNeedAttention = true;
+                        }
+                        else
+                        {
+                            item.CurrentDigiSellerPriceNeedAttention = false;
+                            item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
+                            item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
+                            itemsToDigisellerUpdate.Add(item);
+                        }
                         db.Entry(item).State = EntityState.Modified;
                     }
                 }
