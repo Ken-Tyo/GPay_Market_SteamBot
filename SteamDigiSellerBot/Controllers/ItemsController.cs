@@ -235,7 +235,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [HttpGet, Route("items/bulk/reupdate"), AllowAnonymous]
+        [HttpGet, Route("items/bulk/reupdate"), ValidationActionFilter]
         public async Task<IActionResult> BulkReupdateAction()
         {
             
@@ -246,7 +246,7 @@ namespace SteamDigiSellerBot.Controllers
             User user = await _userManager.GetUserAsync(User);
 
             await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(
-                items, user?.Id, reUpdate:true);
+                items, user.Id, reUpdate:true);
 
             return Ok();
         }

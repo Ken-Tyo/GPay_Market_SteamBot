@@ -81,7 +81,7 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount);
+            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount) / 3d);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
             while (chunk.Count() > 0)
             {
@@ -98,13 +98,14 @@ namespace SteamDigiSellerBot.Network.Services
                 }
 
                 await Task.WhenAll(tasks.ToArray());
+                _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update "+ toUpdate.Count);
                 await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
-
+                _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: finished update " + toUpdate.Count);
                 skipNum += chunkSize;
                 chunk = groupedItems.Skip(skipNum).Take(chunkSize);
                 if (chunk.Count() > 0)
                 {
-                    var timeoutSec = 50;
+                    var timeoutSec = 40;
                     _logger.LogInformation($"\n-----------\ntimeout ({timeoutSec} sec.) before next chunk parsing...\n-----------\n");
                     await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                 }

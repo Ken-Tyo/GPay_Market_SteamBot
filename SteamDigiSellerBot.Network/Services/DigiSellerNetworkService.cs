@@ -314,7 +314,7 @@ namespace SteamDigiSellerBot.Network.Services
                             var answer = response.ToString();
                             if (Guid.TryParse(answer, out _))
                             {
-                                Thread.Sleep(TimeSpan.FromSeconds(20));
+                                Thread.Sleep(TimeSpan.FromSeconds(30));
                                 while (true)
                                 {
                                     HttpRequest checkStatus = new HttpRequest()
@@ -337,7 +337,7 @@ namespace SteamDigiSellerBot.Network.Services
                                             break;
                                         case 2:
                                             _logger.LogError(default, new Exception("Ошибка обновления цен"),
-                                                $"Проблемные товары:\n" + statusAnswer.ErrorsDescriptions
+                                                $"SetRubPriceArrayUpdate: Проблемные товары:\n" + statusAnswer.ErrorsDescriptions
                                                     .Select(x => x.Key + "   " + x.Value)
                                                     .Aggregate((a, b) => a + "\n" + b));
                                             return;
@@ -347,7 +347,7 @@ namespace SteamDigiSellerBot.Network.Services
                                             return;
                                     }
 
-                                    Thread.Sleep(TimeSpan.FromSeconds(10));
+                                    Thread.Sleep(TimeSpan.FromSeconds(15));
                                 }
                             }
                             else
