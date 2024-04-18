@@ -17,6 +17,7 @@ namespace SteamDigiSellerBot.Network.Services
     public interface IItemNetworkService
     {
         Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false);
+        Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
@@ -99,8 +100,12 @@ namespace SteamDigiSellerBot.Network.Services
 
                 await Task.WhenAll(tasks.ToArray());
                 _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update "+ toUpdate.Count);
-                await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
-                _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: finished update " + toUpdate.Count);
+                if (toUpdate.Count > 0)
+                {
+                    await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
+                    _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: finished update " + toUpdate.Count);
+                }
+
                 skipNum += chunkSize;
                 chunk = groupedItems.Skip(skipNum).Take(chunkSize);
                 if (chunk.Count() > 0)
@@ -109,6 +114,19 @@ namespace SteamDigiSellerBot.Network.Services
                     _logger.LogInformation($"\n-----------\ntimeout ({timeoutSec} sec.) before next chunk parsing...\n-----------\n");
                     await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                 }
+            }
+        }
+
+        public async Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId)
+        {
+            using var db = _contextFactory.CreateDbContext();
+            // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
+            var toUpdate = db.Items.Include(i => i.GamePrices).Where(i => itemsId.Contains(i.Id)).ToList();
+            _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: items to update " + toUpdate.Count);
+            if (toUpdate.Count > 0)
+            {
+                await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate, aspNetUserId);
+                _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: finished update " + toUpdate.Count);
             }
         }
 
