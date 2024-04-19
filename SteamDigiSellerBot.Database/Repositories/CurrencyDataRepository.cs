@@ -91,7 +91,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 14, Code = "THB", SteamSymbol = "฿", Position = 110, Name = "Тайский бат", CountryCode = "TH" },
             new Currency { SteamId = 15, Code = "VND", SteamSymbol = "₫", Position = 6, Name = "Вьетнамский донг", CountryCode = "VN" },
             new Currency { SteamId = 16, Code = "KRW", SteamSymbol = "₩", Position = 111, Name = "Южнокорейская вона", CountryCode = "KR" },
-            new Currency { SteamId = 17, Code = "TRY", SteamSymbol = "TL", Position = 5, Name = "Турецкая лира", CountryCode = "TR" },
+            //new Currency { SteamId = 17, Code = "TRY", SteamSymbol = "TL", Position = 5, Name = "Турецкая лира", CountryCode = "TR" },
             new Currency { SteamId = 18, Code = "UAH", SteamSymbol = "₴", Position = 3, Name = "Украинская гривна", CountryCode = "UA" },
             new Currency { SteamId = 19, Code = "MXN", SteamSymbol = "Mex$", Position = 112, Name = "Мексиканское песо", CountryCode = "MX" },
             new Currency { SteamId = 20, Code = "CAD", SteamSymbol = "CDN$", Position = 113, Name = "Канадский доллар", CountryCode = "CA" },
@@ -107,7 +107,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 30, Code = "TWD", SteamSymbol = "NT$", Position = 120, Name = "Новый тайваньский доллар", CountryCode = "TW" },
             new Currency { SteamId = 31, Code = "SAR", SteamSymbol = "SR", Position = 121, Name = "Саудовский риял", CountryCode = "SA" },
             new Currency { SteamId = 32, Code = "AED", SteamSymbol = "AED", Position = 122, Name = "Дирхам ОАЭ", CountryCode = "AE" },
-            new Currency { SteamId = 34, Code = "ARS", SteamSymbol = "ARS$", Position = 123, Name = "Аргентинское песо", CountryCode = "AR" },
+            //new Currency { SteamId = 34, Code = "ARS", SteamSymbol = "ARS$", Position = 123, Name = "Аргентинское песо", CountryCode = "AR" },
             new Currency { SteamId = 35, Code = "ILS", SteamSymbol = "₪", Position = 13, Name = "Новый израильский шекель", CountryCode = "IL" },
             new Currency { SteamId = 37, Code = "KZT", SteamSymbol = "₸", Position = 2, Name = "Казахстанский тенге", CountryCode = "KZ" },
             new Currency { SteamId = 38, Code = "KWD", SteamSymbol = "KD", Position = 8, Name = "Кувейтский динар", CountryCode = "KW" },
@@ -116,6 +116,8 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 41, Code = "UYU", SteamSymbol = "$U", Position = 7, Name = "Уругвайское песо", CountryCode = "UY" },
             new Currency { SteamId = 101, Code = "CIS", SteamSymbol = "$", Position = 101, Name = "CIS - U.S. Dollar", CountryCode = "AZ" },
             new Currency { SteamId = 102, Code = "SAsia", SteamSymbol = "$", Position = 102, Name = "South Asia - USD", CountryCode = "PK" },
+            new Currency { SteamId = 103, Code = "TRY", SteamSymbol = "$", Position = 103, Name = "Турецкая лира", CountryCode = "TR" },
+            new Currency { SteamId = 104, Code = "ARS", SteamSymbol = "$", Position = 104, Name = "Аргентинское песо", CountryCode = "AR" },
         };
 
         public CurrencyDataRepository(DatabaseContext databaseContext, ISteamProxyRepository steamProxyRepository)
