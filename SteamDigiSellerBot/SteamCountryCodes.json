@@ -1003,6 +1003,10 @@
     {
       "code": "AZ",
       "name": "CIS - U.S. Dollar"
+    },
+    {
+      "code": "PK",
+      "name": "South Asia - USD"
     }
   ]
 }

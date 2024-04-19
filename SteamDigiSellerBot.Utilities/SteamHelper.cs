@@ -80,24 +80,28 @@ namespace SteamDigiSellerBot.Utilities
         private static readonly string[] cisDollarCodes = new string[] { "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY" };
 
         //private static readonly string[] sasiaDollarCodes = new string[] { "BD", "BT", "NP", "PK", "LK" };
+        private static readonly string[] sasiaDollarCodes = new string[] { "1" };
 
         public static bool CurrencyCountryFilter(string region, string countryCode)
         {
             return region == countryCode
                              || (region == "EU" && IsEuropianCode(countryCode))
-                             || (region == "CIS$" && cisDollarCodes.Contains(countryCode));
+                             || (region == "CIS$" && cisDollarCodes.Contains(countryCode))
+                             || (region == "SAsia$" && sasiaDollarCodes.Contains(countryCode));
         }
         public static string MapCountryCode(string code) => code switch
         {
             _ when europianCodes.Contains(code) => "EU",
             _ when cisDollarCodes.Contains(code) => "CIS$",
+            _ when sasiaDollarCodes.Contains(code) => "SAsia$",
             _ => code
         };
 
         public static string MapCountryName(string code) => code switch
         {
             "EU" => "European Union",
-            "CIS$" => "CIS US Dollar",
+            "CIS$" => "CIS - U.S. Dollar",
+            "SAsia$" => "South Asia - USD",
             _ => null
         };
             

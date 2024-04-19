@@ -68,7 +68,9 @@ namespace SteamDigiSellerBot.Database.Repositories
             { "KWD", "KD" },
             { "QAR", "QR" },
             { "CRC", "₡" },
-            { "UYU", "$U" }
+            { "UYU", "$U" },
+            { "CIS", "$" },
+            { "SAsia", "$" },
         };
 
         public static readonly List<Currency> DefaultSteamCurrencies = new List<Currency>()
@@ -113,7 +115,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 40, Code = "CRC", SteamSymbol = "₡", Position = 125, Name = "Коста-риканский колон", CountryCode = "CR" },
             new Currency { SteamId = 41, Code = "UYU", SteamSymbol = "$U", Position = 7, Name = "Уругвайское песо", CountryCode = "UY" },
             new Currency { SteamId = 101, Code = "CIS", SteamSymbol = "$", Position = 101, Name = "CIS - U.S. Dollar", CountryCode = "AZ" },
-            //new Currency { SteamId = 102, Code = "Asia", SteamSymbol = "$", Position = 102, Name = "South Asia - USD", CountryCode = "PK" },
+            new Currency { SteamId = 102, Code = "SAsia", SteamSymbol = "$", Position = 102, Name = "South Asia - USD", CountryCode = "PK" },
         };
 
         public CurrencyDataRepository(DatabaseContext databaseContext, ISteamProxyRepository steamProxyRepository)
