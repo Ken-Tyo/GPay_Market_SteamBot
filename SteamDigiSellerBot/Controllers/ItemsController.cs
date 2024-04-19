@@ -234,7 +234,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [HttpGet, Route("items/bulk/reupdate"), AllowAnonymous]
+        [HttpGet, Route("items/bulk/reupdate"), ValidationActionFilter]
         public async Task<IActionResult> BulkReupdateAction()
         {
             
@@ -245,10 +245,27 @@ namespace SteamDigiSellerBot.Controllers
             User user = await _userManager.GetUserAsync(User);
 
             await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(
-                items, user?.Id, reUpdate:true);
+                items, user.Id, reUpdate:true);
 
             return Ok();
         }
+
+        [HttpGet, Route("items/digi/update/price"), ValidationActionFilter]
+        public async Task<IActionResult> UpdateDigiPrices()
+        {
+
+            HashSet<int> idHashSet = new();
+            List<int> items = (await _itemRepository
+                .ListAsync(i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted)
+                ).Select(x=> x.Id).Distinct().ToList();
+
+            User user = await _userManager.GetUserAsync(User);
+
+            await _itemNetworkService.GroupedItemsByAppIdAndSendCurrentPrices(items, user.Id);
+
+            return Ok();
+        }
+
 
         [HttpPost, Route("items/bulk/delete"), ValidationActionFilter]
         public async Task<IActionResult> BulkDelete(BulkDeleteRequest request)

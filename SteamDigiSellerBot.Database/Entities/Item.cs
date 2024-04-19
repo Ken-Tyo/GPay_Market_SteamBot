@@ -14,6 +14,8 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public decimal CurrentDigiSellerPrice { get; set; }
 
+        public bool CurrentDigiSellerPriceNeedAttention { get; set; }
+
         [NotMapped]
         public decimal CurrentDigiSellerPriceUsd { get; set; }
 

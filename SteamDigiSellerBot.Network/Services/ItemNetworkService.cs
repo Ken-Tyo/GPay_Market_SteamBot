@@ -17,6 +17,7 @@ namespace SteamDigiSellerBot.Network.Services
     public interface IItemNetworkService
     {
         Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false);
+        Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
@@ -81,7 +82,7 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount);
+            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount) / 3d);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
             while (chunk.Count() > 0)
             {
@@ -98,16 +99,34 @@ namespace SteamDigiSellerBot.Network.Services
                 }
 
                 await Task.WhenAll(tasks.ToArray());
-                await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
+                _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update "+ toUpdate.Count);
+                if (toUpdate.Count > 0)
+                {
+                    await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
+                    _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: finished update " + toUpdate.Count);
+                }
 
                 skipNum += chunkSize;
                 chunk = groupedItems.Skip(skipNum).Take(chunkSize);
                 if (chunk.Count() > 0)
                 {
-                    var timeoutSec = 50;
+                    var timeoutSec = 40;
                     _logger.LogInformation($"\n-----------\ntimeout ({timeoutSec} sec.) before next chunk parsing...\n-----------\n");
                     await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                 }
+            }
+        }
+
+        public async Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId)
+        {
+            using var db = _contextFactory.CreateDbContext();
+            // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
+            var toUpdate = db.Items.Include(i => i.GamePrices).Where(i => itemsId.Contains(i.Id)).ToList();
+            _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: items to update " + toUpdate.Count);
+            if (toUpdate.Count > 0)
+            {
+                await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate, aspNetUserId);
+                _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: finished update " + toUpdate.Count);
             }
         }
 
@@ -189,9 +208,18 @@ namespace SteamDigiSellerBot.Network.Services
 
                     if ((item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales || reUpdate ) && currentSteamPrice > 0)
                     {
-                        item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
-                        item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
-                        itemsToDigisellerUpdate.Add(item);
+                        if (item.CurrentDigiSellerPrice != 0 && digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice < 0.1M)
+                        {
+                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} со скидкой в {(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 10):0.0}%");
+                            item.CurrentDigiSellerPriceNeedAttention = true;
+                        }
+                        else
+                        {
+                            item.CurrentDigiSellerPriceNeedAttention = false;
+                            item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
+                            item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
+                            itemsToDigisellerUpdate.Add(item);
+                        }
                         db.Entry(item).State = EntityState.Modified;
                     }
                 }
@@ -202,9 +230,18 @@ namespace SteamDigiSellerBot.Network.Services
 
                     if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate) && currentSteamPrice > 0)
                     {
-                        item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
-                        item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
-                        itemsToDigisellerUpdate.Add(item);
+                        if (item.CurrentDigiSellerPrice!= 0 && digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice < 0.1M)
+                        {
+                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} со скидкой в {(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 10):0.0}%");
+                            item.CurrentDigiSellerPriceNeedAttention = true;
+                        }
+                        else
+                        {
+                            item.CurrentDigiSellerPriceNeedAttention = false;
+                            item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
+                            item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
+                            itemsToDigisellerUpdate.Add(item);
+                        }
                         db.Entry(item).State = EntityState.Modified;
                     }
                 }
