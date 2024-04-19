@@ -67,12 +67,7 @@ namespace SteamDigiSellerBot.Utilities
             number = decimal.Parse(newStr);
             return true;
         }
-        public static bool CurrencyCountryFilter(string region, string countryCode)
-        {
-            return region == countryCode
-                             || (region == "EU" && IsEuropianCode(countryCode))
-                             || (region == "CIS$" && cisDollarCodes.Contains(countryCode));
-        }
+        
 
        
         public static bool IsEuropianCode(string code)
@@ -84,6 +79,14 @@ namespace SteamDigiSellerBot.Utilities
                     "SK", "FI", "SE"};
         private static readonly string[] cisDollarCodes = new string[] { "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY" };
 
+        //private static readonly string[] sasiaDollarCodes = new string[] { "BD", "BT", "NP", "PK", "LK" };
+
+        public static bool CurrencyCountryFilter(string region, string countryCode)
+        {
+            return region == countryCode
+                             || (region == "EU" && IsEuropianCode(countryCode))
+                             || (region == "CIS$" && cisDollarCodes.Contains(countryCode));
+        }
         public static string MapCountryCode(string code) => code switch
         {
             _ when europianCodes.Contains(code) => "EU",

@@ -127,6 +127,7 @@ namespace SteamDigiSellerBot.Network.Services
             var currencyData = db.CurrencyData.FirstOrDefault();
 
             var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
+            allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();
             // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
             var dbItems = db.Items.Include(i => i.GamePrices).Where(i => i.AppId == appId && items.Contains(i.SubId)).ToList();
 
@@ -214,7 +215,7 @@ namespace SteamDigiSellerBot.Network.Services
                     var digiItem = await _digiSellerNetworkService
                        .GetItem(item.DigiSellerIds.FirstOrDefault(), aspNetUserId);
 
-                    item.Name = digiItem.Product?.Name;
+                    item.Name = digiItem?.Product?.Name ?? "default";
                     db.Entry(item).State = EntityState.Modified;
                 }
                 // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?

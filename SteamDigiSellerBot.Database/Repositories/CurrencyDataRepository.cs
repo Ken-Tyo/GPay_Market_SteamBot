@@ -112,6 +112,8 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 39, Code = "QAR", SteamSymbol = "QR", Position = 124, Name = "Катарский риал", CountryCode = "QA" },
             new Currency { SteamId = 40, Code = "CRC", SteamSymbol = "₡", Position = 125, Name = "Коста-риканский колон", CountryCode = "CR" },
             new Currency { SteamId = 41, Code = "UYU", SteamSymbol = "$U", Position = 7, Name = "Уругвайское песо", CountryCode = "UY" },
+            new Currency { SteamId = 101, Code = "CIS", SteamSymbol = "$", Position = 101, Name = "CIS - U.S. Dollar", CountryCode = "AZ" },
+            //new Currency { SteamId = 102, Code = "Asia", SteamSymbol = "$", Position = 102, Name = "South Asia - USD", CountryCode = "PK" },
         };
 
         public CurrencyDataRepository(DatabaseContext databaseContext, ISteamProxyRepository steamProxyRepository)
@@ -146,6 +148,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 var currency = currencyData.Currencies[i];
                 try
                 {
+                    //https://store.steampowered.com/api/appdetails?appids=236790&filters=price_overview&cc=US
                     res = await client.GetAsync(
                         $"http://steamcommunity.com/market/priceoverview/?appid=440&currency={currency.SteamId}&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
                     json = await res.Content.ReadAsStringAsync();
