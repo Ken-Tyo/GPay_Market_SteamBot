@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Network.Services
                     var digiItem = await _digiSellerNetworkService
                        .GetItem(item.DigiSellerIds.FirstOrDefault(), aspNetUserId);
 
-                    item.Name = digiItem?.Product?.Name ?? "default";
+                    item.Name = digiItem?.Product?.Name ?? "Error";
                     db.Entry(item).State = EntityState.Modified;
                 }
                 // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?

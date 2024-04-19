@@ -42253,7 +42253,11 @@ var products = function products() {
         }
       }, /*#__PURE__*/react.createElement("div", {
         className: list_styles.product
-      }, /*#__PURE__*/react.createElement("div", null, i.name), /*#__PURE__*/react.createElement("div", null, i.digiSellerIds && i.digiSellerIds.join(','))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
+      }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("span", {
+        style: i.name === "Error" ? {
+          color: "#A12C2C"
+        } : {}
+      }, i.name)), /*#__PURE__*/react.createElement("div", null, i.digiSellerIds && i.digiSellerIds.join(','))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
         className: list_styles.cell
       }, /*#__PURE__*/react.createElement("div", {
         className: list_styles.price
