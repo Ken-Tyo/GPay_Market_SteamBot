@@ -216,22 +216,25 @@ namespace SteamDigiSellerBot.Network.Services
 
             string token = await GetDigisellerToken(aspNetUserId);
 
-            //foreach (Item item in items)
-            //{
-            //    var it = item;
-            //    foreach (string digiSellerId in it.DigiSellerIds)
-            //    {
-            //        var currentDigiSellerPrice = it.CurrentDigiSellerPrice;
-            //        var dsId = digiSellerId;
-            //        await Task.Factory.StartNew(() =>
-            //        {
-            //            SetRubPrice(dsId, currentDigiSellerPrice, token);
-            //        });
-            //    }
+            if (items.Count == 1)
+            {
+                foreach (Item item in items)
+                {
+                    var it = item;
+                    foreach (string digiSellerId in it.DigiSellerIds)
+                    {
+                        var currentDigiSellerPrice = it.CurrentDigiSellerPrice;
+                        var dsId = digiSellerId;
+                        await Task.Factory.StartNew(() => { SetRubPrice(dsId, currentDigiSellerPrice, token); });
+                    }
 
-            //}
-
-            await SetRubPriceArrayUpdate(items.SelectMany(x => x.DigiSellerIds.Select(y => new DigiPriceUpdateArrayItem(long.Parse(y), x.CurrentDigiSellerPrice))).ToList(), token);
+                }
+            }
+            else
+                await SetRubPriceArrayUpdate(
+                    items.SelectMany(x =>
+                        x.DigiSellerIds.Select(y =>
+                            new DigiPriceUpdateArrayItem(long.Parse(y), x.CurrentDigiSellerPrice))).ToList(), token);
         }
 
         /// <summary>

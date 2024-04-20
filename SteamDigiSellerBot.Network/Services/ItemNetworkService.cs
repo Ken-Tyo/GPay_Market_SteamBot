@@ -211,7 +211,7 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         if (item.CurrentDigiSellerPrice != 0 && digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice < 0.1M)
                         {
-                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} со скидкой в {(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 10):0.0}%");
+                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} ({(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 100):0.0}%)");
                             item.CurrentDigiSellerPriceNeedAttention = true;
                         }
                         else
@@ -233,7 +233,7 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         if (item.CurrentDigiSellerPrice!= 0 && digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice < 0.1M)
                         {
-                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} со скидкой в {(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 10):0.0}%");
+                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiPriceWithAllSalesInRub} ({(digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice * 100):0.0}%)");
                             item.CurrentDigiSellerPriceNeedAttention = true;
                         }
                         else
