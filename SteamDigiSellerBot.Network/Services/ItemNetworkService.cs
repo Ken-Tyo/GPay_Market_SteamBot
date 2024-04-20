@@ -230,7 +230,7 @@ namespace SteamDigiSellerBot.Network.Services
                     var digiPriceWithAllSalesInRub =
                         allCurrencies.ConvertToRUB(digiSellerPriceWithAllSales, item.SteamCurrencyId);
 
-                    if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate || (prices != null && ids.Any(id => prices.ContainsKey(id) && prices[id] != digiSellerPriceWithAllSales))) && currentSteamPrice > 0)
+                    if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate || (prices != null && ids.Any(id => prices.ContainsKey(id) && prices[id] != digiPriceWithAllSalesInRub))) && currentSteamPrice > 0)
                     {
                         if (item.CurrentDigiSellerPrice!= 0 && digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice < 0.1M)
                         {
