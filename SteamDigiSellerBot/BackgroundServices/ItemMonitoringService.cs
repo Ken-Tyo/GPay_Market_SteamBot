@@ -39,7 +39,7 @@ namespace SteamDigiSellerBot.Services
                 {
                     var itemRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IItemRepository>();
                     var items = await itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted);
-
+                    
                     if (items.Count > 0)
                     {
                         var steamProxyRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ISteamProxyRepository>();
@@ -49,6 +49,18 @@ namespace SteamDigiSellerBot.Services
                         var adminID = _configuration["adminID"];
                         var _userManager = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
                         User user = await _userManager.FindByIdAsync(adminID);
+
+                        Dictionary<int, decimal> prices = null;
+                        try
+                        {
+                            prices = await _serviceProvider.CreateScope().ServiceProvider
+                                .GetRequiredService<IDigiSellerNetworkService>().GetPriceList(user.DigisellerID);
+                            _logger.LogInformation($"ItemMonitoringService: Получена информация по {prices.Count} товарам из Digiseller");
+                        }
+                        catch
+                        {
+                            _logger.LogError($"ItemMonitoringService: Ошибка при получении товаров из Digiseller");
+                        }
 
                         await itemNetworkService.GroupedItemsByAppIdAndSetPrices(
                             items, user.Id);

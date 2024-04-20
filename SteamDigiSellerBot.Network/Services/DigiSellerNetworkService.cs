@@ -9,9 +9,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Npgsql.TypeMapping;
+using SteamKit2.Internal;
 using xNet;
+using static SteamDigiSellerBot.Network.Services.DigiSellerNetworkService;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -29,6 +35,8 @@ namespace SteamDigiSellerBot.Network.Services
         Task<DigiSellerSoldItem> GetSoldItemFromCode(string uniqueCode, string aspNetUserId);
 
         Task<bool> SendOrderChatMessage(string digisellerDealId, string message, string aspNetUserId);
+
+        Task<Dictionary<int, decimal>> GetPriceList(string sellerId);
     }
 
     public class DigiSellerNetworkService : IDigiSellerNetworkService
@@ -220,10 +228,10 @@ namespace SteamDigiSellerBot.Network.Services
             //            SetRubPrice(dsId, currentDigiSellerPrice, token);
             //        });
             //    }
-                
+
             //}
 
-            await SetRubPriceArrayUpdate(items.SelectMany(x=> x.DigiSellerIds.Select(y => new DigiPriceUpdateArrayItem(long.Parse(y), x.CurrentDigiSellerPrice ))).ToList(), token);
+            await SetRubPriceArrayUpdate(items.SelectMany(x => x.DigiSellerIds.Select(y => new DigiPriceUpdateArrayItem(long.Parse(y), x.CurrentDigiSellerPrice))).ToList(), token);
         }
 
         /// <summary>
@@ -477,5 +485,131 @@ namespace SteamDigiSellerBot.Network.Services
 
             return res;
         }
+
+        public async Task<Dictionary<int, decimal>> GetPriceList(string sellerId)
+        {
+            Dictionary<int, decimal> result = new();
+            HttpClient request = new HttpClient();
+            request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //var categories = await request.GetFromJsonAsync<CategoriesList>("https://api.digiseller.ru/api/categories?seller_id=" + sellerId);
+            //Thread.Sleep(500);
+            //foreach (var c in categories.category)
+            //{
+            //    var count = int.Parse(c.cnt);
+            //    if (count == 0)
+            //        continue;
+            await GetProducts(sellerId, request, result);
+
+
+            //}
+            return result;
+        }
+
+        private static async Task GetProducts(string sellerId, HttpClient request, Dictionary<int, decimal> result, string categoryId=null)
+        {
+            var goods = await request.GetFromJsonAsync<ProductsList>(
+                $"https://api.digiseller.ru/api/shop/products?seller_id={sellerId}&page=1&rows=500&order=name&currency=RUR"+ (categoryId==null? "" : "&category_id="+ categoryId));
+            var count = int.Parse(goods.totalPages);
+            if (goods.product==null)
+                return;
+            goods.product.Where(x => !result.ContainsKey(int.Parse(x.id))).ToList().ForEach(x => result.Add(int.Parse(x.id), decimal.Parse(x.price_rub)));
+            foreach (var c in goods.categories)
+            {
+                if (c.id != categoryId)
+                {
+                    Thread.Sleep(500);
+                    await GetProducts(sellerId, request, result, c.id);
+                }
+            }
+            for (int i = 2; i <= count; i++)
+            {
+                Thread.Sleep(1000);
+                goods = await request.GetFromJsonAsync<ProductsList>(
+                    $"https://api.digiseller.ru/api/shop/products?seller_id={sellerId}&page={i}&rows=500&order=name&currency=RUR" + (categoryId == null ? "" : "&category_id=" + categoryId));
+                goods.product.Where(x => !result.ContainsKey(int.Parse(x.id))).ToList()
+                    .ForEach(x => result.Add(int.Parse(x.id), decimal.Parse(x.price_rub)));
+            }
+        }
+
+
+        public class CategoriesList
+        {
+            public int retval { get; set; }
+            public string retdesc { get; set; }
+            public Category[] category { get; set; }
+        }
+
+        public class Category
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string cnt { get; set; }
+            public SubCategory sub { get; set; }
+        }
+
+        public class SubCategory
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string cnt { get; set; }
+            public string hasImg { get; set; }
+        }
+
+
+        public class ProductsList
+        {
+            public string retval { get; set; }
+            public string retdesc { get; set; }
+            public string lang { get; set; }
+            public string totalPages { get; set; }
+            public string totalItems { get; set; }
+            public Breadcrumb[] breadCrumbs { get; set; }
+            public Category[] categories { get; set; }
+            public Product[] product { get; set; }
+        }
+
+        public class Breadcrumb
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+        }
+
+
+        public class Product
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string cntImg { get; set; }
+            public string info { get; set; }
+            public string price { get; set; }
+            public string base_price { get; set; }
+            public string base_currency { get; set; }
+            public string currency { get; set; }
+            public string price_rub { get; set; }
+            public string price_usd { get; set; }
+            public string price_eur { get; set; }
+            public string price_uah { get; set; }
+            public string partner_comiss { get; set; }
+            public string agency_id { get; set; }
+            public string collection { get; set; }
+            public int is_available { get; set; }
+            public int has_discount { get; set; }
+            public int id_present { get; set; }
+            public Sale_Info sale_info { get; set; }
+            public string label { get; set; }
+        }
+
+        public class Sale_Info
+        {
+            public string common_base_price { get; set; }
+            public string common_price_usd { get; set; }
+            public string common_price_rur { get; set; }
+            public string common_price_eur { get; set; }
+            public string common_price_uah { get; set; }
+            public string sale_end { get; set; }
+            public string sale_percent { get; set; }
+        }
+
+
     }
 }

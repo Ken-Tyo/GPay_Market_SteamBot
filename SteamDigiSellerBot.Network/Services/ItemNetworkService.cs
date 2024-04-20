@@ -11,12 +11,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace SteamDigiSellerBot.Network.Services
 {
     public interface IItemNetworkService
     {
-        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false);
+        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=true, Dictionary<int,decimal> prices=null);
         Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
@@ -59,7 +60,7 @@ namespace SteamDigiSellerBot.Network.Services
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
-        public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false)
+        public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null)
         {
             var groupedItems =
                 items
@@ -92,7 +93,7 @@ namespace SteamDigiSellerBot.Network.Services
                 foreach (var group in chunk)
                 {
                     var gr = group;
-                    tasks.Add(Task.Factory.StartNew(async () => (await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false, reUpdate: reUpdate)).ForEach(x=> toUpdate.Add(x))));
+                    tasks.Add(Task.Factory.StartNew(async () => (await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false, reUpdate: reUpdate, prices: prices)).ForEach(x=> toUpdate.Add(x))));
                     i++;
                     if (i % 10 == 0)
                         await Task.Delay(1000);
@@ -140,7 +141,8 @@ namespace SteamDigiSellerBot.Network.Services
             bool setName = false,
             bool onlyBaseCurrency = false,
             bool sendToDigiSeller = true,
-            bool reUpdate = false)
+            bool reUpdate = false,
+            Dictionary<int, decimal> prices = null)
         {
             using var db = _contextFactory.CreateDbContext();
             var currencyData = db.CurrencyData.FirstOrDefault();
@@ -169,6 +171,7 @@ namespace SteamDigiSellerBot.Network.Services
                     item.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == item.SteamCurrencyId)?.CurrentSteamPrice ?? 0;
                 var digiSellerPriceWithAllSales = item.DigiSellerPriceWithAllSales;
 
+                var ids = ListItemsId(item.DigiSellerIds, _logger);
                 if (item.IsFixedPrice)
                 {
 
@@ -204,8 +207,7 @@ namespace SteamDigiSellerBot.Network.Services
                             }
                         }
                     }
-
-                    if ((item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales || reUpdate ) && currentSteamPrice > 0)
+                    if ((item.CurrentDigiSellerPrice != digiSellerPriceWithAllSales || reUpdate || (prices!=null && ids.Any(id=> prices.ContainsKey(id) && prices[id]!=digiSellerPriceWithAllSales))) && currentSteamPrice > 0)
                     {
                         if (item.CurrentDigiSellerPrice != 0 && digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice < 0.1M)
                         {
@@ -227,7 +229,7 @@ namespace SteamDigiSellerBot.Network.Services
                     var digiPriceWithAllSalesInRub =
                         allCurrencies.ConvertToRUB(digiSellerPriceWithAllSales, item.SteamCurrencyId);
 
-                    if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate) && currentSteamPrice > 0)
+                    if (( item.CurrentDigiSellerPrice != digiPriceWithAllSalesInRub || reUpdate || (prices != null && ids.Any(id => prices.ContainsKey(id) && prices[id] != digiSellerPriceWithAllSales))) && currentSteamPrice > 0)
                     {
                         if (item.CurrentDigiSellerPrice!= 0 && digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice < 0.1M)
                         {
@@ -267,6 +269,20 @@ namespace SteamDigiSellerBot.Network.Services
             }
             else
                 return new();
+        }
+
+        List<int> ListItemsId(List<string> ids, ILogger logger)
+        {
+            return ids?.Select(x =>
+            {
+                if (int.TryParse(x, out int value))
+                    return value;
+                else
+                {
+                    logger.LogWarning("ItemNetworkService.ListItemsId: Обнаружен невалидный товар " + x);
+                    return (int?) null;
+                }
+            }).Where(x => x != null).Cast<int>().ToList() ?? new List<int>();
         }
 
 
