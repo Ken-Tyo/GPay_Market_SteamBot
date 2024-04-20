@@ -17,7 +17,7 @@ namespace SteamDigiSellerBot.Network.Services
 {
     public interface IItemNetworkService
     {
-        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=true, Dictionary<int,decimal> prices=null);
+        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false, Dictionary<int,decimal> prices=null);
         Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
@@ -100,6 +100,7 @@ namespace SteamDigiSellerBot.Network.Services
                 }
 
                 await Task.WhenAll(tasks.ToArray());
+                await Task.Delay(100);
                 _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update "+ toUpdate.Count);
                 if (toUpdate.Count > 0)
                 {
