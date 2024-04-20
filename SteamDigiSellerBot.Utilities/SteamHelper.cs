@@ -2,7 +2,9 @@
 using SteamDigiSellerBot.Utilities.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using xNet;
@@ -66,16 +68,64 @@ namespace SteamDigiSellerBot.Utilities
             number = decimal.Parse(newStr);
             return true;
         }
+        
 
+        public static class Regions
+        {
+            public const string EU = "EU";
+            public const string CIS = "CIS$";
+            public const string SAsia = "SAsia$";
+            public const string TR = "TR$";
+            public const string AR = "AR$";
+
+        }
         public static bool IsEuropianCode(string code)
         {
-            var europianCodes = new string[] { "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
-                    "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI",
-                    "SK", "FI", "SE"};
-
             return europianCodes.Contains(code);
         }
+        private static readonly string[] europianCodes = new string[] { "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
+                    "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI",
+                    "SK", "FI", "SE"};
+        private static readonly string[] cisDollarCodes = new string[] { "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY" };
 
+        private static readonly string[] sAsiaDollarCodes = new string[] { "BD", "BT", "NP", "PK", "LK" };
+
+        //mena
+        private static readonly string[] trDollarCodes = new string[] { "BH", "EG", "IQ", "JO", "LB", "OM", "PS", "TR", "YE", "DZ", "BO", "MA", "TN", "SS" };
+
+        //latam
+        private static readonly string[] arDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
+
+
+        public static bool CurrencyCountryFilter(string region, string countryCode)
+        {
+            return region == countryCode
+                             || (region == Regions.EU && IsEuropianCode(countryCode))
+                             || (region == Regions.CIS && cisDollarCodes.Contains(countryCode))
+                             || (region == Regions.SAsia && sAsiaDollarCodes.Contains(countryCode))
+                             || (region == Regions.TR && trDollarCodes.Contains(countryCode))
+                             || (region == Regions.AR && arDollarCodes.Contains(countryCode));
+        }
+        public static string MapCountryCode(string code) => code switch
+        {
+            _ when europianCodes.Contains(code) => Regions.EU,
+            _ when cisDollarCodes.Contains(code) => Regions.CIS,
+            _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
+            _ when trDollarCodes.Contains(code) => Regions.TR,
+            _ when arDollarCodes.Contains(code) => Regions.AR,
+            _ => code
+        };
+
+        public static string MapCountryName(string code) => code switch
+        {
+            Regions.EU => "European Union",
+            Regions.CIS => "CIS - U.S. Dollar",
+            Regions.SAsia => "South Asia - USD",
+            Regions.TR => "Турецкая лира",
+            Regions.AR => "Аргентинское песо",
+            _ => null
+        };
+            
         public static ProfileDataRes ParseProfileData(string prPage)
         {
             ProfileDataRes profileData = GetProfileDataProfilePage(prPage);

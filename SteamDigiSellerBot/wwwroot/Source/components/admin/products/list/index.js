@@ -177,7 +177,7 @@ const products = () => {
                 <div className={css.cell} style={{ justifyContent: 'start' }}>
                   <div className={css.product}>
                     {/* <div>Полное название товара Digiseller</div> */}
-                    <div>{i.name}</div>
+                    <div><span style={i.name === "Error"?{color : "#A12C2C"}:{}}>{i.name}</span></div>
                     <div>{i.digiSellerIds && i.digiSellerIds.join(',')}</div>
                   </div>
                 </div>

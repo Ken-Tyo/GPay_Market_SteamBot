@@ -25435,6 +25435,7 @@ var map = {
 	"./AR.svg": 6569,
 	"./AU.svg": 1334,
 	"./BR.svg": 772,
+	"./CIS$.svg": 9709,
 	"./CN.svg": 8119,
 	"./CO.svg": 8582,
 	"./EU.svg": 6850,
@@ -25497,6 +25498,14 @@ module.exports = __webpack_require__.p + "99e8e016c7f4e197e924.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "bcc82b02d812598618ea.svg";
+
+/***/ }),
+
+/***/ 9709:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "f5b93a5daffcd9703f73.svg";
 
 /***/ }),
 
@@ -42244,7 +42253,11 @@ var products = function products() {
         }
       }, /*#__PURE__*/react.createElement("div", {
         className: list_styles.product
-      }, /*#__PURE__*/react.createElement("div", null, i.name), /*#__PURE__*/react.createElement("div", null, i.digiSellerIds && i.digiSellerIds.join(','))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
+      }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("span", {
+        style: i.name === "Error" ? {
+          color: "#A12C2C"
+        } : {}
+      }, i.name)), /*#__PURE__*/react.createElement("div", null, i.digiSellerIds && i.digiSellerIds.join(','))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
         className: list_styles.cell
       }, /*#__PURE__*/react.createElement("div", {
         className: list_styles.price

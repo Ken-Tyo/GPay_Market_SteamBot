@@ -42,6 +42,7 @@ const priceHierarchy = () => {
         </div>
         <div className={css.right}>Настроить правила</div>
       </div>
+
       <div className={css.content}>
         <TransformWrapper
           initialScale={1}
@@ -148,6 +149,7 @@ const priceHierarchy = () => {
             </div>
           </TransformComponent>
         </TransformWrapper>
+
       </div>
 
       <ModalSetItemPriceManual

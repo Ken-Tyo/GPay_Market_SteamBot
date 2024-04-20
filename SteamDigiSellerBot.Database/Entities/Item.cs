@@ -69,7 +69,7 @@ namespace SteamDigiSellerBot.Database.Entities
                     // Рассчитывается цена на основе текущей цены игры в Steam, процента скидки и дополнительной наценки.
                     decimal price = Math.Round(
                             gamePrice.CurrentSteamPrice -
-                            Helpers.Utilities.CalculatePriceMinusPercent(gamePrice.CurrentSteamPrice, SteamPercent) + AddPrice);
+                            Helpers.Utilities.CalculatePriceMinusPercent(gamePrice.CurrentSteamPrice, SteamPercent) + AddPrice, 2);
 
                     return price > 0 ? price : 100000;
                 }
