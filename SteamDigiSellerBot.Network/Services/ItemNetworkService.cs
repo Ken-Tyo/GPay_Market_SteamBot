@@ -218,11 +218,15 @@ namespace SteamDigiSellerBot.Network.Services
                         }
                         else
                         {
+                            if (currentSteamPriceRub> 1000 && item.CurrentDigiSellerPrice != 0 &&
+                                digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice < 0.2M)
+                                _logger.LogInformation($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiSellerPriceWithAllSales} ({(digiSellerPriceWithAllSales / item.CurrentDigiSellerPrice * 100):0.0}%)");
                             item.CurrentDigiSellerPriceNeedAttention = false;
                             item.CurrentDigiSellerPrice = digiSellerPriceWithAllSales;
                             item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
                             itemsToDigisellerUpdate.Add(item);
                         }
+
                         db.Entry(item).State = EntityState.Modified;
                     }
                 }
@@ -240,6 +244,9 @@ namespace SteamDigiSellerBot.Network.Services
                         }
                         else
                         {
+                            if (item.CurrentDigiSellerPrice > 1000 && item.CurrentDigiSellerPrice != 0 &&
+                                digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice < 0.2M)
+                                _logger.LogInformation($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {digiPriceWithAllSalesInRub} ({(digiPriceWithAllSalesInRub / item.CurrentDigiSellerPrice * 100):0.0}%)");
                             item.CurrentDigiSellerPriceNeedAttention = false;
                             item.CurrentDigiSellerPrice = digiPriceWithAllSalesInRub;
                             item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiPriceWithAllSalesInRub, 5, 0);
