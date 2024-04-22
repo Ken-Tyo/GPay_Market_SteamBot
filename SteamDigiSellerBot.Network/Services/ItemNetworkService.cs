@@ -72,10 +72,15 @@ namespace SteamDigiSellerBot.Network.Services
                     LastUpdate = x.Min(i => 
                         i.GamePrices.Count() > 0 
                             ? i.GamePrices.Min(gp => gp.LastUpdate)
-                            : DateTime.MinValue)
+                            : DateTime.MinValue),
+                    Discount= x.Max(x=> x.DiscountEndTimeUtc)
                 })
                 .OrderBy(i => i.LastUpdate)
                 .ToList();
+
+            groupedItems = groupedItems
+                .OrderByDescending(x => x.Discount < DateTime.UtcNow.AddHours(1) && x.LastUpdate < x.Discount)
+                .ThenBy(x => x.LastUpdate).ToList();
 
             //using var db = _contextFactory.CreateDbContext();
             var currenicesCount = (await _currencyDataRepository.GetCurrencyData()).Currencies.Count;
@@ -83,7 +88,7 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount) / 1.5d);
+            var chunkSize = CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
             while (chunk.Count() > 0)
             {
@@ -93,14 +98,21 @@ namespace SteamDigiSellerBot.Network.Services
                 foreach (var group in chunk)
                 {
                     var gr = group;
-                    tasks.Add(Task.Factory.StartNew(async () => (await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false, reUpdate: reUpdate, prices: prices)).ForEach(x=> toUpdate.Add(x))));
+                    tasks.Add(Task.Factory.StartNew(async () =>
+                    {
+                        foreach (var i in await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false,
+                                     reUpdate: reUpdate, prices: prices))
+                        {
+                            toUpdate.Add(i);
+                        }
+                    }));
                     i++;
                     if (i % 10 == 0)
                         await Task.Delay(1000);
                 }
 
                 await Task.WhenAll(tasks.ToArray());
-                await Task.Delay(100);
+                await Task.Delay(1000);
                 _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update " + toUpdate.Count);
                 if (toUpdate.Count > 0)
                 {
@@ -112,8 +124,8 @@ namespace SteamDigiSellerBot.Network.Services
                 chunk = groupedItems.Skip(skipNum).Take(chunkSize);
                 if (chunk.Count() > 0)
                 {
-                    var timeoutSec = 40;
-                    _logger.LogInformation($"\n-----------\ntimeout ({timeoutSec} sec.) before next chunk parsing...\n-----------\n");
+                    var timeoutSec = 30;
+                    _logger.LogInformation($"\n-----------\n GroupedItemsByAppIdAndSetPrices: {skipNum}/{groupedItems.Count} timeout ({timeoutSec} sec.) before next chunk parsing (chunkside {chunkSize})...\n-----------\n");
                     await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                 }
             }
