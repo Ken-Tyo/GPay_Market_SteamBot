@@ -190,13 +190,13 @@ namespace SteamDigiSellerBot.Database.Repositories
         {
             CurrencyData currencyData = await InitCurrencyData();
 
-            foreach (Currency currency in newCurrencyData.Currencies)
+            foreach (Currency currency in currencyData.Currencies)
             {
                 if (currency.Value <= 0)
                     continue;
 
-                var oldVal = currencyData.Currencies.First(c => c.Id == currency.Id);
-                oldVal.Value = currency.Value;
+                var newVal = newCurrencyData.Currencies.First(c => c.Id == currency.Id);
+                currency.Value = newVal.Value;
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;

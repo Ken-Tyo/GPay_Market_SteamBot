@@ -89,8 +89,23 @@ namespace SteamDigiSellerBot.Controllers
             var prices = item.GamePrices;
             if (prices != null && prices.Count > 0)
             {
-                Dictionary<int, decimal> rubPrices = prices.ToDictionary(
-                    x => x.Id, (x) => ExchangeHelper.Convert(x.CurrentSteamPrice, currencies[x.SteamCurrencyId], rub));
+                // Парсим только те цены, для которых есть валюта, остальные удаляем из результата
+                Dictionary<int, decimal> rubPrices = new Dictionary<int, decimal>();
+                List<int> removeIds = new List<int>();
+                foreach(var pr in prices)
+                {
+                    if (currencies.TryGetValue(pr.SteamCurrencyId, out var currency))
+                    {
+                        var price = ExchangeHelper.Convert(pr.CurrentSteamPrice, currency, rub);
+                        rubPrices.Add(pr.Id, price);
+                    }
+                    else
+                    {
+                        removeIds.Add(pr.Id);
+                        continue;
+                    }
+                }
+                prices.RemoveAll(e => removeIds.Contains(e.Id));
 
                 prices = prices.OrderByDescending(p => rubPrices[p.Id]).ToList();
 
