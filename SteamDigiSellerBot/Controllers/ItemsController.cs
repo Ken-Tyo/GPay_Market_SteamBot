@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.ActionFilters;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Models.ExchangeRates;
 using SteamDigiSellerBot.Models.Items;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Services.Implementation;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
 using System;
@@ -32,6 +34,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly IBotRepository _botRepository;
+        private readonly ILogger<ItemsController> _logger;
 
         public ItemsController(
             IItemRepository itemRepository, 
@@ -42,7 +45,8 @@ namespace SteamDigiSellerBot.Controllers
             ICurrencyDataService currencyDataService,
             IGamePriceRepository gamePriceRepository,
             ISteamProxyRepository steamProxyRepository,
-            IBotRepository botRepository)
+            IBotRepository botRepository,
+            ILogger<ItemsController> logger)
         {
             _itemRepository = itemRepository;
 
@@ -55,6 +59,7 @@ namespace SteamDigiSellerBot.Controllers
             _mapper = mapper;
             _botRepository = botRepository;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -67,8 +72,22 @@ namespace SteamDigiSellerBot.Controllers
             var curDict = await _currencyDataService.GetCurrencyDictionary();
             foreach (var item in itemsView)
             {
-                var rub = curDict[5];
-                item.CurrentSteamPriceRub = ExchangeHelper.Convert(item.CurrentSteamPrice, curDict[item.SteamCurrencyId], rub);
+#warning Проблема отсутствия некоторых валют в curDict
+                try
+                {
+                    var rub = curDict[5];
+                    item.CurrentSteamPriceRub =
+                        ExchangeHelper.Convert(item.CurrentSteamPrice, curDict[item.SteamCurrencyId], rub);
+                }
+                catch (KeyNotFoundException exception)
+                {
+                    _logger.LogError(exception, "ItemController items/list: Ошибка полученния данных по валюте " + item.SteamCurrencyId);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(exception, "ItemController items/list: Ошибка обработка валюты " + item.SteamCurrencyId);
+                    throw;
+                }
             }
 
             return Ok(itemsView);
