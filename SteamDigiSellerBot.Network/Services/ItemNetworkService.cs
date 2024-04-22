@@ -82,7 +82,7 @@ namespace SteamDigiSellerBot.Network.Services
                     //экстренный приортет скидок
                 .OrderByDescending(x => x.Discount < DateTime.UtcNow.AddHours(1) && x.Discount > DateTime.UtcNow.AddDays(-1) && x.LastUpdate < x.Discount)
                     //обновление сначала более динамических товаров
-                .OrderByDescending(x => x.LastUpdate> DateTime.UtcNow.AddMonths(-3))
+                .ThenBy(x => x.LastUpdate> DateTime.UtcNow.AddMonths(-3))
                 .ThenBy(x => x.LastUpdate).ToList();
 
             //using var db = _contextFactory.CreateDbContext();
