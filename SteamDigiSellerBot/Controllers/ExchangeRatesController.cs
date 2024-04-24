@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Models.ExchangeRates;
 using SteamDigiSellerBot.Network;
+using SteamDigiSellerBot.Services.Implementation;
 using SteamDigiSellerBot.Services.Interfaces;
 using System.Threading.Tasks;
 using static SteamDigiSellerBot.Network.SuperBot;
 
 namespace SteamDigiSellerBot.Controllers
 {
+    [Authorize]
     public class ExchangeRatesController : Controller
     {
         private readonly ICurrencyDataService _currencyDataService;
@@ -35,6 +38,18 @@ namespace SteamDigiSellerBot.Controllers
             CurrencyData curData = await _currencyDataService.GetCurrencyData();
 
             return Ok(curData);
+        }
+        [HttpGet, Route("exchangerates/cleancache")]
+        public async Task<IActionResult> CleanCache()
+        {
+            return Ok(_currencyDataService.CleanCache());
+        }
+
+        [HttpGet, Route("exchangerates/forceupdate")]
+        public async Task<IActionResult> ForceUpdateCurrentCurrency()
+        {
+            await _currencyDataService.ForceUpdateCurrentCurrency();
+            return Ok(true);
         }
 
         [HttpPost, Route("exchangerates/update")]

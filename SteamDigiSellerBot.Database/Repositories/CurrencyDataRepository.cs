@@ -164,7 +164,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     reqCount++;
                     if (reqCount % 10 == 0)
                     {
-                        Thread.Sleep(TimeSpan.FromSeconds(timeoutSec));
+                        await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                         Debug.WriteLine("pause");
                     }
                 }
@@ -177,7 +177,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     Console.WriteLine("\n------------\n");
 
                     reqCount = 0;
-                    Thread.Sleep(TimeSpan.FromSeconds(timeoutSec));
+                    await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                 }
             }
 

@@ -144,7 +144,7 @@ namespace SteamDigiSellerBot.Network.Services
             bool reUpdate = false)
         {
             using var db = _contextFactory.CreateDbContext();
-            var currencyData = db.CurrencyData.FirstOrDefault();
+            var currencyData = await _currencyDataRepository.GetCurrencyData();
 
             var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
             allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();

@@ -15,5 +15,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
         Task<Dictionary<int, Currency>> GetCurrencyDictionary();
         Task<decimal> ConvertToRUB(decimal val, int steamCurrencyId);
         Task<decimal> ConvertRUBto(decimal val, int steamCurrencyId);
+        bool CleanCache();
+        Task ForceUpdateCurrentCurrency();
     }
 }

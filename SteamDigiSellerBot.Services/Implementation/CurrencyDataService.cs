@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Services.Interfaces;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
-    public class CurrencyDataService: ICurrencyDataService
+    public class CurrencyDataService : ICurrencyDataService
     {
         private readonly IMemoryCache _cache;
         private readonly ICurrencyDataRepository _currencyDataRepository;
@@ -38,13 +39,13 @@ namespace SteamDigiSellerBot.Services.Implementation
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {
             await _currencyDataRepository.UpdateCurrencyData(currencyData);
-            _cache.Remove(nameof(GetCurrencyData));
+            CleanCache();
         }
 
         public async Task UpdateCurrencyDataManual(CurrencyData newCurrencyData)
         {
             await _currencyDataRepository.UpdateCurrencyDataManual(newCurrencyData);
-            _cache.Remove(nameof(GetCurrencyData));
+            CleanCache();
         }
 
         public async Task<Dictionary<int, Currency>> GetCurrencyDictionary()
@@ -88,6 +89,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return 0;
 
             return (val / rub.Value) * toCurr.Value;
+        }
+
+        public bool CleanCache()
+        {
+            _cache.Remove(nameof(GetCurrencyData));
+            return true;
+        }
+        public async Task ForceUpdateCurrentCurrency()
+        {
+            var currData = await GetCurrencyData();
+            await UpdateCurrencyData(currData);
         }
     }
 }

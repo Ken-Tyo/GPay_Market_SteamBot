@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.ActionFilters;
 using SteamDigiSellerBot.Database.Entities;
+using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Models.ExchangeRates;
 using SteamDigiSellerBot.Models.Items;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Services;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
 using System;
@@ -31,6 +34,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ISteamProxyRepository _steamProxyRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
+        private readonly ILogger<ItemsController> _logger;
         private readonly IBotRepository _botRepository;
 
         public ItemsController(
@@ -42,10 +46,11 @@ namespace SteamDigiSellerBot.Controllers
             ICurrencyDataService currencyDataService,
             IGamePriceRepository gamePriceRepository,
             ISteamProxyRepository steamProxyRepository,
-            IBotRepository botRepository)
+            IBotRepository botRepository,
+            ILogger<ItemsController> logger)
         {
             _itemRepository = itemRepository;
-
+            
             _itemNetworkService = itemNetworkService;
             _digiSellerNetworkService = digiSellerNetworkService;
             _currencyDataService = currencyDataService;
@@ -55,6 +60,8 @@ namespace SteamDigiSellerBot.Controllers
             _mapper = mapper;
             _botRepository = botRepository;
             _userManager = userManager;
+
+            _logger = logger;
         }
 
         [HttpGet]
@@ -64,12 +71,23 @@ namespace SteamDigiSellerBot.Controllers
             List<Item> items = await _itemRepository.GetSortedItems();
 
             var itemsView = _mapper.Map<List<ItemViewModel>>(items);
-            var curDict = await _currencyDataService.GetCurrencyDictionary();
+            var currencies = await _currencyDataService.GetCurrencyDictionary();
+            List<int> removeIds = new List<int>();
             foreach (var item in itemsView)
             {
-                var rub = curDict[5];
-                item.CurrentSteamPriceRub = ExchangeHelper.Convert(item.CurrentSteamPrice, curDict[item.SteamCurrencyId], rub);
+                
+                if (currencies.TryGetValue(item.SteamCurrencyId, out var currency))
+                {
+                    var rub = currencies[5];
+                    item.CurrentSteamPriceRub = ExchangeHelper.Convert(item.CurrentSteamPrice, currency, rub);
+                }
+                else
+                {
+                    removeIds.Add(item.Id);
+                    _logger.LogError($"items/list : SteamCurrencyId {item.SteamCurrencyId} not implemented for Item {item.Id}");
+                }
             }
+            itemsView.RemoveAll(e => removeIds.Contains(e.Id));
 
             return Ok(itemsView);
         }
@@ -102,6 +120,7 @@ namespace SteamDigiSellerBot.Controllers
                     else
                     {
                         removeIds.Add(pr.Id);
+                        _logger.LogError($"items/{{id}}/info : SteamCurrencyId {pr.SteamCurrencyId} not implemented for PriceId {pr.Id}");
                         continue;
                     }
                 }

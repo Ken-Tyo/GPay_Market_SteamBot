@@ -106,7 +106,11 @@ namespace SteamDigiSellerBot.Network.Services
                 await ParseBundles(appId, db, gamesList);
 
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SetSteamPrices Exception");
+                throw;
+            }
         }
 
         public async Task ParsePrices(
@@ -121,6 +125,21 @@ namespace SteamDigiSellerBot.Network.Services
             var noDetailsForCurrency = new List<Currency>();
             //var client = new System.Net.Http.HttpClient();
             //var gamesList = db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToList();
+
+            //TODO: не самое красивое место, но все в рамках текущего флоу.
+            //Удаляем карренси, которых больше нет в системе, но остались в товарах.
+            if (retryForInvalid)
+            {
+                foreach (var game in gamesList)
+                {
+                    var needToDelete = game.GamePrices.ExceptBy(currencies.Select(e => e.SteamId), e => e.SteamCurrencyId).ToList();
+                    if (needToDelete.Any())
+                    {
+                        game.GamePrices.RemoveAll(e => needToDelete.Contains(e));
+                    }
+                }
+            }
+
             foreach (var c in currencies)
             {
                 var url = $"http://store.steampowered.com/api/appdetails?appids={appId}&cc={c.CountryCode}";
@@ -468,8 +487,7 @@ namespace SteamDigiSellerBot.Network.Services
                 return;
 
             var requaredCurrencies = bundleList.Select(b => b.SteamCurrencyId).ToHashSet();
-            var currencyList = db.Currencies.Where(c => requaredCurrencies.Contains(c.SteamId));
-
+            var currencyList = (await _currencyDataRepository.GetCurrencyData()).Currencies.Where(e => requaredCurrencies.Contains(e.SteamId));
             var groupedBundleList = bundleList.GroupBy(b => b.SteamCurrencyId);
 
             foreach (var bundleGroup in groupedBundleList)

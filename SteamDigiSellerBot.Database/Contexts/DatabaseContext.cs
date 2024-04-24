@@ -17,9 +17,9 @@ namespace SteamDigiSellerBot.Database.Contexts
 
         public DbSet<SteamProxy> SteamProxies { get; set; }
 
-        public DbSet<Currency> Currencies { get; set; }
+        internal DbSet<Currency> Currencies { get; set; }
 
-        public DbSet<CurrencyData> CurrencyData { get; set; }
+        internal DbSet<CurrencyData> CurrencyData { get; set; }
 
         public DbSet<VacGame> VacGames { get; set; }
 
