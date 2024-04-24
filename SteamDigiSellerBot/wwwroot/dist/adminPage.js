@@ -25505,7 +25505,7 @@ module.exports = __webpack_require__.p + "bcc82b02d812598618ea.svg";
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "847a940358458ad0bc8c.svg";
+module.exports = __webpack_require__.p + "f5b93a5daffcd9703f73.svg";
 
 /***/ }),
 
