@@ -83,6 +83,7 @@ namespace SteamDigiSellerBot.Controllers
                 }
                 else
                 {
+                    //TODO Лучше отсюда это убрать. На этом этапе ошибок быть не должно уже.
                     item.CurrentSteamPriceRub = -1;
                     item.CurrentSteamPrice = -1;
                     item.DigiSellerPriceWithAllSales = -1;
