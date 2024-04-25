@@ -18,6 +18,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         Task<List<Item>> ListIncludePricesAsync(Expression<Func<Item, bool>> predicate);
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetByAppIdAndSubId(string appId, string subId);
+        Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items);
     }
 
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
@@ -74,6 +75,20 @@ namespace SteamDigiSellerBot.Database.Repositories
         {
             item.IsDeleted = true;
             db.Entry(item).Property(i => i.IsDeleted).IsModified = true;
+            await db.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items)
+        {
+            foreach(var item in items)
+            {
+                item.Active = false;
+                item.IsPriceParseError = true;
+                db.Entry(item).Property(i => i.Active).IsModified = true;
+                db.Entry(item).Property(i => i.IsPriceParseError).IsModified = true;
+            }
+            
             await db.SaveChangesAsync();
             return true;
         }

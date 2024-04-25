@@ -42297,11 +42297,15 @@ var products = function products() {
         className: list_styles.priceParseErr
       }, /*#__PURE__*/react.createElement("div", {
         className: list_styles.errMes
-      }, /*#__PURE__*/react.createElement("div", null, "\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0431\u0443\u0433\u043E\u0440 \u0431\u043E\u0442"), /*#__PURE__*/react.createElement(Typography_Typography, {
+      }, /*#__PURE__*/react.createElement("div", null, "\u041E\u0448\u0438\u0431\u043A\u0430"), /*#__PURE__*/react.createElement(Typography_Typography, {
         "aria-owns": open ? 'mouse-over-popover' : undefined,
         "aria-haspopup": "true",
         onMouseEnter: function onMouseEnter(event) {
           setAnchorEl(event.currentTarget);
+          if (i.currentSteamPriceRub < 0) {
+            setErrParsePriceText('Возможно проблема связана с парсингом цены и валютой.');
+            return;
+          }
           i.isBundle ? setErrParsePriceText('Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно') : setErrParsePriceText('Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены');
         },
         onMouseLeave: function onMouseLeave() {
@@ -42313,7 +42317,7 @@ var products = function products() {
         className: list_styles.errState
       }, "95% - ", /*#__PURE__*/react.createElement("span", {
         style: {
-          color: '#CCCF1C'
+          color: '#A12C2C'
         }
       }, "\u041E\u0428\u0418\u0411\u041A\u0410")))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
         className: list_styles.cell

@@ -213,12 +213,18 @@ const products = () => {
                     {i.isPriceParseError && (
                       <div className={css.priceParseErr}>
                         <div className={css.errMes}>
-                          <div>Отсутствуют бугор бот</div>
+                          <div>Ошибка</div>
                           <Typography
                             aria-owns={open ? 'mouse-over-popover' : undefined}
                             aria-haspopup="true"
                             onMouseEnter={(event) => {
                               setAnchorEl(event.currentTarget);
+                              if(i.currentSteamPriceRub < 0){
+                                setErrParsePriceText(
+                                  'Возможно проблема связана с парсингом цены и валютой.'
+                                )
+                                return;
+                              }
                               i.isBundle
                                 ? setErrParsePriceText(
                                     'Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно'
@@ -235,7 +241,7 @@ const products = () => {
                           </Typography>
                         </div>
                         <div className={css.errState}>
-                          95% - <span style={{ color: '#CCCF1C' }}>ОШИБКА</span>
+                          95% - <span style={{ color: '#A12C2C' }}>ОШИБКА</span>
                         </div>
                       </div>
                     )}

@@ -72,7 +72,7 @@ namespace SteamDigiSellerBot.Controllers
 
             var itemsView = _mapper.Map<List<ItemViewModel>>(items);
             var currencies = await _currencyDataService.GetCurrencyDictionary();
-            List<int> removeIds = new List<int>();
+            List<int> itemsForDeactivate = new List<int>();
             foreach (var item in itemsView)
             {
                 
@@ -83,11 +83,20 @@ namespace SteamDigiSellerBot.Controllers
                 }
                 else
                 {
-                    removeIds.Add(item.Id);
+                    item.CurrentSteamPriceRub = -1;
+                    item.CurrentSteamPrice = -1;
+                    item.DigiSellerPriceWithAllSales = -1;
+                    var dbItem = items.FirstOrDefault(e => e.Id == item.Id);
+                    dbItem.Active = false;
+                    dbItem.IsPriceParseError = true;
+                    item.Active = false;
+                    item.IsPriceParseError = true;
+
+                    itemsForDeactivate.Add(item.Id);
                     _logger.LogError($"items/list : SteamCurrencyId {item.SteamCurrencyId} not implemented for Item {item.Id}");
                 }
             }
-            itemsView.RemoveAll(e => removeIds.Contains(e.Id));
+            await _itemRepository.DeactivateItemAfterErrorAsync(items.Where(e => itemsForDeactivate.Contains(e.Id)).ToList());
 
             return Ok(itemsView);
         }
