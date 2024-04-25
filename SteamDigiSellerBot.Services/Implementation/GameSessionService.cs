@@ -659,7 +659,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
 
             var (checkFriendErr, friendExists) = await superBot.CheckFriend(profileData.url);
-            if (checkFriendErr != null)
+            if (!string.IsNullOrEmpty(checkFriendErr))
                 _logger.LogError($"CheckFriendErr: {checkFriendErr}");
 
             if (friendExists == true)

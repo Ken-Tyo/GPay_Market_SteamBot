@@ -11,6 +11,7 @@ using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Models.ExchangeRates;
 using SteamDigiSellerBot.Models.Items;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Services.Implementation;
 using SteamDigiSellerBot.Services;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
@@ -36,6 +37,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ILogger<ItemsController> _logger;
         private readonly IBotRepository _botRepository;
+        private readonly ILogger<ItemsController> _logger;
 
         public ItemsController(
             IItemRepository itemRepository, 

@@ -277,6 +277,12 @@ namespace SteamDigiSellerBot.Tests
             Assert.IsTrue(p.CurrentSteamPrice == 0);
         }
 
+        [Test]
+        public async Task GetDigiPrices()
+        {
+            var result = await new DigiSellerNetworkService(null, null, null).GetPriceList( "678945");
+        }
+
         
     }
 }

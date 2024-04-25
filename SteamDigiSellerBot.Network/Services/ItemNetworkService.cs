@@ -11,13 +11,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace SteamDigiSellerBot.Network.Services
 {
     public interface IItemNetworkService
     {
-        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false);
+        Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false, Dictionary<int,decimal> prices=null);
         Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
@@ -60,7 +60,7 @@ namespace SteamDigiSellerBot.Network.Services
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
-        public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false)
+        public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null)
         {
             var groupedItems =
                 items
@@ -72,10 +72,18 @@ namespace SteamDigiSellerBot.Network.Services
                     LastUpdate = x.Min(i => 
                         i.GamePrices.Count() > 0 
                             ? i.GamePrices.Min(gp => gp.LastUpdate)
-                            : DateTime.MinValue)
+                            : DateTime.MinValue),
+                    Discount= x.Max(x=> x.DiscountEndTimeUtc)
                 })
                 .OrderBy(i => i.LastUpdate)
                 .ToList();
+
+            groupedItems = groupedItems
+                    //экстренный приортет скидок
+                .OrderByDescending(x => x.Discount < DateTime.UtcNow.AddHours(1) && x.Discount > DateTime.UtcNow.AddDays(-1) && x.LastUpdate < x.Discount)
+                    //обновление сначала более динамических товаров
+                .ThenBy(x => x.LastUpdate> DateTime.UtcNow.AddMonths(-3))
+                .ThenBy(x => x.LastUpdate).ToList();
 
             //using var db = _contextFactory.CreateDbContext();
             var currenicesCount = (await _currencyDataRepository.GetCurrencyData()).Currencies.Count;
@@ -83,7 +91,7 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount) / 3d);
+            var chunkSize = CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
             while (chunk.Count() > 0)
             {
@@ -93,14 +101,22 @@ namespace SteamDigiSellerBot.Network.Services
                 foreach (var group in chunk)
                 {
                     var gr = group;
-                    tasks.Add(Task.Factory.StartNew(async () => (await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false, reUpdate: reUpdate)).ForEach(x=> toUpdate.Add(x))));
+                    tasks.Add(Task.Factory.StartNew(async () =>
+                    {
+                        foreach (var i in await SetPrices(gr.AppId, gr.Items, aspNetUserId, sendToDigiSeller: false,
+                                     reUpdate: reUpdate, prices: prices))
+                        {
+                            toUpdate.Add(i);
+                        }
+                    }));
                     i++;
                     if (i % 10 == 0)
                         await Task.Delay(1000);
                 }
 
                 await Task.WhenAll(tasks.ToArray());
-                _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update "+ toUpdate.Count);
+                await Task.Delay(1000);
+                _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update " + toUpdate.Count);
                 if (toUpdate.Count > 0)
                 {
                     await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate.ToList(), aspNetUserId);
@@ -111,8 +127,8 @@ namespace SteamDigiSellerBot.Network.Services
                 chunk = groupedItems.Skip(skipNum).Take(chunkSize);
                 if (chunk.Count() > 0)
                 {
-                    var timeoutSec = 40;
-                    _logger.LogInformation($"\n-----------\ntimeout ({timeoutSec} sec.) before next chunk parsing...\n-----------\n");
+                    var timeoutSec = 30;
+                    _logger.LogInformation($"\n-----------\n GroupedItemsByAppIdAndSetPrices: {skipNum}/{groupedItems.Count} timeout ({timeoutSec} sec.) before next chunk parsing (chunkside {chunkSize})...\n-----------\n");
                     await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
                 }
             }
@@ -141,7 +157,8 @@ namespace SteamDigiSellerBot.Network.Services
             bool setName = false,
             bool onlyBaseCurrency = false,
             bool sendToDigiSeller = true,
-            bool reUpdate = false)
+            bool reUpdate = false,
+            Dictionary<int, decimal> prices = null)
         {
             using var db = _contextFactory.CreateDbContext();
             var currencyData = await _currencyDataRepository.GetCurrencyData();
@@ -195,6 +212,7 @@ namespace SteamDigiSellerBot.Network.Services
 
                 var digiSellerPriceWithAllSales = item.DigiSellerPriceWithAllSales;
 
+                var ids = ListItemsId(item.DigiSellerIds, _logger);
                 if (item.IsFixedPrice)
                 {
 
@@ -264,6 +282,21 @@ namespace SteamDigiSellerBot.Network.Services
             else
                 return new();
         }
+
+        List<int> ListItemsId(List<string> ids, ILogger logger)
+        {
+            return ids?.Select(x =>
+            {
+                if (int.TryParse(x, out int value))
+                    return value;
+                else
+                {
+                    logger.LogWarning("ItemNetworkService.ListItemsId: Обнаружен невалидный товар " + x);
+                    return (int?) null;
+                }
+            }).Where(x => x != null).Cast<int>().ToList() ?? new List<int>();
+        }
+
 
         private int CountRecomendationChankSize(int proxyCount, int maxReqNumBySteam, int currenicesCount)
         {
