@@ -35,7 +35,6 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ISteamProxyRepository _steamProxyRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<ItemsController> _logger;
         private readonly IBotRepository _botRepository;
         private readonly ILogger<ItemsController> _logger;
 
