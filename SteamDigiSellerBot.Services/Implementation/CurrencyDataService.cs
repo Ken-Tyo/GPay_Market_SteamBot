@@ -59,20 +59,31 @@ namespace SteamDigiSellerBot.Services.Implementation
             return dict;
         }
 
-        public async Task<decimal> ConvertToRUB(decimal val, int steamCurrencyId)
+        public async Task<(bool, decimal?)> TryConvertToRUB(decimal val, int steamCurrencyId)
         {
             var rubSteamId = 5;
             if (steamCurrencyId == rubSteamId)
-                return val;
+            {
+                return (true, val);
+            }
 
             var currencies = await GetCurrencyDictionary();
-            var thisCurr = currencies[steamCurrencyId];
-            if (thisCurr.Value == 0)
-                return 0;
+            if (currencies.TryGetValue(steamCurrencyId, out var thisCurr))
+            {
+                if (thisCurr.Value == 0)
+                {
+                    return (true, val);
+                }
 
-            var rub = currencies[rubSteamId];
+                var rub = currencies[rubSteamId];
 
-            return (val / thisCurr.Value) * rub.Value;
+                return (true, (val / thisCurr.Value) * rub.Value);
+            }
+            else
+            {
+                return (false, null);
+            }
+        
         }
 
         public async Task<decimal> ConvertRUBto(decimal val, int steamCurrencyId)

@@ -274,10 +274,15 @@ namespace SteamDigiSellerBot.Services.Implementation
             //если выбрано 1 или более приортетных цен
             if (priorityPrices.Count() > 0)
             {
-                var priceInRub = priorityPrices
-                    .ToDictionary(
-                        gp => gp.Id,
-                        gp => _currencyDataService.ConvertToRUB(gp.CurrentSteamPrice, gp.SteamCurrencyId).Result);
+                Dictionary<int, decimal> priceInRub = new Dictionary<int, decimal>();
+                foreach (var priorPrice in priorityPrices)
+                {
+                    var convertResult = _currencyDataService.TryConvertToRUB(priorPrice.CurrentSteamPrice, priorPrice.SteamCurrencyId).Result;
+                    if (convertResult.success)
+                    {
+                        priceInRub.Add(priorPrice.Id, convertResult.value.Value);
+                    }
+                }
 
                 //берем ту где цена меньше всего
                 var prices = priorityPrices
@@ -311,10 +316,15 @@ namespace SteamDigiSellerBot.Services.Implementation
             //если выбрано 2 или более приортетных цен
             if (priorityPrices.Count() > 1)
             {
-                var priceInRub = priorityPrices
-                    .ToDictionary(
-                        gp => gp.Id,
-                        gp => _currencyDataService.ConvertToRUB(gp.CurrentSteamPrice, gp.SteamCurrencyId).Result);
+                Dictionary<int, decimal> priceInRub = new Dictionary<int, decimal>();
+                foreach (var priorPrice in priorityPrices)
+                {
+                    var convertResult = _currencyDataService.TryConvertToRUB(priorPrice.CurrentSteamPrice, priorPrice.SteamCurrencyId).Result;
+                    if (convertResult.success)
+                    {
+                        priceInRub.Add(priorPrice.Id, convertResult.value.Value);
+                    }
+                }
 
                 //берем ту где цена меньше всего
                 var price = priorityPrices
