@@ -275,6 +275,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             if (priorityPrices.Count() > 0)
             {
                 Dictionary<int, decimal> priceInRub = new Dictionary<int, decimal>();
+                List<int> forDelete = new List<int>();
                 foreach (var priorPrice in priorityPrices)
                 {
                     var convertResult = _currencyDataService.TryConvertToRUB(priorPrice.CurrentSteamPrice, priorPrice.SteamCurrencyId).Result;
@@ -282,8 +283,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         priceInRub.Add(priorPrice.Id, convertResult.value.Value);
                     }
+                    else
+                    {
+                        forDelete.Add(priorPrice.Id);
+                    }
                 }
-
+                item.GamePrices.RemoveAll(item => forDelete.Contains(item.Id));
+                priorityPrices.RemoveAll(item => forDelete.Contains(item.Id));
                 //берем ту где цена меньше всего
                 var prices = priorityPrices
                     .OrderBy(gp => priceInRub[gp.Id])
