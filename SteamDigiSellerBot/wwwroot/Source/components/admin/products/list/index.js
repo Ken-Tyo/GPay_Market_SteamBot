@@ -56,7 +56,7 @@ const products = () => {
     backgroundColor: '#8A44AB',
     fontSize: '15px',
   };
-
+  const INFINTITY_DATE = "9999-12-31T23:59:59.999999";
   const currencyDict = {};
   currencies.map((c) => {
     currencyDict[c.steamId] = c;
@@ -105,25 +105,30 @@ const products = () => {
           let discountEndTime = '';
           let discountEndTimeExpired = !i.isDiscount;
           if (i.isDiscount) {
-            var offset = new Date().getTimezoneOffset();
+            if(i.discountEndTime == INFINTITY_DATE){
+                discountEndTime = "∞";
+            }
+            else{
+              var offset = new Date().getTimezoneOffset();
 
-            let det = moment(i.discountEndTime).add(-1 * offset, 'minutes');
-            let last = moment.duration(det.diff(moment()));
-            let hoursToShowCountDown = 24;
-            if (last.asHours() > hoursToShowCountDown) {
-              discountEndTime = 'до ' + det.format('DD.MM');
-            } else if (
-              last.asHours() > 0 &&
-              last.asHours() <= hoursToShowCountDown
-            ) {
-              discountEndTime = `${last
-                .hours()
-                .toFixed(0)
-                .padStart(2, '0')}ч. ${(last.minutes() % 60)
-                .toFixed(0)
-                .padStart(2, '0')}м.`;
-            } else {
-              discountEndTimeExpired = true;
+              let det = moment(i.discountEndTime).add(-1 * offset, 'minutes');
+              let last = moment.duration(det.diff(moment()));
+              let hoursToShowCountDown = 24;
+              if (last.asHours() > hoursToShowCountDown) {
+                discountEndTime = 'до ' + det.format('DD.MM');
+              } else if (
+                last.asHours() > 0 &&
+                last.asHours() <= hoursToShowCountDown
+              ) {
+                discountEndTime = `${last
+                  .hours()
+                  .toFixed(0)
+                  .padStart(2, '0')}ч. ${(last.minutes() % 60)
+                  .toFixed(0)
+                  .padStart(2, '0')}м.`;
+              } else {
+                discountEndTimeExpired = true;
+              }
             }
           }
 

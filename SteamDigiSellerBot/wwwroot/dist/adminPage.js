@@ -42145,6 +42145,7 @@ var products = function products() {
     backgroundColor: '#8A44AB',
     fontSize: '15px'
   };
+  var INFINTITY_DATE = "9999-12-31T23:59:59.999999";
   var currencyDict = {};
   currencies.map(function (c) {
     currencyDict[c.steamId] = c;
@@ -42201,16 +42202,20 @@ var products = function products() {
       var discountEndTime = '';
       var discountEndTimeExpired = !i.isDiscount;
       if (i.isDiscount) {
-        var offset = new Date().getTimezoneOffset();
-        var det = moment_default()(i.discountEndTime).add(-1 * offset, 'minutes');
-        var last = moment_default().duration(det.diff(moment_default()()));
-        var hoursToShowCountDown = 24;
-        if (last.asHours() > hoursToShowCountDown) {
-          discountEndTime = 'до ' + det.format('DD.MM');
-        } else if (last.asHours() > 0 && last.asHours() <= hoursToShowCountDown) {
-          discountEndTime = "".concat(last.hours().toFixed(0).padStart(2, '0'), "\u0447. ").concat((last.minutes() % 60).toFixed(0).padStart(2, '0'), "\u043C.");
+        if (i.discountEndTime == INFINTITY_DATE) {
+          discountEndTime = "∞";
         } else {
-          discountEndTimeExpired = true;
+          var offset = new Date().getTimezoneOffset();
+          var det = moment_default()(i.discountEndTime).add(-1 * offset, 'minutes');
+          var last = moment_default().duration(det.diff(moment_default()()));
+          var hoursToShowCountDown = 24;
+          if (last.asHours() > hoursToShowCountDown) {
+            discountEndTime = 'до ' + det.format('DD.MM');
+          } else if (last.asHours() > 0 && last.asHours() <= hoursToShowCountDown) {
+            discountEndTime = "".concat(last.hours().toFixed(0).padStart(2, '0'), "\u0447. ").concat((last.minutes() % 60).toFixed(0).padStart(2, '0'), "\u043C.");
+          } else {
+            discountEndTimeExpired = true;
+          }
         }
       }
       var steamPriceColor = discountEndTimeExpired ? '#D4D4D4' : '#CCCF1C';

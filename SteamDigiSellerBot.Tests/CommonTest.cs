@@ -1,8 +1,11 @@
 using Castle.Core.Logging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Models;
@@ -45,9 +48,21 @@ namespace SteamDigiSellerBot.Tests
         private Mock<IItemRepository> itemRepositoryMock;
         private GameSessionService gss;
 
+        //private DatabaseContext _dbContext;
+
         [SetUp]
         public void Setup()
         {
+            //var _contextOptions = new DbContextOptionsBuilder<DatabaseContext>()
+            //    .UseInMemoryDatabase("DatabaseContextTest")
+            //    .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            //    .Options;
+
+            //_dbContext = new DatabaseContext(_contextOptions);
+
+            //_dbContext.Database.EnsureDeleted();
+            //_dbContext.Database.EnsureCreated();
+
             botSender = new Bot
             {
                 Id = 106,
@@ -283,6 +298,31 @@ namespace SteamDigiSellerBot.Tests
             var result = await new DigiSellerNetworkService(null, null, null).GetPriceList( "678945");
         }
 
-        
+        [TestCase("сorrectlyInfiniteTimer")]
+        public void CorrectlyInfiniteTimer(string htmlFile)
+        {
+            var editionsHtml = GetHtml(htmlFile);
+            var edition = SteamNetworkService.ParseEditions(editionsHtml).FirstOrDefault();
+            var g =  new Game { SubId = "492793" };
+
+            SteamNetworkService.ParseHtmlDiscountCountdown(edition, g);
+
+            Assert.That(g.DiscountEndTimeUtc == DateTime.MaxValue);
+        }
+
+        [TestCase("noInfiniteDiscount")]
+        public void NoInfiniteTimer(string htmlFile)
+        {
+            var editionsHtml = GetHtml(htmlFile);
+            var edition = SteamNetworkService.ParseEditions(editionsHtml).FirstOrDefault();
+            var g = new Game { SubId = "664383" };
+
+            SteamNetworkService.ParseHtmlDiscountCountdown(edition, g);
+
+            Assert.That(g.DiscountEndTimeUtc != DateTime.MaxValue);
+        }
+
+
+
     }
 }

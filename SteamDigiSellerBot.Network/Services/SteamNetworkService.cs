@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -26,7 +27,7 @@ namespace SteamDigiSellerBot.Network.Services
     public interface ISteamNetworkService
     {
         Task SetSteamPrices(
-            string appId, HashSet<string> items, List<Currency> currencies, 
+            string appId, HashSet<string> items, List<Currency> currencies,
             DatabaseContext db, int tries = 10);
 
         Task<(ProfileDataRes, string)> ParseUserProfileData(string link, SteamContactType contactType, Bot bot = null);
@@ -39,7 +40,7 @@ namespace SteamDigiSellerBot.Network.Services
 
         private readonly ISteamProxyRepository _steamProxyRepository;
         private readonly ISteamCountryCodeRepository _steamCountryCodeRepository;
-        private readonly ICurrencyDataRepository _currencyDataRepository;   
+        private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly IBotRepository _botRepository;
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _superBotPool;
@@ -101,7 +102,7 @@ namespace SteamDigiSellerBot.Network.Services
                 //парсим цены в разных валютых через апи (без прокси)
                 await ParsePrices(appId, currencies, db, PerformWithCustomHttpClient, true, gamesList);
                 //парсим таймеры скидок и УЗНАЕМ БАНДЛЫ!
-                await ParseDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
+                await UpdateDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
                 //парсим цены на бандлы через ботов
                 await ParseBundles(appId, db, gamesList);
 
@@ -313,7 +314,7 @@ namespace SteamDigiSellerBot.Network.Services
             await ParsePrices(appId, invalidCurrencies, db, PerformWithCustomHttpClient, false, gamesList);
         }
 
-        public async Task ParseDiscountTimersAndIsBundleField(
+        public async Task UpdateDiscountTimersAndIsBundleField(
             HttpRequest request,
             string appId,
             DatabaseContext db,
@@ -334,101 +335,9 @@ namespace SteamDigiSellerBot.Network.Services
                     }
 
                     string s = request.Get("https://store.steampowered.com/app/" + appId + "?cc=ru").ToString();
-                    string[] editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
-
                     // Избегаем попадать в лимит при обращении к серверу
                     Thread.Sleep(TimeSpan.FromMilliseconds(200));
-
-                    if (s.Contains("id=\"error_box\"") || editions.Length == 0)
-                    //Данный товар недоступен в вашем регионе
-                    {
-                        var notRfBots = db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToList();
-                        if (notRfBots.Count == 0)
-                            continue;
-
-                        var triesBotCount = 5;
-
-                        for (int i = 0; i < triesBotCount; i++)
-                        {
-                            var notRfBot = notRfBots.FirstOrDefault(b => !notRfBotHS.Contains(b.Id) && b.IsON);
-                            if (notRfBot is null)
-                                continue;
-
-                            var superBot = _superBotPool.GetById(notRfBot.Id);
-                            if (superBot.IsOk())
-                            {
-                                (s, _) = await superBot.GetAppPageHtml(appId, tries: 3);
-                                editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
-                            }
-                            else
-                            {
-                                notRfBotHS.Add(notRfBot.Id);
-                                continue;
-                            }
-                        }
-                    }
-
-                    int successfulEditions = 0;
-
-                    foreach (string edition in editions)
-                    {
-                        if (successfulEditions == gamesList.Count)
-                        {
-                            break;
-                        }
-
-                        string subId = edition.Substrings("_to_cart_", "\"").FirstOrDefault(x => !x.Any(y => !char.IsDigit(y)));
-
-                        if (!string.IsNullOrWhiteSpace(subId))
-                        {
-                            Game game = gamesList.FirstOrDefault(x => x.SubId.Equals(subId));
-
-                            if (game != null)
-                            {
-                                game.IsBundle = edition.Contains("bundleid");
-                                db.Entry(game).Property(g => g.IsBundle).IsModified = true;
-
-                                if (game.IsDiscount)
-                                {
-                                    bool isDiscountTimer = edition.Contains("$DiscountCountdown");
-
-                                    if (isDiscountTimer)
-                                    {
-                                        var price = game.GamePrices.FirstOrDefault(
-                                            gp => gp.SteamCurrencyId == game.SteamCurrencyId);
-
-                                        if (CheckTimerAndUpdatePriceInAdvance(edition, game, price))
-                                        {
-                                            db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
-                                            db.Entry(price).State = EntityState.Modified;
-                                            db.SaveChanges();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        string dateSource = edition
-                                            .Substring("<p class=\"game_purchase_discount_countdown\">", "</p>");
-
-                                        string dateStr = new string(
-                                            dateSource.SkipWhile(x => !char.IsDigit(x)).ToArray()) + " " + DateTime.Now.Year;
-
-                                        if (DateTime.TryParse(dateStr, out DateTime dateTime))
-                                        {
-                                            if (dateTime < DateTime.Now)
-                                                dateTime = dateTime.AddYears(1);
-
-                                            game.DiscountEndTimeUtc = dateTime;
-                                            db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
-                                        }
-                                    }
-                                }
-
-                                successfulEditions++;
-                                //db.Entry(game).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                        }
-                    }
+                    await ParseDiscountsTimersAndIsBundleField(s, appId, db, gamesList);
 
                     break;
                 }
@@ -444,6 +353,130 @@ namespace SteamDigiSellerBot.Network.Services
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }
         }
+        public static string[] ParseEditions(string s) =>
+            s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
+
+        public async Task ParseDiscountsTimersAndIsBundleField(string s, string appId,
+            DatabaseContext db,
+            List<Game> gamesList)
+        {
+            string[] editions = ParseEditions(s);
+
+            if (s.Contains("id=\"error_box\"") || editions.Length == 0)
+            //Данный товар недоступен в вашем регионе
+            {
+                var notRfBots = db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToList();
+                if (notRfBots.Count == 0)
+                    return;
+
+                var triesBotCount = 5;
+
+                for (int i = 0; i < triesBotCount; i++)
+                {
+                    var notRfBot = notRfBots.FirstOrDefault(b => !notRfBotHS.Contains(b.Id) && b.IsON);
+                    if (notRfBot is null)
+                        continue;
+
+                    var superBot = _superBotPool.GetById(notRfBot.Id);
+                    if (superBot.IsOk())
+                    {
+                        (s, _) = await superBot.GetAppPageHtml(appId, tries: 3);
+                        editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
+                    }
+                    else
+                    {
+                        notRfBotHS.Add(notRfBot.Id);
+                        continue;
+                    }
+                }
+            }
+
+            int successfulEditions = 0;
+
+            foreach (string edition in editions)
+            {
+                if (successfulEditions == gamesList.Count)
+                {
+                    break;
+                }
+
+                UpdateDiscountTimerOfEdition(edition, gamesList, db);
+                successfulEditions++;
+            }
+        }
+
+
+        public static void UpdateDiscountTimerOfEdition(string edition, List<Game> gamesList, DatabaseContext db)
+        {
+            string subId = edition.Substrings("_to_cart_", "\"").FirstOrDefault(x => !x.Any(y => !char.IsDigit(y)));
+
+            if (!string.IsNullOrWhiteSpace(subId))
+            {
+                Game game = gamesList.FirstOrDefault(x => x.SubId.Equals(subId));
+
+                if (game != null)
+                {
+                    game.IsBundle = edition.Contains("bundleid");
+                    db.Entry(game).Property(g => g.IsBundle).IsModified = true;
+
+                    if (game.IsDiscount)
+                    {
+                        bool isDiscountTimer = edition.Contains("$DiscountCountdown");
+
+                        if (isDiscountTimer)
+                        {
+                            var price = game.GamePrices.FirstOrDefault(
+                                gp => gp.SteamCurrencyId == game.SteamCurrencyId);
+
+                            if (CheckTimerAndUpdatePriceInAdvance(edition, game, price))
+                            {
+                                db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
+                                db.Entry(price).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            ParseHtmlDiscountCountdown(edition, game);
+
+                            db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
+                        }
+                    }
+
+
+                    //db.Entry(game).State = EntityState.Modified;
+
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public static void ParseHtmlDiscountCountdown(string edition, Game game)
+        {
+            string dateSource = edition
+                .Substring("<p class=\"game_purchase_discount_countdown\">", "</p>");
+
+            // Значит, что скидка бесконечная.
+            if (string.IsNullOrWhiteSpace(dateSource))
+            {
+                game.DiscountEndTimeUtc = DateTime.MaxValue;
+            }
+            else
+            {
+                string dateStr = new string(
+                dateSource.SkipWhile(x => !char.IsDigit(x)).ToArray()) + " " + DateTime.Now.Year;
+
+                if (DateTime.TryParse(dateStr, out DateTime dateTime))
+                {
+                    if (dateTime < DateTime.Now)
+                        dateTime = dateTime.AddYears(1);
+
+                    game.DiscountEndTimeUtc = dateTime;
+                }
+            }
+        }
+
+
 
         public static bool CheckTimerAndUpdatePriceInAdvance(string editionHtml, Game game, GamePrice price)
             //, out bool gameChanged)
