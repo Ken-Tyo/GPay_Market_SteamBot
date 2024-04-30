@@ -63,7 +63,7 @@ namespace SteamDigiSellerBot.Services
                             _logger.LogError($"ItemMonitoringService: Ошибка при получении товаров из Digiseller");
                         }
 
-                        await itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, user.Id, prices: prices);
+                        await itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, user.Id, prices: prices, manualUpdate: false);
                     }
                 }
                 catch (Exception ex)
@@ -113,7 +113,7 @@ namespace SteamDigiSellerBot.Services
                         var _userManager = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
                         User user = await _userManager.FindByIdAsync(adminID);
 
-                        await itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, user.Id);
+                        await itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, user.Id, manualUpdate: false);
                     }
                 }
                 catch (Exception ex)
