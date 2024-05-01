@@ -25990,6 +25990,8 @@ const pen_namespaceObject = __webpack_require__.p + "3a74007026beab8f35fc.svg";
 const additem_namespaceObject = __webpack_require__.p + "9b285564fb5d9a6bb58d.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/warning.svg
 const warning_namespaceObject = __webpack_require__.p + "13512b38768e3bec6f75.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/infinity.svg
+const infinity_namespaceObject = __webpack_require__.p + "83b97d4f7b7230bd8ee1.svg";
 // EXTERNAL MODULE: ./node_modules/use-sync-external-store/shim/with-selector.js
 var with_selector = __webpack_require__(9242);
 ;// CONCATENATED MODULE: ./node_modules/simpler-state/es/utils.js
@@ -42112,6 +42114,7 @@ function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var products = function products() {
   var _state$use = state.use(),
     items = _state$use.items,
@@ -42341,7 +42344,9 @@ var products = function products() {
         className: list_styles.text
       }, "-", i.discountPercent, "%")), /*#__PURE__*/react.createElement("div", {
         className: list_styles.date
-      }, discountEndTime)))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
+      }, discountEndTime == "∞" ? /*#__PURE__*/react.createElement("img", {
+        src: infinity_namespaceObject
+      }) : discountEndTime)))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
         className: list_styles.cell
       }, /*#__PURE__*/react.createElement("div", {
         className: list_styles.buttons

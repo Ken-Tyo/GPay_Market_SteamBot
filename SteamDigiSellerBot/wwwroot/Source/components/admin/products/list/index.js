@@ -10,6 +10,7 @@ import trash from '../../../../icons/trash.svg';
 import pen from '../../../../icons/pen.svg';
 import addItem from '../../../../icons/additem.svg';
 import warning from '../../../../icons/warning.svg';
+import infinity from '../../../../icons/infinity.svg'
 import {
   state,
   apiGetItem,
@@ -274,7 +275,7 @@ const products = () => {
                       >
                         <div className={css.text}>-{i.discountPercent}%</div>
                       </Section>
-                      <div className={css.date}>{discountEndTime}</div>
+                      <div className={css.date}>{discountEndTime == "∞"?<img src={infinity}/>:discountEndTime}</div>
                     </div>
                   )}
                 </div>
