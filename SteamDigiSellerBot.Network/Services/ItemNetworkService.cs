@@ -108,14 +108,14 @@ namespace SteamDigiSellerBot.Network.Services
                         {
                             toUpdate.Add(i);
                         }
-                    }));
+                    }).Unwrap());
                     i++;
                     if (i % 10 == 0)
                         await Task.Delay(1000);
                 }
 
-                await Task.WhenAll(tasks.ToArray());
                 await Task.Delay(1000);
+                await Task.WhenAll(tasks.ToArray());
                 _logger.LogInformation($"GroupedItemsByAppIdAndSetPrices: items to update " + toUpdate.Count);
                 if (toUpdate.Count > 0)
                 {
