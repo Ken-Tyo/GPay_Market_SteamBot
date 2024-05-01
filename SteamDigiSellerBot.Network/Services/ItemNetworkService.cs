@@ -138,7 +138,7 @@ namespace SteamDigiSellerBot.Network.Services
         {
             using var db = _contextFactory.CreateDbContext();
             // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
-            var toUpdate = db.Items.Include(i => i.GamePrices).Where(i => itemsId.Contains(i.Id)).ToList();
+            var toUpdate = await db.Items.Include(i => i.GamePrices).Where(i => itemsId.Contains(i.Id)).ToListAsync();
             _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: items to update " + toUpdate.Count);
             if (toUpdate.Count > 0)
             {
@@ -167,7 +167,7 @@ namespace SteamDigiSellerBot.Network.Services
             var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
             allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();
             // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
-            var dbItems = db.Items.Include(i => i.GamePrices).Where(i => i.AppId == appId && items.Contains(i.SubId)).ToList();
+            var dbItems = await db.Items.Include(i => i.GamePrices).Where(i => i.AppId == appId && items.Contains(i.SubId)).ToListAsync();
 
             var currencyForParse = allCurrencies;
             var currencyDataLastUpdate = currencyData?.LastUpdateDateTime ?? DateTime.MinValue;

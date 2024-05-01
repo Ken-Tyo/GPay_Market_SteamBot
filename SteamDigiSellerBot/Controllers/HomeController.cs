@@ -265,9 +265,9 @@ namespace SteamDigiSellerBot.Controllers
             return check.Success;
         }
 
-        public IActionResult LastOrders()
+        public async Task<IActionResult> LastOrders()
         {
-            var gameSessions = _gameSessionRepository.GetLastValidGameSessions(10);
+            var gameSessions = await _gameSessionRepository.GetLastValidGameSessions(10);
             return Ok(_mapper.Map<List<LastOrder>>(gameSessions));
         }
         //public async Task<IActionResult> Index2(string uniquecode = "", string seller_id = "")

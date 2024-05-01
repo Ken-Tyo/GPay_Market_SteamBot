@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SteamDigiSellerBot.Database.Repositories
 {
@@ -31,7 +32,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         private async Task<List<SteamCountryCode>> InitSteamCounrtyCodes()
         {
-            var codes = _databaseContext.SteamCountryCodes.ToList();
+            var codes = await _databaseContext.SteamCountryCodes.ToListAsync();
             if (codes != null && codes.Count > 0)
                 return codes;
 
@@ -42,7 +43,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
             
             await _databaseContext.SaveChangesAsync();
-            return _databaseContext.SteamCountryCodes.ToList();
+            return await _databaseContext.SteamCountryCodes.ToListAsync();
         }
 
         public async Task<List<SteamCountryCode>> GetAllCountryCodes()

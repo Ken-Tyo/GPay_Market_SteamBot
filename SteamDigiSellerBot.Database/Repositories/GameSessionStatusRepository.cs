@@ -65,7 +65,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 _databaseContext.GameSessionStatuses.Add(InitData.First(s => s.StatusId == sId));
             await _databaseContext.SaveChangesAsync();
 
-            return _databaseContext.GameSessionStatuses.ToList();
+            return await _databaseContext.GameSessionStatuses.ToListAsync();
         }
 
         public async Task<Dictionary<int, GameSessionStatus>> GetGameSessionStatuses()

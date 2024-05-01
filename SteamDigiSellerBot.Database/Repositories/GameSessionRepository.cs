@@ -14,7 +14,7 @@ namespace SteamDigiSellerBot.Database.Repositories
     public interface IGameSessionRepository : IBaseRepositoryEx<GameSession>
     {
         Task<List<GameSession>> Sort(GameSessionSort gameSessionSort);
-        List<GameSession> GetLastValidGameSessions(int size = 10);
+        Task<List<GameSession>> GetLastValidGameSessions(int size = 10);
         Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate);
         Task<(List<GameSession>, int)> Filter(string appId,
             string gameName,
@@ -74,10 +74,10 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (codes == null || codes.Contains(gs.UniqueCode))
                     && (!statusId.HasValue || statusId <= 0 || statusId == gs.StatusId);
 
-            var total = db.GameSessions
-                .Count(predicate);
+            var total = await db.GameSessions
+                .CountAsync(predicate);
 
-            var list = db.GameSessions
+            var list = await db.GameSessions
                 .Include(gs => gs.SendRegion)
                 .Include(gs => gs.Item)
                 .Include(gs => gs.ItemData)
@@ -87,7 +87,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .OrderByDescending(gs => gs.AddedDateTime)
                 .Skip((page.Value - 1) * size.Value)
                 .Take(size.Value)
-                .ToList();
+                .ToListAsync();
 
             return await Task.FromResult((list, total));
         }
@@ -111,13 +111,13 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
         }
 
-        public List<GameSession> GetLastValidGameSessions(int size = 10)
+        public async Task<List<GameSession>> GetLastValidGameSessions(int size = 10)
         {
-            return db.GameSessions
+            return await db.GameSessions
                 .Where(gs => !string.IsNullOrEmpty(gs.SteamProfileName))
                 .OrderByDescending(gs => gs.AddedDateTime)
                 .Take(size)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate)
