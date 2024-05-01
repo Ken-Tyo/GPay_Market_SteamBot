@@ -1,5 +1,6 @@
 ﻿using DatabaseRepository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
@@ -24,6 +25,7 @@ namespace SteamDigiSellerBot.Database.Repositories
     public class CurrencyDataRepository : BaseRepository<CurrencyData>, ICurrencyDataRepository
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
         private readonly ISteamProxyRepository _steamProxyRepository;
 
@@ -120,10 +122,11 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 104, Code = "ARS", SteamSymbol = "$", Position = 104, Name = "Аргентинское песо", CountryCode = "AR" },
         };
 
-        public CurrencyDataRepository(DatabaseContext databaseContext, ISteamProxyRepository steamProxyRepository)
+        public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, ISteamProxyRepository steamProxyRepository)
             : base(databaseContext)
         {
             _databaseContext = databaseContext;
+            _dbContextFactory = dbContextFactory;
 
             _steamProxyRepository = steamProxyRepository;
             //new Currency { Code = "", SteamSymbol = }
@@ -217,7 +220,9 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         private async Task<CurrencyData> InitCurrencyData()
         {
-            CurrencyData currencyData = await _databaseContext.CurrencyData.Include(cd => cd.Currencies).FirstOrDefaultAsync();
+            //конфликт обращения к DbContext
+            await using var db= _dbContextFactory.CreateDbContext();
+            CurrencyData currencyData = await db.CurrencyData.Include(cd => cd.Currencies).FirstOrDefaultAsync();
 
             if (currencyData == null)
             {
