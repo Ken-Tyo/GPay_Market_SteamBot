@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SteamDigiSellerBot.Database;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Enums;
 using SteamDigiSellerBot.Database.Extensions;
@@ -39,6 +41,8 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly IGameSessionStatusLogRepository _gameSessionStatusLogRepository;
         private readonly ILogger<GameSessionService> _logger;
+        //TODO: его тут не должно быть, но это больше системная проблема
+        private readonly DatabaseContext _dbContext;
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -52,7 +56,8 @@ namespace SteamDigiSellerBot.Services.Implementation
             IUserDBRepository userDBRepository,
             IDigiSellerNetworkService digiSellerNetworkService,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
-            ILogger<GameSessionService> logger)
+            ILogger<GameSessionService> logger,
+            DatabaseContext dbContext = null)
         {
             _steamNetworkService = steamNetworkService;
             _gameSessionRepository = gameSessionRepository;
@@ -66,6 +71,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             _digiSellerNetworkService = digiSellerNetworkService;
             this._gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             _logger = logger;
+            _dbContext = dbContext;
         }
 
         public async Task SetSteamContact(GameSession gs, params Option[] opts)
@@ -222,6 +228,13 @@ namespace SteamDigiSellerBot.Services.Implementation
             var nowUtc = DateTime.UtcNow.ToUniversalTime();
             if (gs.Item.IsDiscount && gs.Item.DiscountEndTimeUtc != DateTime.MinValue)
             {
+                if (gs.Item.HasEndlessDiscount)
+                {
+                    await _steamNetworkService.UpdateDiscountTimersAndIsBundleField(gs.Item.AppId, _dbContext, new List<Game>() {gs.Item });
+                    //TODO в идеале тут должен быть контекст тот же, чтобы не перезапрашивать данные. Это системная ошибка.
+                    gs = await _gameSessionRepository.GetByIdAsync(gs.Id);
+                    item = gs.Item;
+                }
                 var exp = gs.Item.DiscountEndTimeUtc;
                 res = nowUtc > exp;
                 newStatus = 11; //Просрочено (скидки)

@@ -322,6 +322,18 @@ namespace SteamDigiSellerBot.Tests
             Assert.That(g.DiscountEndTimeUtc != DateTime.MaxValue);
         }
 
+        [TestCase("noDiscountGame", false)]
+        [TestCase("сorrectlyInfiniteTimer", true)]
+        public void CustomTestIsDiscount(string htmlFile, bool isCorrect)
+        {
+            htmlFile = GetHtml(htmlFile);
+
+            var edition = SteamNetworkService.ParseEditions(htmlFile).FirstOrDefault();
+
+            var isDiscount = edition.Contains("game_purchase_discount");
+
+            Assert.That(isDiscount == isCorrect);
+        }
 
 
     }

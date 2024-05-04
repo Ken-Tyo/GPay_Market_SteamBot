@@ -31,6 +31,12 @@ namespace SteamDigiSellerBot.Network.Services
             DatabaseContext db, int tries = 10);
 
         Task<(ProfileDataRes, string)> ParseUserProfileData(string link, SteamContactType contactType, Bot bot = null);
+
+        Task UpdateDiscountTimersAndIsBundleField(
+            string appId,
+            DatabaseContext db,
+            List<Game> gamesList,
+            int tries = 10);
         //Task<bool?> CheckFriendAddedStatus(GameSession gs);
     }
 
@@ -86,16 +92,7 @@ namespace SteamDigiSellerBot.Network.Services
             try
             {
                 notRfBotHS = new HashSet<int>();
-                HttpRequest request = new HttpRequest()
-                {
-                    Cookies = new CookieDictionary
-                    {
-                        { "Steam_Language", "russian" },
-                        { "birthtime", "155062801" },
-                        { "lastagecheckage", "1-0-1975" },
-                    },
-                    UserAgent = Http.ChromeUserAgent()
-                };
+                HttpRequest request = CreateBaseHttpRequest();
 
                 var gamesList = db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToList();
 
@@ -113,6 +110,18 @@ namespace SteamDigiSellerBot.Network.Services
                 throw;
             }
         }
+
+        public HttpRequest CreateBaseHttpRequest() => new HttpRequest()
+        {
+            Cookies = new CookieDictionary
+                    {
+                        { "Steam_Language", "russian" },
+                        { "birthtime", "155062801" },
+                        { "lastagecheckage", "1-0-1975" },
+                    },
+            UserAgent = Http.ChromeUserAgent()
+        };
+
 
         public async Task ParsePrices(
             string appId,
@@ -258,11 +267,7 @@ namespace SteamDigiSellerBot.Network.Services
                                 db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
                             }
 
-                            if (game.IsDiscount != sub.IsDiscount)
-                            {
-                                game.IsDiscount = sub.IsDiscount;
-                                db.Entry(game).Property(x => x.IsDiscount).IsModified = true;
-                            }
+                            game.UpdateIsDiscount(db, sub.IsDiscount);
 
                             db.SaveChanges();
                         }
@@ -312,6 +317,13 @@ namespace SteamDigiSellerBot.Network.Services
             steamProxy.UserName = notRfBot.Proxy.UserName;
             steamProxy.Password = notRfBot.Proxy.Password;
             await ParsePrices(appId, invalidCurrencies, db, PerformWithCustomHttpClient, false, gamesList);
+        }
+
+        public Task UpdateDiscountTimersAndIsBundleField(string appId, DatabaseContext db, List<Game> gamesList, int tries = 10)
+        {
+            notRfBotHS = new HashSet<int>();
+            HttpRequest request = CreateBaseHttpRequest();
+            return UpdateDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
         }
 
         public async Task UpdateDiscountTimersAndIsBundleField(
@@ -418,6 +430,10 @@ namespace SteamDigiSellerBot.Network.Services
                 {
                     game.IsBundle = edition.Contains("bundleid");
                     db.Entry(game).Property(g => g.IsBundle).IsModified = true;
+
+                    var currentDiscountStatus = edition.Contains("game_purchase_discount");
+
+                    game.UpdateIsDiscount(db, currentDiscountStatus);
 
                     if (game.IsDiscount)
                     {
@@ -647,16 +663,7 @@ namespace SteamDigiSellerBot.Network.Services
         private async Task<ResponsData> PerformWithCustomHttpClient(string url, SteamProxy steamProxy)
         {
             var respData = new ResponsData();
-            HttpRequest request = new HttpRequest()
-            {
-                Cookies = new CookieDictionary
-                    {
-                        { "Steam_Language", "russian" },
-                        { "birthtime", "155062801" },
-                        { "lastagecheckage", "1-0-1975" },
-                    },
-                UserAgent = Http.ChromeUserAgent()
-            };
+            HttpRequest request = CreateBaseHttpRequest();
 
             if (steamProxy != null)
             {
