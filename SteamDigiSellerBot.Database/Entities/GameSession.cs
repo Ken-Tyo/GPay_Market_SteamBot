@@ -18,7 +18,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
         //public GameSessionStatus_old Status { get; set; }
 
-        public int StatusId { get; set; }
+        public GameSessionStatusEnum StatusId { get; set; }
 
         public string SteamProfileName { get; set; }
         public string SteamProfileUrl { get; set; }
@@ -69,6 +69,9 @@ namespace SteamDigiSellerBot.Database.Entities
         [ForeignKey("GameSessionItemId")]
         public virtual GameSessionItem ItemData { get; set; }
 
+        [Column(TypeName = "json")]
+        public List<int> BotSwitchList { get; set; } = new();
+
         public GameSession()
         {
             AddedDateTime = DateTimeOffset.UtcNow;
@@ -87,5 +90,29 @@ namespace SteamDigiSellerBot.Database.Entities
         SendGame = 6,
         ActivationExpired = 7,
         Done = 8
+    }
+
+    public enum GameSessionStatusEnum
+    {
+        Done=1,
+        Received=2,
+        IncorrectProfile=3,
+        RequestReject=4,
+        IncorrectRegion=5,
+        RequestSent=6,
+        UnknownError=7,
+        GameRejected=8,
+        BotLimit=9,
+        ExpiredTimer=10,
+        ExpiredDiscount=11,
+        ProfileNoSet=12,
+        SteamNetworkProblem=13,
+        GameIsExists=14,
+        Closed=15,
+        WaitingToConfirm=16,
+        BotNotFound=17,
+        SendingGame=18,
+        Queue=19,
+        SwitchBot=20
     }
 }

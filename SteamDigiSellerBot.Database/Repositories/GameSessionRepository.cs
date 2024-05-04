@@ -22,7 +22,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
-            int? statusId,
+            GameSessionStatusEnum? statusId,
             int? page = 1,
             int? size = 50);
 
@@ -49,7 +49,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
-            int? statusId,
+            GameSessionStatusEnum? statusId,
             int? page,
             int? size)
         {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SteamDigiSellerBot.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using SteamDigiSellerBot.Database.Entities;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
@@ -50,7 +51,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             //    SendToManager(new Untracked { gsId = gs.Id });
                             //    continue;
                             //}
-                            if (new int[] {3, 17 }.Contains(gs.StatusId))
+                            if (new GameSessionStatusEnum[] { GameSessionStatusEnum.IncorrectProfile, GameSessionStatusEnum.BotNotFound }.Contains(gs.StatusId))
                             {
                                 SendToManager(new ToFixStage { gsId = gs.Id });
                                 continue;
@@ -60,7 +61,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             var (sendRes, readyState) = await gss.SendGame(gs.Id);
                             SendToManager(sendRes == SendGameStatus.sended
                                 ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
-                                : new SendFailed { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
+                                : new SendFailed { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState, ChangeBot = readyState== GameReadyToSendStatus.botSwitch}
                                 );
 
                             //!!!!!!!!!!!!!!!!

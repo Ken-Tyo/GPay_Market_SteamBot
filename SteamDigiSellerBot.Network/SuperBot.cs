@@ -1581,6 +1581,7 @@ namespace SteamDigiSellerBot.Network
             [53] = "За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.",
             [71] = "Подарок недействителен для региона получателя.",
             [72] = "Подарок невозможно отправить, так как цена в регионе получателя значительно отличается от вашей цены.",
+            [73] = "Не удалось назначить получателя подарка",
         };
 
 
@@ -1652,7 +1653,12 @@ namespace SteamDigiSellerBot.Network
                 if (mesDict.ContainsKey(initResp.purchaseresultdetail))
                     mes = mesDict[initResp.purchaseresultdetail];
 
+                
                 Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
+
+                if (initResp.purchaseresultdetail == 0 || initResp.purchaseresultdetail == 2 ||
+                    initResp.purchaseresultdetail == 53 || initResp.purchaseresultdetail == 73)
+                    res.ChangeBot = true;
                 res.result = SendeGameResult.error;
                 res.errCode = res.initTranRes.purchaseresultdetail;
                 res.errMessage = mes;
@@ -1813,6 +1819,7 @@ namespace SteamDigiSellerBot.Network
         public string checkRespStr;
         public FinalTranResponse finalizeTranRes;
         public bool IsCartForgot;
+        public bool ChangeBot;
     }
 
     public enum SendeGameResult

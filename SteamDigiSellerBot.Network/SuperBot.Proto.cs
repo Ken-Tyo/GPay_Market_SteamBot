@@ -192,6 +192,7 @@ namespace SteamDigiSellerBot.Network
                         {
                             res.result = SendeGameResult.error;
                             res.errMessage = "Не удалось добавить товар в корзину";
+                            res.ChangeBot = true;
                             return res;
                         }
                     }
@@ -233,6 +234,7 @@ namespace SteamDigiSellerBot.Network
             {
                 errMessage = "Не удалось дождаться очереди отправки",
                 result = SendeGameResult.error,
+                ChangeBot = true
             };
         }
 

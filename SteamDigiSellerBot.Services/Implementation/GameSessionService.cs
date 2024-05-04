@@ -76,7 +76,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             ValueJson logVal = null;
             if (opt == null)
             {
-                gs.StatusId = 3;//не корректный профиль
+                gs.StatusId = GameSessionStatusEnum.IncorrectProfile;//не корректный профиль
                 gs.SteamContactType = SteamContactType.unknown;
                 logVal = new ValueJson { userProfileUrl = opts.First().Value };
             }
@@ -94,7 +94,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 profileData = profileData2;
                 if (profileData == null)
                 {
-                    gs.StatusId = 3;//не корректный профиль
+                    gs.StatusId = GameSessionStatusEnum.IncorrectProfile;//не корректный профиль
                     logVal = new ValueJson
                     {
                         message = $"Не удалось спарсить данные пользователя. " +
@@ -103,7 +103,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else
                 {
-                    gs.StatusId = 16; //Ожидается подтверждение
+                    gs.StatusId = GameSessionStatusEnum.WaitingToConfirm; //Ожидается подтверждение
                     logVal = new ValueJson { userSteamContact = gs.SteamContactValue, userProfileUrl = profileData.url };
 
                     var timeToSend = DateTimeOffset.UtcNow.AddSeconds(40);
@@ -146,7 +146,9 @@ namespace SteamDigiSellerBot.Services.Implementation
             //Неизвестная ошибка - 7
             //Уже есть этот продукт - 19
             //Некорректный регион - 5
-            if (!new int[] { 16, 6, 4, 17, 7, 14, 19, 5 }.Contains(gs.StatusId))
+            if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.RequestSent,
+                    GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError,
+                    GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion }.Contains(gs.StatusId))
                 return gs;
 
             _gameSessionManager.Remove(gs.Id);
@@ -175,7 +177,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var oldStContactVal = gs.SteamContactValue;
             var oldProfUrlVal = gs.SteamProfileUrl;
             gs.Bot = null;
-            gs.StatusId = 12;
+            gs.StatusId = GameSessionStatusEnum.ProfileNoSet;
             gs.SteamContactValue = null;
             gs.SteamContactType = SteamContactType.unknown;
             gs.SteamProfileUrl = null;
@@ -203,7 +205,9 @@ namespace SteamDigiSellerBot.Services.Implementation
         /// <summary>
         /// This array contains the state numbers before the expiration time.
         /// </summary>
-        public static int[] BeforeExpStatuses = new int[] { 16, 14, 13, 12, 9, 8, 7, 6, 5, 4, 3, 17, 18, 19 };
+        public static GameSessionStatusEnum[] BeforeExpStatuses = new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.SteamNetworkProblem, GameSessionStatusEnum.ProfileNoSet,
+            GameSessionStatusEnum.BotLimit, GameSessionStatusEnum.GameRejected, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.RequestSent, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.IncorrectProfile
+            , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue };
 
         /// <summary>
         /// This method allow to check game session expired for further handling.
@@ -221,14 +225,14 @@ namespace SteamDigiSellerBot.Services.Implementation
                     $"Test in GS ID {gs.Id} for gs.DigiSellerDealPriceUsd = {gs.DigiSellerDealPriceUsd} " +
                     $"and item.CurrentDigiSellerPriceUsd = {item.CurrentDigiSellerPriceUsd}");
 
-            int newStatus = gs.StatusId;
+            GameSessionStatusEnum newStatus = gs.StatusId;
             bool res = false;
             var nowUtc = DateTime.UtcNow.ToUniversalTime();
             if (gs.Item.IsDiscount && gs.Item.DiscountEndTimeUtc != DateTime.MinValue)
             {
                 var exp = gs.Item.DiscountEndTimeUtc;
                 res = nowUtc > exp;
-                newStatus = 11; //Просрочено (скидки)
+                newStatus = GameSessionStatusEnum.ExpiredDiscount; //Просрочено (скидки)
             }
             else if (gs.DigiSellerDealPriceUsd < item.CurrentDigiSellerPriceUsd * 0.98m)
             {
@@ -242,7 +246,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 var exp = gs.ActivationEndDate?.ToUniversalTime();
                 res = exp.HasValue && nowUtc > exp;
-                newStatus = 10; //Просрочено (таймер)
+                newStatus = GameSessionStatusEnum.ExpiredTimer; //Просрочено (таймер)
             }
 
             if (res)
@@ -531,11 +535,20 @@ namespace SteamDigiSellerBot.Services.Implementation
         public async Task<(GetBotForSendGameStatus, BotFilterParams, SuperBot)> GetBotForSendGame(
             GameSession gs)
         {
+            retry_mark:
             SuperBot sbot = null;
 
             var (filterParams, filterRes) = await GetSuitableBotsFor(gs);
             if (filterRes == null || filterRes.Count() == 0)
                 return (GetBotForSendGameStatus.botNotFound, filterParams, sbot);
+
+            gs.BotSwitchList ??= new();
+            if (gs.BotSwitchList.Count > 0)
+            {
+                filterRes= filterRes.Where(x => !gs.BotSwitchList.Contains(x.Id)).ToList();
+                if (filterRes.Count()==0)
+                    return (GetBotForSendGameStatus.botNotFound, filterParams, sbot);
+            }
 
             var bot = await GetFirstBotByItemCriteration(gs, filterRes);
             //foreach (var b in filterRes)
@@ -562,10 +575,18 @@ namespace SteamDigiSellerBot.Services.Implementation
                         break;
                     }
                 }
-                
+
                 if (!successLogin)
+                {
+                    if (gs.BotSwitchList.Count < 3)
+                    {
+                        gs.BotSwitchList.Add(bot.Id);
+                        await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotSwitchList);
+                        goto retry_mark;
+                    }
                     return (GetBotForSendGameStatus.botLoginErr, filterParams, sb);
-                
+                }
+
                 return (GetBotForSendGameStatus.botFound, filterParams, sbot);
             }
 
@@ -596,7 +617,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var (getBotRes, filter, superBot) = await GetBotForSendGame(gs);
             if (getBotRes == GetBotForSendGameStatus.botNotFound)
             {
-                gs.StatusId = 17;//Бот не найден
+                gs.StatusId = GameSessionStatusEnum.BotNotFound;//Бот не найден
                 gs.BotId = null;
                 gs.Bot = null;
 
@@ -621,7 +642,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
             else if (getBotRes == GetBotForSendGameStatus.botsAreBusy)
             {
-                gs.StatusId = 19;//очередь
+                gs.StatusId = GameSessionStatusEnum.Queue;//очередь
                 gs.BotId = null;
                 gs.Bot = null;
 
@@ -641,7 +662,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
             else if (getBotRes == GetBotForSendGameStatus.botLoginErr)
             {
-                gs.StatusId = 7;//неизвестная ошибка
+                gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
                 await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
 
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
@@ -684,7 +705,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (friendExists == true)
             {
-                gs.StatusId = 18;//Отправка игры
+                gs.StatusId = GameSessionStatusEnum.SendingGame;//Отправка игры
             }
             else
             {
@@ -710,7 +731,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (isError)
             {
-                gs.StatusId = 7;//неизвестная ошибка
+                gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
                 valueJson = new GameSessionStatusLog.ValueJson
                 {
                     message = "Не удалось добавить пользователя в друзья",
@@ -736,10 +757,10 @@ namespace SteamDigiSellerBot.Services.Implementation
             //await _gameSessionRepository.EditAsync(gs);
             await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
 
-            if (gs.StatusId == 6 || gs.StatusId == 7 || gs.StatusId == 18)//заявка отправлена
+            if (gs.StatusId == GameSessionStatusEnum.RequestSent || gs.StatusId == GameSessionStatusEnum.UnknownError || gs.StatusId == GameSessionStatusEnum.SendingGame)//заявка отправлена
                 await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
 
-            if (gs.StatusId == 18)
+            if (gs.StatusId == GameSessionStatusEnum.SendingGame)
                 return AddToFriendStatus.friendExists;
 
             return isError 
@@ -764,7 +785,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                         if (r.success == 1)
                         {
-                            gs.StatusId = 6;//заявка отправлена
+                            gs.StatusId = GameSessionStatusEnum.RequestSent;//заявка отправлена
                             valueJson = new GameSessionStatusLog.ValueJson
                             {
                                 userNickname = profileData.personaname,
@@ -792,7 +813,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         if (r.success == 1)
                         {
                             //gs.StatusId = 19;//Очередь
-                            gs.StatusId = 18;//Отправка игры
+                            gs.StatusId = GameSessionStatusEnum.SendingGame;//Отправка игры
                                              //valueJson = new GameSessionStatusLog.ValueJson { botId = bot.Id, botName = bot.UserName };
                         }
                         else
@@ -805,7 +826,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                             if (afr.success == 1)
                             {
-                                gs.StatusId = 6;//заявка отправлена
+                                gs.StatusId = GameSessionStatusEnum.RequestSent;//заявка отправлена
                                 valueJson = new GameSessionStatusLog.ValueJson
                                 {
                                     userNickname = profileData.personaname,
@@ -861,7 +882,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var sbot = _botPool.GetById(gs.Bot.Id);
                 if (!sbot.IsOk())
                 {
-                    gs.StatusId = 7; //Неизвестная ошибка
+                    gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
                     await updateGsStatus(gs, new ValueJson
                     {
                         message = $"Ошибка при попытке логина в аккаунт {sbot.Bot.UserName}"
@@ -873,7 +894,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 (string profilePage, string err) = await sbot.GetPageHtml(gs.SteamProfileUrl, withSnapshot: true);
                 if (!string.IsNullOrEmpty(err))
                 {
-                    gs.StatusId = 7; //Неизвестная ошибка
+                    gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
                     await updateGsStatus(gs, new ValueJson
                     {
                         message = $"Ошибка при парсинге данных пользователя ботом - {sbot.Bot.UserName}{Environment.NewLine} " +
@@ -906,7 +927,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     if (!string.IsNullOrEmpty(checkFriendErr))
                     {
                         _logger.LogError($"CheckFriendErr: {checkFriendErr}");
-                        gs.StatusId = 7; //Неизвестная ошибка
+                        gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
                         await updateGsStatus(gs, new ValueJson
                         {
                             message = $"Ошибка при парсинге данных пользователя ботом - {sbot.Bot.UserName}{Environment.NewLine} " +
@@ -921,7 +942,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //var gs = await _gameSessionRepository.GetByIdAsync((int)gs.Id);
                 if (res == false && needAcceptUserRequest)
                 {
-                    gs.StatusId = 7; //Неизвестная ошибка
+                    gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
                     await updateGsStatus(gs, new ValueJson
                     {
                         message = $"Боту {sbot.Bot.UserName} не удалось принять заявку в друзья"
@@ -931,7 +952,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else if (res == false)
                 {
-                    gs.StatusId = 4; //Заявка отклонена
+                    gs.StatusId = GameSessionStatusEnum.RequestReject; //Заявка отклонена
                     await updateGsStatus(gs, new ValueJson
                     {
                         botId = gs.Bot.Id,
@@ -941,7 +962,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else if (res == true)
                 {
-                    gs.StatusId = 18; //Отправка игры
+                    gs.StatusId = GameSessionStatusEnum.SendingGame; //Отправка игры
                     await updateGsStatus(gs, null);
                     return CheckFriendAddedResult.added;
                 }
@@ -952,7 +973,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 _logger.LogError(ex.Message);
                 _logger.LogError(ex.StackTrace);
-                gs.StatusId = 7; //Неизвестная ошибка
+                gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
                 await updateGsStatus(gs, null);
                 return CheckFriendAddedResult.unknowErr;
             }
@@ -963,7 +984,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             async Task createErrLog(GameSession gs, string mes)
             {
                 //var gs = gs;// await _gameSessionRepository.GetByIdAsync(gsId);
-                gs.StatusId = 7;//неизвестная ошибка
+                gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
                 await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -977,7 +998,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //await _gameSessionRepository.EditAsync(gs);
             }
 
-            if (gs.StatusId != 18 && gs.StatusId != 19)
+            if (gs.StatusId != GameSessionStatusEnum.SendingGame && gs.StatusId != GameSessionStatusEnum.Queue)
             {
                 await createErrLog(gs, "некорректный статус для отправки игры");
                 //gs.StatusId = 7;//неизвестная ошибка
@@ -1044,7 +1065,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
                 var curGs = gs;
-                curGs.StatusId = 17;//Бот не найден
+                curGs.StatusId = GameSessionStatusEnum.BotNotFound;//Бот не найден
                 await _gameSessionRepository.UpdateFieldAsync(curGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -1066,7 +1087,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
                 var curGs = gs;
-                curGs.StatusId = 19;//Очередь
+                curGs.StatusId = GameSessionStatusEnum.Queue;//Очередь
                 await _gameSessionRepository.UpdateFieldAsync(curGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -1107,7 +1128,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
                 var curGs = gs;
-                curGs.StatusId = 18;//Отправка игры
+                curGs.StatusId = GameSessionStatusEnum.SendingGame;//Отправка игры
                 await _gameSessionRepository.UpdateFieldAsync(curGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -1130,7 +1151,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(GameSession gs, DateTimeOffset? timeForTest = null)
         {
             var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
-            var sendStatus = SendGameStatus.sended;
+            SendGameStatus sendStatus;
             if (readyState != GameReadyToSendStatus.ready)
             {
                 sendStatus = SendGameStatus.otherError;
@@ -1146,7 +1167,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var sbot = _botPool.GetById(gs.Bot.Id);
             if (!sbot.IsOk())
             {
-                gs.StatusId = 7; //Неизвестная ошибка
+                gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
                 gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
                 {
                     StatusId = gs.StatusId,
@@ -1158,7 +1179,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 });
                 //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
                 await _gameSessionRepository.EditAsync(gs);
-                return (SendGameStatus.otherError, readyState);
+                return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch ); //readyState
             }
 
             var sendRes = await sbot.SendGameProto(
@@ -1199,7 +1220,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var region = await _steamCountryCodeRepository.GetByPredicateAsync(r => r.Code == gs.Bot.Region);
                 gs.Item.LastSendedRegion = region;
                 gs.SendRegion = region;
-                gs.StatusId = 2;//Игра получена
+                gs.StatusId = GameSessionStatusEnum.Received;//Игра получена
                 valueJson = new GameSessionStatusLog.ValueJson
                 {
                     userNickname = gs.SteamProfileName,
@@ -1238,14 +1259,14 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
             else if (sendRes.result == SendeGameResult.gameExists)
             {
-                gs.StatusId = 14;//Уже есть этот продукт
+                gs.StatusId = GameSessionStatusEnum.GameIsExists;//Уже есть этот продукт
             }
             else if (sendRes.result == SendeGameResult.error)
             {
                 gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71
                            || sendRes.initTranRes?.purchaseresultdetail == 72
-                    ? 5 //Некорректный регион
-                    : 7;//Неизвестная ошибка
+                    ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
+                    : GameSessionStatusEnum.UnknownError;//Неизвестная ошибка
 
                 var mes = "Не удалось отправить игру.";
                 if (!string.IsNullOrEmpty(sendRes.errMessage))
@@ -1324,7 +1345,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             return (sendRes.result == SendeGameResult.sended
                 ? SendGameStatus.sended
                 : SendGameStatus.otherError,
-                readyState);
+                 sendRes.ChangeBot ? GameReadyToSendStatus.botSwitch: readyState);
         }
 
         public async Task UpdateQueueInfo(GameSession gs, int position)
@@ -1398,6 +1419,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         botNotFound,
         botsAreBusy,
         botNoLongerSuitable,
+        botSwitch,
         ready = 100
     }
 

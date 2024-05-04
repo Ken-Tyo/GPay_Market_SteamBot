@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Database.Entities;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
@@ -59,7 +60,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             //    SendToManager(new Untracked { gsId = gs.Id });
                             //    continue;
                             //}
-                            if (new int[] { 1, 15 }.Contains(gs.StatusId))
+                            if (new GameSessionStatusEnum[] { GameSessionStatusEnum.Done, GameSessionStatusEnum.Closed }.Contains(gs.StatusId))
                             {
                                 SendToManager(new ToFixStage { gsId = gs.Id });
                                 continue;
@@ -152,5 +153,6 @@ namespace SteamDigiSellerBot.Services.Implementation
     }
     public class SendFailed: Sended 
     {
+        public bool ChangeBot { get; set; }
     }
 }

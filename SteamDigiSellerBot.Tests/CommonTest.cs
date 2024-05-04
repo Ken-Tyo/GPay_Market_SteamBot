@@ -149,7 +149,7 @@ namespace SteamDigiSellerBot.Tests
 
             var gs = new GameSession
             {
-                StatusId = (int)Status.GameDispatched,
+                StatusId = GameSessionStatusEnum.SwitchBot,
                 Item = barroGTItem,
                 DigiSellerDealId = "not null",
                 PriorityPrice = gamePrice,
@@ -161,8 +161,8 @@ namespace SteamDigiSellerBot.Tests
 
             await gss.SendGame(gs);
 
-            Assert.IsTrue(gs.StatusId == (int)Status.GameReceived);
-            Assert.IsTrue(gs.GameSessionStatusLogs.FirstOrDefault(l => l.StatusId == (int)Status.GameReceived) != null);
+            Assert.IsTrue(gs.StatusId == GameSessionStatusEnum.Received);
+            Assert.IsTrue(gs.GameSessionStatusLogs.FirstOrDefault(l => l.StatusId == GameSessionStatusEnum.Received) != null);
             Assert.IsTrue(gs.Bot.SendGameAttemptsCount == 1);
         }
 
@@ -180,7 +180,7 @@ namespace SteamDigiSellerBot.Tests
 
             var gs = new GameSession
             {
-                StatusId = (int)Status.GameDispatched,
+                StatusId = GameSessionStatusEnum.BotLimit ,
                 Item = barroGTItem,
                 DigiSellerDealId = "not null",
                 PriorityPrice = gamePrice,
@@ -192,8 +192,8 @@ namespace SteamDigiSellerBot.Tests
 
             await gss.SendGame(gs, now);
 
-            Assert.IsTrue(gs.StatusId == (int)Status.GameReceived);
-            Assert.IsTrue(gs.GameSessionStatusLogs.FirstOrDefault(l => l.StatusId == (int)Status.GameReceived) != null);
+            Assert.IsTrue(gs.StatusId == GameSessionStatusEnum.Received);
+            Assert.IsTrue(gs.GameSessionStatusLogs.FirstOrDefault(l => l.StatusId == GameSessionStatusEnum.Received) != null);
             Assert.IsTrue(gs.Bot.SendGameAttemptsCount == 0);
             Assert.IsTrue(gs.Bot.State == Database.Enums.BotState.tempLimit);
         }

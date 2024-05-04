@@ -230,3 +230,6 @@ alter table "Bots" ADD "SendGameAttemptsArray" JSON null;
 
 17.04
 ALTER TABLE "Items" ADD "CurrentDigiSellerPriceNeedAttention" boolean default false;
+
+05.05 
+ALTER TABLE "GameSessions" ADD BotSwitchList JSON null;
