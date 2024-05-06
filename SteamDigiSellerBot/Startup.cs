@@ -57,6 +57,7 @@ namespace SteamDigiSellerBot
             services.AddHostedService<UpdateExchangeRatesService>();
             services.AddHostedService<UpdateBotsService>();
             services.AddHostedService<ItemMonitoringService>();
+            services.AddHostedService<DiscountMonitoringService>();
 #endif
 
             services.AddSingleton<ISuperBotPool, SuperBotPool>();

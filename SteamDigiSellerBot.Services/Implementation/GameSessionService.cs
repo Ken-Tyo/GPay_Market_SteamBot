@@ -220,8 +220,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return false;
 
             Item item = gs.Item;
-            _logger.LogInformation($"Test in GS ID {gs.Id} for gs.DigiSellerDealPriceUsd = {gs.DigiSellerDealPriceUsd} " +
-                $"and item.CurrentDigiSellerPriceUsd = {item.CurrentDigiSellerPriceUsd}");
+
+            //Мусорный лог
+            if (gs.DigiSellerDealPriceUsd != 0 || item.CurrentDigiSellerPriceUsd != 0)
+                _logger.LogInformation(
+                    $"Test in GS ID {gs.Id} for gs.DigiSellerDealPriceUsd = {gs.DigiSellerDealPriceUsd} " +
+                    $"and item.CurrentDigiSellerPriceUsd = {item.CurrentDigiSellerPriceUsd}");
 
             int newStatus = gs.StatusId;
             bool res = false;

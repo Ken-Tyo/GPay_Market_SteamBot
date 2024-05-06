@@ -94,7 +94,7 @@ namespace SteamDigiSellerBot.Network.Services
                 notRfBotHS = new HashSet<int>();
                 HttpRequest request = CreateBaseHttpRequest();
 
-                var gamesList = db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToList();
+                var gamesList = await db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToListAsync();
 
                 //парсим цены в разных валютых через апи (без прокси)
                 await ParsePrices(appId, currencies, db, PerformWithCustomHttpClient, true, gamesList);
@@ -294,7 +294,7 @@ namespace SteamDigiSellerBot.Network.Services
             DatabaseContext db,
             List<Game> gamesList)
         {
-            var notRfBot = db.Bots.FirstOrDefault(b => b.Region.ToUpper() != "RU" && b.IsON);
+            var notRfBot = await db.Bots.FirstOrDefaultAsync(b => b.Region.ToUpper() != "RU" && b.IsON);
             //var gamesList = db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToList();
             var gamesToRetry = gamesList.Where(g => invalidCurrencies.Any(c => c.SteamId == g.SteamCurrencyId));
 
@@ -374,12 +374,12 @@ namespace SteamDigiSellerBot.Network.Services
         {
             string[] editions = ParseEditions(s);
 
-            if (s.Contains("id=\"error_box\"") || editions.Length == 0)
-            //Данный товар недоступен в вашем регионе
-            {
-                var notRfBots = db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToList();
-                if (notRfBots.Count == 0)
-                    return;
+                    if (s.Contains("id=\"error_box\"") || editions.Length == 0)
+                    //Данный товар недоступен в вашем регионе
+                    {
+                        var notRfBots = await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync();
+                        if (notRfBots.Count == 0)
+                            return;
 
                 var triesBotCount = 5;
 
@@ -545,8 +545,8 @@ namespace SteamDigiSellerBot.Network.Services
                 var currency = currencyList.FirstOrDefault(c => c.SteamId == steamCurrencyId);
                 if (currency is null)
                     continue;
-
-                var bot = db.Bots.FirstOrDefault(
+                
+                var bot = await db.Bots.FirstOrDefaultAsync(
                     b => b.Region.ToLower() == currency.CountryCode.ToLower() && b.IsON);
                 if (bot is null)
                 {
