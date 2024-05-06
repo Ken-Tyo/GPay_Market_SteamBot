@@ -349,7 +349,49 @@ namespace SteamDigiSellerBot.Network.Services
                     string s = request.Get("https://store.steampowered.com/app/" + appId + "?cc=ru").ToString();
                     // Избегаем попадать в лимит при обращении к серверу
                     Thread.Sleep(TimeSpan.FromMilliseconds(200));
-                    await ParseDiscountsTimersAndIsBundleField(s, appId, db, gamesList);
+                    string[] editions = ParseEditions(s);
+
+                    if (s.Contains("id=\"error_box\"") || editions.Length == 0)
+                    //Данный товар недоступен в вашем регионе
+                    {
+                        var notRfBots = await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync();
+                        if (notRfBots.Count == 0)
+                            continue;
+
+                        var triesBotCount = 5;
+
+                        for (int i = 0; i < triesBotCount; i++)
+                        {
+                            var notRfBot = notRfBots.FirstOrDefault(b => !notRfBotHS.Contains(b.Id) && b.IsON);
+                            if (notRfBot is null)
+                                continue;
+
+                            var superBot = _superBotPool.GetById(notRfBot.Id);
+                            if (superBot.IsOk())
+                            {
+                                (s, _) = await superBot.GetAppPageHtml(appId, tries: 3);
+                                editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
+                            }
+                            else
+                            {
+                                notRfBotHS.Add(notRfBot.Id);
+                                continue;
+                            }
+                        }
+                    }
+
+                    int successfulEditions = 0;
+
+                    foreach (string edition in editions)
+                    {
+                        if (successfulEditions == gamesList.Count)
+                        {
+                            break;
+                        }
+
+                        UpdateDiscountTimerOfEdition(edition, gamesList, db);
+                        successfulEditions++;
+                    }
 
                     break;
                 }
@@ -367,55 +409,6 @@ namespace SteamDigiSellerBot.Network.Services
         }
         public static string[] ParseEditions(string s) =>
             s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
-
-        public async Task ParseDiscountsTimersAndIsBundleField(string s, string appId,
-            DatabaseContext db,
-            List<Game> gamesList)
-        {
-            string[] editions = ParseEditions(s);
-
-                    if (s.Contains("id=\"error_box\"") || editions.Length == 0)
-                    //Данный товар недоступен в вашем регионе
-                    {
-                        var notRfBots = await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync();
-                        if (notRfBots.Count == 0)
-                            return;
-
-                var triesBotCount = 5;
-
-                for (int i = 0; i < triesBotCount; i++)
-                {
-                    var notRfBot = notRfBots.FirstOrDefault(b => !notRfBotHS.Contains(b.Id) && b.IsON);
-                    if (notRfBot is null)
-                        continue;
-
-                    var superBot = _superBotPool.GetById(notRfBot.Id);
-                    if (superBot.IsOk())
-                    {
-                        (s, _) = await superBot.GetAppPageHtml(appId, tries: 3);
-                        editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
-                    }
-                    else
-                    {
-                        notRfBotHS.Add(notRfBot.Id);
-                        continue;
-                    }
-                }
-            }
-
-            int successfulEditions = 0;
-
-            foreach (string edition in editions)
-            {
-                if (successfulEditions == gamesList.Count)
-                {
-                    break;
-                }
-
-                UpdateDiscountTimerOfEdition(edition, gamesList, db);
-                successfulEditions++;
-            }
-        }
 
 
         public static void UpdateDiscountTimerOfEdition(string edition, List<Game> gamesList, DatabaseContext db)
