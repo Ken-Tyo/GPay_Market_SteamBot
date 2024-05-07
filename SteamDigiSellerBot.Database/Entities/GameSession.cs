@@ -94,6 +94,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
     public enum GameSessionStatusEnum
     {
+        None = 0,
         Done=1,
         Received=2,
         IncorrectProfile=3,
