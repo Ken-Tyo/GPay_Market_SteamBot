@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -26,10 +27,16 @@ namespace SteamDigiSellerBot.Network.Services
     public interface ISteamNetworkService
     {
         Task SetSteamPrices(
-            string appId, HashSet<string> items, List<Currency> currencies, 
+            string appId, HashSet<string> items, List<Currency> currencies,
             DatabaseContext db, int tries = 10);
 
         Task<(ProfileDataRes, string)> ParseUserProfileData(string link, SteamContactType contactType, Bot bot = null);
+
+        Task UpdateDiscountTimersAndIsBundleField(
+            string appId,
+            DatabaseContext db,
+            List<Game> gamesList,
+            int tries = 10);
         //Task<bool?> CheckFriendAddedStatus(GameSession gs);
     }
 
@@ -39,7 +46,7 @@ namespace SteamDigiSellerBot.Network.Services
 
         private readonly ISteamProxyRepository _steamProxyRepository;
         private readonly ISteamCountryCodeRepository _steamCountryCodeRepository;
-        private readonly ICurrencyDataRepository _currencyDataRepository;   
+        private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly IBotRepository _botRepository;
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _superBotPool;
@@ -85,23 +92,14 @@ namespace SteamDigiSellerBot.Network.Services
             try
             {
                 notRfBotHS = new HashSet<int>();
-                HttpRequest request = new HttpRequest()
-                {
-                    Cookies = new CookieDictionary
-                    {
-                        { "Steam_Language", "russian" },
-                        { "birthtime", "155062801" },
-                        { "lastagecheckage", "1-0-1975" },
-                    },
-                    UserAgent = Http.ChromeUserAgent()
-                };
+                HttpRequest request = CreateBaseHttpRequest();
 
                 var gamesList = await db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToListAsync();
 
                 //парсим цены в разных валютых через апи (без прокси)
                 await ParsePrices(appId, currencies, db, PerformWithCustomHttpClient, true, gamesList);
                 //парсим таймеры скидок и УЗНАЕМ БАНДЛЫ!
-                await ParseDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
+                await UpdateDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
                 //парсим цены на бандлы через ботов
                 await ParseBundles(appId, db, gamesList);
 
@@ -112,6 +110,18 @@ namespace SteamDigiSellerBot.Network.Services
                 throw;
             }
         }
+
+        public HttpRequest CreateBaseHttpRequest() => new HttpRequest()
+        {
+            Cookies = new CookieDictionary
+                    {
+                        { "Steam_Language", "russian" },
+                        { "birthtime", "155062801" },
+                        { "lastagecheckage", "1-0-1975" },
+                    },
+            UserAgent = Http.ChromeUserAgent()
+        };
+
 
         public async Task ParsePrices(
             string appId,
@@ -257,11 +267,7 @@ namespace SteamDigiSellerBot.Network.Services
                                 db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
                             }
 
-                            if (game.IsDiscount != sub.IsDiscount)
-                            {
-                                game.IsDiscount = sub.IsDiscount;
-                                db.Entry(game).Property(x => x.IsDiscount).IsModified = true;
-                            }
+                            game.UpdateIsDiscount(db, sub.IsDiscount);
 
                             db.SaveChanges();
                         }
@@ -313,7 +319,14 @@ namespace SteamDigiSellerBot.Network.Services
             await ParsePrices(appId, invalidCurrencies, db, PerformWithCustomHttpClient, false, gamesList);
         }
 
-        public async Task ParseDiscountTimersAndIsBundleField(
+        public Task UpdateDiscountTimersAndIsBundleField(string appId, DatabaseContext db, List<Game> gamesList, int tries = 10)
+        {
+            notRfBotHS = new HashSet<int>();
+            HttpRequest request = CreateBaseHttpRequest();
+            return UpdateDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
+        }
+
+        public async Task UpdateDiscountTimersAndIsBundleField(
             HttpRequest request,
             string appId,
             DatabaseContext db,
@@ -334,10 +347,9 @@ namespace SteamDigiSellerBot.Network.Services
                     }
 
                     string s = request.Get("https://store.steampowered.com/app/" + appId + "?cc=ru").ToString();
-                    string[] editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
-
                     // Избегаем попадать в лимит при обращении к серверу
                     Thread.Sleep(TimeSpan.FromMilliseconds(200));
+                    string[] editions = ParseEditions(s);
 
                     if (s.Contains("id=\"error_box\"") || editions.Length == 0)
                     //Данный товар недоступен в вашем регионе
@@ -377,57 +389,8 @@ namespace SteamDigiSellerBot.Network.Services
                             break;
                         }
 
-                        string subId = edition.Substrings("_to_cart_", "\"").FirstOrDefault(x => !x.Any(y => !char.IsDigit(y)));
-
-                        if (!string.IsNullOrWhiteSpace(subId))
-                        {
-                            Game game = gamesList.FirstOrDefault(x => x.SubId.Equals(subId));
-
-                            if (game != null)
-                            {
-                                game.IsBundle = edition.Contains("bundleid");
-                                db.Entry(game).Property(g => g.IsBundle).IsModified = true;
-
-                                if (game.IsDiscount)
-                                {
-                                    bool isDiscountTimer = edition.Contains("$DiscountCountdown");
-
-                                    if (isDiscountTimer)
-                                    {
-                                        var price = game.GamePrices.FirstOrDefault(
-                                            gp => gp.SteamCurrencyId == game.SteamCurrencyId);
-
-                                        if (CheckTimerAndUpdatePriceInAdvance(edition, game, price))
-                                        {
-                                            db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
-                                            db.Entry(price).State = EntityState.Modified;
-                                            db.SaveChanges();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        string dateSource = edition
-                                            .Substring("<p class=\"game_purchase_discount_countdown\">", "</p>");
-
-                                        string dateStr = new string(
-                                            dateSource.SkipWhile(x => !char.IsDigit(x)).ToArray()) + " " + DateTime.Now.Year;
-
-                                        if (DateTime.TryParse(dateStr, out DateTime dateTime))
-                                        {
-                                            if (dateTime < DateTime.Now)
-                                                dateTime = dateTime.AddYears(1);
-
-                                            game.DiscountEndTimeUtc = dateTime;
-                                            db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
-                                        }
-                                    }
-                                }
-
-                                successfulEditions++;
-                                //db.Entry(game).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                        }
+                        UpdateDiscountTimerOfEdition(edition, gamesList, db);
+                        successfulEditions++;
                     }
 
                     break;
@@ -444,6 +407,85 @@ namespace SteamDigiSellerBot.Network.Services
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }
         }
+        public static string[] ParseEditions(string s) =>
+            s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
+
+
+        public static void UpdateDiscountTimerOfEdition(string edition, List<Game> gamesList, DatabaseContext db)
+        {
+            string subId = edition.Substrings("_to_cart_", "\"").FirstOrDefault(x => !x.Any(y => !char.IsDigit(y)));
+
+            if (!string.IsNullOrWhiteSpace(subId))
+            {
+                Game game = gamesList.FirstOrDefault(x => x.SubId.Equals(subId));
+
+                if (game != null)
+                {
+                    game.IsBundle = edition.Contains("bundleid");
+                    db.Entry(game).Property(g => g.IsBundle).IsModified = true;
+
+                    var currentDiscountStatus = edition.Contains("game_purchase_discount");
+
+                    game.UpdateIsDiscount(db, currentDiscountStatus);
+
+                    if (game.IsDiscount)
+                    {
+                        bool isDiscountTimer = edition.Contains("$DiscountCountdown");
+
+                        if (isDiscountTimer)
+                        {
+                            var price = game.GamePrices.FirstOrDefault(
+                                gp => gp.SteamCurrencyId == game.SteamCurrencyId);
+
+                            if (CheckTimerAndUpdatePriceInAdvance(edition, game, price))
+                            {
+                                db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
+                                db.Entry(price).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            ParseHtmlDiscountCountdown(edition, game);
+
+                            db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
+                        }
+                    }
+
+
+                    //db.Entry(game).State = EntityState.Modified;
+
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public static void ParseHtmlDiscountCountdown(string edition, Game game)
+        {
+            string dateSource = edition
+                .Substring("<p class=\"game_purchase_discount_countdown\">", "</p>");
+
+            // Значит, что скидка бесконечная.
+            if (string.IsNullOrWhiteSpace(dateSource))
+            {
+                game.DiscountEndTimeUtc = DateTime.MaxValue;
+            }
+            else
+            {
+                string dateStr = new string(
+                dateSource.SkipWhile(x => !char.IsDigit(x)).ToArray()) + " " + DateTime.Now.Year;
+
+                if (DateTime.TryParse(dateStr, out DateTime dateTime))
+                {
+                    if (dateTime < DateTime.Now)
+                        dateTime = dateTime.AddYears(1);
+
+                    game.DiscountEndTimeUtc = dateTime;
+                }
+            }
+        }
+
+
 
         public static bool CheckTimerAndUpdatePriceInAdvance(string editionHtml, Game game, GamePrice price)
             //, out bool gameChanged)
@@ -614,16 +656,7 @@ namespace SteamDigiSellerBot.Network.Services
         private async Task<ResponsData> PerformWithCustomHttpClient(string url, SteamProxy steamProxy)
         {
             var respData = new ResponsData();
-            HttpRequest request = new HttpRequest()
-            {
-                Cookies = new CookieDictionary
-                    {
-                        { "Steam_Language", "russian" },
-                        { "birthtime", "155062801" },
-                        { "lastagecheckage", "1-0-1975" },
-                    },
-                UserAgent = Http.ChromeUserAgent()
-            };
+            HttpRequest request = CreateBaseHttpRequest();
 
             if (steamProxy != null)
             {

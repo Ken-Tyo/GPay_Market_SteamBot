@@ -1,5 +1,6 @@
 ﻿using DatabaseRepository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Enums;
