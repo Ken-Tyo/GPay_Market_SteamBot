@@ -315,16 +315,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                 .GetRequiredService<IGameSessionRepository>();
             var gs= await _gsRepo.GetByIdAsync(gsId);
             gs.BotSwitchList ??= new();
+            if (gs.BotId!=null)
+                gs.BotSwitchList.Add(gs.BotId.Value);
             if (gs.BotSwitchList.Count < 3 && gs.BotId!=null)
             {
-                gs.BotSwitchList.Add(gs.BotId.Value);
-
                 gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
                 {
-                    StatusId = gs.StatusId,
+                    //StatusId = GameSessionStatusEnum.SwitchBot,
+                    StatusId = GameSessionStatusEnum.UnknownError,
                     Value = new GameSessionStatusLog.ValueJson
                     {
-                        message = $"Смена бота {gs.BotId}. Попытка №{(gs.BotSwitchList.Count+1)}",
+                        message = $"Смена бота {gs.BotId}. Попытка №{(gs.BotSwitchList.Count)}",
                         botId = gs.BotId.Value,
                         botName = gs.Bot?.UserName,
                         userNickname = gs.SteamProfileName,
@@ -334,8 +335,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 });
                 gs.Bot = null;
                 gs.BotId = null;
-                gs.Stage = GameSessionStage.AddToFriend;
-                gs.StatusId = GameSessionStatusEnum.SwitchBot;
+                gs.Stage = GameSessionStage.WaitToSend;
+                //gs.StatusId = GameSessionStatusEnum.SwitchBot;
                 WaitToSendGameGSQ.Add(gsId);
             }
             else

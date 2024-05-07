@@ -595,6 +595,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         gs.BotSwitchList.Add(bot.Id);
                         await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotSwitchList);
+                        await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog()
+                        // { GameSessionId = gs.Id, StatusId = GameSessionStatusEnum.SwitchBot });
+                        { GameSessionId = gs.Id, StatusId = GameSessionStatusEnum.UnknownError });
                         goto retry_mark;
                     }
                     return (GetBotForSendGameStatus.botLoginErr, filterParams, sb);
