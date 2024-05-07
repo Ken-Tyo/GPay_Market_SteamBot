@@ -12,14 +12,16 @@ namespace SteamDigiSellerBot.ActionFilters
             if (!modelState.IsValid)
             {
                 var errorList = modelState.Values.SelectMany(m => m.Errors)
-                                .Select(e => e.ErrorMessage)
+                                .Select(e => e.Exception)
                                 .ToList();
 
                 //var errorList = ModelState.ToDictionary(
                 //    kvp => kvp.Key,
                 //    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
                 //);
+
                 actionContext.Result = new BadRequestObjectResult(new { errors = errorList });
+                
                
                 //actionContext.Result = new BadRequestObjectResult(modelState);
             }
