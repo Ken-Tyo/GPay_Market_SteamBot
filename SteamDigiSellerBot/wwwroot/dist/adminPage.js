@@ -25991,7 +25991,7 @@ const additem_namespaceObject = __webpack_require__.p + "9b285564fb5d9a6bb58d.sv
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/warning.svg
 const warning_namespaceObject = __webpack_require__.p + "13512b38768e3bec6f75.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/infinity.svg
-const infinity_namespaceObject = __webpack_require__.p + "83b97d4f7b7230bd8ee1.svg";
+const infinity_namespaceObject = __webpack_require__.p + "fc22708812c38683fc50.svg";
 // EXTERNAL MODULE: ./node_modules/use-sync-external-store/shim/with-selector.js
 var with_selector = __webpack_require__(9242);
 ;// CONCATENATED MODULE: ./node_modules/simpler-state/es/utils.js
@@ -42191,7 +42191,8 @@ var products = function products() {
     active: ''
   };
   return /*#__PURE__*/react.createElement("div", {
-    className: list_styles.wrapper
+    className: list_styles.wrapper,
+    onBlur: console.log("products onBlur")
   }, /*#__PURE__*/react.createElement(shared_list, {
     headers: Object.values(headers),
     data: _toConsumableArray(items),
@@ -44868,14 +44869,50 @@ var pageHeader = function pageHeader(_ref) {
 var products_products = function products() {
   var _state$use = state.use(),
     itemsMode = _state$use.itemsMode;
+  var listRef = /*#__PURE__*/react.createRef();
+  var prevItemMode = itemsMode;
+  (0,react.useEffect)(function () {
+    var _listRef$current, _listRef$current2;
+    console.log("wrapper lists " + (listRef === null || listRef === void 0 || (_listRef$current = listRef.current) === null || _listRef$current === void 0 ? void 0 : _listRef$current.scrollTop));
+    listRef === null || listRef === void 0 || (_listRef$current2 = listRef.current) === null || _listRef$current2 === void 0 || _listRef$current2.addEventListener("scroll", function (event) {
+      var _listRef$current3, _listRef$current4;
+      console.log("scrollTop: ".concat(listRef === null || listRef === void 0 || (_listRef$current3 = listRef.current) === null || _listRef$current3 === void 0 ? void 0 : _listRef$current3.scrollTop, " <br>\n                          scrollLeft: ").concat(listRef === null || listRef === void 0 || (_listRef$current4 = listRef.current) === null || _listRef$current4 === void 0 ? void 0 : _listRef$current4.scrollLeft, " "));
+    }, {
+      passive: true
+    });
+    if (prevItemMode === common_itemsMode[2] & itemsMode === common_itemsMode[1] & localStorage.getItem("scrollTop")) {
+      // скроллим к сохраненным координатам
+      listRef.current.scroll({
+        top: localStorage.getItem("scrollTop"),
+        behavior: "smooth"
+      });
+      // удаляем данные с localStorage
+      localStorage.removeItem("scrollTop");
+    }
+    prevItemMode = itemsMode;
+    return function () {
+      if (prevItemMode === common_itemsMode[1] & itemsMode === common_itemsMode[2]) {
+        localStorage.setItem("scrollTop", listRef.current.scrollTop);
+        console.log("OUT" + localStorage.getItem("scrollTop"));
+      }
+      prevItemMode = itemsMode;
+    };
+  }, [itemsMode]);
   return /*#__PURE__*/react.createElement("div", {
-    className: products_styles.wrapper
+    className: products_styles.wrapper,
+    ref: listRef,
+    preventScrollReset: true
   }, /*#__PURE__*/react.createElement(admin_pageHeader, {
     title: "Digiseller",
     subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
   }), /*#__PURE__*/react.createElement("div", {
-    className: products_styles.content
-  }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, null), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, null)));
+    className: products_styles.content,
+    preventScrollReset: true
+  }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, {
+    preventScrollReset: true
+  }), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, {
+    preventScrollReset: true
+  })));
 };
 /* harmony default export */ const admin_products = (products_products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/styles.scss

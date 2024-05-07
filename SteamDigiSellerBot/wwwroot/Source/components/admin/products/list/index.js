@@ -44,6 +44,8 @@ const products = () => {
     currencies,
   } = state.use();
 
+
+
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
   //const [editItem, setEditItem] = useState(null);
@@ -87,7 +89,7 @@ const products = () => {
   };
 
   return (
-    <div className={css.wrapper}>
+    <div className={css.wrapper} onBlur={console.log("products onBlur")}>
       <List
         headers={Object.values(headers)}
         data={[...items]}
