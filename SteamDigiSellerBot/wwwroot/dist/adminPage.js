@@ -44858,6 +44858,159 @@ var pageHeader = function pageHeader(_ref) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/index.js
+
+
+
+
+
+
+
+var products_products = function products() {
+  var _state$use = state.use(),
+    itemsMode = _state$use.itemsMode;
+  var key = "PRODUCTS_CONTENT_SCROLLTOP";
+  var contentRef = (0,react.useRef)(null);
+  (0,react.useEffect)(function () {
+    var scrollTopValue = contentRef.current.scrollTop;
+    if (itemsMode === common_itemsMode[1] & localStorage.getItem(key) != null) {
+      // скроллим к сохраненным координатам
+      contentRef.current.scroll({
+        top: localStorage.getItem(key)
+      });
+      // удаляем данные с localStorage
+      localStorage.removeItem(key);
+    }
+    return function () {
+      if (localStorage.getItem(key) == null & itemsMode === common_itemsMode[1]) {
+        localStorage.setItem(key, scrollTopValue);
+      }
+    };
+  });
+  return /*#__PURE__*/react.createElement("div", {
+    className: products_styles.wrapper
+  }, /*#__PURE__*/react.createElement(admin_pageHeader, {
+    title: "Digiseller",
+    subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
+  }), /*#__PURE__*/react.createElement("div", {
+    className: products_styles.content,
+    ref: contentRef
+  }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, null), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, null)));
+};
+/* harmony default export */ const admin_products = (products_products);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const modalSaveText_styles = ({"content":"styles__content--tL8MP","boxes":"styles__boxes--SkiXb","textarea":"styles__textarea--_WCY4","actions":"styles__actions--tAP37"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/index.js
+function modalSaveText_slicedToArray(arr, i) { return modalSaveText_arrayWithHoles(arr) || modalSaveText_iterableToArrayLimit(arr, i) || modalSaveText_unsupportedIterableToArray(arr, i) || modalSaveText_nonIterableRest(); }
+function modalSaveText_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalSaveText_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalSaveText_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalSaveText_arrayLikeToArray(o, minLen); }
+function modalSaveText_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalSaveText_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalSaveText_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+var modalSaveText = function modalSaveText(_ref) {
+  var title = _ref.title,
+    placeholder = _ref.placeholder,
+    isOpen = _ref.isOpen,
+    onCancel = _ref.onCancel,
+    onSave = _ref.onSave,
+    width = _ref.width,
+    height = _ref.height,
+    defaultValue = _ref.defaultValue;
+  var initialVal = '';
+  var _useState = (0,react.useState)(initialVal),
+    _useState2 = modalSaveText_slicedToArray(_useState, 2),
+    val = _useState2[0],
+    setVal = _useState2[1];
+  return /*#__PURE__*/react.createElement(ModalBase, {
+    isOpen: isOpen,
+    title: title,
+    width: width || 705,
+    height: height || 527
+  }, /*#__PURE__*/react.createElement("div", {
+    className: modalSaveText_styles.content
+  }, /*#__PURE__*/react.createElement("div", {
+    className: modalSaveText_styles.boxes
+  }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
+    onInput: function onInput(e) {
+      setVal(e.target.value);
+    },
+    rows: "18",
+    "class": modalSaveText_styles.textarea,
+    placeholder: placeholder,
+    defaultValue: defaultValue
+  })))), /*#__PURE__*/react.createElement("div", {
+    className: modalSaveText_styles.actions
+  }, /*#__PURE__*/react.createElement(shared_button, {
+    text: onSave.label,
+    style: {
+      backgroundColor: '#478C35',
+      marginRight: '36px',
+      width: '284px'
+    },
+    onClick: function onClick() {
+      if (onSave.action) onSave.action(val);
+      setVal('');
+    }
+  }), /*#__PURE__*/react.createElement(shared_button, {
+    text: onCancel.label || 'Отмена',
+    onClick: function onClick() {
+      if (onCancel.action) onCancel.action();
+    },
+    style: {
+      backgroundColor: '#9A7AA9',
+      marginLeft: '0px'
+    }
+  })));
+};
+/* harmony default export */ const shared_modalSaveText = (modalSaveText);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const orders_list_styles = ({"wrapper":"styles__wrapper--BTOnR","cell":"styles__cell--zWdtD","id":"styles__id--z3lcj","uniqueId":"styles__uniqueId--lnG5z","ref":"styles__ref--zIuH9","comment":"styles__comment--I83lW","info":"styles__info--O_O1Q","secondRow":"styles__secondRow--h4jtc","profileRef":"styles__profileRef--cCxUa","buttons":"styles__buttons--NgPkP","btnWrapper":"styles__btnWrapper--jB4TP"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/statusBadge/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const statusBadge_styles = ({"wrapper":"styles__wrapper--aIpcD","nameText":"styles__nameText--VSPbC","historyWrapper":"styles__historyWrapper--S8306"});
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/history.svg
+const history_namespaceObject = __webpack_require__.p + "0550f86529e8bf1b3ba6.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/statusBadge/index.js
+
+
+
+
+var statusBadge = function statusBadge(_ref) {
+  var data = _ref.data,
+    _onClick = _ref.onClick;
+  return /*#__PURE__*/react.createElement("div", {
+    className: statusBadge_styles.wrapper
+  }, /*#__PURE__*/react.createElement("div", {
+    className: statusBadge_styles.nameText,
+    style: {
+      color: data === null || data === void 0 ? void 0 : data.color
+    }
+  }, data === null || data === void 0 ? void 0 : data.name), /*#__PURE__*/react.createElement("div", {
+    className: statusBadge_styles.historyWrapper,
+    onClick: function onClick() {
+      if (_onClick) _onClick();
+    }
+  }, /*#__PURE__*/react.createElement("img", {
+    src: history_namespaceObject
+  })));
+};
+/* harmony default export */ const list_statusBadge = (statusBadge);
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/referArrow.svg
+const referArrow_namespaceObject = __webpack_require__.p + "0253609d9abb7cc23cc2.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/comment.svg
+const comment_namespaceObject = __webpack_require__.p + "5fdee8aac0f037f4c8ba.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/check.svg
+const check_namespaceObject = __webpack_require__.p + "66c4c75f2ced6614b873.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/retry.svg
+const retry_namespaceObject = __webpack_require__.p + "daec4cd5588eaec46057.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/stop.svg
+const stop_namespaceObject = __webpack_require__.p + "f2c7af70017956da7283.svg";
 ;// CONCATENATED MODULE: ./node_modules/@remix-run/router/dist/router.js
 /**
  * @remix-run/router v1.15.3
@@ -49255,15 +49408,15 @@ if (false) {}
  *
  * @see https://reactrouter.com/hooks/use-href
  */
-function useHref(to, _temp) {
+function dist_useHref(to, _temp) {
   let {
     relative
   } = _temp === void 0 ? {} : _temp;
-  !useInRouterContext() ?  false ? 0 : invariant(false) : void 0;
+  !useInRouterContext() ?  false ? 0 : UNSAFE_invariant(false) : void 0;
   let {
     basename,
     navigator
-  } = react.useContext(NavigationContext);
+  } = React.useContext(NavigationContext);
   let {
     hash,
     pathname,
@@ -49278,7 +49431,7 @@ function useHref(to, _temp) {
   // basename which allows the basename to have full control over the presence
   // of a trailing slash on root links
   if (basename !== "/") {
-    joinedPathname = pathname === "/" ? basename : router_joinPaths([basename, pathname]);
+    joinedPathname = pathname === "/" ? basename : joinPaths([basename, pathname]);
   }
   return navigator.createHref({
     pathname: joinedPathname,
@@ -49466,15 +49619,15 @@ function dist_useResolvedPath(to, _temp2) {
   } = _temp2 === void 0 ? {} : _temp2;
   let {
     future
-  } = react.useContext(NavigationContext);
+  } = React.useContext(NavigationContext);
   let {
     matches
-  } = react.useContext(RouteContext);
+  } = React.useContext(RouteContext);
   let {
     pathname: locationPathname
   } = dist_useLocation();
-  let routePathnamesJson = JSON.stringify(getResolveToMatches(matches, future.v7_relativeSplatPath));
-  return react.useMemo(() => router_resolveTo(to, JSON.parse(routePathnamesJson), locationPathname, relative === "path"), [to, routePathnamesJson, locationPathname, relative]);
+  let routePathnamesJson = JSON.stringify(UNSAFE_getResolveToMatches(matches, future.v7_relativeSplatPath));
+  return React.useMemo(() => resolveTo(to, JSON.parse(routePathnamesJson), locationPathname, relative === "path"), [to, routePathnamesJson, locationPathname, relative]);
 }
 
 /**
@@ -49849,7 +50002,7 @@ function useRouteId() {
  * Returns the current navigation, defaulting to an "idle" navigation when
  * no navigation is in progress
  */
-function useNavigation() {
+function dist_useNavigation() {
   let state = useDataRouterState(DataRouterStateHook.UseNavigation);
   return state.navigation;
 }
@@ -49871,12 +50024,12 @@ function useRevalidator() {
  * Returns the active route matches, useful for accessing loaderData for
  * parent/child routes or the route "handle" property
  */
-function useMatches() {
+function dist_useMatches() {
   let {
     matches,
     loaderData
   } = useDataRouterState(DataRouterStateHook.UseMatches);
-  return react.useMemo(() => matches.map(m => convertRouteMatchToUiMatch(m, loaderData)), [matches, loaderData]);
+  return React.useMemo(() => matches.map(m => UNSAFE_convertRouteMatchToUiMatch(m, loaderData)), [matches, loaderData]);
 }
 
 /**
@@ -50572,1602 +50725,6 @@ function createMemoryRouter(routes, opts) {
 
 //# sourceMappingURL=index.js.map
 
-;// CONCATENATED MODULE: ./node_modules/react-router-dom/dist/index.js
-/**
- * React Router DOM v6.22.3
- *
- * Copyright (c) Remix Software Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.md file in the root directory of this source tree.
- *
- * @license MIT
- */
-
-
-
-
-
-
-function react_router_dom_dist_extends() {
-  react_router_dom_dist_extends = Object.assign ? Object.assign.bind() : function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-  return react_router_dom_dist_extends.apply(this, arguments);
-}
-function dist_objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-  return target;
-}
-
-const defaultMethod = "get";
-const defaultEncType = "application/x-www-form-urlencoded";
-function isHtmlElement(object) {
-  return object != null && typeof object.tagName === "string";
-}
-function isButtonElement(object) {
-  return isHtmlElement(object) && object.tagName.toLowerCase() === "button";
-}
-function isFormElement(object) {
-  return isHtmlElement(object) && object.tagName.toLowerCase() === "form";
-}
-function isInputElement(object) {
-  return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
-}
-function isModifiedEvent(event) {
-  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-}
-function shouldProcessLinkClick(event, target) {
-  return event.button === 0 && (
-  // Ignore everything but left clicks
-  !target || target === "_self") &&
-  // Let browser handle "target=_blank" etc.
-  !isModifiedEvent(event) // Ignore clicks with modifier keys
-  ;
-}
-/**
- * Creates a URLSearchParams object using the given initializer.
- *
- * This is identical to `new URLSearchParams(init)` except it also
- * supports arrays as values in the object form of the initializer
- * instead of just strings. This is convenient when you need multiple
- * values for a given key, but don't want to use an array initializer.
- *
- * For example, instead of:
- *
- *   let searchParams = new URLSearchParams([
- *     ['sort', 'name'],
- *     ['sort', 'price']
- *   ]);
- *
- * you can do:
- *
- *   let searchParams = createSearchParams({
- *     sort: ['name', 'price']
- *   });
- */
-function createSearchParams(init) {
-  if (init === void 0) {
-    init = "";
-  }
-  return new URLSearchParams(typeof init === "string" || Array.isArray(init) || init instanceof URLSearchParams ? init : Object.keys(init).reduce((memo, key) => {
-    let value = init[key];
-    return memo.concat(Array.isArray(value) ? value.map(v => [key, v]) : [[key, value]]);
-  }, []));
-}
-function getSearchParamsForLocation(locationSearch, defaultSearchParams) {
-  let searchParams = createSearchParams(locationSearch);
-  if (defaultSearchParams) {
-    // Use `defaultSearchParams.forEach(...)` here instead of iterating of
-    // `defaultSearchParams.keys()` to work-around a bug in Firefox related to
-    // web extensions. Relevant Bugzilla tickets:
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1414602
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1023984
-    defaultSearchParams.forEach((_, key) => {
-      if (!searchParams.has(key)) {
-        defaultSearchParams.getAll(key).forEach(value => {
-          searchParams.append(key, value);
-        });
-      }
-    });
-  }
-  return searchParams;
-}
-// One-time check for submitter support
-let _formDataSupportsSubmitter = null;
-function isFormDataSubmitterSupported() {
-  if (_formDataSupportsSubmitter === null) {
-    try {
-      new FormData(document.createElement("form"),
-      // @ts-expect-error if FormData supports the submitter parameter, this will throw
-      0);
-      _formDataSupportsSubmitter = false;
-    } catch (e) {
-      _formDataSupportsSubmitter = true;
-    }
-  }
-  return _formDataSupportsSubmitter;
-}
-const supportedFormEncTypes = new Set(["application/x-www-form-urlencoded", "multipart/form-data", "text/plain"]);
-function getFormEncType(encType) {
-  if (encType != null && !supportedFormEncTypes.has(encType)) {
-     false ? 0 : void 0;
-    return null;
-  }
-  return encType;
-}
-function getFormSubmissionInfo(target, basename) {
-  let method;
-  let action;
-  let encType;
-  let formData;
-  let body;
-  if (isFormElement(target)) {
-    // When grabbing the action from the element, it will have had the basename
-    // prefixed to ensure non-JS scenarios work, so strip it since we'll
-    // re-prefix in the router
-    let attr = target.getAttribute("action");
-    action = attr ? stripBasename(attr, basename) : null;
-    method = target.getAttribute("method") || defaultMethod;
-    encType = getFormEncType(target.getAttribute("enctype")) || defaultEncType;
-    formData = new FormData(target);
-  } else if (isButtonElement(target) || isInputElement(target) && (target.type === "submit" || target.type === "image")) {
-    let form = target.form;
-    if (form == null) {
-      throw new Error("Cannot submit a <button> or <input type=\"submit\"> without a <form>");
-    }
-    // <button>/<input type="submit"> may override attributes of <form>
-    // When grabbing the action from the element, it will have had the basename
-    // prefixed to ensure non-JS scenarios work, so strip it since we'll
-    // re-prefix in the router
-    let attr = target.getAttribute("formaction") || form.getAttribute("action");
-    action = attr ? stripBasename(attr, basename) : null;
-    method = target.getAttribute("formmethod") || form.getAttribute("method") || defaultMethod;
-    encType = getFormEncType(target.getAttribute("formenctype")) || getFormEncType(form.getAttribute("enctype")) || defaultEncType;
-    // Build a FormData object populated from a form and submitter
-    formData = new FormData(form, target);
-    // If this browser doesn't support the `FormData(el, submitter)` format,
-    // then tack on the submitter value at the end.  This is a lightweight
-    // solution that is not 100% spec compliant.  For complete support in older
-    // browsers, consider using the `formdata-submitter-polyfill` package
-    if (!isFormDataSubmitterSupported()) {
-      let {
-        name,
-        type,
-        value
-      } = target;
-      if (type === "image") {
-        let prefix = name ? name + "." : "";
-        formData.append(prefix + "x", "0");
-        formData.append(prefix + "y", "0");
-      } else if (name) {
-        formData.append(name, value);
-      }
-    }
-  } else if (isHtmlElement(target)) {
-    throw new Error("Cannot submit element that is not <form>, <button>, or " + "<input type=\"submit|image\">");
-  } else {
-    method = defaultMethod;
-    action = null;
-    encType = defaultEncType;
-    body = target;
-  }
-  // Send body for <Form encType="text/plain" so we encode it into text
-  if (formData && encType === "text/plain") {
-    body = formData;
-    formData = undefined;
-  }
-  return {
-    action,
-    method: method.toLowerCase(),
-    encType,
-    formData,
-    body
-  };
-}
-
-const dist_excluded = ["onClick", "relative", "reloadDocument", "replace", "state", "target", "to", "preventScrollReset", "unstable_viewTransition"],
-  dist_excluded2 = (/* unused pure expression or super */ null && (["aria-current", "caseSensitive", "className", "end", "style", "to", "unstable_viewTransition", "children"])),
-  dist_excluded3 = (/* unused pure expression or super */ null && (["fetcherKey", "navigate", "reloadDocument", "replace", "state", "method", "action", "onSubmit", "relative", "preventScrollReset", "unstable_viewTransition"]));
-// HEY YOU! DON'T TOUCH THIS VARIABLE!
-//
-// It is replaced with the proper version at build time via a babel plugin in
-// the rollup config.
-//
-// Export a global property onto the window for React Router detection by the
-// Core Web Vitals Technology Report.  This way they can configure the `wappalyzer`
-// to detect and properly classify live websites as being built with React Router:
-// https://github.com/HTTPArchive/wappalyzer/blob/main/src/technologies/r.json
-const REACT_ROUTER_VERSION = "6";
-try {
-  window.__reactRouterVersion = REACT_ROUTER_VERSION;
-} catch (e) {
-  // no-op
-}
-function createBrowserRouter(routes, opts) {
-  return router_createRouter({
-    basename: opts == null ? void 0 : opts.basename,
-    future: react_router_dom_dist_extends({}, opts == null ? void 0 : opts.future, {
-      v7_prependBasename: true
-    }),
-    history: router_createBrowserHistory({
-      window: opts == null ? void 0 : opts.window
-    }),
-    hydrationData: (opts == null ? void 0 : opts.hydrationData) || parseHydrationData(),
-    routes,
-    mapRouteProperties: mapRouteProperties,
-    window: opts == null ? void 0 : opts.window
-  }).initialize();
-}
-function createHashRouter(routes, opts) {
-  return createRouter({
-    basename: opts == null ? void 0 : opts.basename,
-    future: react_router_dom_dist_extends({}, opts == null ? void 0 : opts.future, {
-      v7_prependBasename: true
-    }),
-    history: createHashHistory({
-      window: opts == null ? void 0 : opts.window
-    }),
-    hydrationData: (opts == null ? void 0 : opts.hydrationData) || parseHydrationData(),
-    routes,
-    mapRouteProperties: UNSAFE_mapRouteProperties,
-    window: opts == null ? void 0 : opts.window
-  }).initialize();
-}
-function parseHydrationData() {
-  var _window;
-  let state = (_window = window) == null ? void 0 : _window.__staticRouterHydrationData;
-  if (state && state.errors) {
-    state = react_router_dom_dist_extends({}, state, {
-      errors: deserializeErrors(state.errors)
-    });
-  }
-  return state;
-}
-function deserializeErrors(errors) {
-  if (!errors) return null;
-  let entries = Object.entries(errors);
-  let serialized = {};
-  for (let [key, val] of entries) {
-    // Hey you!  If you change this, please change the corresponding logic in
-    // serializeErrors in react-router-dom/server.tsx :)
-    if (val && val.__type === "RouteErrorResponse") {
-      serialized[key] = new ErrorResponseImpl(val.status, val.statusText, val.data, val.internal === true);
-    } else if (val && val.__type === "Error") {
-      // Attempt to reconstruct the right type of Error (i.e., ReferenceError)
-      if (val.__subType) {
-        let ErrorConstructor = window[val.__subType];
-        if (typeof ErrorConstructor === "function") {
-          try {
-            // @ts-expect-error
-            let error = new ErrorConstructor(val.message);
-            // Wipe away the client-side stack trace.  Nothing to fill it in with
-            // because we don't serialize SSR stack traces for security reasons
-            error.stack = "";
-            serialized[key] = error;
-          } catch (e) {
-            // no-op - fall through and create a normal Error
-          }
-        }
-      }
-      if (serialized[key] == null) {
-        let error = new Error(val.message);
-        // Wipe away the client-side stack trace.  Nothing to fill it in with
-        // because we don't serialize SSR stack traces for security reasons
-        error.stack = "";
-        serialized[key] = error;
-      }
-    } else {
-      serialized[key] = val;
-    }
-  }
-  return serialized;
-}
-const ViewTransitionContext = /*#__PURE__*/react.createContext({
-  isTransitioning: false
-});
-if (false) {}
-const FetchersContext = /*#__PURE__*/react.createContext(new Map());
-if (false) {}
-//#endregion
-////////////////////////////////////////////////////////////////////////////////
-//#region Components
-////////////////////////////////////////////////////////////////////////////////
-/**
-  Webpack + React 17 fails to compile on any of the following because webpack
-  complains that `startTransition` doesn't exist in `React`:
-  * import { startTransition } from "react"
-  * import * as React from from "react";
-    "startTransition" in React ? React.startTransition(() => setState()) : setState()
-  * import * as React from from "react";
-    "startTransition" in React ? React["startTransition"](() => setState()) : setState()
-
-  Moving it to a constant such as the following solves the Webpack/React 17 issue:
-  * import * as React from from "react";
-    const START_TRANSITION = "startTransition";
-    START_TRANSITION in React ? React[START_TRANSITION](() => setState()) : setState()
-
-  However, that introduces webpack/terser minification issues in production builds
-  in React 18 where minification/obfuscation ends up removing the call of
-  React.startTransition entirely from the first half of the ternary.  Grabbing
-  this exported reference once up front resolves that issue.
-
-  See https://github.com/remix-run/react-router/issues/10579
-*/
-const dist_START_TRANSITION = "startTransition";
-const dist_startTransitionImpl = react_namespaceObject[dist_START_TRANSITION];
-const FLUSH_SYNC = "flushSync";
-const flushSyncImpl = react_dom_namespaceObject[FLUSH_SYNC];
-const USE_ID = "useId";
-const useIdImpl = react_namespaceObject[USE_ID];
-function startTransitionSafe(cb) {
-  if (dist_startTransitionImpl) {
-    dist_startTransitionImpl(cb);
-  } else {
-    cb();
-  }
-}
-function flushSyncSafe(cb) {
-  if (flushSyncImpl) {
-    flushSyncImpl(cb);
-  } else {
-    cb();
-  }
-}
-class Deferred {
-  constructor() {
-    this.status = "pending";
-    this.promise = new Promise((resolve, reject) => {
-      this.resolve = value => {
-        if (this.status === "pending") {
-          this.status = "resolved";
-          resolve(value);
-        }
-      };
-      this.reject = reason => {
-        if (this.status === "pending") {
-          this.status = "rejected";
-          reject(reason);
-        }
-      };
-    });
-  }
-}
-/**
- * Given a Remix Router instance, render the appropriate UI
- */
-function dist_RouterProvider(_ref) {
-  let {
-    fallbackElement,
-    router,
-    future
-  } = _ref;
-  let [state, setStateImpl] = react.useState(router.state);
-  let [pendingState, setPendingState] = react.useState();
-  let [vtContext, setVtContext] = react.useState({
-    isTransitioning: false
-  });
-  let [renderDfd, setRenderDfd] = react.useState();
-  let [transition, setTransition] = react.useState();
-  let [interruption, setInterruption] = react.useState();
-  let fetcherData = react.useRef(new Map());
-  let {
-    v7_startTransition
-  } = future || {};
-  let optInStartTransition = react.useCallback(cb => {
-    if (v7_startTransition) {
-      startTransitionSafe(cb);
-    } else {
-      cb();
-    }
-  }, [v7_startTransition]);
-  let setState = react.useCallback((newState, _ref2) => {
-    let {
-      deletedFetchers,
-      unstable_flushSync: flushSync,
-      unstable_viewTransitionOpts: viewTransitionOpts
-    } = _ref2;
-    deletedFetchers.forEach(key => fetcherData.current.delete(key));
-    newState.fetchers.forEach((fetcher, key) => {
-      if (fetcher.data !== undefined) {
-        fetcherData.current.set(key, fetcher.data);
-      }
-    });
-    let isViewTransitionUnavailable = router.window == null || typeof router.window.document.startViewTransition !== "function";
-    // If this isn't a view transition or it's not available in this browser,
-    // just update and be done with it
-    if (!viewTransitionOpts || isViewTransitionUnavailable) {
-      if (flushSync) {
-        flushSyncSafe(() => setStateImpl(newState));
-      } else {
-        optInStartTransition(() => setStateImpl(newState));
-      }
-      return;
-    }
-    // flushSync + startViewTransition
-    if (flushSync) {
-      // Flush through the context to mark DOM elements as transition=ing
-      flushSyncSafe(() => {
-        // Cancel any pending transitions
-        if (transition) {
-          renderDfd && renderDfd.resolve();
-          transition.skipTransition();
-        }
-        setVtContext({
-          isTransitioning: true,
-          flushSync: true,
-          currentLocation: viewTransitionOpts.currentLocation,
-          nextLocation: viewTransitionOpts.nextLocation
-        });
-      });
-      // Update the DOM
-      let t = router.window.document.startViewTransition(() => {
-        flushSyncSafe(() => setStateImpl(newState));
-      });
-      // Clean up after the animation completes
-      t.finished.finally(() => {
-        flushSyncSafe(() => {
-          setRenderDfd(undefined);
-          setTransition(undefined);
-          setPendingState(undefined);
-          setVtContext({
-            isTransitioning: false
-          });
-        });
-      });
-      flushSyncSafe(() => setTransition(t));
-      return;
-    }
-    // startTransition + startViewTransition
-    if (transition) {
-      // Interrupting an in-progress transition, cancel and let everything flush
-      // out, and then kick off a new transition from the interruption state
-      renderDfd && renderDfd.resolve();
-      transition.skipTransition();
-      setInterruption({
-        state: newState,
-        currentLocation: viewTransitionOpts.currentLocation,
-        nextLocation: viewTransitionOpts.nextLocation
-      });
-    } else {
-      // Completed navigation update with opted-in view transitions, let 'er rip
-      setPendingState(newState);
-      setVtContext({
-        isTransitioning: true,
-        flushSync: false,
-        currentLocation: viewTransitionOpts.currentLocation,
-        nextLocation: viewTransitionOpts.nextLocation
-      });
-    }
-  }, [router.window, transition, renderDfd, fetcherData, optInStartTransition]);
-  // Need to use a layout effect here so we are subscribed early enough to
-  // pick up on any render-driven redirects/navigations (useEffect/<Navigate>)
-  react.useLayoutEffect(() => router.subscribe(setState), [router, setState]);
-  // When we start a view transition, create a Deferred we can use for the
-  // eventual "completed" render
-  react.useEffect(() => {
-    if (vtContext.isTransitioning && !vtContext.flushSync) {
-      setRenderDfd(new Deferred());
-    }
-  }, [vtContext]);
-  // Once the deferred is created, kick off startViewTransition() to update the
-  // DOM and then wait on the Deferred to resolve (indicating the DOM update has
-  // happened)
-  react.useEffect(() => {
-    if (renderDfd && pendingState && router.window) {
-      let newState = pendingState;
-      let renderPromise = renderDfd.promise;
-      let transition = router.window.document.startViewTransition(async () => {
-        optInStartTransition(() => setStateImpl(newState));
-        await renderPromise;
-      });
-      transition.finished.finally(() => {
-        setRenderDfd(undefined);
-        setTransition(undefined);
-        setPendingState(undefined);
-        setVtContext({
-          isTransitioning: false
-        });
-      });
-      setTransition(transition);
-    }
-  }, [optInStartTransition, pendingState, renderDfd, router.window]);
-  // When the new location finally renders and is committed to the DOM, this
-  // effect will run to resolve the transition
-  react.useEffect(() => {
-    if (renderDfd && pendingState && state.location.key === pendingState.location.key) {
-      renderDfd.resolve();
-    }
-  }, [renderDfd, transition, state.location, pendingState]);
-  // If we get interrupted with a new navigation during a transition, we skip
-  // the active transition, let it cleanup, then kick it off again here
-  react.useEffect(() => {
-    if (!vtContext.isTransitioning && interruption) {
-      setPendingState(interruption.state);
-      setVtContext({
-        isTransitioning: true,
-        flushSync: false,
-        currentLocation: interruption.currentLocation,
-        nextLocation: interruption.nextLocation
-      });
-      setInterruption(undefined);
-    }
-  }, [vtContext.isTransitioning, interruption]);
-  react.useEffect(() => {
-     false ? 0 : void 0;
-    // Only log this once on initial mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  let navigator = react.useMemo(() => {
-    return {
-      createHref: router.createHref,
-      encodeLocation: router.encodeLocation,
-      go: n => router.navigate(n),
-      push: (to, state, opts) => router.navigate(to, {
-        state,
-        preventScrollReset: opts == null ? void 0 : opts.preventScrollReset
-      }),
-      replace: (to, state, opts) => router.navigate(to, {
-        replace: true,
-        state,
-        preventScrollReset: opts == null ? void 0 : opts.preventScrollReset
-      })
-    };
-  }, [router]);
-  let basename = router.basename || "/";
-  let dataRouterContext = react.useMemo(() => ({
-    router,
-    navigator,
-    static: false,
-    basename
-  }), [router, navigator, basename]);
-  // The fragment and {null} here are important!  We need them to keep React 18's
-  // useId happy when we are server-rendering since we may have a <script> here
-  // containing the hydrated server-side staticContext (from StaticRouterProvider).
-  // useId relies on the component tree structure to generate deterministic id's
-  // so we need to ensure it remains the same on the client even though
-  // we don't need the <script> tag
-  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(DataRouterContext.Provider, {
-    value: dataRouterContext
-  }, /*#__PURE__*/react.createElement(DataRouterStateContext.Provider, {
-    value: state
-  }, /*#__PURE__*/react.createElement(FetchersContext.Provider, {
-    value: fetcherData.current
-  }, /*#__PURE__*/react.createElement(ViewTransitionContext.Provider, {
-    value: vtContext
-  }, /*#__PURE__*/react.createElement(dist_Router, {
-    basename: basename,
-    location: state.location,
-    navigationType: state.historyAction,
-    navigator: navigator,
-    future: {
-      v7_relativeSplatPath: router.future.v7_relativeSplatPath
-    }
-  }, state.initialized || router.future.v7_partialHydration ? /*#__PURE__*/react.createElement(dist_DataRoutes, {
-    routes: router.routes,
-    future: router.future,
-    state: state
-  }) : fallbackElement))))), null);
-}
-function dist_DataRoutes(_ref3) {
-  let {
-    routes,
-    future,
-    state
-  } = _ref3;
-  return useRoutesImpl(routes, undefined, state, future);
-}
-/**
- * A `<Router>` for use in web browsers. Provides the cleanest URLs.
- */
-function BrowserRouter(_ref4) {
-  let {
-    basename,
-    children,
-    future,
-    window
-  } = _ref4;
-  let historyRef = React.useRef();
-  if (historyRef.current == null) {
-    historyRef.current = createBrowserHistory({
-      window,
-      v5Compat: true
-    });
-  }
-  let history = historyRef.current;
-  let [state, setStateImpl] = React.useState({
-    action: history.action,
-    location: history.location
-  });
-  let {
-    v7_startTransition
-  } = future || {};
-  let setState = React.useCallback(newState => {
-    v7_startTransition && dist_startTransitionImpl ? dist_startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
-  }, [setStateImpl, v7_startTransition]);
-  React.useLayoutEffect(() => history.listen(setState), [history, setState]);
-  return /*#__PURE__*/React.createElement(Router, {
-    basename: basename,
-    children: children,
-    location: state.location,
-    navigationType: state.action,
-    navigator: history,
-    future: future
-  });
-}
-/**
- * A `<Router>` for use in web browsers. Stores the location in the hash
- * portion of the URL so it is not sent to the server.
- */
-function HashRouter(_ref5) {
-  let {
-    basename,
-    children,
-    future,
-    window
-  } = _ref5;
-  let historyRef = React.useRef();
-  if (historyRef.current == null) {
-    historyRef.current = createHashHistory({
-      window,
-      v5Compat: true
-    });
-  }
-  let history = historyRef.current;
-  let [state, setStateImpl] = React.useState({
-    action: history.action,
-    location: history.location
-  });
-  let {
-    v7_startTransition
-  } = future || {};
-  let setState = React.useCallback(newState => {
-    v7_startTransition && dist_startTransitionImpl ? dist_startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
-  }, [setStateImpl, v7_startTransition]);
-  React.useLayoutEffect(() => history.listen(setState), [history, setState]);
-  return /*#__PURE__*/React.createElement(Router, {
-    basename: basename,
-    children: children,
-    location: state.location,
-    navigationType: state.action,
-    navigator: history,
-    future: future
-  });
-}
-/**
- * A `<Router>` that accepts a pre-instantiated history object. It's important
- * to note that using your own history object is highly discouraged and may add
- * two versions of the history library to your bundles unless you use the same
- * version of the history library that React Router uses internally.
- */
-function HistoryRouter(_ref6) {
-  let {
-    basename,
-    children,
-    future,
-    history
-  } = _ref6;
-  let [state, setStateImpl] = React.useState({
-    action: history.action,
-    location: history.location
-  });
-  let {
-    v7_startTransition
-  } = future || {};
-  let setState = React.useCallback(newState => {
-    v7_startTransition && dist_startTransitionImpl ? dist_startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
-  }, [setStateImpl, v7_startTransition]);
-  React.useLayoutEffect(() => history.listen(setState), [history, setState]);
-  return /*#__PURE__*/React.createElement(Router, {
-    basename: basename,
-    children: children,
-    location: state.location,
-    navigationType: state.action,
-    navigator: history,
-    future: future
-  });
-}
-if (false) {}
-const dist_isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
-const dist_ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
-/**
- * The public API for rendering a history-aware `<a>`.
- */
-const Link = /*#__PURE__*/react.forwardRef(function LinkWithRef(_ref7, ref) {
-  let {
-      onClick,
-      relative,
-      reloadDocument,
-      replace,
-      state,
-      target,
-      to,
-      preventScrollReset,
-      unstable_viewTransition
-    } = _ref7,
-    rest = dist_objectWithoutPropertiesLoose(_ref7, dist_excluded);
-  let {
-    basename
-  } = react.useContext(NavigationContext);
-  // Rendered into <a href> for absolute URLs
-  let absoluteHref;
-  let isExternal = false;
-  if (typeof to === "string" && dist_ABSOLUTE_URL_REGEX.test(to)) {
-    // Render the absolute href server- and client-side
-    absoluteHref = to;
-    // Only check for external origins client-side
-    if (dist_isBrowser) {
-      try {
-        let currentUrl = new URL(window.location.href);
-        let targetUrl = to.startsWith("//") ? new URL(currentUrl.protocol + to) : new URL(to);
-        let path = router_stripBasename(targetUrl.pathname, basename);
-        if (targetUrl.origin === currentUrl.origin && path != null) {
-          // Strip the protocol/origin/basename for same-origin absolute URLs
-          to = path + targetUrl.search + targetUrl.hash;
-        } else {
-          isExternal = true;
-        }
-      } catch (e) {
-        // We can't do external URL detection without a valid URL
-         false ? 0 : void 0;
-      }
-    }
-  }
-  // Rendered into <a href> for relative URLs
-  let href = useHref(to, {
-    relative
-  });
-  let internalOnClick = useLinkClickHandler(to, {
-    replace,
-    state,
-    target,
-    preventScrollReset,
-    relative,
-    unstable_viewTransition
-  });
-  function handleClick(event) {
-    if (onClick) onClick(event);
-    if (!event.defaultPrevented) {
-      internalOnClick(event);
-    }
-  }
-  return (
-    /*#__PURE__*/
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
-    react.createElement("a", react_router_dom_dist_extends({}, rest, {
-      href: absoluteHref || href,
-      onClick: isExternal || reloadDocument ? onClick : handleClick,
-      ref: ref,
-      target: target
-    }))
-  );
-});
-if (false) {}
-/**
- * A `<Link>` wrapper that knows if it's "active" or not.
- */
-const NavLink = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef(function NavLinkWithRef(_ref8, ref) {
-  let {
-      "aria-current": ariaCurrentProp = "page",
-      caseSensitive = false,
-      className: classNameProp = "",
-      end = false,
-      style: styleProp,
-      to,
-      unstable_viewTransition,
-      children
-    } = _ref8,
-    rest = dist_objectWithoutPropertiesLoose(_ref8, dist_excluded2);
-  let path = useResolvedPath(to, {
-    relative: rest.relative
-  });
-  let location = useLocation();
-  let routerState = React.useContext(UNSAFE_DataRouterStateContext);
-  let {
-    navigator,
-    basename
-  } = React.useContext(UNSAFE_NavigationContext);
-  let isTransitioning = routerState != null &&
-  // Conditional usage is OK here because the usage of a data router is static
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useViewTransitionState(path) && unstable_viewTransition === true;
-  let toPathname = navigator.encodeLocation ? navigator.encodeLocation(path).pathname : path.pathname;
-  let locationPathname = location.pathname;
-  let nextLocationPathname = routerState && routerState.navigation && routerState.navigation.location ? routerState.navigation.location.pathname : null;
-  if (!caseSensitive) {
-    locationPathname = locationPathname.toLowerCase();
-    nextLocationPathname = nextLocationPathname ? nextLocationPathname.toLowerCase() : null;
-    toPathname = toPathname.toLowerCase();
-  }
-  if (nextLocationPathname && basename) {
-    nextLocationPathname = stripBasename(nextLocationPathname, basename) || nextLocationPathname;
-  }
-  // If the `to` has a trailing slash, look at that exact spot.  Otherwise,
-  // we're looking for a slash _after_ what's in `to`.  For example:
-  //
-  // <NavLink to="/users"> and <NavLink to="/users/">
-  // both want to look for a / at index 6 to match URL `/users/matt`
-  const endSlashPosition = toPathname !== "/" && toPathname.endsWith("/") ? toPathname.length - 1 : toPathname.length;
-  let isActive = locationPathname === toPathname || !end && locationPathname.startsWith(toPathname) && locationPathname.charAt(endSlashPosition) === "/";
-  let isPending = nextLocationPathname != null && (nextLocationPathname === toPathname || !end && nextLocationPathname.startsWith(toPathname) && nextLocationPathname.charAt(toPathname.length) === "/");
-  let renderProps = {
-    isActive,
-    isPending,
-    isTransitioning
-  };
-  let ariaCurrent = isActive ? ariaCurrentProp : undefined;
-  let className;
-  if (typeof classNameProp === "function") {
-    className = classNameProp(renderProps);
-  } else {
-    // If the className prop is not a function, we use a default `active`
-    // class for <NavLink />s that are active. In v5 `active` was the default
-    // value for `activeClassName`, but we are removing that API and can still
-    // use the old default behavior for a cleaner upgrade path and keep the
-    // simple styling rules working as they currently do.
-    className = [classNameProp, isActive ? "active" : null, isPending ? "pending" : null, isTransitioning ? "transitioning" : null].filter(Boolean).join(" ");
-  }
-  let style = typeof styleProp === "function" ? styleProp(renderProps) : styleProp;
-  return /*#__PURE__*/React.createElement(Link, react_router_dom_dist_extends({}, rest, {
-    "aria-current": ariaCurrent,
-    className: className,
-    ref: ref,
-    style: style,
-    to: to,
-    unstable_viewTransition: unstable_viewTransition
-  }), typeof children === "function" ? children(renderProps) : children);
-})));
-if (false) {}
-/**
- * A `@remix-run/router`-aware `<form>`. It behaves like a normal form except
- * that the interaction with the server is with `fetch` instead of new document
- * requests, allowing components to add nicer UX to the page as the form is
- * submitted and returns with data.
- */
-const Form = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef((_ref9, forwardedRef) => {
-  let {
-      fetcherKey,
-      navigate,
-      reloadDocument,
-      replace,
-      state,
-      method = defaultMethod,
-      action,
-      onSubmit,
-      relative,
-      preventScrollReset,
-      unstable_viewTransition
-    } = _ref9,
-    props = dist_objectWithoutPropertiesLoose(_ref9, dist_excluded3);
-  let submit = useSubmit();
-  let formAction = useFormAction(action, {
-    relative
-  });
-  let formMethod = method.toLowerCase() === "get" ? "get" : "post";
-  let submitHandler = event => {
-    onSubmit && onSubmit(event);
-    if (event.defaultPrevented) return;
-    event.preventDefault();
-    let submitter = event.nativeEvent.submitter;
-    let submitMethod = (submitter == null ? void 0 : submitter.getAttribute("formmethod")) || method;
-    submit(submitter || event.currentTarget, {
-      fetcherKey,
-      method: submitMethod,
-      navigate,
-      replace,
-      state,
-      relative,
-      preventScrollReset,
-      unstable_viewTransition
-    });
-  };
-  return /*#__PURE__*/React.createElement("form", react_router_dom_dist_extends({
-    ref: forwardedRef,
-    method: formMethod,
-    action: formAction,
-    onSubmit: reloadDocument ? onSubmit : submitHandler
-  }, props));
-})));
-if (false) {}
-/**
- * This component will emulate the browser's scroll restoration on location
- * changes.
- */
-function ScrollRestoration(_ref10) {
-  let {
-    getKey,
-    storageKey
-  } = _ref10;
-  useScrollRestoration({
-    getKey,
-    storageKey
-  });
-  return null;
-}
-if (false) {}
-//#endregion
-////////////////////////////////////////////////////////////////////////////////
-//#region Hooks
-////////////////////////////////////////////////////////////////////////////////
-var dist_DataRouterHook;
-(function (DataRouterHook) {
-  DataRouterHook["UseScrollRestoration"] = "useScrollRestoration";
-  DataRouterHook["UseSubmit"] = "useSubmit";
-  DataRouterHook["UseSubmitFetcher"] = "useSubmitFetcher";
-  DataRouterHook["UseFetcher"] = "useFetcher";
-  DataRouterHook["useViewTransitionState"] = "useViewTransitionState";
-})(dist_DataRouterHook || (dist_DataRouterHook = {}));
-var dist_DataRouterStateHook;
-(function (DataRouterStateHook) {
-  DataRouterStateHook["UseFetcher"] = "useFetcher";
-  DataRouterStateHook["UseFetchers"] = "useFetchers";
-  DataRouterStateHook["UseScrollRestoration"] = "useScrollRestoration";
-})(dist_DataRouterStateHook || (dist_DataRouterStateHook = {}));
-// Internal hooks
-function dist_getDataRouterConsoleError(hookName) {
-  return hookName + " must be used within a data router.  See https://reactrouter.com/routers/picking-a-router.";
-}
-function dist_useDataRouterContext(hookName) {
-  let ctx = react.useContext(DataRouterContext);
-  !ctx ?  false ? 0 : invariant(false) : void 0;
-  return ctx;
-}
-function dist_useDataRouterState(hookName) {
-  let state = react.useContext(DataRouterStateContext);
-  !state ?  false ? 0 : invariant(false) : void 0;
-  return state;
-}
-// External hooks
-/**
- * Handles the click behavior for router `<Link>` components. This is useful if
- * you need to create custom `<Link>` components with the same click behavior we
- * use in our exported `<Link>`.
- */
-function useLinkClickHandler(to, _temp) {
-  let {
-    target,
-    replace: replaceProp,
-    state,
-    preventScrollReset,
-    relative,
-    unstable_viewTransition
-  } = _temp === void 0 ? {} : _temp;
-  let navigate = dist_useNavigate();
-  let location = dist_useLocation();
-  let path = dist_useResolvedPath(to, {
-    relative
-  });
-  return react.useCallback(event => {
-    if (shouldProcessLinkClick(event, target)) {
-      event.preventDefault();
-      // If the URL hasn't changed, a regular <a> will do a replace instead of
-      // a push, so do the same here unless the replace prop is explicitly set
-      let replace = replaceProp !== undefined ? replaceProp : router_createPath(location) === router_createPath(path);
-      navigate(to, {
-        replace,
-        state,
-        preventScrollReset,
-        relative,
-        unstable_viewTransition
-      });
-    }
-  }, [location, navigate, path, replaceProp, state, target, to, preventScrollReset, relative, unstable_viewTransition]);
-}
-/**
- * A convenient wrapper for reading and writing search parameters via the
- * URLSearchParams interface.
- */
-function useSearchParams(defaultInit) {
-   false ? 0 : void 0;
-  let defaultSearchParamsRef = React.useRef(createSearchParams(defaultInit));
-  let hasSetSearchParamsRef = React.useRef(false);
-  let location = useLocation();
-  let searchParams = React.useMemo(() =>
-  // Only merge in the defaults if we haven't yet called setSearchParams.
-  // Once we call that we want those to take precedence, otherwise you can't
-  // remove a param with setSearchParams({}) if it has an initial value
-  getSearchParamsForLocation(location.search, hasSetSearchParamsRef.current ? null : defaultSearchParamsRef.current), [location.search]);
-  let navigate = useNavigate();
-  let setSearchParams = React.useCallback((nextInit, navigateOptions) => {
-    const newSearchParams = createSearchParams(typeof nextInit === "function" ? nextInit(searchParams) : nextInit);
-    hasSetSearchParamsRef.current = true;
-    navigate("?" + newSearchParams, navigateOptions);
-  }, [navigate, searchParams]);
-  return [searchParams, setSearchParams];
-}
-function validateClientSideSubmission() {
-  if (typeof document === "undefined") {
-    throw new Error("You are calling submit during the server render. " + "Try calling submit within a `useEffect` or callback instead.");
-  }
-}
-let fetcherId = 0;
-let getUniqueFetcherId = () => "__" + String(++fetcherId) + "__";
-/**
- * Returns a function that may be used to programmatically submit a form (or
- * some arbitrary data) to the server.
- */
-function useSubmit() {
-  let {
-    router
-  } = dist_useDataRouterContext(dist_DataRouterHook.UseSubmit);
-  let {
-    basename
-  } = React.useContext(UNSAFE_NavigationContext);
-  let currentRouteId = UNSAFE_useRouteId();
-  return React.useCallback(function (target, options) {
-    if (options === void 0) {
-      options = {};
-    }
-    validateClientSideSubmission();
-    let {
-      action,
-      method,
-      encType,
-      formData,
-      body
-    } = getFormSubmissionInfo(target, basename);
-    if (options.navigate === false) {
-      let key = options.fetcherKey || getUniqueFetcherId();
-      router.fetch(key, currentRouteId, options.action || action, {
-        preventScrollReset: options.preventScrollReset,
-        formData,
-        body,
-        formMethod: options.method || method,
-        formEncType: options.encType || encType,
-        unstable_flushSync: options.unstable_flushSync
-      });
-    } else {
-      router.navigate(options.action || action, {
-        preventScrollReset: options.preventScrollReset,
-        formData,
-        body,
-        formMethod: options.method || method,
-        formEncType: options.encType || encType,
-        replace: options.replace,
-        state: options.state,
-        fromRouteId: currentRouteId,
-        unstable_flushSync: options.unstable_flushSync,
-        unstable_viewTransition: options.unstable_viewTransition
-      });
-    }
-  }, [router, basename, currentRouteId]);
-}
-// v7: Eventually we should deprecate this entirely in favor of using the
-// router method directly?
-function useFormAction(action, _temp2) {
-  let {
-    relative
-  } = _temp2 === void 0 ? {} : _temp2;
-  let {
-    basename
-  } = React.useContext(UNSAFE_NavigationContext);
-  let routeContext = React.useContext(UNSAFE_RouteContext);
-  !routeContext ?  false ? 0 : UNSAFE_invariant(false) : void 0;
-  let [match] = routeContext.matches.slice(-1);
-  // Shallow clone path so we can modify it below, otherwise we modify the
-  // object referenced by useMemo inside useResolvedPath
-  let path = react_router_dom_dist_extends({}, useResolvedPath(action ? action : ".", {
-    relative
-  }));
-  // If no action was specified, browsers will persist current search params
-  // when determining the path, so match that behavior
-  // https://github.com/remix-run/remix/issues/927
-  let location = useLocation();
-  if (action == null) {
-    // Safe to write to this directly here since if action was undefined, we
-    // would have called useResolvedPath(".") which will never include a search
-    path.search = location.search;
-    // When grabbing search params from the URL, remove any included ?index param
-    // since it might not apply to our contextual route.  We add it back based
-    // on match.route.index below
-    let params = new URLSearchParams(path.search);
-    if (params.has("index") && params.get("index") === "") {
-      params.delete("index");
-      path.search = params.toString() ? "?" + params.toString() : "";
-    }
-  }
-  if ((!action || action === ".") && match.route.index) {
-    path.search = path.search ? path.search.replace(/^\?/, "?index&") : "?index";
-  }
-  // If we're operating within a basename, prepend it to the pathname prior
-  // to creating the form action.  If this is a root navigation, then just use
-  // the raw basename which allows the basename to have full control over the
-  // presence of a trailing slash on root actions
-  if (basename !== "/") {
-    path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
-  }
-  return createPath(path);
-}
-// TODO: (v7) Change the useFetcher generic default from `any` to `unknown`
-/**
- * Interacts with route loaders and actions without causing a navigation. Great
- * for any interaction that stays on the same page.
- */
-function useFetcher(_temp3) {
-  var _route$matches;
-  let {
-    key
-  } = _temp3 === void 0 ? {} : _temp3;
-  let {
-    router
-  } = dist_useDataRouterContext(dist_DataRouterHook.UseFetcher);
-  let state = dist_useDataRouterState(dist_DataRouterStateHook.UseFetcher);
-  let fetcherData = React.useContext(FetchersContext);
-  let route = React.useContext(UNSAFE_RouteContext);
-  let routeId = (_route$matches = route.matches[route.matches.length - 1]) == null ? void 0 : _route$matches.route.id;
-  !fetcherData ?  false ? 0 : UNSAFE_invariant(false) : void 0;
-  !route ?  false ? 0 : UNSAFE_invariant(false) : void 0;
-  !(routeId != null) ?  false ? 0 : UNSAFE_invariant(false) : void 0;
-  // Fetcher key handling
-  // OK to call conditionally to feature detect `useId`
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  let defaultKey = useIdImpl ? useIdImpl() : "";
-  let [fetcherKey, setFetcherKey] = React.useState(key || defaultKey);
-  if (key && key !== fetcherKey) {
-    setFetcherKey(key);
-  } else if (!fetcherKey) {
-    // We will only fall through here when `useId` is not available
-    setFetcherKey(getUniqueFetcherId());
-  }
-  // Registration/cleanup
-  React.useEffect(() => {
-    router.getFetcher(fetcherKey);
-    return () => {
-      // Tell the router we've unmounted - if v7_fetcherPersist is enabled this
-      // will not delete immediately but instead queue up a delete after the
-      // fetcher returns to an `idle` state
-      router.deleteFetcher(fetcherKey);
-    };
-  }, [router, fetcherKey]);
-  // Fetcher additions
-  let load = React.useCallback((href, opts) => {
-    !routeId ?  false ? 0 : UNSAFE_invariant(false) : void 0;
-    router.fetch(fetcherKey, routeId, href, opts);
-  }, [fetcherKey, routeId, router]);
-  let submitImpl = useSubmit();
-  let submit = React.useCallback((target, opts) => {
-    submitImpl(target, react_router_dom_dist_extends({}, opts, {
-      navigate: false,
-      fetcherKey
-    }));
-  }, [fetcherKey, submitImpl]);
-  let FetcherForm = React.useMemo(() => {
-    let FetcherForm = /*#__PURE__*/React.forwardRef((props, ref) => {
-      return /*#__PURE__*/React.createElement(Form, react_router_dom_dist_extends({}, props, {
-        navigate: false,
-        fetcherKey: fetcherKey,
-        ref: ref
-      }));
-    });
-    if (false) {}
-    return FetcherForm;
-  }, [fetcherKey]);
-  // Exposed FetcherWithComponents
-  let fetcher = state.fetchers.get(fetcherKey) || IDLE_FETCHER;
-  let data = fetcherData.get(fetcherKey);
-  let fetcherWithComponents = React.useMemo(() => react_router_dom_dist_extends({
-    Form: FetcherForm,
-    submit,
-    load
-  }, fetcher, {
-    data
-  }), [FetcherForm, submit, load, fetcher, data]);
-  return fetcherWithComponents;
-}
-/**
- * Provides all fetchers currently on the page. Useful for layouts and parent
- * routes that need to provide pending/optimistic UI regarding the fetch.
- */
-function useFetchers() {
-  let state = dist_useDataRouterState(dist_DataRouterStateHook.UseFetchers);
-  return Array.from(state.fetchers.entries()).map(_ref11 => {
-    let [key, fetcher] = _ref11;
-    return react_router_dom_dist_extends({}, fetcher, {
-      key
-    });
-  });
-}
-const SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
-let savedScrollPositions = {};
-/**
- * When rendered inside a RouterProvider, will restore scroll positions on navigations
- */
-function useScrollRestoration(_temp4) {
-  let {
-    getKey,
-    storageKey
-  } = _temp4 === void 0 ? {} : _temp4;
-  let {
-    router
-  } = dist_useDataRouterContext(dist_DataRouterHook.UseScrollRestoration);
-  let {
-    restoreScrollPosition,
-    preventScrollReset
-  } = dist_useDataRouterState(dist_DataRouterStateHook.UseScrollRestoration);
-  let {
-    basename
-  } = react.useContext(NavigationContext);
-  let location = dist_useLocation();
-  let matches = useMatches();
-  let navigation = useNavigation();
-  // Trigger manual scroll restoration while we're active
-  react.useEffect(() => {
-    window.history.scrollRestoration = "manual";
-    return () => {
-      window.history.scrollRestoration = "auto";
-    };
-  }, []);
-  // Save positions on pagehide
-  usePageHide(react.useCallback(() => {
-    if (navigation.state === "idle") {
-      let key = (getKey ? getKey(location, matches) : null) || location.key;
-      savedScrollPositions[key] = window.scrollY;
-    }
-    try {
-      sessionStorage.setItem(storageKey || SCROLL_RESTORATION_STORAGE_KEY, JSON.stringify(savedScrollPositions));
-    } catch (error) {
-       false ? 0 : void 0;
-    }
-    window.history.scrollRestoration = "auto";
-  }, [storageKey, getKey, navigation.state, location, matches]));
-  // Read in any saved scroll locations
-  if (typeof document !== "undefined") {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    react.useLayoutEffect(() => {
-      try {
-        let sessionPositions = sessionStorage.getItem(storageKey || SCROLL_RESTORATION_STORAGE_KEY);
-        if (sessionPositions) {
-          savedScrollPositions = JSON.parse(sessionPositions);
-        }
-      } catch (e) {
-        // no-op, use default empty object
-      }
-    }, [storageKey]);
-    // Enable scroll restoration in the router
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    react.useLayoutEffect(() => {
-      let getKeyWithoutBasename = getKey && basename !== "/" ? (location, matches) => getKey( // Strip the basename to match useLocation()
-      react_router_dom_dist_extends({}, location, {
-        pathname: router_stripBasename(location.pathname, basename) || location.pathname
-      }), matches) : getKey;
-      let disableScrollRestoration = router == null ? void 0 : router.enableScrollRestoration(savedScrollPositions, () => window.scrollY, getKeyWithoutBasename);
-      return () => disableScrollRestoration && disableScrollRestoration();
-    }, [router, basename, getKey]);
-    // Restore scrolling when state.restoreScrollPosition changes
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    react.useLayoutEffect(() => {
-      // Explicit false means don't do anything (used for submissions)
-      if (restoreScrollPosition === false) {
-        return;
-      }
-      // been here before, scroll to it
-      if (typeof restoreScrollPosition === "number") {
-        window.scrollTo(0, restoreScrollPosition);
-        return;
-      }
-      // try to scroll to the hash
-      if (location.hash) {
-        let el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-        if (el) {
-          el.scrollIntoView();
-          return;
-        }
-      }
-      // Don't reset if this navigation opted out
-      if (preventScrollReset === true) {
-        return;
-      }
-      // otherwise go to the top on new locations
-      window.scrollTo(0, 0);
-    }, [location, restoreScrollPosition, preventScrollReset]);
-  }
-}
-/**
- * Setup a callback to be fired on the window's `beforeunload` event. This is
- * useful for saving some data to `window.localStorage` just before the page
- * refreshes.
- *
- * Note: The `callback` argument should be a function created with
- * `React.useCallback()`.
- */
-function useBeforeUnload(callback, options) {
-  let {
-    capture
-  } = options || {};
-  React.useEffect(() => {
-    let opts = capture != null ? {
-      capture
-    } : undefined;
-    window.addEventListener("beforeunload", callback, opts);
-    return () => {
-      window.removeEventListener("beforeunload", callback, opts);
-    };
-  }, [callback, capture]);
-}
-/**
- * Setup a callback to be fired on the window's `pagehide` event. This is
- * useful for saving some data to `window.localStorage` just before the page
- * refreshes.  This event is better supported than beforeunload across browsers.
- *
- * Note: The `callback` argument should be a function created with
- * `React.useCallback()`.
- */
-function usePageHide(callback, options) {
-  let {
-    capture
-  } = options || {};
-  react.useEffect(() => {
-    let opts = capture != null ? {
-      capture
-    } : undefined;
-    window.addEventListener("pagehide", callback, opts);
-    return () => {
-      window.removeEventListener("pagehide", callback, opts);
-    };
-  }, [callback, capture]);
-}
-/**
- * Wrapper around useBlocker to show a window.confirm prompt to users instead
- * of building a custom UI with useBlocker.
- *
- * Warning: This has *a lot of rough edges* and behaves very differently (and
- * very incorrectly in some cases) across browsers if user click addition
- * back/forward navigations while the confirm is open.  Use at your own risk.
- */
-function usePrompt(_ref12) {
-  let {
-    when,
-    message
-  } = _ref12;
-  let blocker = useBlocker(when);
-  React.useEffect(() => {
-    if (blocker.state === "blocked") {
-      let proceed = window.confirm(message);
-      if (proceed) {
-        // This timeout is needed to avoid a weird "race" on POP navigations
-        // between the `window.history` revert navigation and the result of
-        // `window.confirm`
-        setTimeout(blocker.proceed, 0);
-      } else {
-        blocker.reset();
-      }
-    }
-  }, [blocker, message]);
-  React.useEffect(() => {
-    if (blocker.state === "blocked" && !when) {
-      blocker.reset();
-    }
-  }, [blocker, when]);
-}
-/**
- * Return a boolean indicating if there is an active view transition to the
- * given href.  You can use this value to render CSS classes or viewTransitionName
- * styles onto your elements
- *
- * @param href The destination href
- * @param [opts.relative] Relative routing type ("route" | "path")
- */
-function useViewTransitionState(to, opts) {
-  if (opts === void 0) {
-    opts = {};
-  }
-  let vtContext = React.useContext(ViewTransitionContext);
-  !(vtContext != null) ?  false ? 0 : UNSAFE_invariant(false) : void 0;
-  let {
-    basename
-  } = dist_useDataRouterContext(dist_DataRouterHook.useViewTransitionState);
-  let path = useResolvedPath(to, {
-    relative: opts.relative
-  });
-  if (!vtContext.isTransitioning) {
-    return false;
-  }
-  let currentPath = stripBasename(vtContext.currentLocation.pathname, basename) || vtContext.currentLocation.pathname;
-  let nextPath = stripBasename(vtContext.nextLocation.pathname, basename) || vtContext.nextLocation.pathname;
-  // Transition is active if we're going to or coming from the indicated
-  // destination.  This ensures that other PUSH navigations that reverse
-  // an indicated transition apply.  I.e., on the list view you have:
-  //
-  //   <NavLink to="/details/1" unstable_viewTransition>
-  //
-  // If you click the breadcrumb back to the list view:
-  //
-  //   <NavLink to="/list" unstable_viewTransition>
-  //
-  // We should apply the transition because it's indicated as active going
-  // from /list -> /details/1 and therefore should be active on the reverse
-  // (even though this isn't strictly a POP reverse)
-  return matchPath(path.pathname, nextPath) != null || matchPath(path.pathname, currentPath) != null;
-}
-//#endregion
-
-
-//# sourceMappingURL=index.js.map
-
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/index.js
-
-
-
-
-
-
-
-
-var products_products = function products() {
-  var _state$use = state.use(),
-    itemsMode = _state$use.itemsMode;
-  var contentRef = (0,react.useRef)(null);
-  (0,react.useEffect)(function () {
-    var ara = contentRef.current.scrollTop;
-    console.log("IN itemsmode " + itemsMode + " scrollTop " + localStorage.getItem("scrollTop") + " " + (contentRef.current != null));
-    if (itemsMode === common_itemsMode[1] & localStorage.getItem("scrollTop") != null) {
-      // скроллим к сохраненным координатам
-      console.log("scrollTo " + localStorage.getItem("scrollTop"));
-      contentRef.current.scroll({
-        top: localStorage.getItem("scrollTop")
-      });
-      // удаляем данные с localStorage
-      localStorage.removeItem("scrollTop");
-    }
-    return function () {
-      console.log("OUT itemsMode " + itemsMode + " " + (ara != null));
-      if (localStorage.getItem("scrollTop") == null & itemsMode === common_itemsMode[1]) {
-        console.log("setItem scrollTop : " + ara);
-        localStorage.setItem("scrollTop", ara);
-      }
-    };
-  });
-  return /*#__PURE__*/react.createElement("div", {
-    className: products_styles.wrapper
-  }, /*#__PURE__*/react.createElement(admin_pageHeader, {
-    title: "Digiseller",
-    subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
-  }), /*#__PURE__*/react.createElement(Link, {
-    onClick: function onClick() {
-      console.log("contentRef.scrollTop : " + contentRef.current.scrollTop);
-    }
-  }, "Scrolll"), /*#__PURE__*/react.createElement("div", {
-    className: products_styles.content,
-    ref: contentRef
-  }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, null), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, null)), /*#__PURE__*/react.createElement(ScrollRestoration, {
-    getKey: function getKey(location, matches) {
-      // default behavior
-      console.log("ScrollRestoration");
-      console.log(location);
-      return location.key;
-    }
-  }));
-};
-/* harmony default export */ const admin_products = (products_products);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const modalSaveText_styles = ({"content":"styles__content--tL8MP","boxes":"styles__boxes--SkiXb","textarea":"styles__textarea--_WCY4","actions":"styles__actions--tAP37"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/index.js
-function modalSaveText_slicedToArray(arr, i) { return modalSaveText_arrayWithHoles(arr) || modalSaveText_iterableToArrayLimit(arr, i) || modalSaveText_unsupportedIterableToArray(arr, i) || modalSaveText_nonIterableRest(); }
-function modalSaveText_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function modalSaveText_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalSaveText_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalSaveText_arrayLikeToArray(o, minLen); }
-function modalSaveText_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function modalSaveText_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function modalSaveText_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-
-var modalSaveText = function modalSaveText(_ref) {
-  var title = _ref.title,
-    placeholder = _ref.placeholder,
-    isOpen = _ref.isOpen,
-    onCancel = _ref.onCancel,
-    onSave = _ref.onSave,
-    width = _ref.width,
-    height = _ref.height,
-    defaultValue = _ref.defaultValue;
-  var initialVal = '';
-  var _useState = (0,react.useState)(initialVal),
-    _useState2 = modalSaveText_slicedToArray(_useState, 2),
-    val = _useState2[0],
-    setVal = _useState2[1];
-  return /*#__PURE__*/react.createElement(ModalBase, {
-    isOpen: isOpen,
-    title: title,
-    width: width || 705,
-    height: height || 527
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSaveText_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSaveText_styles.boxes
-  }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
-    onInput: function onInput(e) {
-      setVal(e.target.value);
-    },
-    rows: "18",
-    "class": modalSaveText_styles.textarea,
-    placeholder: placeholder,
-    defaultValue: defaultValue
-  })))), /*#__PURE__*/react.createElement("div", {
-    className: modalSaveText_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: onSave.label,
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '36px',
-      width: '284px'
-    },
-    onClick: function onClick() {
-      if (onSave.action) onSave.action(val);
-      setVal('');
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: onCancel.label || 'Отмена',
-    onClick: function onClick() {
-      if (onCancel.action) onCancel.action();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
-};
-/* harmony default export */ const shared_modalSaveText = (modalSaveText);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const orders_list_styles = ({"wrapper":"styles__wrapper--BTOnR","cell":"styles__cell--zWdtD","id":"styles__id--z3lcj","uniqueId":"styles__uniqueId--lnG5z","ref":"styles__ref--zIuH9","comment":"styles__comment--I83lW","info":"styles__info--O_O1Q","secondRow":"styles__secondRow--h4jtc","profileRef":"styles__profileRef--cCxUa","buttons":"styles__buttons--NgPkP","btnWrapper":"styles__btnWrapper--jB4TP"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/statusBadge/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const statusBadge_styles = ({"wrapper":"styles__wrapper--aIpcD","nameText":"styles__nameText--VSPbC","historyWrapper":"styles__historyWrapper--S8306"});
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/history.svg
-const history_namespaceObject = __webpack_require__.p + "0550f86529e8bf1b3ba6.svg";
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/statusBadge/index.js
-
-
-
-
-var statusBadge = function statusBadge(_ref) {
-  var data = _ref.data,
-    _onClick = _ref.onClick;
-  return /*#__PURE__*/react.createElement("div", {
-    className: statusBadge_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: statusBadge_styles.nameText,
-    style: {
-      color: data === null || data === void 0 ? void 0 : data.color
-    }
-  }, data === null || data === void 0 ? void 0 : data.name), /*#__PURE__*/react.createElement("div", {
-    className: statusBadge_styles.historyWrapper,
-    onClick: function onClick() {
-      if (_onClick) _onClick();
-    }
-  }, /*#__PURE__*/react.createElement("img", {
-    src: history_namespaceObject
-  })));
-};
-/* harmony default export */ const list_statusBadge = (statusBadge);
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/referArrow.svg
-const referArrow_namespaceObject = __webpack_require__.p + "0253609d9abb7cc23cc2.svg";
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/comment.svg
-const comment_namespaceObject = __webpack_require__.p + "5fdee8aac0f037f4c8ba.svg";
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/check.svg
-const check_namespaceObject = __webpack_require__.p + "66c4c75f2ced6614b873.svg";
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/retry.svg
-const retry_namespaceObject = __webpack_require__.p + "daec4cd5588eaec46057.svg";
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/stop.svg
-const stop_namespaceObject = __webpack_require__.p + "f2c7af70017956da7283.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalStatusHistory/expander/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const expander_styles = ({"wrapper":"styles__wrapper--rCgse","header":"styles__header--m4aca","content":"styles__content--ZypIv"});
@@ -56836,6 +55393,1434 @@ var menuArrData = [{
     right: -198
   }
 }];
+;// CONCATENATED MODULE: ./node_modules/react-router-dom/dist/index.js
+/**
+ * React Router DOM v6.22.3
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+
+
+
+
+
+
+function react_router_dom_dist_extends() {
+  react_router_dom_dist_extends = Object.assign ? Object.assign.bind() : function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return react_router_dom_dist_extends.apply(this, arguments);
+}
+function dist_objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+
+const defaultMethod = "get";
+const defaultEncType = "application/x-www-form-urlencoded";
+function isHtmlElement(object) {
+  return object != null && typeof object.tagName === "string";
+}
+function isButtonElement(object) {
+  return isHtmlElement(object) && object.tagName.toLowerCase() === "button";
+}
+function isFormElement(object) {
+  return isHtmlElement(object) && object.tagName.toLowerCase() === "form";
+}
+function isInputElement(object) {
+  return isHtmlElement(object) && object.tagName.toLowerCase() === "input";
+}
+function isModifiedEvent(event) {
+  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+}
+function shouldProcessLinkClick(event, target) {
+  return event.button === 0 && (
+  // Ignore everything but left clicks
+  !target || target === "_self") &&
+  // Let browser handle "target=_blank" etc.
+  !isModifiedEvent(event) // Ignore clicks with modifier keys
+  ;
+}
+/**
+ * Creates a URLSearchParams object using the given initializer.
+ *
+ * This is identical to `new URLSearchParams(init)` except it also
+ * supports arrays as values in the object form of the initializer
+ * instead of just strings. This is convenient when you need multiple
+ * values for a given key, but don't want to use an array initializer.
+ *
+ * For example, instead of:
+ *
+ *   let searchParams = new URLSearchParams([
+ *     ['sort', 'name'],
+ *     ['sort', 'price']
+ *   ]);
+ *
+ * you can do:
+ *
+ *   let searchParams = createSearchParams({
+ *     sort: ['name', 'price']
+ *   });
+ */
+function createSearchParams(init) {
+  if (init === void 0) {
+    init = "";
+  }
+  return new URLSearchParams(typeof init === "string" || Array.isArray(init) || init instanceof URLSearchParams ? init : Object.keys(init).reduce((memo, key) => {
+    let value = init[key];
+    return memo.concat(Array.isArray(value) ? value.map(v => [key, v]) : [[key, value]]);
+  }, []));
+}
+function getSearchParamsForLocation(locationSearch, defaultSearchParams) {
+  let searchParams = createSearchParams(locationSearch);
+  if (defaultSearchParams) {
+    // Use `defaultSearchParams.forEach(...)` here instead of iterating of
+    // `defaultSearchParams.keys()` to work-around a bug in Firefox related to
+    // web extensions. Relevant Bugzilla tickets:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1414602
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1023984
+    defaultSearchParams.forEach((_, key) => {
+      if (!searchParams.has(key)) {
+        defaultSearchParams.getAll(key).forEach(value => {
+          searchParams.append(key, value);
+        });
+      }
+    });
+  }
+  return searchParams;
+}
+// One-time check for submitter support
+let _formDataSupportsSubmitter = null;
+function isFormDataSubmitterSupported() {
+  if (_formDataSupportsSubmitter === null) {
+    try {
+      new FormData(document.createElement("form"),
+      // @ts-expect-error if FormData supports the submitter parameter, this will throw
+      0);
+      _formDataSupportsSubmitter = false;
+    } catch (e) {
+      _formDataSupportsSubmitter = true;
+    }
+  }
+  return _formDataSupportsSubmitter;
+}
+const supportedFormEncTypes = new Set(["application/x-www-form-urlencoded", "multipart/form-data", "text/plain"]);
+function getFormEncType(encType) {
+  if (encType != null && !supportedFormEncTypes.has(encType)) {
+     false ? 0 : void 0;
+    return null;
+  }
+  return encType;
+}
+function getFormSubmissionInfo(target, basename) {
+  let method;
+  let action;
+  let encType;
+  let formData;
+  let body;
+  if (isFormElement(target)) {
+    // When grabbing the action from the element, it will have had the basename
+    // prefixed to ensure non-JS scenarios work, so strip it since we'll
+    // re-prefix in the router
+    let attr = target.getAttribute("action");
+    action = attr ? stripBasename(attr, basename) : null;
+    method = target.getAttribute("method") || defaultMethod;
+    encType = getFormEncType(target.getAttribute("enctype")) || defaultEncType;
+    formData = new FormData(target);
+  } else if (isButtonElement(target) || isInputElement(target) && (target.type === "submit" || target.type === "image")) {
+    let form = target.form;
+    if (form == null) {
+      throw new Error("Cannot submit a <button> or <input type=\"submit\"> without a <form>");
+    }
+    // <button>/<input type="submit"> may override attributes of <form>
+    // When grabbing the action from the element, it will have had the basename
+    // prefixed to ensure non-JS scenarios work, so strip it since we'll
+    // re-prefix in the router
+    let attr = target.getAttribute("formaction") || form.getAttribute("action");
+    action = attr ? stripBasename(attr, basename) : null;
+    method = target.getAttribute("formmethod") || form.getAttribute("method") || defaultMethod;
+    encType = getFormEncType(target.getAttribute("formenctype")) || getFormEncType(form.getAttribute("enctype")) || defaultEncType;
+    // Build a FormData object populated from a form and submitter
+    formData = new FormData(form, target);
+    // If this browser doesn't support the `FormData(el, submitter)` format,
+    // then tack on the submitter value at the end.  This is a lightweight
+    // solution that is not 100% spec compliant.  For complete support in older
+    // browsers, consider using the `formdata-submitter-polyfill` package
+    if (!isFormDataSubmitterSupported()) {
+      let {
+        name,
+        type,
+        value
+      } = target;
+      if (type === "image") {
+        let prefix = name ? name + "." : "";
+        formData.append(prefix + "x", "0");
+        formData.append(prefix + "y", "0");
+      } else if (name) {
+        formData.append(name, value);
+      }
+    }
+  } else if (isHtmlElement(target)) {
+    throw new Error("Cannot submit element that is not <form>, <button>, or " + "<input type=\"submit|image\">");
+  } else {
+    method = defaultMethod;
+    action = null;
+    encType = defaultEncType;
+    body = target;
+  }
+  // Send body for <Form encType="text/plain" so we encode it into text
+  if (formData && encType === "text/plain") {
+    body = formData;
+    formData = undefined;
+  }
+  return {
+    action,
+    method: method.toLowerCase(),
+    encType,
+    formData,
+    body
+  };
+}
+
+const dist_excluded = (/* unused pure expression or super */ null && (["onClick", "relative", "reloadDocument", "replace", "state", "target", "to", "preventScrollReset", "unstable_viewTransition"])),
+  dist_excluded2 = (/* unused pure expression or super */ null && (["aria-current", "caseSensitive", "className", "end", "style", "to", "unstable_viewTransition", "children"])),
+  dist_excluded3 = (/* unused pure expression or super */ null && (["fetcherKey", "navigate", "reloadDocument", "replace", "state", "method", "action", "onSubmit", "relative", "preventScrollReset", "unstable_viewTransition"]));
+// HEY YOU! DON'T TOUCH THIS VARIABLE!
+//
+// It is replaced with the proper version at build time via a babel plugin in
+// the rollup config.
+//
+// Export a global property onto the window for React Router detection by the
+// Core Web Vitals Technology Report.  This way they can configure the `wappalyzer`
+// to detect and properly classify live websites as being built with React Router:
+// https://github.com/HTTPArchive/wappalyzer/blob/main/src/technologies/r.json
+const REACT_ROUTER_VERSION = "6";
+try {
+  window.__reactRouterVersion = REACT_ROUTER_VERSION;
+} catch (e) {
+  // no-op
+}
+function createBrowserRouter(routes, opts) {
+  return router_createRouter({
+    basename: opts == null ? void 0 : opts.basename,
+    future: react_router_dom_dist_extends({}, opts == null ? void 0 : opts.future, {
+      v7_prependBasename: true
+    }),
+    history: router_createBrowserHistory({
+      window: opts == null ? void 0 : opts.window
+    }),
+    hydrationData: (opts == null ? void 0 : opts.hydrationData) || parseHydrationData(),
+    routes,
+    mapRouteProperties: mapRouteProperties,
+    window: opts == null ? void 0 : opts.window
+  }).initialize();
+}
+function createHashRouter(routes, opts) {
+  return createRouter({
+    basename: opts == null ? void 0 : opts.basename,
+    future: react_router_dom_dist_extends({}, opts == null ? void 0 : opts.future, {
+      v7_prependBasename: true
+    }),
+    history: createHashHistory({
+      window: opts == null ? void 0 : opts.window
+    }),
+    hydrationData: (opts == null ? void 0 : opts.hydrationData) || parseHydrationData(),
+    routes,
+    mapRouteProperties: UNSAFE_mapRouteProperties,
+    window: opts == null ? void 0 : opts.window
+  }).initialize();
+}
+function parseHydrationData() {
+  var _window;
+  let state = (_window = window) == null ? void 0 : _window.__staticRouterHydrationData;
+  if (state && state.errors) {
+    state = react_router_dom_dist_extends({}, state, {
+      errors: deserializeErrors(state.errors)
+    });
+  }
+  return state;
+}
+function deserializeErrors(errors) {
+  if (!errors) return null;
+  let entries = Object.entries(errors);
+  let serialized = {};
+  for (let [key, val] of entries) {
+    // Hey you!  If you change this, please change the corresponding logic in
+    // serializeErrors in react-router-dom/server.tsx :)
+    if (val && val.__type === "RouteErrorResponse") {
+      serialized[key] = new ErrorResponseImpl(val.status, val.statusText, val.data, val.internal === true);
+    } else if (val && val.__type === "Error") {
+      // Attempt to reconstruct the right type of Error (i.e., ReferenceError)
+      if (val.__subType) {
+        let ErrorConstructor = window[val.__subType];
+        if (typeof ErrorConstructor === "function") {
+          try {
+            // @ts-expect-error
+            let error = new ErrorConstructor(val.message);
+            // Wipe away the client-side stack trace.  Nothing to fill it in with
+            // because we don't serialize SSR stack traces for security reasons
+            error.stack = "";
+            serialized[key] = error;
+          } catch (e) {
+            // no-op - fall through and create a normal Error
+          }
+        }
+      }
+      if (serialized[key] == null) {
+        let error = new Error(val.message);
+        // Wipe away the client-side stack trace.  Nothing to fill it in with
+        // because we don't serialize SSR stack traces for security reasons
+        error.stack = "";
+        serialized[key] = error;
+      }
+    } else {
+      serialized[key] = val;
+    }
+  }
+  return serialized;
+}
+const ViewTransitionContext = /*#__PURE__*/react.createContext({
+  isTransitioning: false
+});
+if (false) {}
+const FetchersContext = /*#__PURE__*/react.createContext(new Map());
+if (false) {}
+//#endregion
+////////////////////////////////////////////////////////////////////////////////
+//#region Components
+////////////////////////////////////////////////////////////////////////////////
+/**
+  Webpack + React 17 fails to compile on any of the following because webpack
+  complains that `startTransition` doesn't exist in `React`:
+  * import { startTransition } from "react"
+  * import * as React from from "react";
+    "startTransition" in React ? React.startTransition(() => setState()) : setState()
+  * import * as React from from "react";
+    "startTransition" in React ? React["startTransition"](() => setState()) : setState()
+
+  Moving it to a constant such as the following solves the Webpack/React 17 issue:
+  * import * as React from from "react";
+    const START_TRANSITION = "startTransition";
+    START_TRANSITION in React ? React[START_TRANSITION](() => setState()) : setState()
+
+  However, that introduces webpack/terser minification issues in production builds
+  in React 18 where minification/obfuscation ends up removing the call of
+  React.startTransition entirely from the first half of the ternary.  Grabbing
+  this exported reference once up front resolves that issue.
+
+  See https://github.com/remix-run/react-router/issues/10579
+*/
+const dist_START_TRANSITION = "startTransition";
+const dist_startTransitionImpl = react_namespaceObject[dist_START_TRANSITION];
+const FLUSH_SYNC = "flushSync";
+const flushSyncImpl = react_dom_namespaceObject[FLUSH_SYNC];
+const USE_ID = "useId";
+const useIdImpl = react_namespaceObject[USE_ID];
+function startTransitionSafe(cb) {
+  if (dist_startTransitionImpl) {
+    dist_startTransitionImpl(cb);
+  } else {
+    cb();
+  }
+}
+function flushSyncSafe(cb) {
+  if (flushSyncImpl) {
+    flushSyncImpl(cb);
+  } else {
+    cb();
+  }
+}
+class Deferred {
+  constructor() {
+    this.status = "pending";
+    this.promise = new Promise((resolve, reject) => {
+      this.resolve = value => {
+        if (this.status === "pending") {
+          this.status = "resolved";
+          resolve(value);
+        }
+      };
+      this.reject = reason => {
+        if (this.status === "pending") {
+          this.status = "rejected";
+          reject(reason);
+        }
+      };
+    });
+  }
+}
+/**
+ * Given a Remix Router instance, render the appropriate UI
+ */
+function dist_RouterProvider(_ref) {
+  let {
+    fallbackElement,
+    router,
+    future
+  } = _ref;
+  let [state, setStateImpl] = react.useState(router.state);
+  let [pendingState, setPendingState] = react.useState();
+  let [vtContext, setVtContext] = react.useState({
+    isTransitioning: false
+  });
+  let [renderDfd, setRenderDfd] = react.useState();
+  let [transition, setTransition] = react.useState();
+  let [interruption, setInterruption] = react.useState();
+  let fetcherData = react.useRef(new Map());
+  let {
+    v7_startTransition
+  } = future || {};
+  let optInStartTransition = react.useCallback(cb => {
+    if (v7_startTransition) {
+      startTransitionSafe(cb);
+    } else {
+      cb();
+    }
+  }, [v7_startTransition]);
+  let setState = react.useCallback((newState, _ref2) => {
+    let {
+      deletedFetchers,
+      unstable_flushSync: flushSync,
+      unstable_viewTransitionOpts: viewTransitionOpts
+    } = _ref2;
+    deletedFetchers.forEach(key => fetcherData.current.delete(key));
+    newState.fetchers.forEach((fetcher, key) => {
+      if (fetcher.data !== undefined) {
+        fetcherData.current.set(key, fetcher.data);
+      }
+    });
+    let isViewTransitionUnavailable = router.window == null || typeof router.window.document.startViewTransition !== "function";
+    // If this isn't a view transition or it's not available in this browser,
+    // just update and be done with it
+    if (!viewTransitionOpts || isViewTransitionUnavailable) {
+      if (flushSync) {
+        flushSyncSafe(() => setStateImpl(newState));
+      } else {
+        optInStartTransition(() => setStateImpl(newState));
+      }
+      return;
+    }
+    // flushSync + startViewTransition
+    if (flushSync) {
+      // Flush through the context to mark DOM elements as transition=ing
+      flushSyncSafe(() => {
+        // Cancel any pending transitions
+        if (transition) {
+          renderDfd && renderDfd.resolve();
+          transition.skipTransition();
+        }
+        setVtContext({
+          isTransitioning: true,
+          flushSync: true,
+          currentLocation: viewTransitionOpts.currentLocation,
+          nextLocation: viewTransitionOpts.nextLocation
+        });
+      });
+      // Update the DOM
+      let t = router.window.document.startViewTransition(() => {
+        flushSyncSafe(() => setStateImpl(newState));
+      });
+      // Clean up after the animation completes
+      t.finished.finally(() => {
+        flushSyncSafe(() => {
+          setRenderDfd(undefined);
+          setTransition(undefined);
+          setPendingState(undefined);
+          setVtContext({
+            isTransitioning: false
+          });
+        });
+      });
+      flushSyncSafe(() => setTransition(t));
+      return;
+    }
+    // startTransition + startViewTransition
+    if (transition) {
+      // Interrupting an in-progress transition, cancel and let everything flush
+      // out, and then kick off a new transition from the interruption state
+      renderDfd && renderDfd.resolve();
+      transition.skipTransition();
+      setInterruption({
+        state: newState,
+        currentLocation: viewTransitionOpts.currentLocation,
+        nextLocation: viewTransitionOpts.nextLocation
+      });
+    } else {
+      // Completed navigation update with opted-in view transitions, let 'er rip
+      setPendingState(newState);
+      setVtContext({
+        isTransitioning: true,
+        flushSync: false,
+        currentLocation: viewTransitionOpts.currentLocation,
+        nextLocation: viewTransitionOpts.nextLocation
+      });
+    }
+  }, [router.window, transition, renderDfd, fetcherData, optInStartTransition]);
+  // Need to use a layout effect here so we are subscribed early enough to
+  // pick up on any render-driven redirects/navigations (useEffect/<Navigate>)
+  react.useLayoutEffect(() => router.subscribe(setState), [router, setState]);
+  // When we start a view transition, create a Deferred we can use for the
+  // eventual "completed" render
+  react.useEffect(() => {
+    if (vtContext.isTransitioning && !vtContext.flushSync) {
+      setRenderDfd(new Deferred());
+    }
+  }, [vtContext]);
+  // Once the deferred is created, kick off startViewTransition() to update the
+  // DOM and then wait on the Deferred to resolve (indicating the DOM update has
+  // happened)
+  react.useEffect(() => {
+    if (renderDfd && pendingState && router.window) {
+      let newState = pendingState;
+      let renderPromise = renderDfd.promise;
+      let transition = router.window.document.startViewTransition(async () => {
+        optInStartTransition(() => setStateImpl(newState));
+        await renderPromise;
+      });
+      transition.finished.finally(() => {
+        setRenderDfd(undefined);
+        setTransition(undefined);
+        setPendingState(undefined);
+        setVtContext({
+          isTransitioning: false
+        });
+      });
+      setTransition(transition);
+    }
+  }, [optInStartTransition, pendingState, renderDfd, router.window]);
+  // When the new location finally renders and is committed to the DOM, this
+  // effect will run to resolve the transition
+  react.useEffect(() => {
+    if (renderDfd && pendingState && state.location.key === pendingState.location.key) {
+      renderDfd.resolve();
+    }
+  }, [renderDfd, transition, state.location, pendingState]);
+  // If we get interrupted with a new navigation during a transition, we skip
+  // the active transition, let it cleanup, then kick it off again here
+  react.useEffect(() => {
+    if (!vtContext.isTransitioning && interruption) {
+      setPendingState(interruption.state);
+      setVtContext({
+        isTransitioning: true,
+        flushSync: false,
+        currentLocation: interruption.currentLocation,
+        nextLocation: interruption.nextLocation
+      });
+      setInterruption(undefined);
+    }
+  }, [vtContext.isTransitioning, interruption]);
+  react.useEffect(() => {
+     false ? 0 : void 0;
+    // Only log this once on initial mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  let navigator = react.useMemo(() => {
+    return {
+      createHref: router.createHref,
+      encodeLocation: router.encodeLocation,
+      go: n => router.navigate(n),
+      push: (to, state, opts) => router.navigate(to, {
+        state,
+        preventScrollReset: opts == null ? void 0 : opts.preventScrollReset
+      }),
+      replace: (to, state, opts) => router.navigate(to, {
+        replace: true,
+        state,
+        preventScrollReset: opts == null ? void 0 : opts.preventScrollReset
+      })
+    };
+  }, [router]);
+  let basename = router.basename || "/";
+  let dataRouterContext = react.useMemo(() => ({
+    router,
+    navigator,
+    static: false,
+    basename
+  }), [router, navigator, basename]);
+  // The fragment and {null} here are important!  We need them to keep React 18's
+  // useId happy when we are server-rendering since we may have a <script> here
+  // containing the hydrated server-side staticContext (from StaticRouterProvider).
+  // useId relies on the component tree structure to generate deterministic id's
+  // so we need to ensure it remains the same on the client even though
+  // we don't need the <script> tag
+  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(DataRouterContext.Provider, {
+    value: dataRouterContext
+  }, /*#__PURE__*/react.createElement(DataRouterStateContext.Provider, {
+    value: state
+  }, /*#__PURE__*/react.createElement(FetchersContext.Provider, {
+    value: fetcherData.current
+  }, /*#__PURE__*/react.createElement(ViewTransitionContext.Provider, {
+    value: vtContext
+  }, /*#__PURE__*/react.createElement(dist_Router, {
+    basename: basename,
+    location: state.location,
+    navigationType: state.historyAction,
+    navigator: navigator,
+    future: {
+      v7_relativeSplatPath: router.future.v7_relativeSplatPath
+    }
+  }, state.initialized || router.future.v7_partialHydration ? /*#__PURE__*/react.createElement(dist_DataRoutes, {
+    routes: router.routes,
+    future: router.future,
+    state: state
+  }) : fallbackElement))))), null);
+}
+function dist_DataRoutes(_ref3) {
+  let {
+    routes,
+    future,
+    state
+  } = _ref3;
+  return useRoutesImpl(routes, undefined, state, future);
+}
+/**
+ * A `<Router>` for use in web browsers. Provides the cleanest URLs.
+ */
+function BrowserRouter(_ref4) {
+  let {
+    basename,
+    children,
+    future,
+    window
+  } = _ref4;
+  let historyRef = React.useRef();
+  if (historyRef.current == null) {
+    historyRef.current = createBrowserHistory({
+      window,
+      v5Compat: true
+    });
+  }
+  let history = historyRef.current;
+  let [state, setStateImpl] = React.useState({
+    action: history.action,
+    location: history.location
+  });
+  let {
+    v7_startTransition
+  } = future || {};
+  let setState = React.useCallback(newState => {
+    v7_startTransition && dist_startTransitionImpl ? dist_startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
+  }, [setStateImpl, v7_startTransition]);
+  React.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return /*#__PURE__*/React.createElement(Router, {
+    basename: basename,
+    children: children,
+    location: state.location,
+    navigationType: state.action,
+    navigator: history,
+    future: future
+  });
+}
+/**
+ * A `<Router>` for use in web browsers. Stores the location in the hash
+ * portion of the URL so it is not sent to the server.
+ */
+function HashRouter(_ref5) {
+  let {
+    basename,
+    children,
+    future,
+    window
+  } = _ref5;
+  let historyRef = React.useRef();
+  if (historyRef.current == null) {
+    historyRef.current = createHashHistory({
+      window,
+      v5Compat: true
+    });
+  }
+  let history = historyRef.current;
+  let [state, setStateImpl] = React.useState({
+    action: history.action,
+    location: history.location
+  });
+  let {
+    v7_startTransition
+  } = future || {};
+  let setState = React.useCallback(newState => {
+    v7_startTransition && dist_startTransitionImpl ? dist_startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
+  }, [setStateImpl, v7_startTransition]);
+  React.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return /*#__PURE__*/React.createElement(Router, {
+    basename: basename,
+    children: children,
+    location: state.location,
+    navigationType: state.action,
+    navigator: history,
+    future: future
+  });
+}
+/**
+ * A `<Router>` that accepts a pre-instantiated history object. It's important
+ * to note that using your own history object is highly discouraged and may add
+ * two versions of the history library to your bundles unless you use the same
+ * version of the history library that React Router uses internally.
+ */
+function HistoryRouter(_ref6) {
+  let {
+    basename,
+    children,
+    future,
+    history
+  } = _ref6;
+  let [state, setStateImpl] = React.useState({
+    action: history.action,
+    location: history.location
+  });
+  let {
+    v7_startTransition
+  } = future || {};
+  let setState = React.useCallback(newState => {
+    v7_startTransition && dist_startTransitionImpl ? dist_startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
+  }, [setStateImpl, v7_startTransition]);
+  React.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return /*#__PURE__*/React.createElement(Router, {
+    basename: basename,
+    children: children,
+    location: state.location,
+    navigationType: state.action,
+    navigator: history,
+    future: future
+  });
+}
+if (false) {}
+const dist_isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
+const dist_ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
+/**
+ * The public API for rendering a history-aware `<a>`.
+ */
+const Link = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef(function LinkWithRef(_ref7, ref) {
+  let {
+      onClick,
+      relative,
+      reloadDocument,
+      replace,
+      state,
+      target,
+      to,
+      preventScrollReset,
+      unstable_viewTransition
+    } = _ref7,
+    rest = dist_objectWithoutPropertiesLoose(_ref7, dist_excluded);
+  let {
+    basename
+  } = React.useContext(UNSAFE_NavigationContext);
+  // Rendered into <a href> for absolute URLs
+  let absoluteHref;
+  let isExternal = false;
+  if (typeof to === "string" && dist_ABSOLUTE_URL_REGEX.test(to)) {
+    // Render the absolute href server- and client-side
+    absoluteHref = to;
+    // Only check for external origins client-side
+    if (dist_isBrowser) {
+      try {
+        let currentUrl = new URL(window.location.href);
+        let targetUrl = to.startsWith("//") ? new URL(currentUrl.protocol + to) : new URL(to);
+        let path = stripBasename(targetUrl.pathname, basename);
+        if (targetUrl.origin === currentUrl.origin && path != null) {
+          // Strip the protocol/origin/basename for same-origin absolute URLs
+          to = path + targetUrl.search + targetUrl.hash;
+        } else {
+          isExternal = true;
+        }
+      } catch (e) {
+        // We can't do external URL detection without a valid URL
+         false ? 0 : void 0;
+      }
+    }
+  }
+  // Rendered into <a href> for relative URLs
+  let href = useHref(to, {
+    relative
+  });
+  let internalOnClick = useLinkClickHandler(to, {
+    replace,
+    state,
+    target,
+    preventScrollReset,
+    relative,
+    unstable_viewTransition
+  });
+  function handleClick(event) {
+    if (onClick) onClick(event);
+    if (!event.defaultPrevented) {
+      internalOnClick(event);
+    }
+  }
+  return (
+    /*#__PURE__*/
+    // eslint-disable-next-line jsx-a11y/anchor-has-content
+    React.createElement("a", react_router_dom_dist_extends({}, rest, {
+      href: absoluteHref || href,
+      onClick: isExternal || reloadDocument ? onClick : handleClick,
+      ref: ref,
+      target: target
+    }))
+  );
+})));
+if (false) {}
+/**
+ * A `<Link>` wrapper that knows if it's "active" or not.
+ */
+const NavLink = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef(function NavLinkWithRef(_ref8, ref) {
+  let {
+      "aria-current": ariaCurrentProp = "page",
+      caseSensitive = false,
+      className: classNameProp = "",
+      end = false,
+      style: styleProp,
+      to,
+      unstable_viewTransition,
+      children
+    } = _ref8,
+    rest = dist_objectWithoutPropertiesLoose(_ref8, dist_excluded2);
+  let path = useResolvedPath(to, {
+    relative: rest.relative
+  });
+  let location = useLocation();
+  let routerState = React.useContext(UNSAFE_DataRouterStateContext);
+  let {
+    navigator,
+    basename
+  } = React.useContext(UNSAFE_NavigationContext);
+  let isTransitioning = routerState != null &&
+  // Conditional usage is OK here because the usage of a data router is static
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useViewTransitionState(path) && unstable_viewTransition === true;
+  let toPathname = navigator.encodeLocation ? navigator.encodeLocation(path).pathname : path.pathname;
+  let locationPathname = location.pathname;
+  let nextLocationPathname = routerState && routerState.navigation && routerState.navigation.location ? routerState.navigation.location.pathname : null;
+  if (!caseSensitive) {
+    locationPathname = locationPathname.toLowerCase();
+    nextLocationPathname = nextLocationPathname ? nextLocationPathname.toLowerCase() : null;
+    toPathname = toPathname.toLowerCase();
+  }
+  if (nextLocationPathname && basename) {
+    nextLocationPathname = stripBasename(nextLocationPathname, basename) || nextLocationPathname;
+  }
+  // If the `to` has a trailing slash, look at that exact spot.  Otherwise,
+  // we're looking for a slash _after_ what's in `to`.  For example:
+  //
+  // <NavLink to="/users"> and <NavLink to="/users/">
+  // both want to look for a / at index 6 to match URL `/users/matt`
+  const endSlashPosition = toPathname !== "/" && toPathname.endsWith("/") ? toPathname.length - 1 : toPathname.length;
+  let isActive = locationPathname === toPathname || !end && locationPathname.startsWith(toPathname) && locationPathname.charAt(endSlashPosition) === "/";
+  let isPending = nextLocationPathname != null && (nextLocationPathname === toPathname || !end && nextLocationPathname.startsWith(toPathname) && nextLocationPathname.charAt(toPathname.length) === "/");
+  let renderProps = {
+    isActive,
+    isPending,
+    isTransitioning
+  };
+  let ariaCurrent = isActive ? ariaCurrentProp : undefined;
+  let className;
+  if (typeof classNameProp === "function") {
+    className = classNameProp(renderProps);
+  } else {
+    // If the className prop is not a function, we use a default `active`
+    // class for <NavLink />s that are active. In v5 `active` was the default
+    // value for `activeClassName`, but we are removing that API and can still
+    // use the old default behavior for a cleaner upgrade path and keep the
+    // simple styling rules working as they currently do.
+    className = [classNameProp, isActive ? "active" : null, isPending ? "pending" : null, isTransitioning ? "transitioning" : null].filter(Boolean).join(" ");
+  }
+  let style = typeof styleProp === "function" ? styleProp(renderProps) : styleProp;
+  return /*#__PURE__*/React.createElement(Link, react_router_dom_dist_extends({}, rest, {
+    "aria-current": ariaCurrent,
+    className: className,
+    ref: ref,
+    style: style,
+    to: to,
+    unstable_viewTransition: unstable_viewTransition
+  }), typeof children === "function" ? children(renderProps) : children);
+})));
+if (false) {}
+/**
+ * A `@remix-run/router`-aware `<form>`. It behaves like a normal form except
+ * that the interaction with the server is with `fetch` instead of new document
+ * requests, allowing components to add nicer UX to the page as the form is
+ * submitted and returns with data.
+ */
+const Form = /*#__PURE__*/(/* unused pure expression or super */ null && (React.forwardRef((_ref9, forwardedRef) => {
+  let {
+      fetcherKey,
+      navigate,
+      reloadDocument,
+      replace,
+      state,
+      method = defaultMethod,
+      action,
+      onSubmit,
+      relative,
+      preventScrollReset,
+      unstable_viewTransition
+    } = _ref9,
+    props = dist_objectWithoutPropertiesLoose(_ref9, dist_excluded3);
+  let submit = useSubmit();
+  let formAction = useFormAction(action, {
+    relative
+  });
+  let formMethod = method.toLowerCase() === "get" ? "get" : "post";
+  let submitHandler = event => {
+    onSubmit && onSubmit(event);
+    if (event.defaultPrevented) return;
+    event.preventDefault();
+    let submitter = event.nativeEvent.submitter;
+    let submitMethod = (submitter == null ? void 0 : submitter.getAttribute("formmethod")) || method;
+    submit(submitter || event.currentTarget, {
+      fetcherKey,
+      method: submitMethod,
+      navigate,
+      replace,
+      state,
+      relative,
+      preventScrollReset,
+      unstable_viewTransition
+    });
+  };
+  return /*#__PURE__*/React.createElement("form", react_router_dom_dist_extends({
+    ref: forwardedRef,
+    method: formMethod,
+    action: formAction,
+    onSubmit: reloadDocument ? onSubmit : submitHandler
+  }, props));
+})));
+if (false) {}
+/**
+ * This component will emulate the browser's scroll restoration on location
+ * changes.
+ */
+function ScrollRestoration(_ref10) {
+  let {
+    getKey,
+    storageKey
+  } = _ref10;
+  useScrollRestoration({
+    getKey,
+    storageKey
+  });
+  return null;
+}
+if (false) {}
+//#endregion
+////////////////////////////////////////////////////////////////////////////////
+//#region Hooks
+////////////////////////////////////////////////////////////////////////////////
+var dist_DataRouterHook;
+(function (DataRouterHook) {
+  DataRouterHook["UseScrollRestoration"] = "useScrollRestoration";
+  DataRouterHook["UseSubmit"] = "useSubmit";
+  DataRouterHook["UseSubmitFetcher"] = "useSubmitFetcher";
+  DataRouterHook["UseFetcher"] = "useFetcher";
+  DataRouterHook["useViewTransitionState"] = "useViewTransitionState";
+})(dist_DataRouterHook || (dist_DataRouterHook = {}));
+var dist_DataRouterStateHook;
+(function (DataRouterStateHook) {
+  DataRouterStateHook["UseFetcher"] = "useFetcher";
+  DataRouterStateHook["UseFetchers"] = "useFetchers";
+  DataRouterStateHook["UseScrollRestoration"] = "useScrollRestoration";
+})(dist_DataRouterStateHook || (dist_DataRouterStateHook = {}));
+// Internal hooks
+function dist_getDataRouterConsoleError(hookName) {
+  return hookName + " must be used within a data router.  See https://reactrouter.com/routers/picking-a-router.";
+}
+function dist_useDataRouterContext(hookName) {
+  let ctx = React.useContext(UNSAFE_DataRouterContext);
+  !ctx ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  return ctx;
+}
+function dist_useDataRouterState(hookName) {
+  let state = React.useContext(UNSAFE_DataRouterStateContext);
+  !state ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  return state;
+}
+// External hooks
+/**
+ * Handles the click behavior for router `<Link>` components. This is useful if
+ * you need to create custom `<Link>` components with the same click behavior we
+ * use in our exported `<Link>`.
+ */
+function useLinkClickHandler(to, _temp) {
+  let {
+    target,
+    replace: replaceProp,
+    state,
+    preventScrollReset,
+    relative,
+    unstable_viewTransition
+  } = _temp === void 0 ? {} : _temp;
+  let navigate = useNavigate();
+  let location = useLocation();
+  let path = useResolvedPath(to, {
+    relative
+  });
+  return React.useCallback(event => {
+    if (shouldProcessLinkClick(event, target)) {
+      event.preventDefault();
+      // If the URL hasn't changed, a regular <a> will do a replace instead of
+      // a push, so do the same here unless the replace prop is explicitly set
+      let replace = replaceProp !== undefined ? replaceProp : createPath(location) === createPath(path);
+      navigate(to, {
+        replace,
+        state,
+        preventScrollReset,
+        relative,
+        unstable_viewTransition
+      });
+    }
+  }, [location, navigate, path, replaceProp, state, target, to, preventScrollReset, relative, unstable_viewTransition]);
+}
+/**
+ * A convenient wrapper for reading and writing search parameters via the
+ * URLSearchParams interface.
+ */
+function useSearchParams(defaultInit) {
+   false ? 0 : void 0;
+  let defaultSearchParamsRef = React.useRef(createSearchParams(defaultInit));
+  let hasSetSearchParamsRef = React.useRef(false);
+  let location = useLocation();
+  let searchParams = React.useMemo(() =>
+  // Only merge in the defaults if we haven't yet called setSearchParams.
+  // Once we call that we want those to take precedence, otherwise you can't
+  // remove a param with setSearchParams({}) if it has an initial value
+  getSearchParamsForLocation(location.search, hasSetSearchParamsRef.current ? null : defaultSearchParamsRef.current), [location.search]);
+  let navigate = useNavigate();
+  let setSearchParams = React.useCallback((nextInit, navigateOptions) => {
+    const newSearchParams = createSearchParams(typeof nextInit === "function" ? nextInit(searchParams) : nextInit);
+    hasSetSearchParamsRef.current = true;
+    navigate("?" + newSearchParams, navigateOptions);
+  }, [navigate, searchParams]);
+  return [searchParams, setSearchParams];
+}
+function validateClientSideSubmission() {
+  if (typeof document === "undefined") {
+    throw new Error("You are calling submit during the server render. " + "Try calling submit within a `useEffect` or callback instead.");
+  }
+}
+let fetcherId = 0;
+let getUniqueFetcherId = () => "__" + String(++fetcherId) + "__";
+/**
+ * Returns a function that may be used to programmatically submit a form (or
+ * some arbitrary data) to the server.
+ */
+function useSubmit() {
+  let {
+    router
+  } = dist_useDataRouterContext(dist_DataRouterHook.UseSubmit);
+  let {
+    basename
+  } = React.useContext(UNSAFE_NavigationContext);
+  let currentRouteId = UNSAFE_useRouteId();
+  return React.useCallback(function (target, options) {
+    if (options === void 0) {
+      options = {};
+    }
+    validateClientSideSubmission();
+    let {
+      action,
+      method,
+      encType,
+      formData,
+      body
+    } = getFormSubmissionInfo(target, basename);
+    if (options.navigate === false) {
+      let key = options.fetcherKey || getUniqueFetcherId();
+      router.fetch(key, currentRouteId, options.action || action, {
+        preventScrollReset: options.preventScrollReset,
+        formData,
+        body,
+        formMethod: options.method || method,
+        formEncType: options.encType || encType,
+        unstable_flushSync: options.unstable_flushSync
+      });
+    } else {
+      router.navigate(options.action || action, {
+        preventScrollReset: options.preventScrollReset,
+        formData,
+        body,
+        formMethod: options.method || method,
+        formEncType: options.encType || encType,
+        replace: options.replace,
+        state: options.state,
+        fromRouteId: currentRouteId,
+        unstable_flushSync: options.unstable_flushSync,
+        unstable_viewTransition: options.unstable_viewTransition
+      });
+    }
+  }, [router, basename, currentRouteId]);
+}
+// v7: Eventually we should deprecate this entirely in favor of using the
+// router method directly?
+function useFormAction(action, _temp2) {
+  let {
+    relative
+  } = _temp2 === void 0 ? {} : _temp2;
+  let {
+    basename
+  } = React.useContext(UNSAFE_NavigationContext);
+  let routeContext = React.useContext(UNSAFE_RouteContext);
+  !routeContext ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  let [match] = routeContext.matches.slice(-1);
+  // Shallow clone path so we can modify it below, otherwise we modify the
+  // object referenced by useMemo inside useResolvedPath
+  let path = react_router_dom_dist_extends({}, useResolvedPath(action ? action : ".", {
+    relative
+  }));
+  // If no action was specified, browsers will persist current search params
+  // when determining the path, so match that behavior
+  // https://github.com/remix-run/remix/issues/927
+  let location = useLocation();
+  if (action == null) {
+    // Safe to write to this directly here since if action was undefined, we
+    // would have called useResolvedPath(".") which will never include a search
+    path.search = location.search;
+    // When grabbing search params from the URL, remove any included ?index param
+    // since it might not apply to our contextual route.  We add it back based
+    // on match.route.index below
+    let params = new URLSearchParams(path.search);
+    if (params.has("index") && params.get("index") === "") {
+      params.delete("index");
+      path.search = params.toString() ? "?" + params.toString() : "";
+    }
+  }
+  if ((!action || action === ".") && match.route.index) {
+    path.search = path.search ? path.search.replace(/^\?/, "?index&") : "?index";
+  }
+  // If we're operating within a basename, prepend it to the pathname prior
+  // to creating the form action.  If this is a root navigation, then just use
+  // the raw basename which allows the basename to have full control over the
+  // presence of a trailing slash on root actions
+  if (basename !== "/") {
+    path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
+  }
+  return createPath(path);
+}
+// TODO: (v7) Change the useFetcher generic default from `any` to `unknown`
+/**
+ * Interacts with route loaders and actions without causing a navigation. Great
+ * for any interaction that stays on the same page.
+ */
+function useFetcher(_temp3) {
+  var _route$matches;
+  let {
+    key
+  } = _temp3 === void 0 ? {} : _temp3;
+  let {
+    router
+  } = dist_useDataRouterContext(dist_DataRouterHook.UseFetcher);
+  let state = dist_useDataRouterState(dist_DataRouterStateHook.UseFetcher);
+  let fetcherData = React.useContext(FetchersContext);
+  let route = React.useContext(UNSAFE_RouteContext);
+  let routeId = (_route$matches = route.matches[route.matches.length - 1]) == null ? void 0 : _route$matches.route.id;
+  !fetcherData ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  !route ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  !(routeId != null) ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  // Fetcher key handling
+  // OK to call conditionally to feature detect `useId`
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  let defaultKey = useIdImpl ? useIdImpl() : "";
+  let [fetcherKey, setFetcherKey] = React.useState(key || defaultKey);
+  if (key && key !== fetcherKey) {
+    setFetcherKey(key);
+  } else if (!fetcherKey) {
+    // We will only fall through here when `useId` is not available
+    setFetcherKey(getUniqueFetcherId());
+  }
+  // Registration/cleanup
+  React.useEffect(() => {
+    router.getFetcher(fetcherKey);
+    return () => {
+      // Tell the router we've unmounted - if v7_fetcherPersist is enabled this
+      // will not delete immediately but instead queue up a delete after the
+      // fetcher returns to an `idle` state
+      router.deleteFetcher(fetcherKey);
+    };
+  }, [router, fetcherKey]);
+  // Fetcher additions
+  let load = React.useCallback((href, opts) => {
+    !routeId ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+    router.fetch(fetcherKey, routeId, href, opts);
+  }, [fetcherKey, routeId, router]);
+  let submitImpl = useSubmit();
+  let submit = React.useCallback((target, opts) => {
+    submitImpl(target, react_router_dom_dist_extends({}, opts, {
+      navigate: false,
+      fetcherKey
+    }));
+  }, [fetcherKey, submitImpl]);
+  let FetcherForm = React.useMemo(() => {
+    let FetcherForm = /*#__PURE__*/React.forwardRef((props, ref) => {
+      return /*#__PURE__*/React.createElement(Form, react_router_dom_dist_extends({}, props, {
+        navigate: false,
+        fetcherKey: fetcherKey,
+        ref: ref
+      }));
+    });
+    if (false) {}
+    return FetcherForm;
+  }, [fetcherKey]);
+  // Exposed FetcherWithComponents
+  let fetcher = state.fetchers.get(fetcherKey) || IDLE_FETCHER;
+  let data = fetcherData.get(fetcherKey);
+  let fetcherWithComponents = React.useMemo(() => react_router_dom_dist_extends({
+    Form: FetcherForm,
+    submit,
+    load
+  }, fetcher, {
+    data
+  }), [FetcherForm, submit, load, fetcher, data]);
+  return fetcherWithComponents;
+}
+/**
+ * Provides all fetchers currently on the page. Useful for layouts and parent
+ * routes that need to provide pending/optimistic UI regarding the fetch.
+ */
+function useFetchers() {
+  let state = dist_useDataRouterState(dist_DataRouterStateHook.UseFetchers);
+  return Array.from(state.fetchers.entries()).map(_ref11 => {
+    let [key, fetcher] = _ref11;
+    return react_router_dom_dist_extends({}, fetcher, {
+      key
+    });
+  });
+}
+const SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
+let savedScrollPositions = {};
+/**
+ * When rendered inside a RouterProvider, will restore scroll positions on navigations
+ */
+function useScrollRestoration(_temp4) {
+  let {
+    getKey,
+    storageKey
+  } = _temp4 === void 0 ? {} : _temp4;
+  let {
+    router
+  } = dist_useDataRouterContext(dist_DataRouterHook.UseScrollRestoration);
+  let {
+    restoreScrollPosition,
+    preventScrollReset
+  } = dist_useDataRouterState(dist_DataRouterStateHook.UseScrollRestoration);
+  let {
+    basename
+  } = React.useContext(UNSAFE_NavigationContext);
+  let location = useLocation();
+  let matches = useMatches();
+  let navigation = useNavigation();
+  // Trigger manual scroll restoration while we're active
+  React.useEffect(() => {
+    window.history.scrollRestoration = "manual";
+    return () => {
+      window.history.scrollRestoration = "auto";
+    };
+  }, []);
+  // Save positions on pagehide
+  usePageHide(React.useCallback(() => {
+    if (navigation.state === "idle") {
+      let key = (getKey ? getKey(location, matches) : null) || location.key;
+      savedScrollPositions[key] = window.scrollY;
+    }
+    try {
+      sessionStorage.setItem(storageKey || SCROLL_RESTORATION_STORAGE_KEY, JSON.stringify(savedScrollPositions));
+    } catch (error) {
+       false ? 0 : void 0;
+    }
+    window.history.scrollRestoration = "auto";
+  }, [storageKey, getKey, navigation.state, location, matches]));
+  // Read in any saved scroll locations
+  if (typeof document !== "undefined") {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useLayoutEffect(() => {
+      try {
+        let sessionPositions = sessionStorage.getItem(storageKey || SCROLL_RESTORATION_STORAGE_KEY);
+        if (sessionPositions) {
+          savedScrollPositions = JSON.parse(sessionPositions);
+        }
+      } catch (e) {
+        // no-op, use default empty object
+      }
+    }, [storageKey]);
+    // Enable scroll restoration in the router
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useLayoutEffect(() => {
+      let getKeyWithoutBasename = getKey && basename !== "/" ? (location, matches) => getKey( // Strip the basename to match useLocation()
+      react_router_dom_dist_extends({}, location, {
+        pathname: stripBasename(location.pathname, basename) || location.pathname
+      }), matches) : getKey;
+      let disableScrollRestoration = router == null ? void 0 : router.enableScrollRestoration(savedScrollPositions, () => window.scrollY, getKeyWithoutBasename);
+      return () => disableScrollRestoration && disableScrollRestoration();
+    }, [router, basename, getKey]);
+    // Restore scrolling when state.restoreScrollPosition changes
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useLayoutEffect(() => {
+      // Explicit false means don't do anything (used for submissions)
+      if (restoreScrollPosition === false) {
+        return;
+      }
+      // been here before, scroll to it
+      if (typeof restoreScrollPosition === "number") {
+        window.scrollTo(0, restoreScrollPosition);
+        return;
+      }
+      // try to scroll to the hash
+      if (location.hash) {
+        let el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        if (el) {
+          el.scrollIntoView();
+          return;
+        }
+      }
+      // Don't reset if this navigation opted out
+      if (preventScrollReset === true) {
+        return;
+      }
+      // otherwise go to the top on new locations
+      window.scrollTo(0, 0);
+    }, [location, restoreScrollPosition, preventScrollReset]);
+  }
+}
+/**
+ * Setup a callback to be fired on the window's `beforeunload` event. This is
+ * useful for saving some data to `window.localStorage` just before the page
+ * refreshes.
+ *
+ * Note: The `callback` argument should be a function created with
+ * `React.useCallback()`.
+ */
+function useBeforeUnload(callback, options) {
+  let {
+    capture
+  } = options || {};
+  React.useEffect(() => {
+    let opts = capture != null ? {
+      capture
+    } : undefined;
+    window.addEventListener("beforeunload", callback, opts);
+    return () => {
+      window.removeEventListener("beforeunload", callback, opts);
+    };
+  }, [callback, capture]);
+}
+/**
+ * Setup a callback to be fired on the window's `pagehide` event. This is
+ * useful for saving some data to `window.localStorage` just before the page
+ * refreshes.  This event is better supported than beforeunload across browsers.
+ *
+ * Note: The `callback` argument should be a function created with
+ * `React.useCallback()`.
+ */
+function usePageHide(callback, options) {
+  let {
+    capture
+  } = options || {};
+  React.useEffect(() => {
+    let opts = capture != null ? {
+      capture
+    } : undefined;
+    window.addEventListener("pagehide", callback, opts);
+    return () => {
+      window.removeEventListener("pagehide", callback, opts);
+    };
+  }, [callback, capture]);
+}
+/**
+ * Wrapper around useBlocker to show a window.confirm prompt to users instead
+ * of building a custom UI with useBlocker.
+ *
+ * Warning: This has *a lot of rough edges* and behaves very differently (and
+ * very incorrectly in some cases) across browsers if user click addition
+ * back/forward navigations while the confirm is open.  Use at your own risk.
+ */
+function usePrompt(_ref12) {
+  let {
+    when,
+    message
+  } = _ref12;
+  let blocker = useBlocker(when);
+  React.useEffect(() => {
+    if (blocker.state === "blocked") {
+      let proceed = window.confirm(message);
+      if (proceed) {
+        // This timeout is needed to avoid a weird "race" on POP navigations
+        // between the `window.history` revert navigation and the result of
+        // `window.confirm`
+        setTimeout(blocker.proceed, 0);
+      } else {
+        blocker.reset();
+      }
+    }
+  }, [blocker, message]);
+  React.useEffect(() => {
+    if (blocker.state === "blocked" && !when) {
+      blocker.reset();
+    }
+  }, [blocker, when]);
+}
+/**
+ * Return a boolean indicating if there is an active view transition to the
+ * given href.  You can use this value to render CSS classes or viewTransitionName
+ * styles onto your elements
+ *
+ * @param href The destination href
+ * @param [opts.relative] Relative routing type ("route" | "path")
+ */
+function useViewTransitionState(to, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+  let vtContext = React.useContext(ViewTransitionContext);
+  !(vtContext != null) ?  false ? 0 : UNSAFE_invariant(false) : void 0;
+  let {
+    basename
+  } = dist_useDataRouterContext(dist_DataRouterHook.useViewTransitionState);
+  let path = useResolvedPath(to, {
+    relative: opts.relative
+  });
+  if (!vtContext.isTransitioning) {
+    return false;
+  }
+  let currentPath = stripBasename(vtContext.currentLocation.pathname, basename) || vtContext.currentLocation.pathname;
+  let nextPath = stripBasename(vtContext.nextLocation.pathname, basename) || vtContext.nextLocation.pathname;
+  // Transition is active if we're going to or coming from the indicated
+  // destination.  This ensures that other PUSH navigations that reverse
+  // an indicated transition apply.  I.e., on the list view you have:
+  //
+  //   <NavLink to="/details/1" unstable_viewTransition>
+  //
+  // If you click the breadcrumb back to the list view:
+  //
+  //   <NavLink to="/list" unstable_viewTransition>
+  //
+  // We should apply the transition because it's indicated as active going
+  // from /list -> /details/1 and therefore should be active on the reverse
+  // (even though this isn't strictly a POP reverse)
+  return matchPath(path.pathname, nextPath) != null || matchPath(path.pathname, currentPath) != null;
+}
+//#endregion
+
+
+//# sourceMappingURL=index.js.map
+
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/admin/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const admin_styles = ({"root":"styles__root--BEW5m","wrapper":"styles__wrapper--eBF7H","bg":"styles__bg--H5cml","wrapperBackground":"styles__wrapperBackground--wQALm"});
