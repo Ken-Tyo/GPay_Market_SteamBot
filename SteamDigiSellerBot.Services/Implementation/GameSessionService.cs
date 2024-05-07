@@ -408,6 +408,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                               && b.SendedGiftsSum < b.MaxSendedGiftsSum //сумма подарков не превышает максимальную
                               && b.IsON);
 
+            gs.BotSwitchList ??= new();
+            if (gs.BotSwitchList.Count > 0)
+            {
+                botFilterRes = botFilterRes.Where(x => !gs.BotSwitchList.Contains(x.Id)).ToList();
+            }
+
             _logger.LogInformation(
                 $"GS ID {gs.Id} after filter bot state - {JsonConvert.SerializeObject(botFilterRes.Select(b => new { id = b.Id, name = b.UserName }))}");
 
@@ -542,13 +548,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             if (filterRes == null || filterRes.Count() == 0)
                 return (GetBotForSendGameStatus.botNotFound, filterParams, sbot);
 
-            gs.BotSwitchList ??= new();
-            if (gs.BotSwitchList.Count > 0)
-            {
-                filterRes= filterRes.Where(x => !gs.BotSwitchList.Contains(x.Id)).ToList();
-                if (filterRes.Count()==0)
-                    return (GetBotForSendGameStatus.botNotFound, filterParams, sbot);
-            }
+
 
             var bot = await GetFirstBotByItemCriteration(gs, filterRes);
             //foreach (var b in filterRes)
@@ -631,7 +631,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                     Value = new GameSessionStatusLog.ValueJson
                     {
                         itemPrice = gs.Item.CurrentDigiSellerPrice,
-                        botFilter = filter
+                        botFilter = filter,
+                        userNickname = gs.SteamProfileName
                     }
                 });
 
@@ -672,6 +673,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                     Value = new GameSessionStatusLog.ValueJson
                     {
                         message = $"Ошибка при попытке логина в аккаунт {superBot.Bot.UserName}",
+                        botId = superBot.Bot.Id,
+                        botName = superBot.Bot.UserName,
+                        userNickname = gs.SteamProfileName
                     }
                 });
                 //await _gameSessionRepository.EditAsync(gs);

@@ -1420,11 +1420,63 @@ namespace SteamDigiSellerBot.Network
                 return (null,null);
 
             var initTranUrl = "https://checkout.steampowered.com/checkout/inittransaction/";
+            var formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+
+            var initTran = new Uri(initTranUrl);
+            var reqMes = new HttpRequestMessage(HttpMethod.Post, initTran);
+            reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
+
+            var cookies = new Dictionary<string, string>() { 
+                { "sessionid", sessionId },
+                { "shoppingCartGID", gidShoppingCart },
+                { "wants_mature_content", "1" }
+            };
+            HttpResponseMessage response;
+            using var client = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler handler, cookies);
+            try
+            {
+                response = await client.SendAsync(reqMes);
+            }
+            catch (TaskCanceledException ex)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(40));
+                response = await client.SendAsync(reqMes);
+            }
+            catch (HttpRequestException ex)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(40));
+                sessionId= await GetSessiondId("https://checkout.steampowered.com");
+                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+                reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
+                cookies = new Dictionary<string, string>() {
+                    { "sessionid", sessionId },
+                    { "shoppingCartGID", gidShoppingCart },
+                    { "wants_mature_content", "1" }
+                };
+                using var client2 = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler _, cookies);
+                response = await client2.SendAsync(reqMes);
+            }
+            catch
+            {
+                throw;
+            }
+
+            var s = await response.Content.ReadAsStringAsync();
+
+            var respObj = JsonConvert.DeserializeObject<InitTranResponse>(s);
+            respObj.sessionId = sessionId;
+
+            return (respObj,s);
+        }
+
+        private static RequestParams transactionParams(string gidShoppingCart, string sessionId, string gifteeAccountId,
+            string receiverName, string comment, string wishes, string signature, string countryCode)
+        {
             var formParams = new RequestParams
             {
                 ["gidShoppingCart"] = gidShoppingCart,
                 ["gidReplayOfTransID"] = -1,
-                ["bUseAccountCart"]= 1,
+                ["bUseAccountCart"] = 1,
                 ["PaymentMethod"] = "steamaccount",
                 ["abortPendingTransactions"] = 0,
                 ["bHasCardInfo"] = 0,
@@ -1469,24 +1521,7 @@ namespace SteamDigiSellerBot.Network
                 ["bPreAuthOnly"] = 0,
                 ["sessionid"] = sessionId,
             };
-
-            var initTran = new Uri(initTranUrl);
-            var reqMes = new HttpRequestMessage(HttpMethod.Post, initTran);
-            reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
-
-            var cookies = new Dictionary<string, string>() { 
-                { "sessionid", sessionId },
-                { "shoppingCartGID", gidShoppingCart },
-                { "wants_mature_content", "1" }
-            };
-            using var client = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler handler, cookies);
-            using var response = client.Send(reqMes);
-            var s = await response.Content.ReadAsStringAsync();
-
-            var respObj = JsonConvert.DeserializeObject<InitTranResponse>(s);
-            respObj.sessionId = sessionId;
-
-            return (respObj,s);
+            return formParams;
         }
 
         public async Task<(bool, string)> CheckTransactionFinalPrice(

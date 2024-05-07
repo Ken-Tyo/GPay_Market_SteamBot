@@ -143,7 +143,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
                         else
                         {
-                            var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
+                            //var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
                         }
                     }
                 }
@@ -325,7 +326,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         message = $"Смена бота {gs.BotId}. Попытка №{(gs.BotSwitchList.Count+1)}",
                         botId = gs.BotId.Value,
-                        botName = gs.Bot?.UserName
+                        botName = gs.Bot?.UserName,
+                        userNickname = gs.SteamProfileName,
+                        userProfileUrl = gs.SteamProfileUrl
+                        
                     }
                 });
                 gs.Bot = null;
@@ -336,6 +340,19 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
             else
             {
+                gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
+                {
+                    StatusId = gs.StatusId,
+                    Value = new GameSessionStatusLog.ValueJson
+                    {
+                        message = $"Использованы все попытки смены бота",
+                        botId =  (gs.Bot?.Id ?? 0),
+                        botName = gs.Bot?.UserName,
+                        userNickname = gs.SteamProfileName,
+                        userProfileUrl = gs.SteamProfileUrl
+
+                    }
+                });
                 gs.Stage = GameSessionStage.Done;
             }
             await _gsRepo.EditAsync(gs);

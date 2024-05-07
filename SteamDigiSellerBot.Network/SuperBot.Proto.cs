@@ -96,10 +96,10 @@ namespace SteamDigiSellerBot.Network
             return (response?.cart_items?.Count() == 1 && response.cart_items.Any(x => x.item_id.packageid == subId || x.item_id.bundleid == subId));
         }
 
-        public async Task<string> GetSessiondId()
+        public async Task<string> GetSessiondId(string url=null)
         {
             HttpRequest request = _bot.SteamHttpRequest;
-            var gameUrl = $"https://store.steampowered.com/app/413150";
+            var gameUrl = url ?? $"https://store.steampowered.com/app/413150";
             (string html, _) = await GetPageHtml(gameUrl);
             return html.Substring("var g_sessionID = \"", "\"");
         }
@@ -119,7 +119,7 @@ namespace SteamDigiSellerBot.Network
             var response = await api.CallProtobufAsync<CAccountCart_AddItemToCart_Response>(
                 HttpMethod.Post, "AddItemToCart", args: PrepareProtobufArguments(item, accessToken));
             if (response.line_item_id == 0)
-                throw new Exception("Не удалось добавить покупку в корзину");
+                return (null, 0);
             if (reciverId != 0)
             {
                 var m = new CAccountCart_ModifyLineItem_Request()
@@ -183,11 +183,27 @@ namespace SteamDigiSellerBot.Network
 
                     //добаляем в корзину
                     var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId), receiverName, comment);
+                    if (ShoppingCart.Item1 == null)
+                    {
+                        res.result = SendeGameResult.error;
+                        res.errMessage = "Не удалось добавить товар в корзину";
+                        res.ChangeBot = true;
+                        return res;
+                    }
                     if (!CheckCart_Proto(countryCode, subId, out bool empty))
                     {
                         if (!empty)
-                           await DeleteCart(sessionId);
-                        ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId), receiverName, comment);
+                            await DeleteCart(sessionId);
+                        ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId),
+                            receiverName, comment);
+                        if (ShoppingCart.Item1 == null)
+                        {
+                            res.result = SendeGameResult.error;
+                            res.errMessage = "Не удалось добавить товар в корзину";
+                            res.ChangeBot = true;
+                            return res;
+                        }
+
                         if (!CheckCart_Proto(sessionId, subId, out bool _))
                         {
                             res.result = SendeGameResult.error;
@@ -196,6 +212,7 @@ namespace SteamDigiSellerBot.Network
                             return res;
                         }
                     }
+
                     //res.gidShoppingCart = ;
                     res.sessionId = sessionId;
 
