@@ -29,6 +29,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         //#4FBD53 - зеленый
         private List<GameSessionStatus> InitData = new List<GameSessionStatus>
         {
+            new GameSessionStatus{ StatusId = 0, Name = "Неизвестный статус", Color = "#E13F29" },
             new GameSessionStatus{ StatusId = 1, Name = "Заказ выполнен", Color = "#4FBD53", Description = "Вы вручную подтвердили выполнение данного заказа" },
             new GameSessionStatus{ StatusId = 2, Name = "Игра получена", Color = "#4FBD53" },
             new GameSessionStatus{ StatusId = 3, Name = "Некорректный профиль", Color = "#D3AE29", Description = "Получателем был указан некорректный профиль" },
@@ -48,6 +49,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             new GameSessionStatus{ StatusId = 17, Name = "Бот не найден", Color = "#D3AE29" },
             new GameSessionStatus{ StatusId = 18, Name = "Отправка игры", Color = "#DDE11C" },
             new GameSessionStatus{ StatusId = 19, Name = "Очередь", Color = "#DDE11C" },
+            new GameSessionStatus{ StatusId = 20, Name = "Смена бота", Color = "#DDE11C" },
         };
 
         private async Task<List<GameSessionStatus>> InitGameSessionStatuses()

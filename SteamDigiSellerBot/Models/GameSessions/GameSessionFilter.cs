@@ -1,4 +1,6 @@
-﻿namespace SteamDigiSellerBot.Models.GameSessions
+﻿using SteamDigiSellerBot.Database.Entities;
+
+namespace SteamDigiSellerBot.Models.GameSessions
 {
     public class GameSessionFilter
     {
@@ -10,6 +12,6 @@
         public int? Page { get; set; } = 1;
         public int? Size { get; set; }
         public string UniqueCodes { get; set; }
-        public int? StatusId { get; set; }
+        public GameSessionStatusEnum? StatusId { get; set; }
     }
 }

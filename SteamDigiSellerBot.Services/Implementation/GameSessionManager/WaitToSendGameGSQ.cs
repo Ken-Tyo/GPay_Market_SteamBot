@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SteamDigiSellerBot.Services.Interfaces;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Database.Entities;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
@@ -50,7 +51,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             //    SendToManager(new Untracked { gsId = gs.Id });
                             //    continue;
                             //}
-                            if (new int[] { 1, 15 }.Contains(gs.StatusId))
+                            if (new GameSessionStatusEnum[] {GameSessionStatusEnum.Done, GameSessionStatusEnum.Closed }.Contains(gs.StatusId))
                             {
                                 SendToManager(new ToFixStage { gsId = gs.Id });
                                 continue;

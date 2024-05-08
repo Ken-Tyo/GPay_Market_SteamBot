@@ -133,7 +133,7 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> SetGameSessionStatus(SetGameSesStatusRequest req)
         {
             GameSession gs = await _gameSessionRepository.GetByIdAsync(req.GameSessionId);
-            if (req.StatusId == 1 || req.StatusId == 15)
+            if (req.StatusId == GameSessionStatusEnum.Done || req.StatusId == GameSessionStatusEnum.Closed)
             {
                 _gameSessionManager.RemoveWithStatus(gs.Id, req.StatusId);
                 //_gameSessionManager.Remove(gs.Id);
@@ -189,7 +189,7 @@ namespace SteamDigiSellerBot.Controllers
 
             gs.Bot = null;
             gs.SteamProfileUrl = null;
-            gs.StatusId = 12;//Не указан профиль
+            gs.StatusId = GameSessionStatusEnum.ProfileNoSet;//Не указан профиль
             gs.SteamContactValue = null;
             gs.SteamContactType = SteamContactType.unknown;
             gs.ActivationEndDate = null;
@@ -261,7 +261,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 gs.User = user;
                 gs.Item = item;
-                gs.StatusId = 12;
+                gs.StatusId = GameSessionStatusEnum.ProfileNoSet;
                 gs.PriorityPrice = priorityPriceRub;
                 gs.GameSessionStatusLogs = new List<GameSessionStatusLog>()
                 {
@@ -354,18 +354,18 @@ namespace SteamDigiSellerBot.Controllers
                 return this.CreateBadRequest();
             }
 
-            if (gs.StatusId != 4 && gs.StatusId != 14)
+            if (gs.StatusId != GameSessionStatusEnum.RequestReject && gs.StatusId != GameSessionStatusEnum.GameIsExists)
             {
                 ModelState.AddModelError("", "не корректный статус заказа");
                 return this.CreateBadRequest();
             }
 
-            if (gs.StatusId == 14)
+            if (gs.StatusId == GameSessionStatusEnum.GameIsExists)
             {
                 gs.GameExistsRepeatSendCount++;
             }
 
-            gs.StatusId = 6;//Заявка отправлена
+            gs.StatusId = GameSessionStatusEnum.RequestSent;//Заявка отправлена
             gs.Stage = GameSessionStage.CheckFriend;
             await _gameSessionRepository.EditAsync(gs);
             _gameSessionManager.CheckFriend(gs.Id);

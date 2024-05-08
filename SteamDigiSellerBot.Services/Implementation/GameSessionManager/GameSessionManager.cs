@@ -143,7 +143,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
                         else
                         {
-                            var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
+                            //var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
                         }
                     }
                 }
@@ -156,9 +157,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                         var ur = UpdateStage(gsId, GameSessionStage.SendGame).GetAwaiter().GetResult();
                         SendGameGSQ.Add(gsId);
                     }
-                    else if (res is Rejected || res is FailCheckFriendAdded)
+                    else if (res is Rejected )
                     {
                         var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                    }
+                    else if (res is FailCheckFriendAdded)
+                    {
+                        ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
                     }
                 }
                 else if (sender == WaitToSendGameGSQ)
@@ -179,6 +184,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                         {
                             var ur = UpdateStage(gsId, GameSessionStage.WaitToSend).GetAwaiter().GetResult();
                             WaitToSendGameGSQ.Add(gsId);
+                        }
+                        else if (sf.ChangeBot)
+                        {
+                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
                         }
                         else
                         {
@@ -262,7 +271,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
         }
 
-        public void RemoveWithStatus(int gsId, int statusId)
+        public void RemoveWithStatus(int gsId, GameSessionStatusEnum statusId)
         {
             lock (sync)
             {
@@ -297,6 +306,59 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
         }
 
+
+        public async Task ChangeBotAndRetry(int gsId)
+        {
+            var _gsRepo = _serviceProvider
+                .CreateScope()
+                .ServiceProvider
+                .GetRequiredService<IGameSessionRepository>();
+            var gs= await _gsRepo.GetByIdAsync(gsId);
+            gs.BotSwitchList ??= new();
+            if (gs.BotId!=null)
+                gs.BotSwitchList.Add(gs.BotId.Value);
+            if (gs.BotSwitchList.Count < 3 && gs.BotId!=null)
+            {
+                gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
+                {
+                    //StatusId = GameSessionStatusEnum.SwitchBot,
+                    StatusId = GameSessionStatusEnum.UnknownError,
+                    Value = new GameSessionStatusLog.ValueJson
+                    {
+                        message = $"Смена бота {gs.BotId}. Попытка №{(gs.BotSwitchList.Count)}",
+                        botId = gs.BotId.Value,
+                        botName = gs.Bot?.UserName,
+                        userNickname = gs.SteamProfileName,
+                        userProfileUrl = gs.SteamProfileUrl
+                        
+                    }
+                });
+                gs.Bot = null;
+                gs.BotId = null;
+                gs.Stage = GameSessionStage.WaitToSend;
+                //gs.StatusId = GameSessionStatusEnum.SwitchBot;
+                WaitToSendGameGSQ.Add(gsId);
+            }
+            else
+            {
+                gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
+                {
+                    StatusId = gs.StatusId,
+                    Value = new GameSessionStatusLog.ValueJson
+                    {
+                        message = $"Использованы все попытки смены бота",
+                        botId =  (gs.Bot?.Id ?? 0),
+                        botName = gs.Bot?.UserName,
+                        userNickname = gs.SteamProfileName,
+                        userProfileUrl = gs.SteamProfileUrl
+
+                    }
+                });
+                gs.Stage = GameSessionStage.Done;
+            }
+            await _gsRepo.EditAsync(gs);
+        }
+
         //public void RemoveWithDone(int gsId)
         //{
         //    lock (sync)
@@ -320,7 +382,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 ;
         }
 
-        private async Task<bool> UpdateStage(int gsId, GameSessionStage stage, int? lastStatusId = null)
+        private async Task<bool> UpdateStage(int gsId, GameSessionStage stage, GameSessionStatusEnum? lastStatusId = null)
         {
             var _gsRepo = _serviceProvider
                    .CreateScope()
@@ -346,6 +408,6 @@ namespace SteamDigiSellerBot.Services.Implementation
     public class CancelationData
     {
         public bool IsCanceled { get; set; }
-        public int? StatusId { get; set; }
+        public GameSessionStatusEnum? StatusId { get; set; }
     }
 }

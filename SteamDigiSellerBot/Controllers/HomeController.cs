@@ -171,7 +171,7 @@ namespace SteamDigiSellerBot.Controllers
             isRobotCheck = false;
 
             //Заявка отклонена
-            if (gs.StatusId == 4)
+            if (gs.StatusId == GameSessionStatusEnum.RequestReject)
             {
                 if (gs.Bot != null)
                 {
@@ -233,7 +233,7 @@ namespace SteamDigiSellerBot.Controllers
                         DigiSellerDealPriceUsd = (decimal)soldItem.AmountUsd,
                         IsSteamMonitoring = true,
                         UniqueCode = uniquecode,
-                        StatusId = 12,//не указан профиль
+                        StatusId = GameSessionStatusEnum.ProfileNoSet,//не указан профиль
                         PriorityPrice = priorityPriceRub,
                         MaxSellPercent = null
                     };

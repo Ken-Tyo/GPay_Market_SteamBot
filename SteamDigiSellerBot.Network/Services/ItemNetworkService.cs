@@ -161,130 +161,148 @@ namespace SteamDigiSellerBot.Network.Services
             Dictionary<int, decimal> prices = null,
             bool manualUpdate=true)
         {
-            using var db = _contextFactory.CreateDbContext();
-            var currencyData = await _currencyDataRepository.GetCurrencyData();
-
-            var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
-            allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();
-            // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
-            var dbItems = await db.Items.Include(i => i.GamePrices).Where(i => i.AppId == appId && items.Contains(i.SubId)).ToListAsync();
-
-            var currencyForParse = allCurrencies;
-            var currencyDataLastUpdate = currencyData?.LastUpdateDateTime ?? DateTime.MinValue;
-            if (onlyBaseCurrency 
-            && dbItems.SelectMany(i => i.GamePrices).All(gp => gp.LastUpdate > currencyDataLastUpdate))
+            try
             {
-                var targetCurrs = dbItems.Select(i => i.SteamCurrencyId).ToHashSet();
-                currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
-            }
+                using var db = _contextFactory.CreateDbContext();
+                var currencyData = await _currencyDataRepository.GetCurrencyData();
 
-            await _steamNetworkService.SetSteamPrices(appId, items, currencyForParse, db, 5);
+                var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
+                allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();
+                // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
+                var dbItems = await db.Items.Include(i => i.GamePrices)
+                    .Where(i => i.AppId == appId && items.Contains(i.SubId)).ToListAsync();
 
-            //before update Digiseller price
-            var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
-            var itemsToDigisellerUpdate = new List<Item>();
-            foreach (Item item in dbItems)
-            {
-                var currentSteamPrice =
-                    item.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == item.SteamCurrencyId)?.CurrentSteamPrice ?? 0;
-
-                Item SetPricesToItem(Item item, decimal digiSellerPriceWithAllSales, List<int> ids)
+                var currencyForParse = allCurrencies;
+                var currencyDataLastUpdate = currencyData?.LastUpdateDateTime ?? DateTime.MinValue;
+                if (onlyBaseCurrency
+                    && dbItems.SelectMany(i => i.GamePrices).All(gp => gp.LastUpdate > currencyDataLastUpdate))
                 {
-                    var finalPrice = digiSellerPriceWithAllSales + item.AddPrice;
-                    if ((item.CurrentDigiSellerPrice != finalPrice || reUpdate || (prices != null && ids.Any(id => prices.ContainsKey(id) && prices[id] != finalPrice))) && currentSteamPrice > 0)
-                    {
-                        if (!manualUpdate && item.CurrentDigiSellerPrice != 0 && finalPrice / item.CurrentDigiSellerPrice < 0.1M)
-                        {
-                            _logger.LogWarning($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой в {(finalPrice / item.CurrentDigiSellerPrice * 10):0.0}%");
-                            item.CurrentDigiSellerPriceNeedAttention = true;
-                        }
-                        else
-                        {
-                            if (!manualUpdate && item.CurrentDigiSellerPrice > 1000 && finalPrice / item.CurrentDigiSellerPrice < 0.2M)
-                                _logger.LogInformation($"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%)");
-                            item.CurrentDigiSellerPriceNeedAttention = false;
-                            //FixedPrice все время в рублях
-                            item.CurrentDigiSellerPrice = finalPrice;
-                            item.CurrentDigiSellerPriceUsd = allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
-                            itemsToDigisellerUpdate.Add(item);
-                        }
-                        db.Entry(item).State = EntityState.Modified;
-                    }
-
-                    return item;
+                    var targetCurrs = dbItems.Select(i => i.SteamCurrencyId).ToHashSet();
+                    currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
                 }
 
-                var digiSellerPriceWithAllSales = item.DigiSellerPriceWithAllSales;
+                await _steamNetworkService.SetSteamPrices(appId, items, currencyForParse, db, 5);
 
-                var ids = ListItemsId(item.DigiSellerIds, _logger);
-                if (item.IsFixedPrice)
+                //before update Digiseller price
+                var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
+                var itemsToDigisellerUpdate = new List<Item>();
+                foreach (Item item in dbItems)
                 {
+                    var currentSteamPrice =
+                        item.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == item.SteamCurrencyId)
+                            ?.CurrentSteamPrice ?? 0;
 
-                    var currentSteamPriceRub = allCurrencies.ConvertToRUB(currentSteamPrice, item.SteamCurrencyId);
-                    if (currentSteamPriceRub != 0)
+                    Item SetPricesToItem(Item item, decimal digiSellerPriceWithAllSales, List<int> ids)
                     {
-                        var diffPriceInPercent = (digiSellerPriceWithAllSales * 100) / currentSteamPriceRub;
-                        //новое значение активности товара
-                        //вычисляется в зависимости от меньше ли фиксированная цена Digiseller в процентах минимального порога
-                        //если да - активировать товар
-                        //иначе - деактивировать
-                        var newActive = !(diffPriceInPercent < item.MinActualThreshold);
-                        
-                        if (item.Active != newActive)
+                        var finalPrice = digiSellerPriceWithAllSales + item.AddPrice;
+                        if ((item.CurrentDigiSellerPrice != finalPrice || reUpdate || (prices != null &&
+                                ids.Any(id => prices.ContainsKey(id) && prices[id] != finalPrice))) &&
+                            currentSteamPrice > 0)
                         {
-                            if (newActive == false)
-                                item.Active = newActive;
+                            if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
+                                finalPrice / item.CurrentDigiSellerPrice < 0.1M)
+                            {
+                                _logger.LogWarning(
+                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой в {(finalPrice / item.CurrentDigiSellerPrice * 10):0.0}%");
+                                item.CurrentDigiSellerPriceNeedAttention = true;
+                            }
                             else
                             {
-                                //автоактивация возможна только если соответствующая функция включена
-                                if (item.IsAutoActivation)
-                                {
-                                    item.Active = newActive;
-                                    db.Entry(item).State = EntityState.Modified;
-                                }
+                                if (!manualUpdate && item.CurrentDigiSellerPrice > 1000 &&
+                                    finalPrice / item.CurrentDigiSellerPrice < 0.2M)
+                                    _logger.LogInformation(
+                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%)");
+                                item.CurrentDigiSellerPriceNeedAttention = false;
+                                //FixedPrice все время в рублях
+                                item.CurrentDigiSellerPrice = finalPrice;
+                                item.CurrentDigiSellerPriceUsd =
+                                    allCurrencies.Convert(digiSellerPriceWithAllSales, 5, 0);
+                                itemsToDigisellerUpdate.Add(item);
                             }
 
-                            //если изменение всё же произошло и API запросы к Digiseller включены
-                            if (digiSellerEnable && item.Active == newActive)
-                            {
-                                await _digiSellerNetworkService.SetDigiSellerItemsCondition(
-                                        item.DigiSellerIds, item.Active, aspNetUserId);
-                            }
+                            db.Entry(item).State = EntityState.Modified;
                         }
+
+                        return item;
                     }
 
-                    SetPricesToItem(item, digiSellerPriceWithAllSales, ids);
+                    var digiSellerPriceWithAllSales = item.DigiSellerPriceWithAllSales;
+
+                    var ids = ListItemsId(item.DigiSellerIds, _logger);
+                    if (item.IsFixedPrice)
+                    {
+
+                        var currentSteamPriceRub = allCurrencies.ConvertToRUB(currentSteamPrice, item.SteamCurrencyId);
+                        if (currentSteamPriceRub != 0)
+                        {
+                            var diffPriceInPercent = (digiSellerPriceWithAllSales * 100) / currentSteamPriceRub;
+                            //новое значение активности товара
+                            //вычисляется в зависимости от меньше ли фиксированная цена Digiseller в процентах минимального порога
+                            //если да - активировать товар
+                            //иначе - деактивировать
+                            var newActive = !(diffPriceInPercent < item.MinActualThreshold);
+
+                            if (item.Active != newActive)
+                            {
+                                if (newActive == false)
+                                    item.Active = newActive;
+                                else
+                                {
+                                    //автоактивация возможна только если соответствующая функция включена
+                                    if (item.IsAutoActivation)
+                                    {
+                                        item.Active = newActive;
+                                        db.Entry(item).State = EntityState.Modified;
+                                    }
+                                }
+
+                                //если изменение всё же произошло и API запросы к Digiseller включены
+                                if (digiSellerEnable && item.Active == newActive)
+                                {
+                                    await _digiSellerNetworkService.SetDigiSellerItemsCondition(
+                                        item.DigiSellerIds, item.Active, aspNetUserId);
+                                }
+                            }
+                        }
+
+                        SetPricesToItem(item, digiSellerPriceWithAllSales, ids);
+                    }
+                    else
+                    {
+                        var digiPriceWithAllSalesInRub =
+                            allCurrencies.ConvertToRUB(digiSellerPriceWithAllSales, item.SteamCurrencyId);
+
+                        SetPricesToItem(item, digiPriceWithAllSalesInRub, ids);
+                    }
+
+                    if (digiSellerEnable && setName)
+                    {
+                        // Здесь делаем запросы к Digiseller, иногда входим в лимит
+                        var digiItem = await _digiSellerNetworkService
+                            .GetItem(item.DigiSellerIds.FirstOrDefault(), aspNetUserId);
+
+                        item.Name = digiItem?.Product?.Name ?? "Error";
+                        db.Entry(item).State = EntityState.Modified;
+                    }
+                    // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
+
+                    await db.SaveChangesAsync();
+                }
+
+                if (digiSellerEnable)
+                {
+                    if (sendToDigiSeller)
+                        await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);
+                    return itemsToDigisellerUpdate;
                 }
                 else
-                {
-                    var digiPriceWithAllSalesInRub =
-                        allCurrencies.ConvertToRUB(digiSellerPriceWithAllSales, item.SteamCurrencyId);
-
-                    SetPricesToItem(item, digiPriceWithAllSalesInRub, ids);
-                }
-
-                if (digiSellerEnable && setName)
-                {
-                    // Здесь делаем запросы к Digiseller, иногда входим в лимит
-                    var digiItem = await _digiSellerNetworkService
-                       .GetItem(item.DigiSellerIds.FirstOrDefault(), aspNetUserId);
-
-                    item.Name = digiItem?.Product?.Name ?? "Error";
-                    db.Entry(item).State = EntityState.Modified;
-                }
-                // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
-
-                db.SaveChanges();
+                    return new();
             }
-
-            if (digiSellerEnable)
+            catch (Exception ex)
             {
-                if (sendToDigiSeller)
-                    await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);
-                return itemsToDigisellerUpdate;
-            }
-            else
+                _logger.LogError(ex, $"Ошибка получения цен, appId:{appId} Items:{items.Aggregate((a,b)=> a+","+b)} ");
                 return new();
+            }
         }
 
         List<int> ListItemsId(List<string> ids, ILogger logger)

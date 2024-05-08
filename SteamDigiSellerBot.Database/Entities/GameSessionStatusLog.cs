@@ -9,7 +9,7 @@ namespace SteamDigiSellerBot.Database.Entities
     {
         public int GameSessionId { get; set; }
         public DateTimeOffset InsertDate { get; set; }
-        public int StatusId { get; set; }
+        public GameSessionStatusEnum StatusId { get; set; }
 
         [Column(TypeName = "json")]
         public ValueJson Value { get; set; }
