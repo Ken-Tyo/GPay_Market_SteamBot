@@ -89,7 +89,7 @@ const products = () => {
   };
 
   return (
-    <div className={css.wrapper} onBlur={console.log("products onBlur")}>
+    <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
         data={[...items]}
@@ -198,7 +198,6 @@ const products = () => {
                         <div
                           style={{ cursor: 'pointer' }}
                           onClick={async () => {
-                            console.log('test');
                             let item = await apiGetItem(i.id);
                             setSelectedItem(item);
                             setStateProp('itemsMode', itemsMode[2]);

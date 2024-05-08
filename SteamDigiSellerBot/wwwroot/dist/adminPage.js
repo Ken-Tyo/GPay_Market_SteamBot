@@ -42191,8 +42191,7 @@ var products = function products() {
     active: ''
   };
   return /*#__PURE__*/react.createElement("div", {
-    className: list_styles.wrapper,
-    onBlur: console.log("products onBlur")
+    className: list_styles.wrapper
   }, /*#__PURE__*/react.createElement(shared_list, {
     headers: Object.values(headers),
     data: _toConsumableArray(items),
@@ -42281,14 +42280,13 @@ var products = function products() {
           return list_regeneratorRuntime().wrap(function _callee2$(_context2) {
             while (1) switch (_context2.prev = _context2.next) {
               case 0:
-                console.log('test');
-                _context2.next = 3;
+                _context2.next = 2;
                 return apiGetItem(i.id);
-              case 3:
+              case 2:
                 item = _context2.sent;
                 setSelectedItem(item);
                 setStateProp('itemsMode', common_itemsMode[2]);
-              case 6:
+              case 5:
               case "end":
                 return _context2.stop();
             }
