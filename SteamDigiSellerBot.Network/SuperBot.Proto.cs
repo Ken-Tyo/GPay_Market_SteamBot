@@ -106,37 +106,40 @@ namespace SteamDigiSellerBot.Network
 
         public async Task<(AccountCartContents, ulong)> AddToCart_Proto(string userCountry, uint subId, bool isBundle = false, int reciverId = 0, string reciverName="Покупатель", string comment="")
         {
-            var item = new CAccountCart_AddItemToCart_Request()
+            var item = new CAccountCart_AddItemsToCart_Request()
             {
+                items = { new CAccountCart_AddItemsToCart_Request_ItemToAdd() {
                 flags = new AccountCartLineItemFlags() { is_gift = true },
+                
+                } } ,
                 user_country = userCountry
             };
             if (isBundle)
-                item.bundleid = subId;
+                item.items[0].bundleid = subId;
             else
-                item.packageid = subId;
+                item.items[0].packageid = subId;
             var api = _steamClient.Configuration.GetAsyncWebAPIInterface("IAccountCartService");
-            var response = await api.CallProtobufAsync<CAccountCart_AddItemToCart_Response>(
-                HttpMethod.Post, "AddItemToCart", args: PrepareProtobufArguments(item, accessToken));
-            if (response.line_item_id == 0)
+            var response = await api.CallProtobufAsync<CAccountCart_AddItemsToCart_Response>(
+                HttpMethod.Post, "AddItemsToCart", args: PrepareProtobufArguments(item, accessToken));
+            if (response.line_item_ids.FirstOrDefault()  == 0)
                 return (null, 0);
             if (reciverId != 0)
             {
                 var m = new CAccountCart_ModifyLineItem_Request()
                 {
                     user_country = userCountry,
-                    line_item_id = response.line_item_id,
+                    line_item_id = response.line_item_ids.First(),
                     flags = new AccountCartLineItemFlags() { is_gift = true },
                     gift_info = new CartGiftInfo() { accountid_giftee = reciverId, gift_message = new() { gifteename = reciverName, message = comment, sentiment = "Счастливой игры" , signature = "GPay market" } }
                 };
                 var response2 = await api.CallProtobufAsync<CAccountCart_ModifyLineItem_Response>(
                     HttpMethod.Post, "ModifyLineItem", args: PrepareProtobufArguments(m, accessToken));
-                if (response2.cart.line_items.FirstOrDefault(x => x.line_item_id == response.line_item_id)?.gift_info
+                if (response2.cart.line_items.FirstOrDefault(x => x.line_item_id == response.line_item_ids.First())?.gift_info
                         ?.accountid_giftee == reciverId)
-                    return (response2.cart, response.line_item_id);
+                    return (response2.cart, response.line_item_ids.First());
             }
 
-            return (response.cart, response.line_item_id);
+            return (response.cart, response.line_item_ids.First());
         }
 
         public async Task<bool> CheckoutFriendGift_Proto(uint subId, bool isBundle, int reciverId)
@@ -182,7 +185,7 @@ namespace SteamDigiSellerBot.Network
                     var res = new SendGameResponse();
 
                     //добаляем в корзину
-                    var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId), receiverName, comment);
+                     var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId), receiverName, comment);
                     if (ShoppingCart.Item1 == null)
                     {
                         res.result = SendeGameResult.error;
