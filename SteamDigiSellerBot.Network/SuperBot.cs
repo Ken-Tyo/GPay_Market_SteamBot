@@ -1737,6 +1737,7 @@ namespace SteamDigiSellerBot.Network
 
             if (!checkFinalPrice)
             {
+
                 res.result = SendeGameResult.error;
                 {
                     sendGame = res;
@@ -1752,7 +1753,9 @@ namespace SteamDigiSellerBot.Network
             {
                 if (mesDict.ContainsKey(finalTranRes.purchaseresultdetail))
                     mes = mesDict[finalTranRes.purchaseresultdetail];
-
+                if (finalTranRes.purchaseresultdetail == 0 || finalTranRes.purchaseresultdetail == 2 ||
+                    finalTranRes.purchaseresultdetail == 53 || finalTranRes.purchaseresultdetail == 73)
+                    res.ChangeBot = true;
                 //Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
                 res.result = SendeGameResult.error;
                 res.errMessage = mes;
