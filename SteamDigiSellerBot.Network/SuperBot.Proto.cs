@@ -178,9 +178,10 @@ namespace SteamDigiSellerBot.Network
 
 
         public async Task<SendGameResponse> SendGameProto(
-            uint appId, uint subId, bool isBundle, string gifteeAccountId, string receiverName, string comment, string countryCode)
+            uint appId, uint subId, bool isBundle, string gifteeAccountId, string receiverName, string comment,
+            string countryCode)
         {
-            
+
             if (BusyState.WaitOne())
             {
                 try
@@ -189,8 +190,9 @@ namespace SteamDigiSellerBot.Network
                     var res = new SendGameResponse();
 
                     //добаляем в корзину
-                     var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId), receiverName, comment);
-                     
+                    var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId),
+                        receiverName, comment);
+
                     if (ShoppingCart.Item1 == null)
                     {
                         res.result = SendeGameResult.error;
@@ -198,6 +200,7 @@ namespace SteamDigiSellerBot.Network
                         res.ChangeBot = true;
                         return res;
                     }
+
                     if (!CheckCart_Proto(countryCode, subId, out bool empty))
                     {
                         if (!empty)
@@ -227,7 +230,7 @@ namespace SteamDigiSellerBot.Network
                     if (!string.IsNullOrEmpty(receiverName))
                     {
                         //проверяем что игры такой у пользователя нет
-                        var gameExists = await CheckoutFriendGift_Proto(subId, isBundle,int.Parse(gifteeAccountId));
+                        var gameExists = await CheckoutFriendGift_Proto(subId, isBundle, int.Parse(gifteeAccountId));
                         if (gameExists)
                         {
                             //проверка что это не исключение
@@ -240,14 +243,33 @@ namespace SteamDigiSellerBot.Network
                     }
 
                     sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
-                    var result= await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1", sessionId, res);
+                    var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
+                        sessionId, res);
                     return result;
                 }
-                catch (Exception e) 
+                catch (TaskCanceledException ex)
                 {
                     return new SendGameResponse()
                     {
-                        errMessage = "Отправка завершилась с ошибкой: "+ e.Message+" \n\n"+ e.StackTrace,
+                        errMessage = "Отправка завершилась с ошибкой:  Ошибка подключения к Steam.\n" + ex.Message,
+                        result = SendeGameResult.error,
+                        ChangeBot = true
+                    };
+                }
+                catch (HttpRequestException ex)
+                {
+                    return new SendGameResponse()
+                    {
+                        errMessage = "Отправка завершилась с ошибкой:  Ошибка подключения к Steam.\n" + ex.Message,
+                        result = SendeGameResult.error,
+                        ChangeBot = true
+                    };
+                }
+                catch (Exception e)
+                {
+                    return new SendGameResponse()
+                    {
+                        errMessage = "Отправка завершилась с ошибкой: " + e.Message + " \n\n" + e.StackTrace,
                         result = SendeGameResult.error,
                     };
                 }

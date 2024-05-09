@@ -1018,7 +1018,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //await _gameSessionRepository.EditAsync(gs);
             }
 
-            if (gs.StatusId != GameSessionStatusEnum.SendingGame && gs.StatusId != GameSessionStatusEnum.Queue)
+            if (gs.StatusId != GameSessionStatusEnum.SendingGame && gs.StatusId != GameSessionStatusEnum.Queue
+                && gs.StatusId != GameSessionStatusEnum.UnknownError)
             {
                 await createErrLog(gs, "некорректный статус для отправки игры");
                 //gs.StatusId = 7;//неизвестная ошибка
