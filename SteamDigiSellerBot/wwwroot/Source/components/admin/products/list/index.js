@@ -44,6 +44,8 @@ const products = () => {
     currencies,
   } = state.use();
 
+
+
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
   //const [editItem, setEditItem] = useState(null);
@@ -196,7 +198,6 @@ const products = () => {
                         <div
                           style={{ cursor: 'pointer' }}
                           onClick={async () => {
-                            console.log('test');
                             let item = await apiGetItem(i.id);
                             setSelectedItem(item);
                             setStateProp('itemsMode', itemsMode[2]);

@@ -25991,7 +25991,7 @@ const additem_namespaceObject = __webpack_require__.p + "9b285564fb5d9a6bb58d.sv
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/warning.svg
 const warning_namespaceObject = __webpack_require__.p + "13512b38768e3bec6f75.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/infinity.svg
-const infinity_namespaceObject = __webpack_require__.p + "83b97d4f7b7230bd8ee1.svg";
+const infinity_namespaceObject = __webpack_require__.p + "fc22708812c38683fc50.svg";
 // EXTERNAL MODULE: ./node_modules/use-sync-external-store/shim/with-selector.js
 var with_selector = __webpack_require__(9242);
 ;// CONCATENATED MODULE: ./node_modules/simpler-state/es/utils.js
@@ -42280,14 +42280,13 @@ var products = function products() {
           return list_regeneratorRuntime().wrap(function _callee2$(_context2) {
             while (1) switch (_context2.prev = _context2.next) {
               case 0:
-                console.log('test');
-                _context2.next = 3;
+                _context2.next = 2;
                 return apiGetItem(i.id);
-              case 3:
+              case 2:
                 item = _context2.sent;
                 setSelectedItem(item);
                 setStateProp('itemsMode', common_itemsMode[2]);
-              case 6:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -44868,13 +44867,32 @@ var pageHeader = function pageHeader(_ref) {
 var products_products = function products() {
   var _state$use = state.use(),
     itemsMode = _state$use.itemsMode;
+  var key = "PRODUCTS_CONTENT_SCROLLTOP";
+  var contentRef = (0,react.useRef)(null);
+  (0,react.useEffect)(function () {
+    var scrollTopValue = contentRef.current.scrollTop;
+    if (itemsMode === common_itemsMode[1] & localStorage.getItem(key) != null) {
+      // скроллим к сохраненным координатам
+      contentRef.current.scroll({
+        top: localStorage.getItem(key)
+      });
+      // удаляем данные с localStorage
+      localStorage.removeItem(key);
+    }
+    return function () {
+      if (localStorage.getItem(key) == null & itemsMode === common_itemsMode[1]) {
+        localStorage.setItem(key, scrollTopValue);
+      }
+    };
+  });
   return /*#__PURE__*/react.createElement("div", {
     className: products_styles.wrapper
   }, /*#__PURE__*/react.createElement(admin_pageHeader, {
     title: "Digiseller",
     subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
   }), /*#__PURE__*/react.createElement("div", {
-    className: products_styles.content
+    className: products_styles.content,
+    ref: contentRef
   }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, null), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, null)));
 };
 /* harmony default export */ const admin_products = (products_products);
