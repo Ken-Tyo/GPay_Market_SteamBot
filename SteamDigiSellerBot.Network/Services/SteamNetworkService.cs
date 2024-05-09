@@ -369,7 +369,7 @@ namespace SteamDigiSellerBot.Network.Services
                             var superBot = _superBotPool.GetById(notRfBot.Id);
                             if (superBot.IsOk())
                             {
-                                (s, _) = await superBot.GetAppPageHtml(appId, tries: 3);
+                                (s, _,_) = await superBot.GetAppPageHtml(appId, tries: 3);
                                 editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
                             }
                             else
@@ -807,7 +807,7 @@ namespace SteamDigiSellerBot.Network.Services
                 if (!sb.IsOk())
                     return (null, $"{nameof(ParseUserProfileData)} - error to login to the BOT - {sb.Bot.UserName}");
 
-                (string prPage2, string err) = await sb.GetPageHtml(link, withSnapshot: true);
+                (string prPage2, string err,_) = await sb.GetPageHtml(link, withSnapshot: true);
                 if (!string.IsNullOrEmpty(err))
                     return (null, err);
 

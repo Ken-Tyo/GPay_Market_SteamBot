@@ -427,7 +427,7 @@ namespace SteamDigiSellerBot.Network
         {
             var url = "https://store.steampowered.com/account/history/";
 
-            (string s, _) = GetPageHtml(url, 1).Result;
+            (string s, _,_) = GetPageHtml(url, 1).Result;
             string sessionId = s.Substring("var g_sessionID = \"", "\"");
             if (string.IsNullOrWhiteSpace(sessionId))
                 return (false, null);
@@ -1072,6 +1072,7 @@ namespace SteamDigiSellerBot.Network
             return GetDefaultHttpClientBy(urlStr, out HttpClientHandler handler, cookies);
         }
 
+        private string Language { get; set; } = null;
         private HttpClient GetDefaultHttpClientBy(
             string urlStr, out HttpClientHandler handlerOut, Dictionary<string, string> cookies = null)
         {
@@ -1079,7 +1080,15 @@ namespace SteamDigiSellerBot.Network
             HttpRequest request = _bot.SteamHttpRequest;
             var reqCookies = new CookieCollection();
             foreach (var k in _bot.SteamCookies)
-                reqCookies.Add(new Cookie(k.Key.Trim(), k.Value.Trim()) { Domain = url.Host });
+                if (cookies == null || !cookies.ContainsKey(k.Key.Trim()))
+                {
+                    if (k.Key.Trim() == "Steam_Language" && Language != null)
+                    {
+                        reqCookies.Add(new Cookie(k.Key.Trim(), Language) { Domain = url.Host });
+                        continue;
+                    }
+                    reqCookies.Add(new Cookie(k.Key.Trim(), k.Value.Trim()) { Domain = url.Host });
+                }
 
             if (cookies != null)
             {
@@ -1160,13 +1169,13 @@ namespace SteamDigiSellerBot.Network
             return result;
         }
 
-        public async Task<(string html, string err)> GetAppPageHtml(string appId, int tries = 10)
+        public async Task<(string html, string err, HttpClientHandler handler)> GetAppPageHtml(string appId, int tries = 10)
         {
             string url = $"https://store.steampowered.com/app/{appId}";
             return await GetPageHtml(url, tries);
         }
 
-        public async Task<(string html, string error)> GetPageHtml(
+        public async Task<(string html, string error, HttpClientHandler handler)> GetPageHtml(
             string url, int tries = 10, bool withSnapshot = false, [CallerMemberName] string caller = null)
         {
             var err = "";
@@ -1175,16 +1184,17 @@ namespace SteamDigiSellerBot.Network
                 try
                 {
                     var reqMes = new HttpRequestMessage(HttpMethod.Get, url);
-                    using var client = GetDefaultHttpClientBy(url);
-                    using var response = client.Send(reqMes);
+                    using var client = GetDefaultHttpClientBy(url, out var handler);
+                    using var response = await client.SendAsync(reqMes);
 
                     string s = await response.Content.ReadAsStringAsync();
+                    
                     if (withSnapshot)
                     {
                         await CreatePageSnapshot(url, s, caller);
                     }
 
-                    return (s, "");
+                    return (s, "", handler);
                 }
                 catch (Exception ex)
                 {
@@ -1197,7 +1207,7 @@ namespace SteamDigiSellerBot.Network
                 }
             }
 
-            return ("", err);
+            return ("", err, null);
         }
 
         private async Task CreatePageSnapshot(string url, string pageContent, string callerMethod)
@@ -1239,7 +1249,7 @@ namespace SteamDigiSellerBot.Network
             try
             {
 
-                (string page, _) = await GetPageHtml(profileUrl, withSnapshot: true);
+                (string page, _,_) = await GetPageHtml(profileUrl, withSnapshot: true);
                 if (!page.Contains("Accept Friend Request"))
                     return ("", false);
                 //получаение доп данных на странице профиля
@@ -1391,7 +1401,7 @@ namespace SteamDigiSellerBot.Network
                 return "";
             });
 
-            (string page, string err) = await GetPageHtml(profileUrl, withSnapshot: true);
+            (string page, string err,_) = await GetPageHtml(profileUrl, withSnapshot: true);
             if (page.Contains("AddFriend()"))
                 return (getErr(err), false);
             else if (page.Contains("RemoveFriend()"))
@@ -1403,7 +1413,7 @@ namespace SteamDigiSellerBot.Network
         private async Task<bool> CheckIfGameExists(
             string gidShoppingCart, string gifteeAccountId, string userName)
         {
-            (string checkoutPage, _) = await GetPageHtml($"https://checkout.steampowered.com/checkout/?purchasetype=gift&cart={gidShoppingCart}&snr=1_8_4__503&{engUrlParam}");
+            (string checkoutPage, _,_) = await GetPageHtml($"https://checkout.steampowered.com/checkout/?purchasetype=gift&cart={gidShoppingCart}&snr=1_8_4__503&{engUrlParam}");
 
             var set = checkoutPage.Substring(
                 $"<div class=\"friend_name\" data-miniprofile=\"{gifteeAccountId}\">", "<div class=\"friend_ownership_info already_owns\">");
@@ -1488,10 +1498,12 @@ namespace SteamDigiSellerBot.Network
                 ["bUseAccountCart"] = 1,
                 ["PaymentMethod"] = "steamaccount",
                 ["abortPendingTransactions"] = 0,
+
                 ["bHasCardInfo"] = 0,
                 ["CardNumber"] = "",
                 ["CardExpirationYear"] = "",
                 ["CardExpirationMonth"] = "",
+
                 ["FirstName"] = "",
                 ["LastName"] = "",
                 ["Address"] = "",
@@ -1501,6 +1513,7 @@ namespace SteamDigiSellerBot.Network
                 ["State"] = "",
                 ["PostalCode"] = "",
                 ["Phone"] = "",
+
                 ["ShippingFirstName"] = "",
                 ["ShippingLastName"] = "",
                 ["ShippingAddress"] = "",
@@ -1518,12 +1531,14 @@ namespace SteamDigiSellerBot.Network
                 ["Sentiment"] = wishes,
                 ["Signature"] = signature,
                 ["ScheduledSendOnDate"] = 0,
+
                 ["BankAccount"] = "",
                 ["BankCode"] = "",
                 ["BankIBAN"] = "",
                 ["BankBIC"] = "",
                 ["TPBankID"] = "",
                 ["BankAccountID"] = "",
+
                 ["bSaveBillingAddress"] = 1,
                 ["gidPaymentID"] = "",
                 ["bUseRemainingSteamAccount"] = 1,
@@ -1626,6 +1641,7 @@ namespace SteamDigiSellerBot.Network
             [71] = "Подарок недействителен для региона получателя.",
             [72] = "Подарок невозможно отправить, так как цена в регионе получателя значительно отличается от вашей цены.",
             [73] = "Не удалось назначить получателя подарка",
+            [100] = "Покупка не может быть совершена, поскольку в вашей корзине есть продукты, которые невозможно приобрести."
         };
 
 
@@ -1760,7 +1776,7 @@ namespace SteamDigiSellerBot.Network
         public async Task<string> CreateInvitatinoLink()
         {
             var friendsUrl = $"https://steamcommunity.com/profiles/{_bot.SteamId}/friends/add";
-            (string html, _) = await GetPageHtml(friendsUrl, 1);
+            (string html, _,_) = await GetPageHtml(friendsUrl, 1);
             var sessionId = GetSessionIdFromProfilePage(html);
             var shortId = html.Substrings("s.team\\/p\\/", "&").FirstOrDefault();
             if (shortId == null)

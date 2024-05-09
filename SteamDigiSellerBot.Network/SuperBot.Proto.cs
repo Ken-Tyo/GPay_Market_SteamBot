@@ -100,7 +100,11 @@ namespace SteamDigiSellerBot.Network
         {
             HttpRequest request = _bot.SteamHttpRequest;
             var gameUrl = url ?? $"https://store.steampowered.com/app/413150";
-            (string html, _) = await GetPageHtml(gameUrl);
+            (string html, _, var handler) = await GetPageHtml(gameUrl);
+            
+            var langs= handler.CookieContainer.GetCookies(new Uri(gameUrl)).Where(x => x.Name == "Steam_Language" && x.Value!= "english").ToList();
+            if (langs.Count == 1)
+                Language = langs.First().Value;
             return html.Substring("var g_sessionID = \"", "\"");
         }
 
@@ -186,6 +190,7 @@ namespace SteamDigiSellerBot.Network
 
                     //добаляем в корзину
                      var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId), receiverName, comment);
+                     
                     if (ShoppingCart.Item1 == null)
                     {
                         res.result = SendeGameResult.error;
@@ -207,7 +212,7 @@ namespace SteamDigiSellerBot.Network
                             return res;
                         }
 
-                        if (!CheckCart_Proto(sessionId, subId, out bool _))
+                        if (!CheckCart_Proto(countryCode, subId, out bool _))
                         {
                             res.result = SendeGameResult.error;
                             res.errMessage = "Не удалось добавить товар в корзину";
@@ -234,7 +239,9 @@ namespace SteamDigiSellerBot.Network
                         }
                     }
 
-                    return await StartTransaction(gifteeAccountId, receiverName, comment, null, "-1", sessionId, res);
+                    sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
+                    var result= await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1", sessionId, res);
+                    return result;
                 }
                 catch (Exception e) 
                 {
