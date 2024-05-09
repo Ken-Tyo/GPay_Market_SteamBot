@@ -911,7 +911,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
 
                 bool? res = null;
-                (string profilePage, string err) = await sbot.GetPageHtml(gs.SteamProfileUrl, withSnapshot: true);
+                (string profilePage, string err,_) = await sbot.GetPageHtml(gs.SteamProfileUrl, withSnapshot: true);
                 if (!string.IsNullOrEmpty(err))
                 {
                     gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
