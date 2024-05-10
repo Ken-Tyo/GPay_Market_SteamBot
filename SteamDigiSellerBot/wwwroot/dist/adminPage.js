@@ -44864,27 +44864,61 @@ var pageHeader = function pageHeader(_ref) {
 
 
 
+var products_scroll = null;
+var prevCheck = null;
+var prevScroll = null;
 var products_products = function products() {
   var _state$use = state.use(),
     itemsMode = _state$use.itemsMode;
   var key = "PRODUCTS_CONTENT_SCROLLTOP";
   var contentRef = (0,react.useRef)(null);
+
+  //   useEffect(() =>{
+  //     var scrollTopValue = contentRef.current.scrollTop;
+  //     console.log(`prevMode : ${prevMode} itemMode : ${itemsMode}`);
+  //     if(prevMode === mode[2] & itemsMode === mode[1]){
+
+  //       var storageScrollTop = localStorage.getItem(key);
+  //       console.log(`localStorage.getItem : ${storageScrollTop}`);
+  //       if(itemsMode === mode[1] & storageScrollTop != null ){
+  //         // скроллим к сохраненным координатам
+  //         if(storageScrollTop != 0){
+  //           console.log(`scrollTo : ${storageScrollTop}`);
+  //           contentRef.current.scroll({
+  //             top: storageScrollTop
+  //           });
+  //         }
+  //           // удаляем данные с localStorage
+  //           localStorage.removeItem(key);
+  //       }
+  //     }
+  //     if(prevMode === mode[1] & itemsMode === mode[2]){
+  //       console.log(`localStorage.setItem : ${scrollTopValue}`);
+  //       localStorage.setItem(key, scrollTopValue);
+  //     }
+  //     prevMode = itemsMode;
+  // });
   (0,react.useEffect)(function () {
-    var scrollTopValue = contentRef.current.scrollTop;
-    if (itemsMode === common_itemsMode[1] & localStorage.getItem(key) != null) {
-      // скроллим к сохраненным координатам
-      contentRef.current.scroll({
-        top: localStorage.getItem(key)
-      });
-      // удаляем данные с localStorage
-      localStorage.removeItem(key);
+    var _contentRef$current;
+    console.log("IN prevCheck : ".concat(prevCheck, " prevScroll : ").concat(prevScroll, " itemsMode : ").concat(itemsMode, " "));
+    if (prevCheck == common_itemsMode[1] & itemsMode === common_itemsMode[2]) {
+      products_scroll = prevScroll;
     }
-    return function () {
-      if (localStorage.getItem(key) == null & itemsMode === common_itemsMode[1]) {
-        localStorage.setItem(key, scrollTopValue);
-      }
-    };
+    prevCheck = itemsMode;
+    prevScroll = contentRef === null || contentRef === void 0 || (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.scrollTop;
   });
+  (0,react.useEffect)(function () {
+    var currentMode = state.get()["itemsMode"];
+    if (itemsMode === common_itemsMode[1]) {
+      console.log("if scroll ".concat(products_scroll));
+      if (products_scroll != null) {
+        console.log("scrollTo ".concat(products_scroll));
+        contentRef.current.scroll({
+          top: products_scroll
+        });
+      }
+    }
+  }, [itemsMode]);
   return /*#__PURE__*/react.createElement("div", {
     className: products_styles.wrapper
   }, /*#__PURE__*/react.createElement(admin_pageHeader, {
@@ -44892,6 +44926,7 @@ var products_products = function products() {
     subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
   }), /*#__PURE__*/react.createElement("div", {
     className: products_styles.content,
+    id: "content-pane",
     ref: contentRef
   }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, null), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, null)));
 };
