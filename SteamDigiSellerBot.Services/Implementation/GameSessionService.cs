@@ -1129,6 +1129,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 if (!bots.Any(b => b.Id == gs.Bot.Id))
                 {
                     await createErrLog(gs, "бот больше не подходит");
+                    return GameReadyToSendStatus.botSwitch;
                     //gs.StatusId = 7;//неизвестная ошибка
                     //await _gameSessionRepository.UpdateField(gs, gs => gs.StatusId);
                     //await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
