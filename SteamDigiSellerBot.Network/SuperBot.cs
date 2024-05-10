@@ -1452,28 +1452,30 @@ namespace SteamDigiSellerBot.Network
                 await Task.Delay(TimeSpan.FromSeconds(40));
                 sessionId = await GetSessiondId("https://checkout.steampowered.com");
                 formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
-                reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
+                var reqMes2 = new HttpRequestMessage(HttpMethod.Post, initTran);
+                reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
                 cookies = new Dictionary<string, string>() {
                     { "sessionid", sessionId },
                     { "shoppingCartGID", gidShoppingCart },
                     { "wants_mature_content", "1" }
                 };
                 using var client2 = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler _, cookies);
-                response = await client2.SendAsync(reqMes);
+                response = await client2.SendAsync(reqMes2);
             }
             catch (HttpRequestException ex)
             {
                 await Task.Delay(TimeSpan.FromSeconds(40));
                 sessionId= await GetSessiondId("https://checkout.steampowered.com");
                 formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
-                reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
+                var reqMes2 = new HttpRequestMessage(HttpMethod.Post, initTran);
+                reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
                 cookies = new Dictionary<string, string>() {
                     { "sessionid", sessionId },
                     { "shoppingCartGID", gidShoppingCart },
                     { "wants_mature_content", "1" }
                 };
                 using var client2 = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler _, cookies);
-                response = await client2.SendAsync(reqMes);
+                response = await client2.SendAsync(reqMes2);
             }
             catch
             {
