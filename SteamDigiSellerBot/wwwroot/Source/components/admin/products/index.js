@@ -7,50 +7,30 @@ import { state } from '../../../containers/admin/state';
 import { itemsMode as mode } from '../../../containers/admin/common';
 
 
-var scroll = null;
-var prevCheck = null;
-var prevScroll = null;
+var crossFullUnmountScroll = null;
+
 const products = () => {
   const { itemsMode } = state.use();
   const key = "PRODUCTS_CONTENT_SCROLLTOP";
   const contentRef = useRef(null);
-  
-//   useEffect(() =>{
-//     var scrollTopValue = contentRef.current.scrollTop;
-//     console.log(`prevMode : ${prevMode} itemMode : ${itemsMode}`);
-//     if(prevMode === mode[2] & itemsMode === mode[1]){
-      
-//       var storageScrollTop = localStorage.getItem(key);
-//       console.log(`localStorage.getItem : ${storageScrollTop}`);
-//       if(itemsMode === mode[1] & storageScrollTop != null ){
-//         // скроллим к сохраненным координатам
-//         if(storageScrollTop != 0){
-//           console.log(`scrollTo : ${storageScrollTop}`);
-//           contentRef.current.scroll({
-//             top: storageScrollTop
-//           });
-//         }
-//           // удаляем данные с localStorage
-//           localStorage.removeItem(key);
-//       }
-//     }
-//     if(prevMode === mode[1] & itemsMode === mode[2]){
-//       console.log(`localStorage.setItem : ${scrollTopValue}`);
-//       localStorage.setItem(key, scrollTopValue);
-//     }
-//     prevMode = itemsMode;
-// });
+
+  const [scroll, setScroll] = useState(null);
+  const [prevItemsMode, setPrevItemsMode] = useState(null);
+  const [prevScroll, setPrevScroll] = useState(null);
+
 useEffect(() =>{
-  console.log(`IN prevCheck : ${prevCheck} prevScroll : ${prevScroll} itemsMode : ${itemsMode} `);
-  if(prevCheck == mode[1] & itemsMode === mode[2]){
-    scroll = prevScroll;
+  console.log(`IN prevItemsMode : ${prevItemsMode} prevScroll : ${prevScroll} itemsMode : ${itemsMode} `);
+  if(prevItemsMode == mode[1] & itemsMode === mode[2]){
+    //scroll = prevScroll;
+    setScroll(prevScroll);
+    // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+    crossFullUnmountScroll = prevScroll;
   }
-  prevCheck = itemsMode;
-  prevScroll = contentRef?.current?.scrollTop;
+  setPrevItemsMode(itemsMode);
+  setPrevScroll(contentRef?.current?.scrollTop);
 });
 
 useEffect(() =>{
-  const currentMode = state.get()["itemsMode"];
   if(itemsMode === mode[1]){  
     console.log(`if scroll ${scroll}`);
     if(scroll != null){
@@ -58,6 +38,13 @@ useEffect(() =>{
       contentRef.current.scroll({
         top: scroll
       });
+    }
+    else if(crossFullUnmountScroll != null){
+       // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+      contentRef.current.scroll({
+        top: crossFullUnmountScroll
+      });
+      crossFullUnmountScroll = null;
     }
 }},[itemsMode]);
 

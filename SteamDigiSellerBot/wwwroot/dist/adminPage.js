@@ -44857,6 +44857,12 @@ var pageHeader = function pageHeader(_ref) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/index.js
+function products_slicedToArray(arr, i) { return products_arrayWithHoles(arr) || products_iterableToArrayLimit(arr, i) || products_unsupportedIterableToArray(arr, i) || products_nonIterableRest(); }
+function products_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function products_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return products_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return products_arrayLikeToArray(o, minLen); }
+function products_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function products_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function products_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -44864,58 +44870,50 @@ var pageHeader = function pageHeader(_ref) {
 
 
 
-var products_scroll = null;
-var prevCheck = null;
-var prevScroll = null;
+var crossFullUnmountScroll = null;
 var products_products = function products() {
   var _state$use = state.use(),
     itemsMode = _state$use.itemsMode;
   var key = "PRODUCTS_CONTENT_SCROLLTOP";
   var contentRef = (0,react.useRef)(null);
-
-  //   useEffect(() =>{
-  //     var scrollTopValue = contentRef.current.scrollTop;
-  //     console.log(`prevMode : ${prevMode} itemMode : ${itemsMode}`);
-  //     if(prevMode === mode[2] & itemsMode === mode[1]){
-
-  //       var storageScrollTop = localStorage.getItem(key);
-  //       console.log(`localStorage.getItem : ${storageScrollTop}`);
-  //       if(itemsMode === mode[1] & storageScrollTop != null ){
-  //         // скроллим к сохраненным координатам
-  //         if(storageScrollTop != 0){
-  //           console.log(`scrollTo : ${storageScrollTop}`);
-  //           contentRef.current.scroll({
-  //             top: storageScrollTop
-  //           });
-  //         }
-  //           // удаляем данные с localStorage
-  //           localStorage.removeItem(key);
-  //       }
-  //     }
-  //     if(prevMode === mode[1] & itemsMode === mode[2]){
-  //       console.log(`localStorage.setItem : ${scrollTopValue}`);
-  //       localStorage.setItem(key, scrollTopValue);
-  //     }
-  //     prevMode = itemsMode;
-  // });
+  var _useState = (0,react.useState)(null),
+    _useState2 = products_slicedToArray(_useState, 2),
+    scroll = _useState2[0],
+    setScroll = _useState2[1];
+  var _useState3 = (0,react.useState)(null),
+    _useState4 = products_slicedToArray(_useState3, 2),
+    prevItemsMode = _useState4[0],
+    setPrevItemsMode = _useState4[1];
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = products_slicedToArray(_useState5, 2),
+    prevScroll = _useState6[0],
+    setPrevScroll = _useState6[1];
   (0,react.useEffect)(function () {
     var _contentRef$current;
-    console.log("IN prevCheck : ".concat(prevCheck, " prevScroll : ").concat(prevScroll, " itemsMode : ").concat(itemsMode, " "));
-    if (prevCheck == common_itemsMode[1] & itemsMode === common_itemsMode[2]) {
-      products_scroll = prevScroll;
+    console.log("IN prevItemsMode : ".concat(prevItemsMode, " prevScroll : ").concat(prevScroll, " itemsMode : ").concat(itemsMode, " "));
+    if (prevItemsMode == common_itemsMode[1] & itemsMode === common_itemsMode[2]) {
+      //scroll = prevScroll;
+      setScroll(prevScroll);
+      // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+      crossFullUnmountScroll = prevScroll;
     }
-    prevCheck = itemsMode;
-    prevScroll = contentRef === null || contentRef === void 0 || (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.scrollTop;
+    setPrevItemsMode(itemsMode);
+    setPrevScroll(contentRef === null || contentRef === void 0 || (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.scrollTop);
   });
   (0,react.useEffect)(function () {
-    var currentMode = state.get()["itemsMode"];
     if (itemsMode === common_itemsMode[1]) {
-      console.log("if scroll ".concat(products_scroll));
-      if (products_scroll != null) {
-        console.log("scrollTo ".concat(products_scroll));
+      console.log("if scroll ".concat(scroll));
+      if (scroll != null) {
+        console.log("scrollTo ".concat(scroll));
         contentRef.current.scroll({
-          top: products_scroll
+          top: scroll
         });
+      } else if (crossFullUnmountScroll != null) {
+        // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+        contentRef.current.scroll({
+          top: crossFullUnmountScroll
+        });
+        crossFullUnmountScroll = null;
       }
     }
   }, [itemsMode]);
