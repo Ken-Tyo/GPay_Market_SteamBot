@@ -44684,9 +44684,11 @@ function priceHierarchy_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr
 
 
 
+
 var priceHierarchy = function priceHierarchy() {
   var _state$use = state.use(),
-    selectedItem = _state$use.selectedItem;
+    selectedItem = _state$use.selectedItem,
+    itemsMode = _state$use.itemsMode;
   var prices = selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.priceHierarchy;
   var percentDiff = selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.percentDiff;
   //console.log(prices);
@@ -44698,7 +44700,11 @@ var priceHierarchy = function priceHierarchy() {
     _useState4 = priceHierarchy_slicedToArray(_useState3, 2),
     isOpen = _useState4[0],
     setIsOpen = _useState4[1];
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/react.createElement(ModalBase, {
+    isOpen: itemsMode === common_itemsMode[2],
+    width: "80%",
+    height: "80%"
+  }, /*#__PURE__*/react.createElement("div", {
     className: priceHierarchy_styles.priceHierarchyWrapper
   }, /*#__PURE__*/react.createElement("div", {
     className: priceHierarchy_styles.header
@@ -44827,7 +44833,7 @@ var priceHierarchy = function priceHierarchy() {
       setItemPrice(selectedPrice.id, val, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.id);
       setIsOpen(false);
     }
-  }));
+  })));
 };
 /* harmony default export */ const products_priceHierarchy = (priceHierarchy);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/pageHeader/styles.scss
@@ -44888,35 +44894,37 @@ var products_products = function products() {
     _useState6 = products_slicedToArray(_useState5, 2),
     prevScroll = _useState6[0],
     setPrevScroll = _useState6[1];
-  (0,react.useEffect)(function () {
-    var _contentRef$current;
-    console.log("IN prevItemsMode : ".concat(prevItemsMode, " prevScroll : ").concat(prevScroll, " itemsMode : ").concat(itemsMode, " "));
-    if (prevItemsMode == common_itemsMode[1] & itemsMode === common_itemsMode[2]) {
-      //scroll = prevScroll;
-      setScroll(prevScroll);
-      // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
-      crossFullUnmountScroll = prevScroll;
-    }
-    setPrevItemsMode(itemsMode);
-    setPrevScroll(contentRef === null || contentRef === void 0 || (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.scrollTop);
-  });
-  (0,react.useEffect)(function () {
-    if (itemsMode === common_itemsMode[1] & prevItemsMode === common_itemsMode[2]) {
-      console.log("if scroll ".concat(scroll));
-      if (scroll != null) {
-        console.log("scrollTo ".concat(scroll));
-        contentRef.current.scroll({
-          top: scroll
-        });
-      } else if (crossFullUnmountScroll != null) {
-        // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
-        contentRef.current.scroll({
-          top: crossFullUnmountScroll
-        });
-        crossFullUnmountScroll = null;
-      }
-    }
-  }, [itemsMode]);
+
+  // useEffect(() =>{
+  //   console.log(`IN prevItemsMode : ${prevItemsMode} prevScroll : ${prevScroll} itemsMode : ${itemsMode} `);
+  //   if(prevItemsMode == mode[1] & itemsMode === mode[2]){
+  //     //scroll = prevScroll;
+  //     setScroll(prevScroll);
+  //     // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+  //     crossFullUnmountScroll = prevScroll;
+  //   }
+  //   setPrevItemsMode(itemsMode);
+  //   setPrevScroll(contentRef?.current?.scrollTop);
+  // });
+
+  // useEffect(() =>{
+  //   if(itemsMode === mode[1] & prevItemsMode === mode[2]){  
+  //     console.log(`if scroll ${scroll}`);
+  //     if(scroll != null){
+  //       console.log(`scrollTo ${scroll}`);
+  //       contentRef.current.scroll({
+  //         top: scroll
+  //       });
+  //     }
+  //     else if(crossFullUnmountScroll != null ){
+  //        // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+  //       contentRef.current.scroll({
+  //         top: crossFullUnmountScroll
+  //       });
+  //       crossFullUnmountScroll = null;
+  //     }
+  // }},[itemsMode]);
+
   return /*#__PURE__*/react.createElement("div", {
     className: products_styles.wrapper
   }, /*#__PURE__*/react.createElement(admin_pageHeader, {
@@ -44926,7 +44934,7 @@ var products_products = function products() {
     className: products_styles.content,
     id: "content-pane",
     ref: contentRef
-  }, itemsMode === common_itemsMode[1] && /*#__PURE__*/react.createElement(products_list, null), itemsMode === common_itemsMode[2] && /*#__PURE__*/react.createElement(products_priceHierarchy, null)));
+  }, /*#__PURE__*/react.createElement(products_list, null)), /*#__PURE__*/react.createElement(products_priceHierarchy, null));
 };
 /* harmony default export */ const admin_products = (products_products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/styles.scss

@@ -18,35 +18,35 @@ const products = () => {
   const [prevItemsMode, setPrevItemsMode] = useState(null);
   const [prevScroll, setPrevScroll] = useState(null);
 
-useEffect(() =>{
-  console.log(`IN prevItemsMode : ${prevItemsMode} prevScroll : ${prevScroll} itemsMode : ${itemsMode} `);
-  if(prevItemsMode == mode[1] & itemsMode === mode[2]){
-    //scroll = prevScroll;
-    setScroll(prevScroll);
-    // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
-    crossFullUnmountScroll = prevScroll;
-  }
-  setPrevItemsMode(itemsMode);
-  setPrevScroll(contentRef?.current?.scrollTop);
-});
+// useEffect(() =>{
+//   console.log(`IN prevItemsMode : ${prevItemsMode} prevScroll : ${prevScroll} itemsMode : ${itemsMode} `);
+//   if(prevItemsMode == mode[1] & itemsMode === mode[2]){
+//     //scroll = prevScroll;
+//     setScroll(prevScroll);
+//     // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+//     crossFullUnmountScroll = prevScroll;
+//   }
+//   setPrevItemsMode(itemsMode);
+//   setPrevScroll(contentRef?.current?.scrollTop);
+// });
 
-useEffect(() =>{
-  if(itemsMode === mode[1] & prevItemsMode === mode[2]){  
-    console.log(`if scroll ${scroll}`);
-    if(scroll != null){
-      console.log(`scrollTo ${scroll}`);
-      contentRef.current.scroll({
-        top: scroll
-      });
-    }
-    else if(crossFullUnmountScroll != null ){
-       // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
-      contentRef.current.scroll({
-        top: crossFullUnmountScroll
-      });
-      crossFullUnmountScroll = null;
-    }
-}},[itemsMode]);
+// useEffect(() =>{
+//   if(itemsMode === mode[1] & prevItemsMode === mode[2]){  
+//     console.log(`if scroll ${scroll}`);
+//     if(scroll != null){
+//       console.log(`scrollTo ${scroll}`);
+//       contentRef.current.scroll({
+//         top: scroll
+//       });
+//     }
+//     else if(crossFullUnmountScroll != null ){
+//        // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
+//       contentRef.current.scroll({
+//         top: crossFullUnmountScroll
+//       });
+//       crossFullUnmountScroll = null;
+//     }
+// }},[itemsMode]);
 
   return (
     
@@ -56,9 +56,9 @@ useEffect(() =>{
         subTitle="Панель управления Digiseller ботом"
       />
       <div className={css.content} id="content-pane" ref={contentRef} >
-        {itemsMode === mode[1] && <List />}
-        {itemsMode === mode[2] && <PriceHierarchy />}
+        <List />
       </div>
+      <PriceHierarchy />
     </div>
     
   );
