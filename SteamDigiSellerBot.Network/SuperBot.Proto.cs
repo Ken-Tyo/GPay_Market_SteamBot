@@ -190,23 +190,14 @@ namespace SteamDigiSellerBot.Network
                     var res = new SendGameResponse();
 
                     //добаляем в корзину
-                    var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId),
-                        receiverName, comment);
-
-                    if (ShoppingCart.Item1 == null)
+                    bool errorRepeat = false;
+                    cartRepeat:
+                    try
                     {
-                        res.result = SendeGameResult.error;
-                        res.errMessage = "Не удалось добавить товар в корзину";
-                        res.ChangeBot = true;
-                        return res;
-                    }
-
-                    if (!CheckCart_Proto(countryCode, subId, out bool empty))
-                    {
-                        if (!empty)
-                            await DeleteCart(sessionId);
-                        ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle, int.Parse(gifteeAccountId),
+                        var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
+                            int.Parse(gifteeAccountId),
                             receiverName, comment);
+
                         if (ShoppingCart.Item1 == null)
                         {
                             res.result = SendeGameResult.error;
@@ -215,30 +206,65 @@ namespace SteamDigiSellerBot.Network
                             return res;
                         }
 
-                        if (!CheckCart_Proto(countryCode, subId, out bool _))
+                        if (!CheckCart_Proto(countryCode, subId, out bool empty))
                         {
-                            res.result = SendeGameResult.error;
-                            res.errMessage = "Не удалось добавить товар в корзину";
-                            res.ChangeBot = true;
-                            return res;
-                        }
-                    }
-
-                    //res.gidShoppingCart = ;
-                    res.sessionId = sessionId;
-
-                    if (!string.IsNullOrEmpty(receiverName))
-                    {
-                        //проверяем что игры такой у пользователя нет
-                        var gameExists = await CheckoutFriendGift_Proto(subId, isBundle, int.Parse(gifteeAccountId));
-                        if (gameExists)
-                        {
-                            //проверка что это не исключение
-                            if (appId != 730 && appId != 302670)
+                            if (!empty)
+                                await DeleteCart(sessionId);
+                            ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
+                                int.Parse(gifteeAccountId),
+                                receiverName, comment);
+                            if (ShoppingCart.Item1 == null)
                             {
-                                res.result = SendeGameResult.gameExists;
+                                res.result = SendeGameResult.error;
+                                res.errMessage = "Не удалось добавить товар в корзину";
+                                res.ChangeBot = true;
                                 return res;
                             }
+
+                            if (!CheckCart_Proto(countryCode, subId, out bool _))
+                            {
+                                res.result = SendeGameResult.error;
+                                res.errMessage = "Не удалось добавить товар в корзину";
+                                res.ChangeBot = true;
+                                return res;
+                            }
+                        }
+
+                        //res.gidShoppingCart = ;
+                        res.sessionId = sessionId;
+
+                        if (!string.IsNullOrEmpty(receiverName))
+                        {
+                            //проверяем что игры такой у пользователя нет
+                            var gameExists =
+                                await CheckoutFriendGift_Proto(subId, isBundle, int.Parse(gifteeAccountId));
+                            if (gameExists)
+                            {
+                                //проверка что это не исключение
+                                if (appId != 730 && appId != 302670)
+                                {
+                                    res.result = SendeGameResult.gameExists;
+                                    return res;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (errorRepeat)
+                        {
+                            return new SendGameResponse()
+                            {
+                                errMessage = "Ошибка при работе с корзиной - " + ex.Message + "\n\n" + ex.StackTrace,
+                                result = SendeGameResult.error,
+                                ChangeBot = true
+                            };
+                        }
+                        else
+                        {
+                            errorRepeat = true;
+                            await Task.Delay(TimeSpan.FromSeconds(15));
+                            goto cartRepeat;
                         }
                     }
 
