@@ -354,7 +354,9 @@ namespace SteamDigiSellerBot.Network.Services
                     if (s.Contains("id=\"error_box\"") || editions.Length == 0)
                     //Данный товар недоступен в вашем регионе
                     {
-                        var notRfBots = await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync();
+                        var gamesCurrs = gamesList.Select(x => x.SteamCurrencyId).Distinct().ToList();
+                        var notRfBots = (await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync())
+                            .OrderByDescending(x=> gamesCurrs.Contains(x.SteamCurrencyId ?? 0)).ThenBy(x=> Guid.NewGuid()).ToList();
                         if (notRfBots.Count == 0)
                             continue;
 
@@ -371,6 +373,9 @@ namespace SteamDigiSellerBot.Network.Services
                             {
                                 (s, _,_) = await superBot.GetAppPageHtml(appId, tries: 3);
                                 editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
+                                if (!(s.Contains("id=\"error_box\"") || editions.Length == 0))
+                                    break;
+                                notRfBotHS.Add(notRfBot.Id);
                             }
                             else
                             {

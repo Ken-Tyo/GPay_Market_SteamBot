@@ -574,7 +574,8 @@ namespace SteamDigiSellerBot.Network
 
                 //проверяем на проблемный регион
                 //юани или иены
-                if (purchases.Any(p => p.SteamCurrencyId == 23 || p.SteamCurrencyId == 8))
+
+                if (false && purchases.Any(p => p.SteamCurrencyId == 23 || p.SteamCurrencyId == 8))
                 {
                     res.IsProblemRegion = true;
                     res.HasProblemPurchase = true;
@@ -863,7 +864,7 @@ namespace SteamDigiSellerBot.Network
 
                     res = SteamHelper.MapCountryCode(country);
 
-                    if (res == "JP" || res == "CN")
+                    if (false && (res == "JP" || res == "CN"))
                     {
                         isProblemRegion = true;
                     }
