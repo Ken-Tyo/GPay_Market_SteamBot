@@ -97,7 +97,7 @@ namespace SteamDigiSellerBot.Utilities
         private static readonly string[] arDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
 
 
-        public static bool CurrencyCountryFilter(string region, string countryCode,string currencyCode)
+        public static bool CurrencyCountryFilter(string region, string countryCode)
         {
             return region == countryCode
                              || ((region == Regions.EU) && IsEuropianCode(countryCode))
