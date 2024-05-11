@@ -367,20 +367,27 @@ namespace SteamDigiSellerBot.Network.Services
                             var notRfBot = notRfBots.FirstOrDefault(b => !notRfBotHS.Contains(b.Id) && b.IsON);
                             if (notRfBot is null)
                                 continue;
-
-                            var superBot = _superBotPool.GetById(notRfBot.Id);
-                            if (superBot.IsOk())
+                            try
                             {
-                                (s, _,_) = await superBot.GetAppPageHtml(appId, tries: 3);
-                                editions = s.Substrings("class=\"game_area_purchase_game_wrapper", "<div class=\"btn_addtocart\">");
-                                if (!(s.Contains("id=\"error_box\"") || editions.Length == 0))
-                                    break;
-                                notRfBotHS.Add(notRfBot.Id);
+                                var superBot = _superBotPool.GetById(notRfBot.Id);
+                                if (superBot.IsOk())
+                                {
+                                    (s, _, _) = await superBot.GetAppPageHtml(appId, tries: 3);
+                                    editions = s.Substrings("class=\"game_area_purchase_game_wrapper",
+                                        "<div class=\"btn_addtocart\">");
+                                    if (!(s.Contains("id=\"error_box\"") || editions.Length == 0))
+                                        break;
+                                    notRfBotHS.Add(notRfBot.Id);
+                                }
+                                else
+                                {
+                                    notRfBotHS.Add(notRfBot.Id);
+                                    continue;
+                                }
                             }
-                            else
+                            catch
                             {
                                 notRfBotHS.Add(notRfBot.Id);
-                                continue;
                             }
                         }
                     }
