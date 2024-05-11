@@ -44901,7 +44901,7 @@ var products_products = function products() {
     setPrevScroll(contentRef === null || contentRef === void 0 || (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.scrollTop);
   });
   (0,react.useEffect)(function () {
-    if (itemsMode === common_itemsMode[1]) {
+    if (itemsMode === common_itemsMode[1] & prevItemsMode === common_itemsMode[2]) {
       console.log("if scroll ".concat(scroll));
       if (scroll != null) {
         console.log("scrollTo ".concat(scroll));

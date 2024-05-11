@@ -31,7 +31,7 @@ useEffect(() =>{
 });
 
 useEffect(() =>{
-  if(itemsMode === mode[1]){  
+  if(itemsMode === mode[1] & prevItemsMode === mode[2]){  
     console.log(`if scroll ${scroll}`);
     if(scroll != null){
       console.log(`scrollTo ${scroll}`);
@@ -39,7 +39,7 @@ useEffect(() =>{
         top: scroll
       });
     }
-    else if(crossFullUnmountScroll != null){
+    else if(crossFullUnmountScroll != null ){
        // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
       contentRef.current.scroll({
         top: crossFullUnmountScroll
