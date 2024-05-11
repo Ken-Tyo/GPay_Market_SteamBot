@@ -355,7 +355,8 @@ namespace SteamDigiSellerBot.Network.Services
                     //Данный товар недоступен в вашем регионе
                     {
                         var gamesCurrs = gamesList.Select(x => x.SteamCurrencyId).Distinct().ToList();
-                        var notRfBots = (await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync()).OrderByDescending(x=> gamesCurrs.Contains(x.SteamCurrencyId ?? 0)).ToList();
+                        var notRfBots = (await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync())
+                            .OrderByDescending(x=> gamesCurrs.Contains(x.SteamCurrencyId ?? 0)).ThenBy(x=> Guid.NewGuid()).ToList();
                         if (notRfBots.Count == 0)
                             continue;
 
