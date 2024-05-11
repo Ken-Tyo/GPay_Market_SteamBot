@@ -97,11 +97,12 @@ namespace SteamDigiSellerBot.Utilities
         private static readonly string[] arDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
 
 
-        public static bool CurrencyCountryFilter(string region, string countryCode)
+        public static bool CurrencyCountryFilter(string region, string countryCode,string currencyCode)
         {
             return region == countryCode
-                             || (region == Regions.EU && IsEuropianCode(countryCode))
-                             || (region == Regions.CIS && cisDollarCodes.Contains(countryCode))
+                             || ((region == Regions.EU) && IsEuropianCode(countryCode))
+#warning Регион бота должен храниться настоящий, а не группа регионов
+                             || ((region == Regions.CIS || cisDollarCodes.Contains(region)) && cisDollarCodes.Contains(countryCode))
                              || (region == Regions.SAsia && sAsiaDollarCodes.Contains(countryCode))
                              || (region == Regions.TR && trDollarCodes.Contains(countryCode))
                              || (region == Regions.AR && arDollarCodes.Contains(countryCode));
