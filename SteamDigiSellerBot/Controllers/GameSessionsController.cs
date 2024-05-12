@@ -188,6 +188,7 @@ namespace SteamDigiSellerBot.Controllers
                     .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
 
             gs.Bot = null;
+            gs.BotSwitchList = new();
             gs.SteamProfileUrl = null;
             gs.StatusId = GameSessionStatusEnum.ProfileNoSet;//Не указан профиль
             gs.SteamContactValue = null;
