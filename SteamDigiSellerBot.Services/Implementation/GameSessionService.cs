@@ -132,6 +132,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 StatusId = gs.StatusId,
                 Value = logVal
             });
+            gs.BotSwitchList = new();
 
             await _gameSessionRepository.EditAsync(gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
@@ -202,6 +203,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     oldUserProfileUrl = oldProfUrlVal
                 }
             });
+            gs.BotSwitchList = new();
             await _gameSessionRepository.EditAsync(gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
 
