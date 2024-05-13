@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SteamDigiSellerBot.Extensions;
 using SteamDigiSellerBot.Services.Interfaces;
+using SteamDigiSellerBot.Utilities;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -51,6 +52,10 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> BotsList()
         {
             List<Bot> bots = await _steamBotRepository.ListAsync();
+            bots.ForEach(e =>
+            {
+                e.Region = SteamHelper.MapCountryCodeToNameCode(e.Region);
+            });
 
             var groups = bots.GroupBy(b => b.Region ?? "").ToDictionary((g) => g.Key, g => g.Count());
             groups[""] = 0;

@@ -73,12 +73,13 @@ namespace SteamDigiSellerBot.Utilities
         public static class Regions
         {
             public const string EU = "EU";
-            public const string CIS = "CIS$";
-            public const string SAsia = "SAsia$";
-            public const string TR = "TR$";
-            public const string AR = "AR$";
+            public const string CIS = "AZ";
+            public const string SAsia = "PK";
+            public const string TR = "TR";
+            public const string AR = "AR";
 
         }
+
         public static bool IsEuropianCode(string code)
         {
             return europianCodes.Contains(code);
@@ -109,11 +110,7 @@ namespace SteamDigiSellerBot.Utilities
         public static string MapCountryCode(string code) => code switch
         {
             _ when europianCodes.Contains(code) => Regions.EU,
-            _ when cisDollarCodes.Contains(code) => Regions.CIS,
-            _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
-            _ when trDollarCodes.Contains(code) => Regions.TR,
-            _ when arDollarCodes.Contains(code) => Regions.AR,
-            _ => code
+            
         };
 
         public static string MapCountryName(string code) => code switch
@@ -125,7 +122,16 @@ namespace SteamDigiSellerBot.Utilities
             Regions.AR => "Аргентинское песо",
             _ => null
         };
-            
+
+        public static string MapCountryCodeToNameCode(string code) => code switch
+        {
+            _ when cisDollarCodes.Contains(code) => Regions.CIS,
+            _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
+            _ when trDollarCodes.Contains(code) => Regions.TR,
+            _ when arDollarCodes.Contains(code) => Regions.AR,
+            _ => code
+        };
+
         public static ProfileDataRes ParseProfileData(string prPage)
         {
             ProfileDataRes profileData = GetProfileDataProfilePage(prPage);
