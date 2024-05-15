@@ -396,10 +396,10 @@ namespace SteamDigiSellerBot.Network.Services
 
                     foreach (string edition in editions)
                     {
-                        if (successfulEditions == gamesList.Count)
-                        {
-                            break;
-                        }
+                        //if (successfulEditions == gamesList.Count)
+                        //{
+                        //    break;
+                        //}
 
                         UpdateDiscountTimerOfEdition(edition, gamesList, db);
                         successfulEditions++;
