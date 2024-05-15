@@ -615,7 +615,7 @@ namespace SteamDigiSellerBot.Network
                 decimal maxSendedGiftsSum = (totalPurchaseSum + purchaseCNY + purchaseJPY) - (refundedSum + giftRefundedSum);
 
                 var currency = currencyData.Currencies
-                    .FirstOrDefault(c => SteamHelper.CurrencyCountryFilter(botData.Region,c.CountryCode));
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(botData.Region,c.CountryCode,c.Code));
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
@@ -685,7 +685,7 @@ namespace SteamDigiSellerBot.Network
                         : ToUsdSum(sendedGifts, DateTime.MinValue, currencyData);
 
                 var currency = currencyData.Currencies
-                    .FirstOrDefault(c => SteamHelper.CurrencyCountryFilter(region, c.CountryCode));
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(region, c.CountryCode , c.Code));
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
