@@ -288,7 +288,7 @@ namespace SteamDigiSellerBot.Controllers
                 ModelState.AddModelError("", "такой заказ не найден");
                 return this.CreateBadRequest();
             }
-
+            
             var opt = new Option { Value = req.SteamContact };
             await _gameSessionService.SetSteamContact(gs, opt);
 
