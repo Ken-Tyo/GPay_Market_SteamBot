@@ -76,9 +76,9 @@ namespace SteamDigiSellerBot.Utilities
         {
             public const string EU = "EU";
             public const string CIS = "CIS$";
-            public const string SAsia = "sAsia$";
-            public const string MENA = "TR$";
-            public const string LATAN = "AR$";
+            public const string SAsia = "SAsia$";
+            public const string MENA = "MENA$";
+            public const string LATAN = "LATAN$";
         }
 
         public static class RegionsCode
@@ -105,7 +105,7 @@ namespace SteamDigiSellerBot.Utilities
         private static readonly string[] menaDollarCodes = new string[] { "BH", "EG", "IQ", "JO", "LB", "OM", "PS", "TR", "YE", "DZ", "BO", "MA", "TN", "SS" };
 
         //latam
-        private static readonly string[] latamDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
+        private static readonly string[] latanDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
 
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace SteamDigiSellerBot.Utilities
                              || ((currCode == RegionsCode.CIS) && cisDollarCodes.Contains(targetRegion))
                              || ((currCode == RegionsCode.SASIA) && sAsiaDollarCodes.Contains(targetRegion))
                              || ((currCode == RegionsCode.MENA) && menaDollarCodes.Contains(targetRegion))
-                             || ((currCode == RegionsCode.LATAM) && latamDollarCodes.Contains(targetRegion));
+                             || ((currCode == RegionsCode.LATAM) && latanDollarCodes.Contains(targetRegion));
 
             return result;
         }
@@ -138,7 +138,7 @@ namespace SteamDigiSellerBot.Utilities
             _ when cisDollarCodes.Contains(code) => Regions.CIS,
             _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
             _ when menaDollarCodes.Contains(code) => Regions.MENA,
-            _ when latamDollarCodes.Contains(code) => Regions.LATAN,
+            _ when latanDollarCodes.Contains(code) => Regions.LATAN,
             _ => code
         };
 
