@@ -1066,7 +1066,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var percentDiff = ((decimal)(newPriorityPriceRub * 100) / gs.PriorityPrice) - 100;
                 if (percentDiff > percentDiffMax)
                 {
-                    await createErrLog(gs, "изменились цены");
+                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи {gs.PriorityPrice}, сохраненная в рублях {gs.Item.CurrentDigiSellerPrice}. Разница {percentDiff}% вместо {percentDiffMax}%" );
                     //gs.StatusId = 7;//неизвестная ошибка
                     //await _gameSessionRepository.UpdateField(gs, gs => gs.StatusId);
                     //await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
