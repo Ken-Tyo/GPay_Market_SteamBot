@@ -73,10 +73,10 @@ namespace SteamDigiSellerBot.Utilities
         public static class Regions
         {
             public const string EU = "EU";
-            public const string CIS = "AZ";
-            public const string SAsia = "PK";
-            public const string TR = "TR";
-            public const string AR = "AR";
+            public const string CIS = "CIS$";
+            public const string SAsia = "sAsia$";
+            public const string TR = "TR$";
+            public const string AR = "AR$";
 
         }
 
@@ -101,16 +101,17 @@ namespace SteamDigiSellerBot.Utilities
         public static bool CurrencyCountryFilter(string region, string countryCode)
         {
             return region == countryCode
-                             || ((region == Regions.EU) && IsEuropianCode(countryCode))
-#warning Регион бота должен храниться настоящий, а не группа регионов
-                             || ((region == Regions.CIS || cisDollarCodes.Contains(region)) && cisDollarCodes.Contains(countryCode))
-                             || (region == Regions.SAsia && sAsiaDollarCodes.Contains(countryCode))
-                             || (region == Regions.TR && trDollarCodes.Contains(countryCode))
-                             || (region == Regions.AR && arDollarCodes.Contains(countryCode));
+                             || ((region == Regions.EU) && IsEuropianCode(countryCode));
+//#warning Регион бота должен храниться настоящий, а не группа регионов
+//                             || ((region == Regions.CIS || cisDollarCodes.Contains(region)) && cisDollarCodes.Contains(countryCode))
+//                             || (region == Regions.SAsia && sAsiaDollarCodes.Contains(countryCode))
+//                             || (region == Regions.TR && trDollarCodes.Contains(countryCode))
+//                             || (region == Regions.AR && arDollarCodes.Contains(countryCode));
         }
         public static string MapCountryCode(string code) => code switch
         {
             _ when europianCodes.Contains(code) => Regions.EU,
+            _ => code
             
         };
 
@@ -121,10 +122,10 @@ namespace SteamDigiSellerBot.Utilities
             Regions.SAsia => "South Asia - USD",
             Regions.TR => "Турецкая лира",
             Regions.AR => "Аргентинское песо",
-            _ => null
+            _ => code
         };
 
-        public static string MapCountryCodeToNameCode(string code) => code switch
+        public static string MapCountryCodeToNameGroupCountryCode(string code) => code switch
         {
             _ when cisDollarCodes.Contains(code) => Regions.CIS,
             _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,

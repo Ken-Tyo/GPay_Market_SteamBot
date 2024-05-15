@@ -54,7 +54,7 @@ namespace SteamDigiSellerBot.Controllers
             List<Bot> bots = await _steamBotRepository.ListAsync();
             bots.ForEach(e =>
             {
-                e.Region = SteamHelper.MapCountryCodeToNameCode(e.Region);
+                e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
             });
 
             var groups = bots.GroupBy(b => b.Region ?? "").ToDictionary((g) => g.Key, g => g.Count());
