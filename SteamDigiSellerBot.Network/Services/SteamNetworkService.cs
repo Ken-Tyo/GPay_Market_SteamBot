@@ -436,7 +436,7 @@ namespace SteamDigiSellerBot.Network.Services
                     game.IsBundle = edition.Contains("bundleid");
                     db.Entry(game).Property(g => g.IsBundle).IsModified = true;
 
-                    var currentDiscountStatus = edition.Contains("game_purchase_discount");
+                    var currentDiscountStatus = edition.Contains("game_purchase_discount") && !edition.Contains("no_discount");
 
                     game.UpdateIsDiscount(db, currentDiscountStatus);
 
@@ -477,12 +477,9 @@ namespace SteamDigiSellerBot.Network.Services
             string dateSource = edition
                 .Substring("<p class=\"game_purchase_discount_countdown\">", "</p>");
 
-            // Значит, что скидка бесконечная.
-            if (string.IsNullOrWhiteSpace(dateSource))
-            {
-                game.DiscountEndTimeUtc = DateTime.MaxValue;
-            }
-            else
+            bool isDiscountPct = edition.Contains("discount_pct");
+
+            if(!string.IsNullOrWhiteSpace(dateSource))
             {
                 string dateStr = new string(
                 dateSource.SkipWhile(x => !char.IsDigit(x)).ToArray()) + " " + DateTime.Now.Year;
@@ -494,6 +491,11 @@ namespace SteamDigiSellerBot.Network.Services
 
                     game.DiscountEndTimeUtc = dateTime;
                 }
+            }
+            // Значит, что скидка бесконечная.
+            else if (string.IsNullOrWhiteSpace(dateSource) && isDiscountPct)
+            {
+                game.DiscountEndTimeUtc = DateTime.MaxValue;
             }
         }
 

@@ -313,12 +313,13 @@ namespace SteamDigiSellerBot.Tests
             Assert.That(g.DiscountEndTimeUtc == DateTime.MaxValue);
         }
 
-        [TestCase("noInfiniteDiscount")]
-        public void NoInfiniteTimer(string htmlFile)
+        [TestCase("notEndlessDiscount", "664383")]
+        [TestCase("bundleDiscount", "12620")]
+        public void NoEndlessTimer(string htmlFile, string subId)
         {
             var editionsHtml = GetHtml(htmlFile);
             var edition = SteamNetworkService.ParseEditions(editionsHtml).FirstOrDefault();
-            var g = new Game { SubId = "664383" };
+            var g = new Game { SubId = subId };
 
             SteamNetworkService.ParseHtmlDiscountCountdown(edition, g);
 
