@@ -52,10 +52,16 @@ namespace SteamDigiSellerBot.Network
         private string cartUrlStr => $"https://store.steampowered.com/cart?{engUrlParam}";
 
         /// <summary>
+        /// Делать ли снимки(сохранение json страниц) при запросах
+        /// </summary>
+        /// TODO В идеале вынести в настройки и подгружать, не задействуя запрос к сервисам(пусть сверху приходит). Не хочу лишних зависимостей тут
+        private const bool snapshotModeOn = false;
+
+        /// <summary>
         /// Randomly-generated device ID. Should only be generated once per linker.
         /// </summary>
         public string _deviceID { get; private set; } = "android:" + Guid.NewGuid().ToString(); // TODO: from maFile
-
+        
         //private readonly ICurrencyDataRepository _currencyDataRepository;
         //private readonly IVacGameRepository _vacGameRepository;
 
@@ -1215,15 +1221,18 @@ namespace SteamDigiSellerBot.Network
         {
             try
             {
-                var dirPath = "Logs/Snapshots";
-                Directory.CreateDirectory(dirPath);
-                await File.WriteAllTextAsync(
-                    $"{dirPath}/{this.Bot.UserName}_{DateTime.Now.ToUniversalTime().ToString("dd-MM-yyyy")}_{DateTime.Now.ToUniversalTime().ToString("HH-mm-ss")}_{callerMethod}",
-                    JsonConvert.SerializeObject(new
-                    {
-                        url,
-                        pageContent
-                    }));
+                if (snapshotModeOn)
+                {
+                    var dirPath = "Logs/Snapshots";
+                    Directory.CreateDirectory(dirPath);
+                    await File.WriteAllTextAsync(
+                        $"{dirPath}/{this.Bot.UserName}_{DateTime.Now.ToUniversalTime().ToString("dd-MM-yyyy")}_{DateTime.Now.ToUniversalTime().ToString("HH-mm-ss")}_{callerMethod}",
+                        JsonConvert.SerializeObject(new
+                        {
+                            url,
+                            pageContent
+                        }));
+                }
             }
             catch(Exception ex) { Console.WriteLine(ex.Message); }
         }
