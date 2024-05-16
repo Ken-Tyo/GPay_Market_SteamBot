@@ -77,8 +77,8 @@ namespace SteamDigiSellerBot.Utilities
             public const string EU = "EU";
             public const string CIS = "CIS$";
             public const string SAsia = "SAsia$";
-            public const string MENA = "MENA$";
-            public const string LATAN = "LATAN$";
+            public const string MENA = "TR$";
+            public const string LATAN = "AR$";
         }
 
         public static class RegionsCode

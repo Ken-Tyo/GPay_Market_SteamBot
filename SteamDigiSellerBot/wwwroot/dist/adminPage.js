@@ -25432,6 +25432,7 @@ if (true) {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./AR$.svg": 5239,
 	"./AU.svg": 1334,
 	"./BR.svg": 772,
 	"./CIS$.svg": 9709,
@@ -25444,12 +25445,11 @@ var map = {
 	"./JP.svg": 8510,
 	"./KW.svg": 6022,
 	"./KZ.svg": 8979,
-	"./LATAN$.svg": 2110,
-	"./MENA$.svg": 4351,
 	"./NO.svg": 2181,
 	"./NZ.svg": 280,
 	"./RU.svg": 2763,
 	"./SAsia$.svg": 879,
+	"./TR$.svg": 2862,
 	"./UA.svg": 1710,
 	"./US.svg": 2172,
 	"./UY.svg": 4758,
@@ -25476,6 +25476,14 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 9642;
+
+/***/ }),
+
+/***/ 5239:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "21a07caf2995ef2b021b.svg";
 
 /***/ }),
 
@@ -25575,22 +25583,6 @@ module.exports = __webpack_require__.p + "5a93e3dfb6c4311bb75a.svg";
 
 /***/ }),
 
-/***/ 2110:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "21a07caf2995ef2b021b.svg";
-
-/***/ }),
-
-/***/ 4351:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "3b1c5ea749f9f762da33.svg";
-
-/***/ }),
-
 /***/ 2181:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25620,6 +25612,14 @@ module.exports = __webpack_require__.p + "69cf005a5dd815b9bf27.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "f69431faf158d3201f0e.svg";
+
+/***/ }),
+
+/***/ 2862:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "3b1c5ea749f9f762da33.svg";
 
 /***/ }),
 
