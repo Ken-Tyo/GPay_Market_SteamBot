@@ -95,7 +95,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //var bot = await _botRepository.GetFirstAsync();
                 //var superBot = await _botPool.GetById(bot.Id);
 
-                (ProfileDataRes profileData2, string err) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
+                (ProfileDataRes profileData2, string url) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
+                if (profileData2 != null && string.IsNullOrWhiteSpace(profileData2.gifteeAccountId))
+                {
+                    _logger.LogWarning("SetSteamContact: Проблема получения gifteeAccountId, url: "+url);
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                    (profileData2, url) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
+                }
 
                 profileData = profileData2;
                 if (profileData == null)

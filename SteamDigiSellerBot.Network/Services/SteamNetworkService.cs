@@ -826,7 +826,7 @@ namespace SteamDigiSellerBot.Network.Services
                 prPage = prPage2;
             }
 
-            return (SteamHelper.ParseProfileData(prPage), "");
+            return (SteamHelper.ParseProfileData(prPage), link);
         }
 
         public class ResponsData
