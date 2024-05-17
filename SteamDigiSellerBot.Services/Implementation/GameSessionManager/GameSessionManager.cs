@@ -321,8 +321,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
                 {
-                    //StatusId = GameSessionStatusEnum.SwitchBot,
-                    StatusId = GameSessionStatusEnum.UnknownError,
+                    StatusId = GameSessionStatusEnum.SwitchBot,
                     Value = new GameSessionStatusLog.ValueJson
                     {
                         message = $"Смена бота {gs.BotId}. Попытка №{(gs.BotSwitchList.Count)}",
@@ -336,7 +335,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.Bot = null;
                 gs.BotId = null;
                 gs.Stage = GameSessionStage.WaitToSend;
-                //gs.StatusId = GameSessionStatusEnum.SwitchBot;
+                gs.StatusId = GameSessionStatusEnum.SwitchBot;
                 WaitToSendGameGSQ.Add(gsId);
             }
             else

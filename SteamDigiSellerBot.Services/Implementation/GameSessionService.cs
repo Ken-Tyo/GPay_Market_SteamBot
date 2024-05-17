@@ -155,7 +155,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //Некорректный регион - 5
             if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.RequestSent,
                     GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError,
-                    GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion }.Contains(gs.StatusId))
+                    GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.SwitchBot }.Contains(gs.StatusId))
                 return gs;
 
             _gameSessionManager.Remove(gs.Id);
@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         /// </summary>
         public static GameSessionStatusEnum[] BeforeExpStatuses = new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.SteamNetworkProblem, GameSessionStatusEnum.ProfileNoSet,
             GameSessionStatusEnum.BotLimit, GameSessionStatusEnum.GameRejected, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.RequestSent, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.IncorrectProfile
-            , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue };
+            , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue, GameSessionStatusEnum.SwitchBot };
 
         /// <summary>
         /// This method allow to check game session expired for further handling.
@@ -598,8 +598,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                         gs.BotSwitchList.Add(bot.Id);
                         await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotSwitchList);
                         await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog()
-                        // { GameSessionId = gs.Id, StatusId = GameSessionStatusEnum.SwitchBot });
-                        { GameSessionId = gs.Id, StatusId = GameSessionStatusEnum.UnknownError });
+                        
+                        { GameSessionId = gs.Id, StatusId = GameSessionStatusEnum.SwitchBot, Value  = new ValueJson() { message = "Не удалось залогиниться в процессе подбора бота", botId = bot.Id, botName = bot.UserName}});
                         goto retry_mark;
                     }
                     return (GetBotForSendGameStatus.botLoginErr, filterParams, sb);
@@ -779,7 +779,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //await _gameSessionRepository.EditAsync(gs);
             await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
 
-            if (gs.StatusId == GameSessionStatusEnum.RequestSent || gs.StatusId == GameSessionStatusEnum.UnknownError || gs.StatusId == GameSessionStatusEnum.SendingGame)//заявка отправлена
+            if (gs.StatusId == GameSessionStatusEnum.RequestSent || gs.StatusId == GameSessionStatusEnum.UnknownError || gs.StatusId == GameSessionStatusEnum.SendingGame || gs.StatusId== GameSessionStatusEnum.SwitchBot)//заявка отправлена
                 await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
 
             if (gs.StatusId == GameSessionStatusEnum.SendingGame)
@@ -996,7 +996,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 _logger.LogError(ex.Message);
                 _logger.LogError(ex.StackTrace);
                 gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
-                await updateGsStatus(gs, null);
+                await updateGsStatus(gs, new ValueJson() { message = $"Ошибка проверки добавления друга\n\n{ex.Message}\n{ex.StackTrace}"});
                 return CheckFriendAddedResult.unknowErr;
             }
         }
