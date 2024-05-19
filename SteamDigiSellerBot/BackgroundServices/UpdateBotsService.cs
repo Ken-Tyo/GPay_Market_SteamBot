@@ -44,15 +44,15 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 startCount++;
-
+                GC.Collect();
                 _logger.LogInformation("Bot updates started");
-                IBotRepository botRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IBotRepository>();
-                IVacGameRepository vacGameRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IVacGameRepository>();
-                ISuperBotPool superBotPool = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ISuperBotPool>();
+                var scope = _serviceProvider.CreateScope();
+                IBotRepository botRepository = scope.ServiceProvider.GetRequiredService<IBotRepository>();
+                IVacGameRepository vacGameRepository = scope.ServiceProvider.GetRequiredService<IVacGameRepository>();
+                ISuperBotPool superBotPool = scope.ServiceProvider.GetRequiredService<ISuperBotPool>();
 
-                List<Database.Entities.Bot> bots = await botRepository.ListAsync(b => b.IsON);
-                var currencyDataRepository =
-                    _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ICurrencyDataService>();
+                List<Bot> bots = await botRepository.ListAsync(b => b.IsON);
+                var currencyDataRepository = scope.ServiceProvider.GetRequiredService<ICurrencyDataService>();
 
                 //var adminID = _configuration["adminID"];
 
@@ -194,6 +194,7 @@ namespace SteamDigiSellerBot.Services
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                GC.Collect();
                 List<Bot> bots = await botRepository.ListAsync(
                     b => b.IsON && b.State == BotState.tempLimit);
 

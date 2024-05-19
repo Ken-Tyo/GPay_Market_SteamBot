@@ -14,39 +14,32 @@ namespace SteamDigiSellerBot.Controllers
     [Authorize]
     public class GamePriceController: Controller
     {
-        private readonly IItemRepository _itemRepository;
+        //private readonly IItemRepository _itemRepository;
 
-        private readonly IItemNetworkService _itemNetworkService;
+        ///private readonly IItemNetworkService _itemNetworkService;
         private readonly IGamePriceRepository _gamePriceRepository;
-        private readonly IDigiSellerNetworkService _digiSellerNetworkService;
+        //private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly ICurrencyDataService _currencyDataService;
-        private readonly ISteamProxyRepository _steamProxyRepository;
-        private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        private readonly IBotRepository _botRepository;
+        //private readonly ISteamProxyRepository _steamProxyRepository;
+        //private readonly IMapper _mapper;
+        //private readonly UserManager<User> _userManager;
+        //private readonly IBotRepository _botRepository;
 
         public GamePriceController(
-            IItemRepository itemRepository,
-            IItemNetworkService itemNetworkService,
-            IDigiSellerNetworkService digiSellerNetworkService,
-            IMapper mapper,
-            UserManager<User> userManager,
             ICurrencyDataService currencyDataService,
-            IGamePriceRepository gamePriceRepository,
-            ISteamProxyRepository steamProxyRepository,
-            IBotRepository botRepository)
+            IGamePriceRepository gamePriceRepository)
         {
-            _itemRepository = itemRepository;
+            //_itemRepository = itemRepository;
 
-            _itemNetworkService = itemNetworkService;
-            _digiSellerNetworkService = digiSellerNetworkService;
+            //_itemNetworkService = itemNetworkService;
+            //_digiSellerNetworkService = digiSellerNetworkService;
             _currencyDataService = currencyDataService;
-            _steamProxyRepository = steamProxyRepository;
+            //_steamProxyRepository = steamProxyRepository;
             _gamePriceRepository = gamePriceRepository;
 
-            _mapper = mapper;
-            _botRepository = botRepository;
-            _userManager = userManager;
+            //_mapper = mapper;
+            //_botRepository = botRepository;
+            //_userManager = userManager;
         }
 
         [HttpPost, Route("items/price/{gpId}/{newPrice}"), ValidationActionFilter]

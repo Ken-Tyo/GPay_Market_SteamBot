@@ -36,13 +36,13 @@ namespace SteamDigiSellerBot
             services.AddScoped<IVacGameRepository, VacGameRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<IGameSessionRepository, GameSessionRepository>();
+            services.AddTransient<IGameSessionRepository, GameSessionRepository>();
             services.AddScoped<IGameSessionStatusRepository, GameSessionStatusRepository>();
             services.AddScoped<ISteamProxyRepository, SteamProxyRepository>();
             services.AddScoped<ICurrencyDataRepository, CurrencyDataRepository>();
             services.AddScoped<IUserDBRepository, UserDBRepository>();
             services.AddScoped<ISteamCountryCodeRepository, SteamCountryCodeRepository>();
-            services.AddScoped<IGameSessionStatusLogRepository, GameSessionStatusLogRepository>();
+            services.AddTransient<IGameSessionStatusLogRepository, GameSessionStatusLogRepository>();
 
             services.AddScoped<ICryptographyUtilityService, CryptographyUtilityService>();
 

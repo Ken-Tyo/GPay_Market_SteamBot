@@ -10,21 +10,12 @@ namespace SteamDigiSellerBot.Controllers
 {
     public class DictionaryController : Controller
     {
-        private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly ISteamCountryCodeRepository _steamCountryCodeRepository;
-        private readonly IBotRepository _steamBotRepository;
-        private readonly IMapper _mapper;
 
         public DictionaryController(
-            ICurrencyDataRepository currencyDataRepository,
-            ISteamCountryCodeRepository steamCountryCodeRepository,
-            IBotRepository botRepository,
-            IMapper mapper)
+            ISteamCountryCodeRepository steamCountryCodeRepository)
         {
-            _currencyDataRepository = currencyDataRepository;
             _steamCountryCodeRepository = steamCountryCodeRepository;
-            _steamBotRepository = botRepository;
-            _mapper = mapper;
         }
 
         [HttpGet, Route("dict/regions")]

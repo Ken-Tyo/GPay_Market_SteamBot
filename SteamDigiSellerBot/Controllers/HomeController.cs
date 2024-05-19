@@ -34,20 +34,20 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ILogger<HomeController> _logger;
 
         private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
+        //private readonly UserManager<User> _userManager;
 
         private readonly IGameSessionRepository _gameSessionRepository;
-        private readonly IGameSessionStatusRepository _gameSessionStatusRepository;
+        //private readonly IGameSessionStatusRepository _gameSessionStatusRepository;
         private readonly IGameSessionService _gameSessionService;
         private readonly IItemRepository _itemRepository;
 
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
-        private readonly ISteamNetworkService _steamNetworkService;
+        //private readonly ISteamNetworkService _steamNetworkService;
         private readonly IUserDBRepository _userDBRepository;
 
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        private readonly IBotRepository _botRepository;
+        //private readonly IBotRepository _botRepository;
         private readonly IMemoryCache _memoryCache;
         private readonly IWsNotificationSender _wsNotifSender;
         private readonly ISuperBotPool _superBotPool;
@@ -56,17 +56,13 @@ namespace SteamDigiSellerBot.Controllers
         private object obj = new object();
         public HomeController(ILogger<HomeController> logger,
             SignInManager<User> signInManager,
-            UserManager<User> userManager,
             IGameSessionRepository gameSessionRepository,
-            IGameSessionStatusRepository gameSessionStatusRepository,
             IGameSessionService gameSessionService,
             IItemRepository itemRepository, 
             IDigiSellerNetworkService digiSellerNetworkService,
-            ISteamNetworkService steamNetworkService,
             IUserDBRepository userDBRepository,
             IConfiguration configuration,
             IMapper mapper,
-            IBotRepository botRepository,
             IMemoryCache memoryCache,
             IWsNotificationSender wsNotificationSender,
             ISuperBotPool superBotPool,
@@ -75,19 +71,19 @@ namespace SteamDigiSellerBot.Controllers
             _logger = logger;
 
             _signInManager = signInManager;
-            _userManager = userManager;
+            //_userManager = userManager;
 
             _gameSessionRepository = gameSessionRepository;
-            _gameSessionStatusRepository = gameSessionStatusRepository;
+            //_gameSessionStatusRepository = gameSessionStatusRepository;
             _gameSessionService = gameSessionService;
             _itemRepository = itemRepository;
 
             _digiSellerNetworkService = digiSellerNetworkService;
-            _steamNetworkService = steamNetworkService;
+            //_steamNetworkService = steamNetworkService;
             _userDBRepository = userDBRepository;
             _configuration = configuration;
             _mapper = mapper;
-            _botRepository = botRepository;
+            //_botRepository = botRepository;
             _memoryCache = memoryCache;
             _wsNotifSender = wsNotificationSender;
             _superBotPool = superBotPool;

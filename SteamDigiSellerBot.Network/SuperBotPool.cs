@@ -22,13 +22,15 @@ namespace SteamDigiSellerBot.Network
     public class SuperBotPool : ISuperBotPool
     {
         private Dictionary<int, SuperBot> bots;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<SuperBotPool> _logger;
+        private readonly IBotRepository _botRepository;
         private object sync = new object();
         private static Random random = new Random();
-        public SuperBotPool(IServiceProvider serviceProvider)
+        public SuperBotPool(IBotRepository botRepository, ILogger<SuperBotPool> logger)
         {
             bots = new Dictionary<int, SuperBot>();
-            _serviceProvider = serviceProvider;
+            _logger=logger;
+            _botRepository = botRepository;
             Init();
         }
 
@@ -36,7 +38,6 @@ namespace SteamDigiSellerBot.Network
         {
             lock (sync)
             {
-                var _botRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IBotRepository>();
                 var allBots = _botRepository.ListAsync(b => b.IsON).Result;
                 foreach (var b in allBots)
                 {
@@ -101,7 +102,6 @@ namespace SteamDigiSellerBot.Network
                 }
                 else
                 {
-                    var _botRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IBotRepository>();
                     var bot = _botRepository.GetByIdAsync(id).Result;
                     bots[id] = new SuperBot(bot);
                     return GetById(bot.Id);
@@ -151,7 +151,7 @@ namespace SteamDigiSellerBot.Network
 
         private ILogger<SuperBotPool> getLogger()
         {
-            return _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ILogger<SuperBotPool>>();
+            return _logger;
         }
     }
 }

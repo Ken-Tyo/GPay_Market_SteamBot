@@ -11,15 +11,19 @@ namespace SteamDigiSellerBot.Services.Implementation
 {
     public class ActivationExpiredGSQ : GameSessionQueue
     {
-        private readonly IServiceProvider _sp;
-        private readonly ILogger<ActivationExpiredGSQ> _logger;
+        private readonly ILogger _logger;
+        private readonly IGameSessionRepository gsr;
+        private readonly IGameSessionService gss;
 
         public ActivationExpiredGSQ(
-            IServiceProvider sp, 
-            BaseGameSessionManager manager) : base(manager)
+            BaseGameSessionManager manager,
+            ILogger logger,
+            IGameSessionRepository gsr,
+            IGameSessionService gss) : base(manager)
         {
-            _sp = sp;
-            _logger = sp.CreateScope().ServiceProvider.GetRequiredService<ILogger<ActivationExpiredGSQ>>();
+            _logger = logger;
+            this.gsr = gsr;
+            this.gss = gss;
             Init();
         }
 
@@ -34,9 +38,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    var gsr = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionRepository>();
-                    var gss = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionService>();
-
                     //берем сессии где возможна просрочка времени на получение игры
                     var sess = await gsr
                         .ListAsync(gs => GameSessionService.BeforeExpStatuses.Contains(gs.StatusId));

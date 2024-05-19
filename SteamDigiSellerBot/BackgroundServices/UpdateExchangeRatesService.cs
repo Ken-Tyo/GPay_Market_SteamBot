@@ -34,11 +34,11 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Exchange rates update started");
-
+                GC.Collect();
                 try
                 {
-                    var currencyServ =
-                        _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ICurrencyDataService>();
+                    var scope = _serviceProvider.CreateScope();
+                    var currencyServ = scope.ServiceProvider.GetRequiredService<ICurrencyDataService>();
 
                     var currencyData = await currencyServ.GetCurrencyData();
                     if (currencyData.LastUpdateDateTime.AddDays(1) <= DateTime.UtcNow)

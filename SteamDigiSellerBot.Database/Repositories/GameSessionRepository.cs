@@ -36,11 +36,13 @@ namespace SteamDigiSellerBot.Database.Repositories
     public class GameSessionRepository : BaseRepositoryEx<GameSession>, IGameSessionRepository
     {
         private readonly DatabaseContext db;
+        private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
-        public GameSessionRepository(DatabaseContext databaseContext)
+        public GameSessionRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory)
             : base(databaseContext)
         {
             db = databaseContext;
+            _dbContextFactory = dbContextFactory;
         }
 
         public async Task<(List<GameSession>, int)> Filter(
@@ -75,6 +77,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (codes == null || codes.Contains(gs.UniqueCode))
                     && (!statusId.HasValue || statusId <= 0 || statusId == gs.StatusId);
 
+            await using var db = _dbContextFactory.CreateDbContext();
             var total = await db.GameSessions
                 .CountAsync(predicate);
 
@@ -114,6 +117,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<List<GameSession>> GetLastValidGameSessions(int size = 10)
         {
+            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .Where(gs => !string.IsNullOrEmpty(gs.SteamProfileName))
                 .OrderByDescending(gs => gs.AddedDateTime)
@@ -123,6 +127,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate)
         {
+            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .AsNoTracking()
                 .Where(predicate)
@@ -132,6 +137,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate)
         {
+            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .AsNoTracking()
                 .Where(predicate)
@@ -147,6 +153,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<GameSession> GetForReset(int id)
         {
+            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .Include(gs => gs.Item)
                 .ThenInclude(gs => gs.GamePrices)
@@ -164,6 +171,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<GameSessionStage> GetStageBy(int gsId)
         {
+            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .Where(gs => gs.Id == gsId)
                 .Select(gs => gs.Stage)

@@ -163,7 +163,7 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
-                using var db = _contextFactory.CreateDbContext();
+                await using var db = _contextFactory.CreateDbContext();
                 var currencyData = await _currencyDataRepository.GetCurrencyData(true);
 
                 var allCurrencies = currencyData?.Currencies ?? new List<Currency>();

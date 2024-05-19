@@ -35,12 +35,10 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionStatusRepository _gameSessionStatusRepository;
         private readonly IGameSessionService _gameSessionService;
 
-        private readonly ISteamNetworkService _steamNetworkService;
         private readonly ICurrencyDataService _currencyDataService;
         private readonly IWsNotificationSender _wsNotifSender;
         private readonly IHubContext<AdminHub> _hub;
         private readonly IUserDBRepository _userDBRepository;
-        private readonly ISuperBotPool _botPool;
         private readonly GameSessionManager _gameSessionManager;
         private readonly IGameSessionStatusLogRepository gameSessionStatusLogRepository;
         private readonly ILogger<GameSessionsController> logger;
@@ -50,13 +48,11 @@ namespace SteamDigiSellerBot.Controllers
             IItemRepository itemRepository,
             IGameSessionRepository gameSessionRepository,
             IGameSessionStatusRepository gameSessionStatusRepository,
-            ISteamNetworkService steamNetworkService,
             ICurrencyDataService currencyDataService,
             IGameSessionService gameSessionService,
             IWsNotificationSender wsNotificationSender,
             IHubContext<AdminHub> hub,
             IUserDBRepository userDBRepository,
-            ISuperBotPool superBotPool,
             GameSessionManager gameSessionManager,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
             ILogger<GameSessionsController> logger)
@@ -66,13 +62,11 @@ namespace SteamDigiSellerBot.Controllers
             _itemRepository = itemRepository;
             _gameSessionRepository = gameSessionRepository;
             _gameSessionStatusRepository = gameSessionStatusRepository;
-            _steamNetworkService = steamNetworkService;
             _currencyDataService = currencyDataService;
             _gameSessionService = gameSessionService;
             _wsNotifSender = wsNotificationSender;
             _hub = hub;
             _userDBRepository = userDBRepository;
-            _botPool = superBotPool;
             _gameSessionManager = gameSessionManager;
             this.gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             this.logger = logger;

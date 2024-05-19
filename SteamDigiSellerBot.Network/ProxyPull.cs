@@ -27,16 +27,20 @@ namespace SteamDigiSellerBot.Network
         private TimeSpan Timeout = TimeSpan.FromSeconds(90);
         private static Random random = new Random();
         private readonly ILogger<IProxyPull> _logger;
+        private ISteamProxyRepository _proxyRepository { get; set; }
 
         public static readonly int MAX_REQUESTS = 110;
 
         public ProxyPull(
             IServiceProvider serviceProvider,
-            ILogger<IProxyPull> logger)
+            ILogger<IProxyPull> logger,
+            ISteamProxyRepository proxyRepository)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _proxyRepository = proxyRepository;
             Init();
+            
         }
 
         private void Init()
@@ -44,10 +48,6 @@ namespace SteamDigiSellerBot.Network
             lock (sync)
             {
                 proxyData = new List<ProxyData>();
-                var _proxyRepository = _serviceProvider
-                    .CreateScope()
-                    .ServiceProvider
-                    .GetRequiredService<ISteamProxyRepository>();
 
                 foreach (var p in _proxyRepository.ListAsync().Result)
                 {
@@ -65,11 +65,6 @@ namespace SteamDigiSellerBot.Network
         {
             lock (sync)
             {
-                var _proxyRepository = _serviceProvider
-                    .CreateScope()
-                    .ServiceProvider
-                    .GetRequiredService<ISteamProxyRepository>();
-
                 var proxyDict = proxyData.ToDictionary(pd => pd.SteamProxy.Id);
                 foreach (var p in _proxyRepository.ListAsync().Result)
                 {

@@ -12,14 +12,18 @@ namespace SteamDigiSellerBot.Services.Implementation
 {
     public class CheckFriendGSQ : GameSessionQueue
     {
-        private readonly IServiceProvider _sp;
-        private readonly ILogger<CheckFriendGSQ> _logger;
 
-        public CheckFriendGSQ(IServiceProvider sp, BaseGameSessionManager manager) : base(manager)
+        private readonly ILogger _logger;
+        private readonly IGameSessionRepository gsr;
+        private readonly IGameSessionService gss;
+
+        public CheckFriendGSQ(BaseGameSessionManager manager, ILogger logger,
+            IGameSessionRepository gsr,
+            IGameSessionService gss) : base(manager)
         {
-            _sp = sp;
-            _logger = sp.CreateScope().ServiceProvider.GetRequiredService<ILogger<CheckFriendGSQ>>();
-
+            _logger = logger;
+            this.gsr = gsr;
+            this.gss = gss;
             Init();
         }
 
@@ -34,10 +38,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    var gsr = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionRepository>();
-                    //var sns = _sp.CreateScope().ServiceProvider.GetRequiredService<ISteamNetworkService>();
-                    var gss = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionService>();
-
                     //берем сессии где ожидается принятия заявки в друзья
                     //var sess = gsr.ListAsync(gs => gs.StatusId == 6).Result;
                     var sess = await gsr.GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.CheckFriend);

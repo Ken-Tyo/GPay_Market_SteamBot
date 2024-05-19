@@ -2,16 +2,18 @@
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
+using SteamDigiSellerBot.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using SteamDigiSellerBot.Network.Services;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
     public class GameSessionManager: BaseGameSessionManager
     {
-        private readonly IServiceProvider _serviceProvider;
+        //private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<GameSessionManager> _logger;
         //private readonly IGameSessionRepository _gsRepo;
 
@@ -24,19 +26,24 @@ namespace SteamDigiSellerBot.Services.Implementation
         private SendGameGSQ SendGameGSQ;
         private ActivationExpiredGSQ ActivationExpiredGSQ;
         private Dictionary<int, CancelationData> cancelation;
-        public GameSessionManager(IServiceProvider serviceProvider)
+        private readonly IGameSessionRepository gsr;
+        private readonly IGameSessionService gss;
+        public GameSessionManager(ILogger<GameSessionManager> logger,
+            IGameSessionRepository gsr,
+            IServiceProvider sp)
         {
-            _serviceProvider = serviceProvider;
-            var scope = serviceProvider.CreateScope();
-            _logger = scope.ServiceProvider.GetRequiredService<ILogger<GameSessionManager>>();
+            //using var scope = sp.CreateScope();
+            _logger = logger;
+            this.gsr  = gsr;
+            this.gss = gss;
             //_gsRepo = scope.ServiceProvider.GetRequiredService<IGameSessionRepository>();
 
-            WaitConfirmationGSQ = new WaitConfirmationGSQ(serviceProvider, this);
-            AddToFriendGSQ = new AddToFriendGSQ(serviceProvider, this);
-            CheckFriendGSQ = new CheckFriendGSQ(serviceProvider, this);
-            WaitToSendGameGSQ = new WaitToSendGameGSQ(serviceProvider, this);
-            SendGameGSQ = new SendGameGSQ(serviceProvider, this);
-            ActivationExpiredGSQ = new ActivationExpiredGSQ(serviceProvider, this);
+            WaitConfirmationGSQ = new WaitConfirmationGSQ(this, _logger, gsr);
+            AddToFriendGSQ = new AddToFriendGSQ(this,_logger,gsr,gss);
+            CheckFriendGSQ = new CheckFriendGSQ(this, _logger, gsr, gss);
+            WaitToSendGameGSQ = new WaitToSendGameGSQ(this,_logger, gsr,gss);
+            SendGameGSQ = new SendGameGSQ( this,_logger, gsr,gss);
+            ActivationExpiredGSQ = new ActivationExpiredGSQ(this, _logger, gsr, gss);
 
             cancelation = new Dictionary<int, CancelationData>();
             Init();
@@ -44,10 +51,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         private async void Init()
         {
-            var _gsRepo = _serviceProvider
-                   .CreateScope()
-                   .ServiceProvider
-                   .GetRequiredService<IGameSessionRepository>();
+            var _gsRepo = gsr;
 
             foreach (var id in (await _gsRepo.GetGameSessionIds(gs => gs.Stage == GameSessionStage.WaitConfirmation)))
             {
@@ -283,10 +287,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 WaitToSendGameGSQ.Remove(gsId);
             }
 
-            var _gsRepo = _serviceProvider
-                   .CreateScope()
-                   .ServiceProvider
-                   .GetRequiredService<IGameSessionRepository>();
+            var _gsRepo = gsr;
 
             var stage = _gsRepo.GetStageBy(gsId).GetAwaiter().GetResult();
             if (stage == GameSessionStage.New || stage == GameSessionStage.ActivationExpired)
@@ -309,10 +310,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task ChangeBotAndRetry(int gsId)
         {
-            var _gsRepo = _serviceProvider
-                .CreateScope()
-                .ServiceProvider
-                .GetRequiredService<IGameSessionRepository>();
+            var _gsRepo = gsr;
             var gs= await _gsRepo.GetByIdAsync(gsId);
             gs.BotSwitchList ??= new();
             if (gs.BotId!=null)
@@ -383,10 +381,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         private async Task<bool> UpdateStage(int gsId, GameSessionStage stage, GameSessionStatusEnum? lastStatusId = null)
         {
-            var _gsRepo = _serviceProvider
-                   .CreateScope()
-                   .ServiceProvider
-                   .GetRequiredService<IGameSessionRepository>();
+            var _gsRepo = gsr;
 
             var gs = new GameSession { Id = gsId, Stage = stage };
             if (lastStatusId.HasValue)

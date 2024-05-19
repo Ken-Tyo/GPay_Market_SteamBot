@@ -14,19 +14,17 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IHubContext<AdminHub> adminHub;
         private readonly IHubContext<HomeHub> homeHub;
         private readonly IUserDBRepository _userDBRepository;
-        private readonly IServiceProvider _serviceProvider;
         private Dictionary<string, HashSet<string>> userUniqueCodes;
         private object sync = new object();
 
         public WsNotificationSender(
             IHubContext<AdminHub> adminHub,
             IHubContext<HomeHub> homeHub,
-            IServiceProvider serviceProvider)
+            IUserDBRepository userDbRepository)
         {
             this.adminHub = adminHub;
             this.homeHub = homeHub;
-            _serviceProvider = serviceProvider;
-            _userDBRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IUserDBRepository>();
+            _userDBRepository = userDbRepository;
             userUniqueCodes = new Dictionary<string, HashSet<string>>();
         }
 

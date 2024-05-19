@@ -11,13 +11,19 @@ namespace SteamDigiSellerBot.Services.Implementation
 {
     public class AddToFriendGSQ : GameSessionQueue
     {
-        private readonly IServiceProvider _sp;
-        private readonly ILogger<AddToFriendGSQ> _logger;
+        
+        private readonly ILogger _logger;
+        private readonly IGameSessionRepository gsr;
+        private readonly IGameSessionService gss;
 
-        public AddToFriendGSQ(IServiceProvider sp, BaseGameSessionManager manager) : base(manager)
+        public AddToFriendGSQ(BaseGameSessionManager manager,
+            ILogger logger,
+            IGameSessionRepository gsr,
+            IGameSessionService gss) : base(manager)
         {
-            _sp = sp;
-            _logger = sp.CreateScope().ServiceProvider.GetRequiredService<ILogger<AddToFriendGSQ>>();
+            this.gsr = gsr;
+            this.gss = gss;
+            _logger = logger;
             Init();
         }
 
@@ -32,9 +38,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    var gsr = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionRepository>();
-                    var gss = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionService>();
-
                     //берем сессии где ожидается подтвреждение аккаунта или в очереди и пришло время автоотправки
                     var sess = await gsr
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.AddToFriend);

@@ -44,42 +44,25 @@ namespace SteamDigiSellerBot.Network.Services
     {
         private readonly ILogger<SteamNetworkService> _logger;
 
-        private readonly ISteamProxyRepository _steamProxyRepository;
-        private readonly ISteamCountryCodeRepository _steamCountryCodeRepository;
+
         private readonly ICurrencyDataRepository _currencyDataRepository;
-        private readonly IBotRepository _botRepository;
-        private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _superBotPool;
         private readonly IProxyPull _proxyPull;
-        private readonly IWsNotificationSender _wsNotifSender;
-        private readonly IUserDBRepository _userDBRepository;
         private readonly decimal _errParseValue = 9999;
         private HashSet<int> notRfBotHS;
 
         public SteamNetworkService(
             ILogger<SteamNetworkService> logger,
-            ISteamProxyRepository steamProxyRepository,
             ICurrencyDataRepository currencyDataRepository,
-            IGameSessionRepository gameSessionRepository,
             ISuperBotPool superBotPool,
-            IProxyPull proxyPull,
-            IBotRepository botRepository,
-            ISteamCountryCodeRepository steamCountryCodeRepository,
-            IWsNotificationSender wsNotificationSender,
-            IUserDBRepository userDBRepository
+            IProxyPull proxyPull
         )
         {
             _logger = logger;
 
-            _steamProxyRepository = steamProxyRepository;
             _currencyDataRepository = currencyDataRepository;
-            _gameSessionRepository = gameSessionRepository;
-            _botRepository = botRepository;
             _superBotPool = superBotPool;
             _proxyPull = proxyPull;
-            _steamCountryCodeRepository = steamCountryCodeRepository;
-            _wsNotifSender = wsNotificationSender;
-            _userDBRepository = userDBRepository;
         }
 
         public async Task SetSteamPrices(

@@ -6,18 +6,21 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Entities;
+using SteamDigiSellerBot.Services.Interfaces;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
     public class WaitConfirmationGSQ : GameSessionQueue
     {
-        private readonly IServiceProvider _sp;
-        private readonly ILogger<WaitConfirmationGSQ> _logger;
+        private readonly ILogger _logger;
+        private readonly IGameSessionRepository gsr;
 
-        public WaitConfirmationGSQ(IServiceProvider serviceProvider, BaseGameSessionManager manager) : base(manager)
+
+        public WaitConfirmationGSQ(BaseGameSessionManager manager, ILogger logger,
+            IGameSessionRepository gsr) : base(manager)
         {
-            _sp = serviceProvider;
-            _logger = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ILogger<WaitConfirmationGSQ>>();
+            this.gsr = gsr;
+            _logger = logger;
 
             Init();
         }
@@ -33,8 +36,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    var gsr = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionRepository>();
-                    var sns = _sp.CreateScope().ServiceProvider.GetRequiredService<ISteamNetworkService>();
 
                     //берем сессии где ожидается подтвреждение аккаунта и пришло время автоотправки
                     var sess = await gsr

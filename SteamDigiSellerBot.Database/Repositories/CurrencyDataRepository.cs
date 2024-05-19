@@ -28,8 +28,8 @@ namespace SteamDigiSellerBot.Database.Repositories
         private readonly DatabaseContext _databaseContext;
         private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
-        private readonly ISteamProxyRepository _steamProxyRepository;
-        private GlobalVault _global;
+        //private readonly ISteamProxyRepository _steamProxyRepository;
+        private readonly GlobalVault _global;
 
         private readonly Dictionary<string, string> _codeAndSymbols = new Dictionary<string, string>()
         {
@@ -124,13 +124,13 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 104, Code = "ARS", SteamSymbol = "$", Position = 104, Name = "Аргентинское песо", CountryCode = "AR" },
         };
 
-        public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, ISteamProxyRepository steamProxyRepository, GlobalVault global)
+        public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, GlobalVault global)
             : base(databaseContext)
         {
             _databaseContext = databaseContext;
             _dbContextFactory = dbContextFactory;
 
-            _steamProxyRepository = steamProxyRepository;
+            //_steamProxyRepository = steamProxyRepository;
             _global = global;
             //new Currency { Code = "", SteamSymbol = }
         }
@@ -256,7 +256,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public partial class GlobalVault
     {
-        public DateTime? lastTimeCurrencyLoad { get; set; }
-        public CurrencyData currencyCache { get; set; }
+        public DateTime? lastTimeCurrencyLoad { get; set; } = null;
+        public CurrencyData currencyCache { get; set; } = null;
     }
 }

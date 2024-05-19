@@ -12,13 +12,18 @@ namespace SteamDigiSellerBot.Services.Implementation
 {
     public class SendGameGSQ : GameSessionQueue
     {
-        private readonly IServiceProvider _sp;
-        private readonly ILogger<SendGameGSQ> _logger;
+        private readonly ILogger _logger;
+        private readonly IGameSessionRepository gsr;
+        private readonly IGameSessionService gss;
 
-        public SendGameGSQ(IServiceProvider sp, BaseGameSessionManager manager) : base(manager)
+        public SendGameGSQ(BaseGameSessionManager manager, ILogger logger,
+            IGameSessionRepository gsr,
+            IGameSessionService gss) : base(manager)
         {
-            _sp = sp;
-            _logger = sp.CreateScope().ServiceProvider.GetRequiredService<ILogger<SendGameGSQ>>();
+
+            _logger = logger;
+            this.gsr = gsr;
+            this.gss = gss;
 
             Init();
         }
@@ -34,9 +39,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    var gsr = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionRepository>();
-                    var gss = _sp.CreateScope().ServiceProvider.GetRequiredService<IGameSessionService>();
-
                     //берем сессии где ожидается подтвреждение аккаунта и пришло время автоотправки
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 18).Result;

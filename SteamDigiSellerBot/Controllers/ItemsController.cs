@@ -29,10 +29,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IItemRepository _itemRepository;
 
         private readonly IItemNetworkService _itemNetworkService;
-        private readonly IGamePriceRepository _gamePriceRepository;
-        private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly ICurrencyDataService _currencyDataService;
-        private readonly ISteamProxyRepository _steamProxyRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly IBotRepository _botRepository;
@@ -41,22 +38,17 @@ namespace SteamDigiSellerBot.Controllers
         public ItemsController(
             IItemRepository itemRepository, 
             IItemNetworkService itemNetworkService,
-            IDigiSellerNetworkService digiSellerNetworkService, 
             IMapper mapper, 
             UserManager<User> userManager,
             ICurrencyDataService currencyDataService,
-            IGamePriceRepository gamePriceRepository,
-            ISteamProxyRepository steamProxyRepository,
             IBotRepository botRepository,
             ILogger<ItemsController> logger)
         {
             _itemRepository = itemRepository;
             
             _itemNetworkService = itemNetworkService;
-            _digiSellerNetworkService = digiSellerNetworkService;
+
             _currencyDataService = currencyDataService;
-            _steamProxyRepository = steamProxyRepository;
-            _gamePriceRepository = gamePriceRepository;
 
             _mapper = mapper;
             _botRepository = botRepository;

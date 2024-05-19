@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace SteamDigiSellerBot.Services
 {
@@ -36,25 +37,27 @@ namespace SteamDigiSellerBot.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                GC.Collect();
                 try
                 {
-                    var itemRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IItemRepository>();
+                    var scope = _serviceProvider.CreateScope();
+                    var itemRepository = scope.ServiceProvider.GetRequiredService<IItemRepository>();
                     var items = await itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted);
                     
                     if (items.Count > 0)
                     {
-                        var steamProxyRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ISteamProxyRepository>();
-                        var currencyDataRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ICurrencyDataRepository>();
-                        var itemNetworkService = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IItemNetworkService>();
+                        //var steamProxyRepository = scope.ServiceProvider.GetRequiredService<ISteamProxyRepository>();
+                        //var currencyDataRepository = scope.ServiceProvider.GetRequiredService<ICurrencyDataRepository>();
+                        var itemNetworkService = scope.ServiceProvider.GetRequiredService<IItemNetworkService>();
 
                         var adminID = _configuration["adminID"];
-                        var _userManager = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
+                        var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                         User user = await _userManager.FindByIdAsync(adminID);
 
                         Dictionary<int, decimal> prices = null;
                         try
                         {
-                            prices = await _serviceProvider.CreateScope().ServiceProvider
+                            prices = await scope.ServiceProvider
                                 .GetRequiredService<IDigiSellerNetworkService>().GetPriceList(user.DigisellerID);
                             _logger.LogInformation($"ItemMonitoringService: Получена информация по {prices.Count} товарам из Digiseller");
                         }
@@ -97,9 +100,11 @@ namespace SteamDigiSellerBot.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                GC.Collect();
                 try
                 {
-                    var itemRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IItemRepository>();
+                    var scope = _serviceProvider.CreateScope();
+                    var itemRepository = scope.ServiceProvider.GetRequiredService<IItemRepository>();
                     var items = await itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted && x.DiscountEndTimeUtc!=new DateTime()
                       && x.DiscountEndTimeUtc < DateTime.UtcNow && x.DiscountEndTimeUtc.AddHours(24) > DateTime.UtcNow
                       && x.GamePrices.Count() > 0 && x.DiscountEndTimeUtc > x.GamePrices.Max(x=> x.LastUpdate));
@@ -107,10 +112,10 @@ namespace SteamDigiSellerBot.Services
                     if (items.Count > 0)
                     {
                         _logger.LogInformation($"DiscountMonitoringService: отобрано на обновление скидок {items.Count}");
-                        var itemNetworkService = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IItemNetworkService>();
+                        var itemNetworkService = scope.ServiceProvider.GetRequiredService<IItemNetworkService>();
 
                         var adminID = _configuration["adminID"];
-                        var _userManager = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<UserManager<User>>();
+                        var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                         User user = await _userManager.FindByIdAsync(adminID);
 
                         await itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, user.Id, manualUpdate: false);
