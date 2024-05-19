@@ -1027,9 +1027,10 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
 
             if (gs.StatusId != GameSessionStatusEnum.SendingGame && gs.StatusId != GameSessionStatusEnum.Queue
-                && gs.StatusId != GameSessionStatusEnum.UnknownError)
+                                                                 && gs.StatusId != GameSessionStatusEnum.UnknownError)
             {
-                await createErrLog(gs, "некорректный статус для отправки игры");
+                if (gs.StatusId != GameSessionStatusEnum.Received && gs.StatusId != GameSessionStatusEnum.Done)
+                    await createErrLog(gs, "некорректный статус для отправки игры");
                 //gs.StatusId = 7;//неизвестная ошибка
                 //await _gameSessionRepository.UpdateField(gs, gs => gs.StatusId);
                 //await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
