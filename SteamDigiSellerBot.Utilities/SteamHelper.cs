@@ -70,15 +70,26 @@ namespace SteamDigiSellerBot.Utilities
         }
         
 
+        //TODO Стоит всю эту обработку с данными перенести в бд. 
+
         public static class Regions
         {
             public const string EU = "EU";
             public const string CIS = "CIS$";
             public const string SAsia = "SAsia$";
-            public const string TR = "TR$";
-            public const string AR = "AR$";
-
+            public const string MENA = "TR$";
+            public const string LATAN = "AR$";
         }
+
+        public static class RegionsCode
+        {
+            public const string EU = "EU";
+            public const string CIS = "CIS";
+            public const string SASIA = "SAsia";
+            public const string MENA = "TRY";
+            public const string LATAM = "ARS";
+        }
+
         public static bool IsEuropianCode(string code)
         {
             return europianCodes.Contains(code);
@@ -91,42 +102,46 @@ namespace SteamDigiSellerBot.Utilities
         private static readonly string[] sAsiaDollarCodes = new string[] { "BD", "BT", "NP", "PK", "LK" };
 
         //mena
-        private static readonly string[] trDollarCodes = new string[] { "BH", "EG", "IQ", "JO", "LB", "OM", "PS", "TR", "YE", "DZ", "BO", "MA", "TN", "SS" };
+        private static readonly string[] menaDollarCodes = new string[] { "BH", "EG", "IQ", "JO", "LB", "OM", "PS", "TR", "YE", "DZ", "BO", "MA", "TN", "SS" };
 
         //latam
-        private static readonly string[] arDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
+        private static readonly string[] latanDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
 
 
-        public static bool CurrencyCountryFilter(string region, string countryCode)
+        /// <summary>
+        /// Метод служит для сопоставления регионов. Отдельный метод создан для того, чтобы учитывать виртуальных регионов
+        /// Групповой регион определяется по <paramref name="currCode"/> 
+        /// </summary>
+        /// <param name="targetRegion">С чем сравниваем</param>
+        /// <param name="currRegion">Регион валюты в обычном случае</param>
+        /// <param name="currCode">На случай, если валюта для виртуального региона</param>
+        /// <returns></returns>
+        public static bool CurrencyCountryGroupFilter(string targetRegion, string currRegion, string currCode)
         {
-            return region == countryCode
-                             || ((region == Regions.EU) && IsEuropianCode(countryCode))
-#warning Регион бота должен храниться настоящий, а не группа регионов
-                             || ((region == Regions.CIS || cisDollarCodes.Contains(region)) && cisDollarCodes.Contains(countryCode))
-                             || (region == Regions.SAsia && sAsiaDollarCodes.Contains(countryCode))
-                             || (region == Regions.TR && trDollarCodes.Contains(countryCode))
-                             || (region == Regions.AR && arDollarCodes.Contains(countryCode));
+            var result = targetRegion == currRegion
+                             || ((currCode == RegionsCode.EU) && IsEuropianCode(targetRegion))
+                             || ((currCode == RegionsCode.CIS) && cisDollarCodes.Contains(targetRegion))
+                             || ((currCode == RegionsCode.SASIA) && sAsiaDollarCodes.Contains(targetRegion))
+                             || ((currCode == RegionsCode.MENA) && menaDollarCodes.Contains(targetRegion))
+                             || ((currCode == RegionsCode.LATAM) && latanDollarCodes.Contains(targetRegion));
+
+            return result;
         }
         public static string MapCountryCode(string code) => code switch
         {
             _ when europianCodes.Contains(code) => Regions.EU,
-            _ when cisDollarCodes.Contains(code) => Regions.CIS,
-            _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
-            _ when trDollarCodes.Contains(code) => Regions.TR,
-            _ when arDollarCodes.Contains(code) => Regions.AR,
             _ => code
         };
 
-        public static string MapCountryName(string code) => code switch
+        public static string MapCountryCodeToNameGroupCountryCode(string code) => code switch
         {
-            Regions.EU => "European Union",
-            Regions.CIS => "CIS - U.S. Dollar",
-            Regions.SAsia => "South Asia - USD",
-            Regions.TR => "Турецкая лира",
-            Regions.AR => "Аргентинское песо",
-            _ => null
+            _ when cisDollarCodes.Contains(code) => Regions.CIS,
+            _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
+            _ when menaDollarCodes.Contains(code) => Regions.MENA,
+            _ when latanDollarCodes.Contains(code) => Regions.LATAN,
+            _ => code
         };
-            
+
         public static ProfileDataRes ParseProfileData(string prPage)
         {
             ProfileDataRes profileData = GetProfileDataProfilePage(prPage);

@@ -447,15 +447,18 @@ namespace SteamDigiSellerBot.Services.Implementation
             foreach (var price in prices)
             {
                 //берем код региона
-                currCountryCode = currencies[price.SteamCurrencyId].CountryCode;
+                var curr = currencies[price.SteamCurrencyId];
+                currCountryCode = curr.CountryCode;
+                var currCode = curr.Code;
+
                 currCountryName = steamCountries.First(cc => cc.Code == currCountryCode).Name;
 
                 var priceRegionFilteredBots = botFilterRes
-                    .Where(b => SteamHelper.CurrencyCountryFilter(b.Region, currCountryCode))
+                    .Where(b => SteamHelper.CurrencyCountryGroupFilter(b.Region, currCountryCode, currCode))
                     .ToList();
 
                 _logger.LogInformation(
-                $"GS ID {gs.Id} after filter by price region ({currencies[price.SteamCurrencyId].Code}) - {JsonConvert.SerializeObject(priceRegionFilteredBots.Select(b => new { id = b.Id, name = b.UserName }))}");
+                $"GS ID {gs.Id} after filter by price region ({currCode}) - {JsonConvert.SerializeObject(priceRegionFilteredBots.Select(b => new { id = b.Id, name = b.UserName }))}");
 
                 if (priceRegionFilteredBots.Count == 0)
                     continue;
@@ -623,12 +626,9 @@ namespace SteamDigiSellerBot.Services.Implementation
             return await AddToFriend(gs);
         }
 
-        private string GetBotRegionName(Bot bot)
+        private async Task<string> GetBotRegionName(Bot bot)
         {
-            var mapResult = SteamHelper.MapCountryCode(bot.Region);
-            return bot.Region != mapResult
-                ? SteamHelper.MapCountryName(mapResult)
-                : _steamCountryCodeRepository.GetByPredicateAsync(scc => scc.Code == bot.Region).Result?.Name;
+            return (await _steamCountryCodeRepository.GetByPredicateAsync(scc => scc.Code == bot.Region))?.Name;
         }
 
         public async Task<AddToFriendStatus> AddToFriend(GameSession gs)
@@ -820,7 +820,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                                 userProfileUrl = profileData.url,
                                 botId = bot.Id,
                                 botName = bot.UserName,
-                                botRegionName = GetBotRegionName(bot),
+                                botRegionName = await GetBotRegionName(bot),
                                 botRegionCode = bot.Region
                             };
                         }
@@ -861,7 +861,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                                     userProfileUrl = profileData.url,
                                     botId = bot.Id,
                                     botName = bot.UserName,
-                                    botRegionName = GetBotRegionName(bot),
+                                    botRegionName = await GetBotRegionName(bot),
                                     botRegionCode = bot.Region
                                 };
                             }

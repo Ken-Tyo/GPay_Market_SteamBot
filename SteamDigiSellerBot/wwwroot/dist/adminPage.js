@@ -25432,7 +25432,7 @@ if (true) {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
-	"./AR.svg": 6569,
+	"./AR$.svg": 5239,
 	"./AU.svg": 1334,
 	"./BR.svg": 772,
 	"./CIS$.svg": 9709,
@@ -25442,12 +25442,14 @@ var map = {
 	"./GB.svg": 2231,
 	"./IL.svg": 1559,
 	"./IN.svg": 4981,
+	"./JP.svg": 8510,
 	"./KW.svg": 6022,
 	"./KZ.svg": 8979,
 	"./NO.svg": 2181,
 	"./NZ.svg": 280,
 	"./RU.svg": 2763,
-	"./TR.svg": 3822,
+	"./SAsia$.svg": 879,
+	"./TR$.svg": 2862,
 	"./UA.svg": 1710,
 	"./US.svg": 2172,
 	"./UY.svg": 4758,
@@ -25477,7 +25479,7 @@ webpackContext.id = 9642;
 
 /***/ }),
 
-/***/ 6569:
+/***/ 5239:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -25557,6 +25559,14 @@ module.exports = __webpack_require__.p + "36c2bd78a3f6195b6d28.svg";
 
 /***/ }),
 
+/***/ 8510:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "e89b3e112ea13027c078.svg";
+
+/***/ }),
+
 /***/ 6022:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25597,7 +25607,15 @@ module.exports = __webpack_require__.p + "69cf005a5dd815b9bf27.svg";
 
 /***/ }),
 
-/***/ 3822:
+/***/ 879:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "f69431faf158d3201f0e.svg";
+
+/***/ }),
+
+/***/ 2862:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -44863,77 +44881,19 @@ var pageHeader = function pageHeader(_ref) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/index.js
-function products_slicedToArray(arr, i) { return products_arrayWithHoles(arr) || products_iterableToArrayLimit(arr, i) || products_unsupportedIterableToArray(arr, i) || products_nonIterableRest(); }
-function products_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function products_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return products_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return products_arrayLikeToArray(o, minLen); }
-function products_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function products_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function products_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
 
 
-
-
-var crossFullUnmountScroll = null;
 var products_products = function products() {
-  var _state$use = state.use(),
-    itemsMode = _state$use.itemsMode;
-  var key = "PRODUCTS_CONTENT_SCROLLTOP";
-  var contentRef = (0,react.useRef)(null);
-  var _useState = (0,react.useState)(null),
-    _useState2 = products_slicedToArray(_useState, 2),
-    scroll = _useState2[0],
-    setScroll = _useState2[1];
-  var _useState3 = (0,react.useState)(null),
-    _useState4 = products_slicedToArray(_useState3, 2),
-    prevItemsMode = _useState4[0],
-    setPrevItemsMode = _useState4[1];
-  var _useState5 = (0,react.useState)(null),
-    _useState6 = products_slicedToArray(_useState5, 2),
-    prevScroll = _useState6[0],
-    setPrevScroll = _useState6[1];
-
-  // useEffect(() =>{
-  //   console.log(`IN prevItemsMode : ${prevItemsMode} prevScroll : ${prevScroll} itemsMode : ${itemsMode} `);
-  //   if(prevItemsMode == mode[1] & itemsMode === mode[2]){
-  //     //scroll = prevScroll;
-  //     setScroll(prevScroll);
-  //     // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
-  //     crossFullUnmountScroll = prevScroll;
-  //   }
-  //   setPrevItemsMode(itemsMode);
-  //   setPrevScroll(contentRef?.current?.scrollTop);
-  // });
-
-  // useEffect(() =>{
-  //   if(itemsMode === mode[1] & prevItemsMode === mode[2]){  
-  //     console.log(`if scroll ${scroll}`);
-  //     if(scroll != null){
-  //       console.log(`scrollTo ${scroll}`);
-  //       contentRef.current.scroll({
-  //         top: scroll
-  //       });
-  //     }
-  //     else if(crossFullUnmountScroll != null ){
-  //        // Если из itemsMode:priceHierarchy мы перейдем на другую вкладку, а потом обратно и выйдем в list, это гарантирует что мы вернемся все равно
-  //       contentRef.current.scroll({
-  //         top: crossFullUnmountScroll
-  //       });
-  //       crossFullUnmountScroll = null;
-  //     }
-  // }},[itemsMode]);
-
   return /*#__PURE__*/react.createElement("div", {
     className: products_styles.wrapper
   }, /*#__PURE__*/react.createElement(admin_pageHeader, {
     title: "Digiseller",
     subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
   }), /*#__PURE__*/react.createElement("div", {
-    className: products_styles.content,
-    id: "content-pane",
-    ref: contentRef
+    className: products_styles.content
   }, /*#__PURE__*/react.createElement(products_list, null)), /*#__PURE__*/react.createElement(products_priceHierarchy, null));
 };
 /* harmony default export */ const admin_products = (products_products);
