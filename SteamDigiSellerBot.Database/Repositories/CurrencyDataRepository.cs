@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,10 +17,10 @@ namespace SteamDigiSellerBot.Database.Repositories
 {
     public interface ICurrencyDataRepository : IBaseRepository<CurrencyData>
     {
-        Task<CurrencyData> GetCurrencyData();
+        Task<CurrencyData> GetCurrencyData(bool useCache = false);
         Task UpdateCurrencyDataManual(CurrencyData newCurrencyData);
         Task UpdateCurrencyData(CurrencyData currencyData);
-        Task<Dictionary<int, Currency>> GetCurrencyDictionary();
+        Task<Dictionary<int, Currency>> GetCurrencyDictionary(bool useCache = false);
     }
 
     public class CurrencyDataRepository : BaseRepository<CurrencyData>, ICurrencyDataRepository
@@ -28,6 +29,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
         private readonly ISteamProxyRepository _steamProxyRepository;
+        private GlobalVault _global;
 
         private readonly Dictionary<string, string> _codeAndSymbols = new Dictionary<string, string>()
         {
@@ -122,19 +124,20 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 104, Code = "ARS", SteamSymbol = "$", Position = 104, Name = "Аргентинское песо", CountryCode = "AR" },
         };
 
-        public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, ISteamProxyRepository steamProxyRepository)
+        public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, ISteamProxyRepository steamProxyRepository, GlobalVault global)
             : base(databaseContext)
         {
             _databaseContext = databaseContext;
             _dbContextFactory = dbContextFactory;
 
             _steamProxyRepository = steamProxyRepository;
+            _global = global;
             //new Currency { Code = "", SteamSymbol = }
         }
 
-        public async Task<CurrencyData> GetCurrencyData()
+        public async Task<CurrencyData> GetCurrencyData(bool useCache = false)
         {
-            CurrencyData currencyData = await InitCurrencyData();
+            CurrencyData currencyData = await InitCurrencyData(useCache);
 
             currencyData.Currencies = currencyData.Currencies.OrderBy(c => c.Position).ToList();
             return currencyData;
@@ -142,6 +145,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {
+            _global.currencyCache = null;
             var client = new System.Net.Http.HttpClient();
             var timeoutSec = 61;
             var res = await client.GetAsync("http://steamcommunity.com/market/priceoverview/?appid=440&currency=1&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
@@ -191,6 +195,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task UpdateCurrencyDataManual(CurrencyData newCurrencyData)
         {
+            _global.currencyCache = null;
             CurrencyData currencyData = await InitCurrencyData();
 
             foreach (Currency currency in currencyData.Currencies)
@@ -207,9 +212,9 @@ namespace SteamDigiSellerBot.Database.Repositories
             await _databaseContext.SaveChangesAsync();
         }
 
-        public async Task<Dictionary<int, Currency>> GetCurrencyDictionary()
+        public async Task<Dictionary<int, Currency>> GetCurrencyDictionary(bool useCache = false)
         {
-            var data = await GetCurrencyData();
+            var data = await GetCurrencyData(useCache);
 
             var dict = new Dictionary<int, Currency>();
             foreach (var item in data.Currencies)
@@ -218,25 +223,40 @@ namespace SteamDigiSellerBot.Database.Repositories
             return dict;
         }
 
-        private async Task<CurrencyData> InitCurrencyData()
+
+
+        private async Task<CurrencyData> InitCurrencyData(bool useCache = false)
         {
-            //конфликт обращения к DbContext
-            await using var db= _dbContextFactory.CreateDbContext();
-            CurrencyData currencyData = await db.CurrencyData.Include(cd => cd.Currencies).FirstOrDefaultAsync();
-
-            if (currencyData == null)
+            CurrencyData currencyData = null;
+            if (useCache && (_global.currencyCache != null && _global.lastTimeCurrencyLoad > DateTime.Now.AddMinutes(-10)))
             {
-                currencyData = new CurrencyData();
-
-                foreach (var cur in DefaultSteamCurrencies)
-                {
-                    currencyData.Currencies.Add(cur);
-                }
-
-                await _databaseContext.CurrencyData.AddAsync(currencyData);
+                currencyData = _global.currencyCache;
             }
+            else
+            {
+                await using var db = _dbContextFactory.CreateDbContext();
+                currencyData = await db.CurrencyData.Include(cd => cd.Currencies).FirstOrDefaultAsync();
+                if (currencyData == null)
+                {
+                    currencyData = new CurrencyData();
 
+                    foreach (var cur in DefaultSteamCurrencies)
+                    {
+                        currencyData.Currencies.Add(cur);
+                    }
+
+                    await db.CurrencyData.AddAsync(currencyData);
+                }
+                _global.currencyCache = currencyData;
+                _global.lastTimeCurrencyLoad = DateTime.Now;
+            }
             return currencyData;
         }
+    }
+
+    public partial class GlobalVault
+    {
+        public DateTime? lastTimeCurrencyLoad { get; set; }
+        public CurrencyData currencyCache { get; set; }
     }
 }

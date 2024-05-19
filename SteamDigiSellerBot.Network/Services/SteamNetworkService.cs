@@ -541,7 +541,7 @@ namespace SteamDigiSellerBot.Network.Services
                 return;
 
             var requaredCurrencies = bundleList.Select(b => b.SteamCurrencyId).ToHashSet();
-            var currencyList = (await _currencyDataRepository.GetCurrencyData()).Currencies.Where(e => requaredCurrencies.Contains(e.SteamId));
+            var currencyList = (await _currencyDataRepository.GetCurrencyData(true)).Currencies.Where(e => requaredCurrencies.Contains(e.SteamId));
             var groupedBundleList = bundleList.GroupBy(b => b.SteamCurrencyId);
 
             foreach (var bundleGroup in groupedBundleList)

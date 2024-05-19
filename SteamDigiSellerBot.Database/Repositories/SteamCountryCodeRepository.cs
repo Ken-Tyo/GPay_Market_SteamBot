@@ -56,7 +56,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         {
             var codes = await InitSteamCounrtyCodes();
             var currCountryCodes = (await _currencyDataRepository
-                .GetCurrencyData()).Currencies
+                .GetCurrencyData(true)).Currencies
                 .Select(x => x.CountryCode)
                 .ToHashSet();
 

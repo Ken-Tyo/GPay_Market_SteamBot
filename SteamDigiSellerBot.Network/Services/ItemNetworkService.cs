@@ -86,7 +86,7 @@ namespace SteamDigiSellerBot.Network.Services
                 .ThenBy(x => x.LastUpdate).ToList();
 
             //using var db = _contextFactory.CreateDbContext();
-            var currenicesCount = (await _currencyDataRepository.GetCurrencyData()).Currencies.Count;
+            var currenicesCount = (await _currencyDataRepository.GetCurrencyData(true)).Currencies.Count;
             //var proxyCount = db.SteamProxies.Count();
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
@@ -164,7 +164,7 @@ namespace SteamDigiSellerBot.Network.Services
             try
             {
                 using var db = _contextFactory.CreateDbContext();
-                var currencyData = await _currencyDataRepository.GetCurrencyData();
+                var currencyData = await _currencyDataRepository.GetCurrencyData(true);
 
                 var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
                 allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();

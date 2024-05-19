@@ -29,6 +29,7 @@ namespace SteamDigiSellerBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDatabaseWithIdentity(Configuration);
+            services.AddSingleton<GlobalVault>();
 
             services.AddScoped<IBotRepository, BotRepository>();
             services.AddScoped<IBotSendGameAttemptsRepository, BotSendGameAttemptsRepository>();
