@@ -20,17 +20,18 @@ namespace SteamDigiSellerBot.Services
     {
         private readonly ILogger<ItemMonitoringService> _logger;
         private readonly IConfiguration _configuration;
-
+        private readonly IItemRepository _itemRepository;
         private readonly IServiceProvider _serviceProvider;
 
         public ItemMonitoringService(
             ILogger<ItemMonitoringService> logger, 
-            IServiceProvider serviceProvider,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IItemRepository itemRepository,
+            IServiceProvider sp)
         {
             _logger = logger;
-            _serviceProvider = serviceProvider;
             _configuration = configuration;
+            _itemRepository = itemRepository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,14 +41,11 @@ namespace SteamDigiSellerBot.Services
                 GC.Collect();
                 try
                 {
-                    var scope = _serviceProvider.CreateScope();
-                    var itemRepository = scope.ServiceProvider.GetRequiredService<IItemRepository>();
-                    var items = await itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted);
+                    var items = await _itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted);
                     
                     if (items.Count > 0)
                     {
-                        //var steamProxyRepository = scope.ServiceProvider.GetRequiredService<ISteamProxyRepository>();
-                        //var currencyDataRepository = scope.ServiceProvider.GetRequiredService<ICurrencyDataRepository>();
+                        var scope = _serviceProvider.CreateScope();
                         var itemNetworkService = scope.ServiceProvider.GetRequiredService<IItemNetworkService>();
 
                         var adminID = _configuration["adminID"];
@@ -83,17 +81,19 @@ namespace SteamDigiSellerBot.Services
     {
         private readonly ILogger<ItemMonitoringService> _logger;
         private readonly IConfiguration _configuration;
-
+        private readonly IItemRepository _itemRepository;
         private readonly IServiceProvider _serviceProvider;
 
         public DiscountMonitoringService(
             ILogger<ItemMonitoringService> logger,
             IServiceProvider serviceProvider,
+            IItemRepository itemRepository,
             IConfiguration configuration)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _configuration = configuration;
+            _itemRepository = itemRepository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -103,14 +103,13 @@ namespace SteamDigiSellerBot.Services
                 GC.Collect();
                 try
                 {
-                    var scope = _serviceProvider.CreateScope();
-                    var itemRepository = scope.ServiceProvider.GetRequiredService<IItemRepository>();
-                    var items = await itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted && x.DiscountEndTimeUtc!=new DateTime()
+                    var items = await _itemRepository.ListIncludePricesAsync(x => x.Active && !x.IsDeleted && x.DiscountEndTimeUtc!=new DateTime()
                       && x.DiscountEndTimeUtc < DateTime.UtcNow && x.DiscountEndTimeUtc.AddHours(24) > DateTime.UtcNow
                       && x.GamePrices.Count() > 0 && x.DiscountEndTimeUtc > x.GamePrices.Max(x=> x.LastUpdate));
 
                     if (items.Count > 0)
                     {
+                        var scope = _serviceProvider.CreateScope();
                         _logger.LogInformation($"DiscountMonitoringService: отобрано на обновление скидок {items.Count}");
                         var itemNetworkService = scope.ServiceProvider.GetRequiredService<IItemNetworkService>();
 

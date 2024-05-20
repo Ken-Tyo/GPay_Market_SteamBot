@@ -16,6 +16,7 @@ namespace SteamDigiSellerBot.Database.Repositories
     {
         Task<List<GameSession>> Sort(GameSessionSort gameSessionSort);
         Task<List<GameSession>> GetLastValidGameSessions(int size = 10);
+        Task<List<int>> GetGameSessionIds(DatabaseContext context, Expression<Func<GameSession, bool>> predicate);
         Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate);
         Task<(List<GameSession>, int)> Filter(string appId,
             string gameName,
@@ -123,14 +124,20 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate)
+        public async Task<List<int>> GetGameSessionIds(DatabaseContext db, Expression<Func<GameSession, bool>> predicate)
         {
-            await using var db = _dbContextFactory.CreateDbContext();
+  
             return await db.GameSessions
                 .AsNoTracking()
                 .Where(predicate)
                 .Select(gs => gs.Id)
                 .ToListAsync();
+        }
+
+        public async Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate)
+        {
+            await using var db = _dbContextFactory.CreateDbContext();
+            return await GetGameSessionIds(db, predicate);
         }
 
         public async Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate)

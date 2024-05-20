@@ -16,15 +16,18 @@ namespace SteamDigiSellerBot.Services
         private readonly IConfiguration _configuration;
 
         private readonly IServiceProvider _serviceProvider;
+        private readonly ICurrencyDataService _currencyDataService;
 
         public UpdateExchangeRatesService(
             ILogger<UpdateExchangeRatesService> logger,
             IServiceProvider serviceProvider,
-            IConfiguration configuration)
+            IConfiguration configuration, 
+            ICurrencyDataService currencyDataService)
         {
             _logger = logger;
 
             _serviceProvider = serviceProvider;
+            _currencyDataService = currencyDataService;
 
             _configuration = configuration;
         }
@@ -37,13 +40,11 @@ namespace SteamDigiSellerBot.Services
                 GC.Collect();
                 try
                 {
-                    var scope = _serviceProvider.CreateScope();
-                    var currencyServ = scope.ServiceProvider.GetRequiredService<ICurrencyDataService>();
 
-                    var currencyData = await currencyServ.GetCurrencyData();
+                    var currencyData = await _currencyDataService.GetCurrencyData();
                     if (currencyData.LastUpdateDateTime.AddDays(1) <= DateTime.UtcNow)
                     {
-                        await currencyServ.UpdateCurrencyData(currencyData);
+                        await _currencyDataService.UpdateCurrencyData(currencyData);
                         _logger.LogInformation("Exchange rates update ended");
                     }
                     else

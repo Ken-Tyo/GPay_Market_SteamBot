@@ -7,220 +7,36 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Network;
+using SteamDigiSellerBot.Utilities.Services;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
-    public class GameSessionManager: BaseGameSessionManager
+
+    //TODO необходимо рассмотреть объединение IGameSessionService и GameSessionManager из-за проблем цикловой зависимости
+    public class GameSessionCommon
     {
-        //private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<GameSessionManager> _logger;
-        //private readonly IGameSessionRepository _gsRepo;
+        public WaitConfirmationGSQ WaitConfirmationGSQ;
+        public AddToFriendGSQ AddToFriendGSQ;
+        public CheckFriendGSQ CheckFriendGSQ;
+        public WaitToSendGameGSQ WaitToSendGameGSQ;
+        public SendGameGSQ SendGameGSQ;
+        public ActivationExpiredGSQ ActivationExpiredGSQ;
 
-        private object sync = new object();
+        public Dictionary<int, CancelationData> cancelation;
 
-        private WaitConfirmationGSQ WaitConfirmationGSQ;
-        private AddToFriendGSQ AddToFriendGSQ;
-        private CheckFriendGSQ CheckFriendGSQ;
-        private WaitToSendGameGSQ WaitToSendGameGSQ;
-        private SendGameGSQ SendGameGSQ;
-        private ActivationExpiredGSQ ActivationExpiredGSQ;
-        private Dictionary<int, CancelationData> cancelation;
-        private readonly IGameSessionRepository gsr;
-        private readonly IGameSessionService gss;
+        public object sync = new object();
 
-        public GameSessionManager(ILogger<GameSessionManager> logger,
-            IGameSessionRepository gsr,
-            IServiceProvider sp)
+        public bool CanAdd(int gsId)
         {
-            //using var scope = sp.CreateScope();
-            _logger = logger;
-            this.gsr  = gsr;
-            this.gss = sp.CreateScope().ServiceProvider.GetService<IGameSessionService>();
-            //_gsRepo = scope.ServiceProvider.GetRequiredService<IGameSessionRepository>();
-
-            WaitConfirmationGSQ = new WaitConfirmationGSQ(this, _logger, gsr);
-            AddToFriendGSQ = new AddToFriendGSQ(this,_logger,gsr,gss);
-            CheckFriendGSQ = new CheckFriendGSQ(this, _logger, gsr, gss);
-            WaitToSendGameGSQ = new WaitToSendGameGSQ(this,_logger, gsr,gss);
-            SendGameGSQ = new SendGameGSQ( this,_logger, gsr,gss);
-            ActivationExpiredGSQ = new ActivationExpiredGSQ(this, _logger, gsr, gss);
-
-            cancelation = new Dictionary<int, CancelationData>();
-            Init();
-        }
-
-
-        private async void Init()
-        {
-            var _gsRepo = gsr;
-
-            foreach (var id in (await _gsRepo.GetGameSessionIds(gs => gs.Stage == GameSessionStage.WaitConfirmation)))
-            {
-                WaitConfirmationGSQ.Add(id);
-                //cancelation[id] = false;
-            }
-
-            foreach (var id in (await _gsRepo.GetGameSessionIds(gs => gs.Stage == GameSessionStage.AddToFriend)))
-            {
-                AddToFriendGSQ.Add(id);
-                //cancelation[id] = false;
-
-            }
-
-            foreach (var id in (await _gsRepo.GetGameSessionIds(gs => gs.Stage == GameSessionStage.CheckFriend)))
-            {
-                CheckFriendGSQ.Add(id);
-                //cancelation[id] = false;
-
-            }
-
-            foreach (var id in (await _gsRepo.GetGameSessionIds(gs => gs.Stage == GameSessionStage.WaitToSend)))
-            {
-                WaitToSendGameGSQ.Add(id);
-                //cancelation[id] = false;
-
-            }
-
-            foreach (var id in await (_gsRepo.GetGameSessionIds(gs => gs.Stage == GameSessionStage.SendGame)))
-            {
-                SendGameGSQ.Add(id);
-                //cancelation[id] = false;
-            }
-        }
-
-        private void WriteLog(GameSessionQueue sender, BaseMes res, int gsId)
-        {
-            _logger.LogInformation($" {("GS ID " + gsId), 10} {sender.GetType().Name, 25} {res.GetType().Name, 15}");
-            _logger.LogInformation(new string('-', 60));
-        }
-        public override void Send(object res, GameSessionQueue sender)
-        {
-            lock (sync)
-            {
-                var mes = res as BaseMes;
-                var gsId = mes.gsId;
-                //var t = res.GetType();
-                WriteLog(sender, mes, gsId);
-
-                //if (!sender.Q.ContainsKey(gsId))
-                //    return;
-                if (cancelation.TryGetValue(gsId, out CancelationData data) && data.IsCanceled)
-                {
-                    UpdateStage(gsId, GameSessionStage.Done, data.StatusId).GetAwaiter().GetResult();
-                    return;
-                }
-
-                if (res is ToFixStage)
-                {
-                    var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                    return;
-                }
-
-                
-                if (sender == WaitConfirmationGSQ)
-                {
-                    WaitConfirmationGSQ.Remove(gsId);
-                    if (res is Done)
-                    {
-                        var ur = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
-                        AddToFriendGSQ.Add(gsId);
-                    }
-                }
-                else if (sender == AddToFriendGSQ)
-                {
-                    AddToFriendGSQ.Remove(gsId);
-                    if (res is Done)
-                    {
-                        var ur = UpdateStage(gsId, GameSessionStage.CheckFriend).GetAwaiter().GetResult();
-                        CheckFriendGSQ.Add(gsId);
-                    }
-                    else if (res is Omitted)
-                    {
-                        var ur = UpdateStage(gsId, GameSessionStage.SendGame).GetAwaiter().GetResult();
-                        SendGameGSQ.Add(gsId);
-                    }
-                    else if (res is FailAddToFriend failToAdd)
-                    {
-                        if (failToAdd.AddToFriendStatus == AddToFriendStatus.botsAreBusy)
-                        {
-                            var ur = UpdateStage(gsId, GameSessionStage.WaitToSend).GetAwaiter().GetResult();
-                            WaitToSendGameGSQ.Add(gsId);
-                        }
-                        else
-                        {
-                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
-                            //var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                        }
-                    }
-                }
-                else if (sender == CheckFriendGSQ)
-                {
-                    CheckFriendGSQ.Remove(gsId);
-                    if (res is Added)
-                    {
-                        //WaitToSendGameGSQ.Add(gsId);
-                        var ur = UpdateStage(gsId, GameSessionStage.SendGame).GetAwaiter().GetResult();
-                        SendGameGSQ.Add(gsId);
-                    }
-                    else if (res is Rejected )
-                    {
-                        var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                    }
-                    else if (res is FailCheckFriendAdded)
-                    {
-                        ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
-                    }
-                }
-                else if (sender == WaitToSendGameGSQ)
-                {
-                    WaitToSendGameGSQ.Remove(gsId);
-                    if (res is ReadyToAddToFriend)
-                    {
-                        var ur = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
-                        AddToFriendGSQ.Add(gsId);
-                    }
-                }
-                else if (sender == SendGameGSQ)
-                {
-                    SendGameGSQ.Remove(gsId);
-                    if (res is SendFailed sf)
-                    {
-                        if (sf.ReadyStatus == GameReadyToSendStatus.botsAreBusy)
-                        {
-                            var ur = UpdateStage(gsId, GameSessionStage.WaitToSend).GetAwaiter().GetResult();
-                            WaitToSendGameGSQ.Add(gsId);
-                        }
-                        else if (sf.ChangeBot)
-                        {
-                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
-                        }
-                        else
-                        {
-                            var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                        }
-                    }
-                    else if (res is Sended)
-                    {
-                        var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                    }
-                }
-                else if (sender == ActivationExpiredGSQ)
-                {
-                    ActivationExpiredGSQ.Remove(gsId);
-                    WaitConfirmationGSQ.Remove(gsId);
-                    AddToFriendGSQ.Remove(gsId);
-                    CheckFriendGSQ.Remove(gsId);
-                    SendGameGSQ.Remove(gsId);
-                    WaitToSendGameGSQ.Remove(gsId);
-
-                    var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                }
-                else
-                {
-                    var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
-                }
-            }
+            return !WaitConfirmationGSQ.Q.ContainsKey(gsId)
+                   && !AddToFriendGSQ.Q.ContainsKey(gsId)
+                   && !CheckFriendGSQ.Q.ContainsKey(gsId)
+                   && !SendGameGSQ.Q.ContainsKey(gsId)
+                   && !WaitToSendGameGSQ.Q.ContainsKey(gsId)
+                ;
         }
 
         public void NewGameSession(int gsId)
@@ -236,33 +52,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
         }
 
-        public bool ConfirmProfile(int gsId)
-        {
-            lock (sync)
-            {
-                var deleted = WaitConfirmationGSQ.Remove(gsId);
-                var canAdd = CanAdd(gsId);
-                if (canAdd)
-                {
-                    //var res = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
-                    AddToFriendGSQ.Add(gsId);
-                }
-
-                return deleted || !canAdd;
-            }
-        }
-
-        public void CheckFriend(int gsId)
-        {
-            lock (sync)
-            {
-                if (CanAdd(gsId))
-                {
-                    //var res = UpdateStage(gsId, GameSessionStage.CheckFriend).GetAwaiter().GetResult();
-                    CheckFriendGSQ.Add(gsId);
-                }
-            }
-        }
 
         public void Remove(int gsId)
         {
@@ -276,17 +65,263 @@ namespace SteamDigiSellerBot.Services.Implementation
                 WaitToSendGameGSQ.Remove(gsId);
             }
         }
+    }
+
+
+    public class GameSessionManager: BaseGameSessionManager
+    {
+        //private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<GameSessionManager> _logger;
+        //private readonly IGameSessionRepository _gsRepo;
+
+        private GameSessionCommon GSSCommon { get; set; }
+
+
+        private readonly IGameSessionRepository gsr;
+        private readonly IGameSessionService gss;
+
+        public GameSessionManager(ILogger<GameSessionManager> logger,
+            IGameSessionRepository gameSessionRepository,
+            IGameSessionService gameSessionService,
+            GameSessionCommon gssCommon)
+        {
+            //using var scope = sp.CreateScope();
+            _logger = logger;
+            gsr  = gameSessionRepository;
+            gss = gameSessionService;
+            GSSCommon = gssCommon;
+            //_gsRepo = scope.ServiceProvider.GetRequiredService<IGameSessionRepository>();
+
+            GSSCommon.WaitConfirmationGSQ = new WaitConfirmationGSQ(this, _logger, gsr);
+            GSSCommon.AddToFriendGSQ = new AddToFriendGSQ(this,_logger,gsr,gss);
+            GSSCommon.CheckFriendGSQ = new CheckFriendGSQ(this, _logger, gsr, gss);
+            GSSCommon.WaitToSendGameGSQ = new WaitToSendGameGSQ(this,_logger, gsr,gss);
+            GSSCommon.SendGameGSQ = new SendGameGSQ( this,_logger, gsr,gss);
+            GSSCommon.ActivationExpiredGSQ = new ActivationExpiredGSQ(this, _logger, gsr, gss);
+
+            GSSCommon.cancelation = new Dictionary<int, CancelationData>();
+            Init().GetAwaiter().GetResult();
+        }
+
+
+        private async Task Init()
+        {
+            var _gsRepo = gsr;
+            await using var db = _gsRepo.GetContext() as DatabaseContext;
+
+            foreach (var id in (await _gsRepo.GetGameSessionIds(db, gs => gs.Stage == GameSessionStage.WaitConfirmation)))
+            {
+                GSSCommon.WaitConfirmationGSQ.Add(id);
+                //cancelation[id] = false;
+            }
+
+            foreach (var id in (await _gsRepo.GetGameSessionIds(db, gs => gs.Stage == GameSessionStage.AddToFriend)))
+            {
+                GSSCommon.AddToFriendGSQ.Add(id);
+                //cancelation[id] = false;
+
+            }
+
+            foreach (var id in (await _gsRepo.GetGameSessionIds(db, gs => gs.Stage == GameSessionStage.CheckFriend)))
+            {
+                GSSCommon.CheckFriendGSQ.Add(id);
+                //cancelation[id] = false;
+
+            }
+
+            foreach (var id in (await _gsRepo.GetGameSessionIds(db, gs => gs.Stage == GameSessionStage.WaitToSend)))
+            {
+                GSSCommon.WaitToSendGameGSQ.Add(id);
+                //cancelation[id] = false;
+
+            }
+
+            foreach (var id in await (_gsRepo.GetGameSessionIds(db, gs => gs.Stage == GameSessionStage.SendGame)))
+            {
+                GSSCommon.SendGameGSQ.Add(id);
+                //cancelation[id] = false;
+            }
+        }
+
+        private void WriteLog(GameSessionQueue sender, BaseMes res, int gsId)
+        {
+            _logger.LogInformation($" {("GS ID " + gsId), 10} {sender.GetType().Name, 25} {res.GetType().Name, 15}");
+            _logger.LogInformation(new string('-', 60));
+        }
+        public override void Send(object res, GameSessionQueue sender)
+        {
+            lock (GSSCommon.sync)
+            {
+                var mes = res as BaseMes;
+                var gsId = mes.gsId;
+                //var t = res.GetType();
+                WriteLog(sender, mes, gsId);
+
+                //if (!sender.Q.ContainsKey(gsId))
+                //    return;
+                if (GSSCommon.cancelation.TryGetValue(gsId, out CancelationData data) && data.IsCanceled)
+                {
+                    UpdateStage(gsId, GameSessionStage.Done, data.StatusId).GetAwaiter().GetResult();
+                    return;
+                }
+
+                if (res is ToFixStage)
+                {
+                    var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                    return;
+                }
+
+                
+                if (sender == GSSCommon.WaitConfirmationGSQ)
+                {
+                    GSSCommon.WaitConfirmationGSQ.Remove(gsId);
+                    if (res is Done)
+                    {
+                        var ur = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
+                        GSSCommon.AddToFriendGSQ.Add(gsId);
+                    }
+                }
+                else if (sender == GSSCommon.AddToFriendGSQ)
+                {
+                    GSSCommon.AddToFriendGSQ.Remove(gsId);
+                    if (res is Done)
+                    {
+                        var ur = UpdateStage(gsId, GameSessionStage.CheckFriend).GetAwaiter().GetResult();
+                        GSSCommon.CheckFriendGSQ.Add(gsId);
+                    }
+                    else if (res is Omitted)
+                    {
+                        var ur = UpdateStage(gsId, GameSessionStage.SendGame).GetAwaiter().GetResult();
+                        GSSCommon.SendGameGSQ.Add(gsId);
+                    }
+                    else if (res is FailAddToFriend failToAdd)
+                    {
+                        if (failToAdd.AddToFriendStatus == AddToFriendStatus.botsAreBusy)
+                        {
+                            var ur = UpdateStage(gsId, GameSessionStage.WaitToSend).GetAwaiter().GetResult();
+                            GSSCommon.WaitToSendGameGSQ.Add(gsId);
+                        }
+                        else
+                        {
+                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
+                            //var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                        }
+                    }
+                }
+                else if (sender == GSSCommon.CheckFriendGSQ)
+                {
+                    GSSCommon.CheckFriendGSQ.Remove(gsId);
+                    if (res is Added)
+                    {
+                        //WaitToSendGameGSQ.Add(gsId);
+                        var ur = UpdateStage(gsId, GameSessionStage.SendGame).GetAwaiter().GetResult();
+                        GSSCommon.SendGameGSQ.Add(gsId);
+                    }
+                    else if (res is Rejected )
+                    {
+                        var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                    }
+                    else if (res is FailCheckFriendAdded)
+                    {
+                        ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
+                    }
+                }
+                else if (sender == GSSCommon.WaitToSendGameGSQ)
+                {
+                    GSSCommon.WaitToSendGameGSQ.Remove(gsId);
+                    if (res is ReadyToAddToFriend)
+                    {
+                        var ur = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
+                        GSSCommon.AddToFriendGSQ.Add(gsId);
+                    }
+                }
+                else if (sender == GSSCommon.SendGameGSQ)
+                {
+                    GSSCommon.SendGameGSQ.Remove(gsId);
+                    if (res is SendFailed sf)
+                    {
+                        if (sf.ReadyStatus == GameReadyToSendStatus.botsAreBusy)
+                        {
+                            var ur = UpdateStage(gsId, GameSessionStage.WaitToSend).GetAwaiter().GetResult();
+                            GSSCommon.WaitToSendGameGSQ.Add(gsId);
+                        }
+                        else if (sf.ChangeBot)
+                        {
+                            ChangeBotAndRetry(gsId).GetAwaiter().GetResult();
+                        }
+                        else
+                        {
+                            var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                        }
+                    }
+                    else if (res is Sended)
+                    {
+                        var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                    }
+                }
+                else if (sender == GSSCommon.ActivationExpiredGSQ)
+                {
+                    GSSCommon.ActivationExpiredGSQ.Remove(gsId);
+                    GSSCommon.WaitConfirmationGSQ.Remove(gsId);
+                    GSSCommon.AddToFriendGSQ.Remove(gsId);
+                    GSSCommon.CheckFriendGSQ.Remove(gsId);
+                    GSSCommon.SendGameGSQ.Remove(gsId);
+                    GSSCommon.WaitToSendGameGSQ.Remove(gsId);
+
+                    var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                }
+                else
+                {
+                    var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                }
+            }
+        }
+
+        public void Remove(int gsId)
+        {
+            GSSCommon.Remove(gsId);
+        }
+
+        public bool ConfirmProfile(int gsId)
+        {
+            lock (GSSCommon.sync)
+            {
+                var deleted = GSSCommon.WaitConfirmationGSQ.Remove(gsId);
+                var canAdd = GSSCommon.CanAdd(gsId);
+                if (canAdd)
+                {
+                    //var res = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
+                    GSSCommon.AddToFriendGSQ.Add(gsId);
+                }
+
+                return deleted || !canAdd;
+            }
+        }
+
+        public void CheckFriend(int gsId)
+        {
+            lock (GSSCommon.sync)
+            {
+                if (GSSCommon.CanAdd(gsId))
+                {
+                    //var res = UpdateStage(gsId, GameSessionStage.CheckFriend).GetAwaiter().GetResult();
+                    GSSCommon.CheckFriendGSQ.Add(gsId);
+                }
+            }
+        }
+
+
 
         public void RemoveWithStatus(int gsId, GameSessionStatusEnum statusId)
         {
-            lock (sync)
+            lock (GSSCommon.sync)
             {
-                cancelation[gsId] = new CancelationData { IsCanceled = true, StatusId = statusId };
-                WaitConfirmationGSQ.Remove(gsId);
-                AddToFriendGSQ.Remove(gsId);
-                CheckFriendGSQ.Remove(gsId);
-                SendGameGSQ.Remove(gsId);
-                WaitToSendGameGSQ.Remove(gsId);
+                GSSCommon.cancelation[gsId] = new CancelationData { IsCanceled = true, StatusId = statusId };
+                GSSCommon.WaitConfirmationGSQ.Remove(gsId);
+                GSSCommon.AddToFriendGSQ.Remove(gsId);
+                GSSCommon.CheckFriendGSQ.Remove(gsId);
+                GSSCommon.SendGameGSQ.Remove(gsId);
+                GSSCommon.WaitToSendGameGSQ.Remove(gsId);
             }
 
             var _gsRepo = gsr;
@@ -337,7 +372,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.BotId = null;
                 gs.Stage = GameSessionStage.WaitToSend;
                 gs.StatusId = GameSessionStatusEnum.SwitchBot;
-                WaitToSendGameGSQ.Add(gsId);
+                GSSCommon.WaitToSendGameGSQ.Add(gsId);
             }
             else
             {
@@ -372,15 +407,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         //    }
         //}
 
-        private bool CanAdd(int gsId)
-        {
-            return !WaitConfirmationGSQ.Q.ContainsKey(gsId)
-                && !AddToFriendGSQ.Q.ContainsKey(gsId)
-                && !CheckFriendGSQ.Q.ContainsKey(gsId)
-                && !SendGameGSQ.Q.ContainsKey(gsId)
-                && !WaitToSendGameGSQ.Q.ContainsKey(gsId)
-                ;
-        }
+
 
         private async Task<bool> UpdateStage(int gsId, GameSessionStage stage, GameSessionStatusEnum? lastStatusId = null)
         {

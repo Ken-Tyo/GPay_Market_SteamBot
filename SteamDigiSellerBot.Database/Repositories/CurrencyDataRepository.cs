@@ -123,7 +123,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 104, Code = "ARS", SteamSymbol = "$", Position = 104, Name = "Аргентинское песо", CountryCode = "AR" },
         };
 
-        public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, GlobalVault global)
+        public CurrencyDataRepository(IDbContextFactory<DatabaseContext> dbContextFactory, GlobalVault global)
             : base(dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
@@ -141,7 +141,6 @@ namespace SteamDigiSellerBot.Database.Repositories
             return currencyData;
         }
 
-        public DbContext GetContext() => _dbContextFactory.CreateDbContext();
 
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {

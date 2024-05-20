@@ -27,9 +27,9 @@ namespace SteamDigiSellerBot.Services.Implementation
             Init();
         }
 
-        private async void Init()
+        private void Init()
         {
-            await Task.Factory.StartNew(loop);
+            Task.Run(loop);
         }
 
         private async void loop()

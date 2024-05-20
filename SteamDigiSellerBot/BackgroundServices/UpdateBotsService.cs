@@ -24,17 +24,29 @@ namespace SteamDigiSellerBot.Services
         private readonly ILogger<UpdateBotsService> _logger;
         private readonly IDbContextFactory<DatabaseContext> _contextFactory;
 
+        private readonly IBotRepository _botRepository;
+        private readonly IVacGameRepository _vacGameRepository;
+        private readonly ISuperBotPool _superBotPool;
+
         private readonly IServiceProvider _serviceProvider;
         private uint startCount;
         public UpdateBotsService(
             ILogger<UpdateBotsService> logger, 
             IServiceProvider serviceProvider,
-            IDbContextFactory<DatabaseContext> contextFactory)
+            IDbContextFactory<DatabaseContext> contextFactory,
+            IBotRepository botRepository,
+            IVacGameRepository vacGameRepository,
+            ISuperBotPool superBotPool)
         {
             _logger = logger;
 
             _serviceProvider = serviceProvider;
             _contextFactory = contextFactory;
+
+            _botRepository = botRepository;
+            _superBotPool = superBotPool;
+            _vacGameRepository= vacGameRepository;
+
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -47,11 +59,8 @@ namespace SteamDigiSellerBot.Services
                 GC.Collect();
                 _logger.LogInformation("Bot updates started");
                 var scope = _serviceProvider.CreateScope();
-                IBotRepository botRepository = scope.ServiceProvider.GetRequiredService<IBotRepository>();
-                IVacGameRepository vacGameRepository = scope.ServiceProvider.GetRequiredService<IVacGameRepository>();
-                ISuperBotPool superBotPool = scope.ServiceProvider.GetRequiredService<ISuperBotPool>();
 
-                List<Bot> bots = await botRepository.ListAsync(b => b.IsON);
+                List<Bot> bots = await _botRepository.ListAsync(b => b.IsON);
                 var currencyDataRepository = scope.ServiceProvider.GetRequiredService<ICurrencyDataService>();
 
                 //var adminID = _configuration["adminID"];
@@ -60,13 +69,13 @@ namespace SteamDigiSellerBot.Services
 
                 //User user = await _userManager.FindByIdAsync(adminID);
                 CurrencyData currencyData = await currencyDataRepository.GetCurrencyData();
-                List<VacGame> vacCheckList = await vacGameRepository.ListAsync();
-                await using var db = botRepository.GetContext();
+                List<VacGame> vacCheckList = await _vacGameRepository.ListAsync();
+                await using var db = _botRepository.GetContext();
                 foreach (var bot in bots)
                 {
                     try
                     {
-                        var sb = superBotPool.GetById(bot.Id);
+                        var sb = _superBotPool.GetById(bot.Id);
                         if (!sb.IsOk())
                             continue;
 
@@ -76,10 +85,10 @@ namespace SteamDigiSellerBot.Services
                             if (regParseSuc)
                             {
                                 bot.Region = reg;
-                                await botRepository.UpdateFieldAsync(db, bot, b => b.Region);
+                                await _botRepository.UpdateFieldAsync(db, bot, b => b.Region);
 
                                 bot.IsProblemRegion = isProblem;
-                                await botRepository.UpdateFieldAsync(db, bot, b => b.IsProblemRegion);
+                                await _botRepository.UpdateFieldAsync(db, bot, b => b.IsProblemRegion);
                             }
                         }
 
@@ -87,14 +96,14 @@ namespace SteamDigiSellerBot.Services
                         if (balanceFetched)
                         {
                             bot.Balance = balance;
-                            await botRepository.UpdateFieldAsync(db, bot, b => b.Balance);
+                            await _botRepository.UpdateFieldAsync(db, bot, b => b.Balance);
                         }
 
                         (bool, List<Database.Entities.Bot.VacGame>) vacParse = await sb.GetBotVacGames(vacCheckList, bot.Region);
                         if (vacParse.Item1)
                         {
                             bot.VacGames = vacParse.Item2;
-                            await botRepository.UpdateFieldAsync(db, bot, b => b.VacGames);
+                            await _botRepository.UpdateFieldAsync(db, bot, b => b.VacGames);
                         }
 
                         //каждые 3 часа
@@ -109,14 +118,14 @@ namespace SteamDigiSellerBot.Services
                                 bot.State = state;
                                 if (bot.State == BotState.active && bot.TempLimitDeadline > DateTimeOffset.UtcNow.ToUniversalTime())
                                     bot.State = BotState.tempLimit;
-                                await botRepository.UpdateFieldAsync(db, bot, b => b.State);
+                                await _botRepository.UpdateFieldAsync(db, bot, b => b.State);
                             }
                             else
                             {
                                 if (CheckAndReleaseBotFromLimit(bot))
                                 {
                                     bot.State = BotState.active;
-                                    await botRepository.UpdateFieldAsync(db, bot, b => b.State);
+                                    await _botRepository.UpdateFieldAsync(db, bot, b => b.State);
                                     //await botRepository.EditAsync(bot);
                                 }
                             }
@@ -131,11 +140,11 @@ namespace SteamDigiSellerBot.Services
                                     if (bot.SteamCurrencyId is null || bot.SteamCurrencyId != steamCurrencyId)
                                     {
                                         bot.SteamCurrencyId = steamCurrencyId;
-                                        await botRepository.UpdateFieldAsync(db, bot, b => b.SteamCurrencyId);
+                                        await _botRepository.UpdateFieldAsync(db, bot, b => b.SteamCurrencyId);
                                     }
 
                                     bot.SendedGiftsSum = sendedGiftsSum;
-                                    await botRepository.UpdateFieldAsync(db, bot, b => b.SendedGiftsSum);
+                                    await _botRepository.UpdateFieldAsync(db, bot, b => b.SendedGiftsSum);
 
                                     _logger.LogInformation($"BOT {bot.Id} {bot.UserName} - GetSendedGiftsSum - {sendedGiftsSum}, {steamCurrencyId}");
                                 }
@@ -154,7 +163,7 @@ namespace SteamDigiSellerBot.Services
                                 bot.MaxSendedGiftsSum = getMaxSendedRes.MaxSendedGiftsSum;
                                 bot.MaxSendedGiftsUpdateDate = getMaxSendedRes.MaxSendedGiftsUpdateDate;
 
-                                await botRepository.UpdateFieldsAsync(db, bot,
+                                await _botRepository.UpdateFieldsAsync(db, bot,
                                     b => b.IsProblemRegion,
                                     b => b.HasProblemPurchase,
                                     b => b.TotalPurchaseSumUSD, 
@@ -192,13 +201,12 @@ namespace SteamDigiSellerBot.Services
 
         private async void UpdateBotState(CancellationToken stoppingToken)
         {
-            IBotRepository botRepository = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IBotRepository>();
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 GC.Collect();
-                await using var db = botRepository.GetContext();
-                List<Bot> bots = await botRepository.ListAsync(db,
+                await using var db = _botRepository.GetContext();
+                List<Bot> bots = await _botRepository.ListAsync(db,
                     b => b.IsON && b.State == BotState.tempLimit);
 
                 foreach (var bot in bots)
@@ -208,7 +216,7 @@ namespace SteamDigiSellerBot.Services
                         if (CheckAndReleaseBotFromLimit(bot))
                         {
                             bot.State = BotState.active;
-                            await botRepository.UpdateFieldAsync(db, bot, b => b.State);
+                            await _botRepository.UpdateFieldAsync(db, bot, b => b.State);
                         }
                     }
                     catch (Exception ex)

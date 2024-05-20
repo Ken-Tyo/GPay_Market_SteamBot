@@ -21,7 +21,6 @@ namespace SteamDigiSellerBot.Network
 
     public class ProxyPull: IProxyPull
     {
-        private readonly IServiceProvider _serviceProvider;
         private object sync = new object();
         private List<ProxyData> proxyData;
         private TimeSpan Timeout = TimeSpan.FromSeconds(90);
@@ -36,7 +35,6 @@ namespace SteamDigiSellerBot.Network
             ILogger<IProxyPull> logger,
             ISteamProxyRepository proxyRepository)
         {
-            _serviceProvider = serviceProvider;
             _logger = logger;
             _proxyRepository = proxyRepository;
             Init();

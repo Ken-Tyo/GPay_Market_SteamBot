@@ -49,7 +49,7 @@ namespace SteamDigiSellerBot.Network.Services
         private readonly ISuperBotPool _superBotPool;
         private readonly IProxyPull _proxyPull;
         private readonly decimal _errParseValue = 9999;
-        private HashSet<int> notRfBotHS;
+        //private HashSet<int> notRfBotHS;
 
         public SteamNetworkService(
             ILogger<SteamNetworkService> logger,
@@ -74,7 +74,7 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
-                notRfBotHS = new HashSet<int>();
+                var notRfBotHS = new HashSet<int>();
                 HttpRequest request = CreateBaseHttpRequest();
 
                 var gamesList = await db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToListAsync();
@@ -304,7 +304,6 @@ namespace SteamDigiSellerBot.Network.Services
 
         public Task UpdateDiscountTimersAndIsBundleField(string appId, DatabaseContext db, List<Game> gamesList, int tries = 10)
         {
-            notRfBotHS = new HashSet<int>();
             HttpRequest request = CreateBaseHttpRequest();
             return UpdateDiscountTimersAndIsBundleField(request, appId, db, gamesList, tries);
         }
@@ -337,6 +336,7 @@ namespace SteamDigiSellerBot.Network.Services
                     if (s.Contains("id=\"error_box\"") || editions.Length == 0)
                     //Данный товар недоступен в вашем регионе
                     {
+                        var notRfBotHS= new HashSet<int>();
                         var gamesCurrs = gamesList.Select(x => x.SteamCurrencyId).Distinct().ToList();
                         var notRfBots = (await db.Bots.Where(b => b.Region.ToUpper() != "RU" && b.IsON).ToListAsync())
                             .OrderByDescending(x=> gamesCurrs.Contains(x.SteamCurrencyId ?? 0)).ThenBy(x=> Guid.NewGuid()).ToList();

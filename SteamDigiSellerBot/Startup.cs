@@ -43,16 +43,16 @@ namespace SteamDigiSellerBot
             services.AddTransient<IUserDBRepository, UserDBRepository>();
             services.AddTransient<ISteamCountryCodeRepository, SteamCountryCodeRepository>();
             services.AddTransient<IGameSessionStatusLogRepository, GameSessionStatusLogRepository>();
-
-            services.AddScoped<ICryptographyUtilityService, CryptographyUtilityService>();
-
-            services.AddScoped<ISteamNetworkService, SteamNetworkService>();
-            services.AddScoped<IDigiSellerNetworkService, DigiSellerNetworkService>();
-            services.AddScoped<IItemNetworkService, ItemNetworkService>();
-            services.AddScoped<IGameSessionService, GameSessionService>();
             services.AddTransient<IGamePriceRepository, GamePriceRepository>();
 
-            services.AddScoped<ICurrencyDataService, CurrencyDataService>();
+            services.AddSingleton<ICryptographyUtilityService, CryptographyUtilityService>();
+
+            services.AddSingleton<ISteamNetworkService, SteamNetworkService>();
+            services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();
+            services.AddSingleton<IItemNetworkService, ItemNetworkService>();
+            services.AddSingleton<ICurrencyDataService, CurrencyDataService>();
+
+            services.AddSingleton<IGameSessionService, GameSessionService>();
 
 #if !DEBUG
             services.AddHostedService<UpdateExchangeRatesService>();
@@ -64,6 +64,7 @@ namespace SteamDigiSellerBot
             services.AddSingleton<ISuperBotPool, SuperBotPool>();
             services.AddSingleton<IProxyPull, ProxyPull>();
             services.AddSingleton<IWsNotificationSender, WsNotificationSender>();
+            services.AddSingleton<GameSessionCommon>();
             services.AddSingleton<GameSessionManager>();
 
             services.AddAutoMapper(typeof(Startup));

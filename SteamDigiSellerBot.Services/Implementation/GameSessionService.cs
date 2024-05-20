@@ -34,13 +34,13 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IBotRepository _botRepository;
         private readonly ISuperBotPool _botPool;
         private readonly IWsNotificationSender _wsNotifSender;
-        private readonly GameSessionManager _gameSessionManager;
         private readonly ICurrencyDataService _currencyDataService;
         private readonly ISteamCountryCodeRepository _steamCountryCodeRepository;
         private readonly IUserDBRepository _userDBRepository;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly IGameSessionStatusLogRepository _gameSessionStatusLogRepository;
         private readonly ILogger<GameSessionService> _logger;
+        private GameSessionCommon _gameSessionManager { get; set; }
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -48,7 +48,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             IBotRepository botRepository,
             ISuperBotPool botPoolService,
             IWsNotificationSender wsNotificationSender,
-            GameSessionManager gameSessionManager,
+            GameSessionCommon gameSessionManager,
             ICurrencyDataService currencyDataService,
             ISteamCountryCodeRepository steamCountryCodeRepository,
             IUserDBRepository userDBRepository,
