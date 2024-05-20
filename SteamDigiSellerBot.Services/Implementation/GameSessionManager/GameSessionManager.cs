@@ -30,6 +30,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IGameSessionService gss;
         public GameSessionManager(ILogger<GameSessionManager> logger,
             IGameSessionRepository gsr,
+            IGameSessionService gss,
             IServiceProvider sp)
         {
             //using var scope = sp.CreateScope();
