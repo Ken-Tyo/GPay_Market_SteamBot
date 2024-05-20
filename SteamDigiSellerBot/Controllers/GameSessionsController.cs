@@ -34,6 +34,8 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly IGameSessionStatusRepository _gameSessionStatusRepository;
         private readonly IGameSessionService _gameSessionService;
+        private readonly ISuperBotPool _botPool;
+        private readonly ISteamNetworkService _steamNetworkService;
 
         private readonly ICurrencyDataService _currencyDataService;
         private readonly IWsNotificationSender _wsNotifSender;
@@ -51,10 +53,12 @@ namespace SteamDigiSellerBot.Controllers
             ICurrencyDataService currencyDataService,
             IGameSessionService gameSessionService,
             IWsNotificationSender wsNotificationSender,
+            ISuperBotPool botPool,
             IHubContext<AdminHub> hub,
             IUserDBRepository userDBRepository,
             GameSessionManager gameSessionManager,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
+            ISteamNetworkService steamNetworkService,
             ILogger<GameSessionsController> logger)
         {
             _mapper = mapper;
@@ -68,6 +72,8 @@ namespace SteamDigiSellerBot.Controllers
             _hub = hub;
             _userDBRepository = userDBRepository;
             _gameSessionManager = gameSessionManager;
+            _botPool=botPool;
+            _steamNetworkService = steamNetworkService;
             this.gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             this.logger = logger;
         }

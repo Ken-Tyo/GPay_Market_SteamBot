@@ -34,6 +34,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IBotRepository _botRepository;
         private readonly ILogger<ItemsController> _logger;
+        private readonly IDigiSellerNetworkService _digiSellerNetworkService;
 
         public ItemsController(
             IItemRepository itemRepository, 
@@ -42,10 +43,11 @@ namespace SteamDigiSellerBot.Controllers
             UserManager<User> userManager,
             ICurrencyDataService currencyDataService,
             IBotRepository botRepository,
-            ILogger<ItemsController> logger)
+            ILogger<ItemsController> logger,
+            IDigiSellerNetworkService digiSellerNetwork)
         {
             _itemRepository = itemRepository;
-            
+            _digiSellerNetworkService = digiSellerNetwork;
             _itemNetworkService = itemNetworkService;
 
             _currencyDataService = currencyDataService;
