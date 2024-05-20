@@ -168,11 +168,12 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (bot != null)
                 {
-                    var gameSessions = await _gameSessionRepository.ListAsync(gs => gs.Bot.Id == bot.Id);
+                    await using var db = _gameSessionRepository.GetContext();
+                    var gameSessions = await _gameSessionRepository.ListAsync(db, gs => gs.Bot.Id == bot.Id);
                     foreach (var gs in gameSessions)
                     {
                         gs.Bot = null;
-                        await _gameSessionRepository.EditAsync(gs);
+                        await _gameSessionRepository.EditAsync(db, gs);
                     }
 
                     await _botSendGameAttemptsRepository.DeleteListAsync(bot.SendGameAttempts);
@@ -187,7 +188,8 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("bots/regionsettings")]
         public async Task<IActionResult> SaveRegionSettings(EditBotRegionSettings req)
         {
-            var bot = await _steamBotRepository.GetByIdAsync(req.BotId);
+            await using var db = _steamBotRepository.GetContext();
+            var bot = await _steamBotRepository.GetByIdAsync(db, req.BotId);
             bot.BotRegionSetting = new BotRegionSetting
             {
                 GiftSendSteamCurrencyId = req.GiftSendSteamCurrencyId,
@@ -215,7 +217,7 @@ namespace SteamDigiSellerBot.Controllers
 
             if (superBot.IsOk())
             {
-                await _steamBotRepository.EditAsync(bot);
+                await _steamBotRepository.EditAsync(db, bot);
                 _botPool.Update(bot);
                 return Ok();
             }
@@ -232,13 +234,14 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (req.BotId > 0)
             {
-                Bot bot = await _steamBotRepository.GetByIdAsync(req.BotId);
+                await using var db = _steamBotRepository.GetContext();
+                Bot bot = await _steamBotRepository.GetByIdAsync(db, req.BotId);
 
                 if (bot != null)
                 {
                     bot.IsON = req.IsON;
 
-                    await _steamBotRepository.EditAsync(bot);
+                    await _steamBotRepository.EditAsync(db, bot);
                     if (bot.IsON)
                     {
                         _botPool.Add(bot);

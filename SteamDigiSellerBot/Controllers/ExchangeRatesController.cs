@@ -60,7 +60,8 @@ namespace SteamDigiSellerBot.Controllers
             await _currencyDataService.UpdateCurrencyDataManual(curData);
 
             curData = await _currencyDataService.GetCurrencyData();
-            var bots = await _steamBotRepository.ListAsync(b => b.IsON);
+            await using var db = _steamBotRepository.GetContext();
+            var bots = await _steamBotRepository.ListAsync(db, b => b.IsON);
             foreach (var bot in bots)
             {
                 var sb = _superBotPool.GetById(bot.Id);
@@ -76,7 +77,7 @@ namespace SteamDigiSellerBot.Controllers
                     bot.MaxSendedGiftsSum = getMaxSendedRes.MaxSendedGiftsSum;
                     bot.MaxSendedGiftsUpdateDate = getMaxSendedRes.MaxSendedGiftsUpdateDate;
                 }
-                await _steamBotRepository.EditAsync(bot);
+                await _steamBotRepository.EditAsync(db,bot);
                 _superBotPool.Update(bot);
             }
 

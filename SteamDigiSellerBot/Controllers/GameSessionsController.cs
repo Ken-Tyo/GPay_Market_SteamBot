@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.SignalR;
 using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.Network;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -132,7 +133,8 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/setstatus")]
         public async Task<IActionResult> SetGameSessionStatus(SetGameSesStatusRequest req)
         {
-            GameSession gs = await _gameSessionRepository.GetByIdAsync(req.GameSessionId);
+            await using var db = _gameSessionRepository.GetContext();
+            GameSession gs = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
             if (req.StatusId == GameSessionStatusEnum.Done || req.StatusId == GameSessionStatusEnum.Closed)
             {
                 _gameSessionManager.RemoveWithStatus(gs.Id, req.StatusId);
@@ -142,7 +144,7 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             gs.StatusId = req.StatusId;
-            await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
+            await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
             await gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
             {
                 GameSessionId = gs.Id,
@@ -215,12 +217,13 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
         {
-            GameSession gameSession = await _gameSessionRepository.GetByIdAsync(req.GameSessionId);
+            using var db = _gameSessionRepository.GetContext();
+            GameSession gameSession = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
             if (gameSession == null)
                 return BadRequest();
 
             gameSession.Comment = req.Comment;
-            await _gameSessionRepository.EditAsync(gameSession);
+            await _gameSessionRepository.EditAsync(db, gameSession);
 
             return Ok();
         }
@@ -301,9 +304,9 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
-
+            await using var db = _gameSessionRepository.GetContext();
             var gs =
-                await _gameSessionRepository.GetByPredicateAsync(x => x.UniqueCode.Equals(req.Uniquecode));
+                await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(req.Uniquecode));
 
             if (gs == null)
             {
@@ -316,7 +319,7 @@ namespace SteamDigiSellerBot.Controllers
 
             gs.Stage = GameSessionStage.AddToFriend;
             gs.AutoSendInvitationTime = null;
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
 
@@ -346,9 +349,9 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
-
+            await using var db = _gameSessionRepository.GetContext();
             var gs =
-                await _gameSessionRepository.GetByPredicateAsync(x => x.UniqueCode.Equals(req.Uniquecode));
+                await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(req.Uniquecode));
             if (gs == null)
             {
                 ModelState.AddModelError("", "такой заказ не найден");
@@ -368,7 +371,7 @@ namespace SteamDigiSellerBot.Controllers
 
             gs.StatusId = GameSessionStatusEnum.RequestSent;//Заявка отправлена
             gs.Stage = GameSessionStage.CheckFriend;
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             _gameSessionManager.CheckFriend(gs.Id);
 
             return Ok();

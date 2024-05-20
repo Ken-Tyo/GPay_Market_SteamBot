@@ -1,4 +1,5 @@
 ﻿using DatabaseRepository.Repositories;
+using Microsoft.EntityFrameworkCore;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 
@@ -11,8 +12,8 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class BotSendGameAttemptsRepository : BaseRepository<BotSendGameAttempts>, IBotSendGameAttemptsRepository
     {
-        public BotSendGameAttemptsRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        public BotSendGameAttemptsRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
 
         }

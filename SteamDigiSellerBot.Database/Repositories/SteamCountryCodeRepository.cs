@@ -19,19 +19,20 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class SteamCountryCodeRepository : BaseRepository<SteamCountryCode>, ISteamCountryCodeRepository
     {
-        private readonly DatabaseContext _databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> dbContextFactory;
         private readonly ICurrencyDataRepository _currencyDataRepository;
         public SteamCountryCodeRepository(
-            DatabaseContext databaseContext, 
+            IDbContextFactory<DatabaseContext> dbContextFactory, 
             ICurrencyDataRepository currencyDataRepository) 
-            : base(databaseContext)
+            : base(dbContextFactory)
         {
-            _databaseContext = databaseContext;
+            this.dbContextFactory = dbContextFactory;
             _currencyDataRepository = currencyDataRepository;
         }
 
         private async Task<List<SteamCountryCode>> InitSteamCounrtyCodes()
         {
+            await using var _databaseContext = dbContextFactory.CreateDbContext();
             var codes = await _databaseContext.SteamCountryCodes.ToListAsync();
             if (codes != null && codes.Count > 0)
                 return codes;

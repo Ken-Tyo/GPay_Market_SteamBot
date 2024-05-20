@@ -18,7 +18,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class VacGameRepository : BaseRepository<VacGame>, IVacGameRepository
     {
-        private readonly DatabaseContext _databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> dbContextFactory;
 
         private readonly List<VacGame> _initGames = new List<VacGame>
         {
@@ -29,16 +29,17 @@ namespace SteamDigiSellerBot.Database.Repositories
             new VacGame{ Name = "Tom Clancy's Rainbow Six Siege", AppId = "377560", SubId = "88521" },
         };
 
-        public VacGameRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        public VacGameRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
-            _databaseContext = databaseContext;
+            this.dbContextFactory = dbContextFactory;
 
             InitVacGames().GetAwaiter().GetResult();
         }
 
         private async Task InitVacGames()
         {
+            await using var _databaseContext = dbContextFactory.CreateDbContext();
             var vacGames = await _databaseContext.VacGames.FirstOrDefaultAsync();
 
             if (vacGames == null)

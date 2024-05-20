@@ -18,14 +18,13 @@ namespace SteamDigiSellerBot.Database.Repositories
     public interface ICurrencyDataRepository : IBaseRepository<CurrencyData>
     {
         Task<CurrencyData> GetCurrencyData(bool useCache = false);
-        Task UpdateCurrencyDataManual(CurrencyData newCurrencyData);
+        Task UpdateCurrencyDataManual( CurrencyData newCurrencyData);
         Task UpdateCurrencyData(CurrencyData currencyData);
         Task<Dictionary<int, Currency>> GetCurrencyDictionary(bool useCache = false);
     }
 
     public class CurrencyDataRepository : BaseRepository<CurrencyData>, ICurrencyDataRepository
     {
-        private readonly DatabaseContext _databaseContext;
         private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
         //private readonly ISteamProxyRepository _steamProxyRepository;
@@ -125,9 +124,8 @@ namespace SteamDigiSellerBot.Database.Repositories
         };
 
         public CurrencyDataRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory, GlobalVault global)
-            : base(databaseContext)
+            : base(dbContextFactory)
         {
-            _databaseContext = databaseContext;
             _dbContextFactory = dbContextFactory;
 
             //_steamProxyRepository = steamProxyRepository;
@@ -142,6 +140,8 @@ namespace SteamDigiSellerBot.Database.Repositories
             currencyData.Currencies = currencyData.Currencies.OrderBy(c => c.Position).ToList();
             return currencyData;
         }
+
+        public DbContext GetContext() => _dbContextFactory.CreateDbContext();
 
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {
@@ -189,8 +189,8 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
-
-            await _databaseContext.SaveChangesAsync();
+            await EditAsync(currencyData);
+            //await context.SaveChangesAsync();
         }
 
         public async Task UpdateCurrencyDataManual(CurrencyData newCurrencyData)
@@ -208,8 +208,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
-
-            await _databaseContext.SaveChangesAsync();
+            await EditAsync(currencyData);
         }
 
         public async Task<Dictionary<int, Currency>> GetCurrencyDictionary(bool useCache = false)

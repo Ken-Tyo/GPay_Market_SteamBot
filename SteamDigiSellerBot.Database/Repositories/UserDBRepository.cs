@@ -1,4 +1,5 @@
 ﻿using DatabaseRepository.Repositories;
+using Microsoft.EntityFrameworkCore;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using System.Threading.Tasks;
@@ -13,8 +14,8 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class UserDBRepository : BaseRepository<UserDB>, IUserDBRepository
     {
-        public UserDBRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        public UserDBRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
 
         }

@@ -133,7 +133,8 @@ namespace SteamDigiSellerBot.Controllers
             {
                 lock(obj)
                 {
-                    gs = _gameSessionRepository.GetByPredicateAsync(x => x.UniqueCode.Equals(uniquecode)).Result;
+                    using var db = _gameSessionRepository.GetContext();
+                    gs = _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode)).Result;
 
                     if (gs == null)
                     {
@@ -149,7 +150,7 @@ namespace SteamDigiSellerBot.Controllers
                     && gs.DaysExpiration.HasValue)
                     {
                         gs.ActivationEndDate = DateTimeOffset.UtcNow.AddDays(gs.DaysExpiration.Value);
-                        _gameSessionRepository.EditAsync(gs).Wait();
+                        _gameSessionRepository.EditAsync(db, gs).Wait();
                     }
 
                     if (isCorrectCode)

@@ -23,16 +23,16 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
     {
-        private readonly DatabaseContext db;
-
-        public ItemRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        private IDbContextFactory<DatabaseContext> dbContextFactory;
+        public ItemRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
-            db = databaseContext;
+            this.dbContextFactory = dbContextFactory;
         }
 
         public async Task<List<Item>> GetSortedItems()
         {
+            await using var db = dbContextFactory.CreateDbContext();
             List<Item> items = await db.Items
                 .AsNoTracking()
                 .Include(i => i.GamePrices)
@@ -48,6 +48,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task UpdateGamePrices(List<GamePrice> gamePrices)
         {
+            await using var db = dbContextFactory.CreateDbContext();
             foreach (var p in gamePrices)
             {
                 db.Entry(p).State = p.Id == 0 ? EntityState.Added : EntityState.Modified;
@@ -58,6 +59,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<Item> GetWithAllPrices(int itemId)
         {
+            await using var db = dbContextFactory.CreateDbContext();
             return await db.Items
                 .Include(i => i.GamePrices)
                 .Where(i => i.Id == itemId)
@@ -66,6 +68,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<List<Item>> ListIncludePricesAsync(Expression<Func<Item, bool>> predicate)
         {
+            await using var db = dbContextFactory.CreateDbContext();
             return await db.Items
                 .Include(i => i.GamePrices)
                 .Where(predicate).ToListAsync();
@@ -73,6 +76,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<bool> DeleteItemAsync(Item item)
         {
+            await using var db = dbContextFactory.CreateDbContext();
             item.IsDeleted = true;
             db.Entry(item).Property(i => i.IsDeleted).IsModified = true;
             await db.SaveChangesAsync();
@@ -81,7 +85,8 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items)
         {
-            foreach(var item in items)
+            await using var db = dbContextFactory.CreateDbContext();
+            foreach (var item in items)
             {
                 item.Active = false;
                 item.IsPriceParseError = true;
@@ -95,6 +100,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<Item> GetByAppIdAndSubId(string appId, string subId)
         {
+            await using var db = dbContextFactory.CreateDbContext();
             return await db.Items.FirstOrDefaultAsync(i => i.AppId == appId && i.SubId == subId);
         }
     }

@@ -146,8 +146,9 @@ namespace SteamDigiSellerBot.Services.Implementation
     
         public async Task<GameSession> ResetSteamContact(string uniquecode)
         {
+            await using var db = _gameSessionRepository.GetContext();
             var gs =
-                await _gameSessionRepository.GetByPredicateAsync(x => x.UniqueCode.Equals(uniquecode));
+                await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode));
 
             if (gs == null)
                 return null;
@@ -210,7 +211,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
             });
             gs.BotSwitchList = new();
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db,gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
 
             return gs;
@@ -272,9 +273,10 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (res)
             {
-                var trackedGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
+                using var db = _gameSessionRepository.GetContext();
+                var trackedGs = await _gameSessionRepository.GetByIdAsync(db,gs.Id);
                 trackedGs.StatusId = newStatus;
-                await _gameSessionRepository.UpdateFieldAsync(trackedGs, gs => gs.StatusId);
+                await _gameSessionRepository.UpdateFieldAsync(db,trackedGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
                     GameSessionId = gs.Id,
@@ -633,9 +635,10 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<AddToFriendStatus> AddToFriend(GameSession gs)
         {
+            await using var db = _gameSessionRepository.GetContext();
             var user = await _userDBRepository.GetByIdAsync(gs.UserId);
             gs.AutoSendInvitationTime = null;
-            await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.AutoSendInvitationTime);
+            await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.AutoSendInvitationTime);
 
             //находим бота
             var (getBotRes, filter, superBot) = await GetBotForSendGame(gs);
@@ -645,8 +648,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.BotId = null;
                 gs.Bot = null;
 
-                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
-                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotId);
+                await _gameSessionRepository.UpdateFieldsAsync(db, gs, gs => gs.StatusId, gs=> gs.BotId);
+
 
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -671,8 +674,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.BotId = null;
                 gs.Bot = null;
 
-                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
-                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotId);
+                await _gameSessionRepository.UpdateFieldsAsync(db, gs, gs => gs.StatusId, gs => gs.BotId);
 
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -688,7 +690,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             else if (getBotRes == GetBotForSendGameStatus.botLoginErr)
             {
                 gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
-                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
+                await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
 
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
@@ -711,7 +713,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var bot = await _botRepository.GetByIdAsync(superBot.Bot.Id);
             gs.Bot = bot;
             gs.BotId = bot.Id;
-            await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotId);
+            await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BotId);
 
             bool isError = false;
 
@@ -781,7 +783,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //if (gs.StatusId != 18)
             //gs.GameSessionStatusLogs.Add(log);
             await _gameSessionStatusLogRepository.AddAsync(log);
-            await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
+            await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
             //await _gameSessionRepository.EditAsync(gs);
             await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
 
@@ -1009,11 +1011,12 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<GameReadyToSendStatus> CheckReadyToSendGameAndHandle(GameSession gs, bool writeReadyLog = false)
         {
+            await using var db = _gameSessionRepository.GetContext();
             async Task createErrLog(GameSession gs, string mes)
             {
                 //var gs = gs;// await _gameSessionRepository.GetByIdAsync(gsId);
                 gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
-                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
+                await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
                     GameSessionId = gs.Id,
@@ -1096,7 +1099,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
                 var curGs = gs;
                 curGs.StatusId = GameSessionStatusEnum.BotNotFound;//Бот не найден
-                await _gameSessionRepository.UpdateFieldAsync(curGs, gs => gs.StatusId);
+                await _gameSessionRepository.UpdateFieldAsync(db, curGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
                     GameSessionId = curGs.Id,
@@ -1118,7 +1121,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
                 var curGs = gs;
                 curGs.StatusId = GameSessionStatusEnum.Queue;//Очередь
-                await _gameSessionRepository.UpdateFieldAsync(curGs, gs => gs.StatusId);
+                await _gameSessionRepository.UpdateFieldAsync(db, curGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
                     GameSessionId = curGs.Id,
@@ -1160,7 +1163,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);
                 var curGs = gs;
                 curGs.StatusId = GameSessionStatusEnum.SendingGame;//Отправка игры
-                await _gameSessionRepository.UpdateFieldAsync(curGs, gs => gs.StatusId);
+                await _gameSessionRepository.UpdateFieldAsync(db, curGs, gs => gs.StatusId);
                 await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
                 {
                     GameSessionId = curGs.Id,

@@ -15,12 +15,12 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class GameSessionStatusRepository : BaseRepository<GameSessionStatus>, IGameSessionStatusRepository
     {
-        private readonly DatabaseContext _databaseContext;
+        private IDbContextFactory<DatabaseContext> dbContextFactory;
 
-        public GameSessionStatusRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        public GameSessionStatusRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
-            _databaseContext = databaseContext;
+            this.dbContextFactory = dbContextFactory;
         }
 
         //#E13F29 - красный
@@ -54,6 +54,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         private async Task<List<GameSessionStatus>> InitGameSessionStatuses()
         {
+            await using var _databaseContext = dbContextFactory.CreateDbContext();
             var statuses = await _databaseContext.GameSessionStatuses.ToListAsync();
             if (statuses.Count == InitData.Count)
                 return statuses;

@@ -257,14 +257,15 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/bulk/change"), ValidationActionFilter]
         public async Task<IActionResult> BulkChangeAction(BulkActionRequest request)
         {
+            await using var db = _itemRepository.GetContext();
             HashSet<int> idHashSet = request.Ids?.ToHashSet() ?? new HashSet<int>();
             List<Item> items = await _itemRepository
-                .ListAsync(i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
+                .ListAsync(db, i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
 
             foreach (Item item in items)
             {
                 item.SteamPercent = request.SteamPercent;
-                await _itemRepository.UpdateFieldAsync(item, i => i.SteamPercent);
+                await _itemRepository.UpdateFieldAsync(db, item, i => i.SteamPercent);
             }
 
             User user = await _userManager.GetUserAsync(User);
@@ -326,6 +327,7 @@ namespace SteamDigiSellerBot.Controllers
 
         public async Task<IActionResult> SetActive(string ids)
         {
+            await using var db = _itemRepository.GetContext();
             var idList = new string[0];
             if (!string.IsNullOrEmpty(ids))
                 idList = ids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -338,11 +340,11 @@ namespace SteamDigiSellerBot.Controllers
             if (idList.Length >= 1)
             {
                 HashSet<int> idsHashSet = idList.Select(i => int.Parse(i)).ToHashSet();
-                items = await _itemRepository.ListAsync(i => idsHashSet.Contains(i.Id) && !i.IsDeleted);
+                items = await _itemRepository.ListAsync(db, i => idsHashSet.Contains(i.Id) && !i.IsDeleted);
             }
             else
             {
-                items = await _itemRepository.ListAsync(i => !i.IsDeleted);
+                items = await _itemRepository.ListAsync(db, i => !i.IsDeleted);
             }
 
             User user = await _userManager.GetUserAsync(User);
@@ -353,7 +355,7 @@ namespace SteamDigiSellerBot.Controllers
 #if !DEBUG
                 await _digiSellerNetworkService.SetDigiSellerItemsCondition(item.DigiSellerIds, item.Active, user.Id);
 #endif
-                await _itemRepository.UpdateFieldAsync(item, i => i.Active);
+                await _itemRepository.UpdateFieldAsync(db, item, i => i.Active);
             }
 
             return Ok();

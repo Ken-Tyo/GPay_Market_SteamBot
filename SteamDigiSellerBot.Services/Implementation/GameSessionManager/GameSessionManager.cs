@@ -313,7 +313,8 @@ namespace SteamDigiSellerBot.Services.Implementation
         public async Task ChangeBotAndRetry(int gsId)
         {
             var _gsRepo = gsr;
-            var gs= await _gsRepo.GetByIdAsync(gsId);
+            await using var db = _gsRepo.GetContext();
+            var gs= await _gsRepo.GetByIdAsync(db, gsId);
             gs.BotSwitchList ??= new();
             if (gs.BotId!=null)
                 gs.BotSwitchList.Add(gs.BotId.Value);
@@ -355,7 +356,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 });
                 gs.Stage = GameSessionStage.Done;
             }
-            await _gsRepo.EditAsync(gs);
+            await _gsRepo.EditAsync(db,gs);
         }
 
         //public void RemoveWithDone(int gsId)

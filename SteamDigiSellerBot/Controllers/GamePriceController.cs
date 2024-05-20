@@ -45,26 +45,28 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/price/{gpId}/{newPrice}"), ValidationActionFilter]
         public async Task<IActionResult> SetItemPrice(int gpId, decimal newPrice)
         {
-            var gp = await _gamePriceRepository.GetByIdAsync(gpId);
+            using var db = _gamePriceRepository.GetContext();
+            var gp = await _gamePriceRepository.GetByIdAsync(db, gpId);
             if (gp == null)
                 return NotFound();
 
             gp.IsManualSet = newPrice > 0;
             gp.OriginalSteamPrice = gp.CurrentSteamPrice =
                 await _currencyDataService.ConvertRUBto(newPrice, gp.SteamCurrencyId);
-            await _gamePriceRepository.EditAsync(gp);
+            await _gamePriceRepository.EditAsync(db, gp);
             return Ok();
         }
 
         [HttpPost, Route("items/price/{gpId}/priority"), ValidationActionFilter]
         public async Task<IActionResult> SetItemPricePriority(int gpId)
         {
-            var gp = await _gamePriceRepository.GetByIdAsync(gpId);
+            await using var db= _gamePriceRepository.GetContext();
+            var gp = await _gamePriceRepository.GetByIdAsync(db, gpId);
             if (gp == null)
                 return NotFound();
 
             gp.IsPriority = !gp.IsPriority;
-            await _gamePriceRepository.EditAsync(gp);
+            await _gamePriceRepository.EditAsync(db, gp);
             return Ok();
         }
     }

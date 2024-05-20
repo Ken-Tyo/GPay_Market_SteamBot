@@ -26,6 +26,7 @@ namespace SteamDigiSellerBot.Controllers
         [Route("user/edit/digiseller")]
         public async Task<IActionResult> EditDigisellerData(EditDigisellerDataRequest request)
         {
+            await using var db = _userDBRepository.GetContext();
             User user = await _userManager.GetUserAsync(User);
             var u = await _userDBRepository.GetByAspNetUserId(user.Id);
 
@@ -36,7 +37,7 @@ namespace SteamDigiSellerBot.Controllers
             u.DigisellerApiKey = request.DigisellerApiKey;
 
             await _userManager.UpdateAsync(user);
-            await _userDBRepository.EditAsync(u);
+            await _userDBRepository.EditAsync(db, u);
 
             return Ok();
         }

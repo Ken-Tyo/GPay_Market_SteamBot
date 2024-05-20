@@ -18,19 +18,20 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class SteamProxyRepository : BaseRepository<SteamProxy>, ISteamProxyRepository
     {
-        private readonly DatabaseContext _databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> _databaseContextFactory;
 
         private static readonly Random _random = new Random();
 
-        public SteamProxyRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        public SteamProxyRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
-            _databaseContext = databaseContext;
+            _databaseContextFactory = dbContextFactory;
         }
 
         public async Task<SteamProxy> GetRandomProxy()
         {
-            List<SteamProxy> steamProxies = await _databaseContext.SteamProxies.ToListAsync();
+            await using var db = _databaseContextFactory.CreateDbContext();
+            List<SteamProxy> steamProxies = await db.SteamProxies.ToListAsync();
 
             int count = steamProxies.Count;
 
@@ -48,7 +49,8 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task<int> GetTotalCount()
         {
-            return await _databaseContext.SteamProxies.CountAsync();
+            await using var db = _databaseContextFactory.CreateDbContext();
+            return await db.SteamProxies.CountAsync();
         }
     }
 }

@@ -35,13 +35,11 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class GameSessionRepository : BaseRepositoryEx<GameSession>, IGameSessionRepository
     {
-        private readonly DatabaseContext db;
         private readonly IDbContextFactory<DatabaseContext> _dbContextFactory;
 
-        public GameSessionRepository(DatabaseContext databaseContext, IDbContextFactory<DatabaseContext> dbContextFactory)
-            : base(databaseContext)
+        public GameSessionRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
-            db = databaseContext;
             _dbContextFactory = dbContextFactory;
         }
 
@@ -163,6 +161,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task UpdateQueueInfo(GameSession gs)
         {
+            await using var db= _dbContextFactory.CreateDbContext();
             db.Attach(gs);
             db.Entry(gs).Property(gs => gs.QueuePosition).IsModified = true;
             db.Entry(gs).Property(gs => gs.QueueWaitingMinutes).IsModified = true;

@@ -15,17 +15,18 @@ namespace SteamDigiSellerBot.Database.Repositories
 
     public class GamePriceRepository : BaseRepository<GamePrice>, IGamePriceRepository
     {
-        private readonly DatabaseContext databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> dbContextFactory;
 
-        public GamePriceRepository(DatabaseContext databaseContext)
-            : base(databaseContext)
+        public GamePriceRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+            : base(dbContextFactory)
         {
-            this.databaseContext = databaseContext;
+            this.dbContextFactory = dbContextFactory;
         }
 
         public async Task<List<GamePrice>> GetPricesByGameIdAndSteamCurrId(List<int> games)
         {
-            return await databaseContext
+            await using var db = dbContextFactory.CreateDbContext();
+            return await db
                 .GamePrices
                 .Include(gp => gp.Game)
                 .Where(gp => games.Contains(gp.GameId) && gp.Game.SteamCurrencyId == gp.SteamCurrencyId)
