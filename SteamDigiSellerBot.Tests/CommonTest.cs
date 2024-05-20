@@ -129,7 +129,7 @@ namespace SteamDigiSellerBot.Tests
                 CurrencyDataRepository.DefaultSteamCurrencies.ToDictionary(p => p.SteamId));
 
             cdrMock = new Mock<ICurrencyDataRepository>();
-            cdrMock.Setup(r => r.GetCurrencyData().Result).Returns(new CurrencyData { Currencies = CurrencyDataRepository.DefaultSteamCurrencies });
+            cdrMock.Setup(r => r.GetCurrencyData(false).Result).Returns(new CurrencyData { Currencies = CurrencyDataRepository.DefaultSteamCurrencies });
 
             loggerMock = new Mock<ILogger<GameSessionService>>();
             gsrMock = new Mock<IGameSessionRepository>();

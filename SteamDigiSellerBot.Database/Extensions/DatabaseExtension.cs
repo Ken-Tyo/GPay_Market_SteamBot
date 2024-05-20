@@ -22,7 +22,7 @@ namespace SteamDigiSellerBot.Database.Extensions
                 options.UseLazyLoadingProxies()
                        .UseNpgsql(configuration.GetConnectionString(connection)));
 
-            services.AddScoped<DatabaseContext>(p => p
+            services.AddTransient<DatabaseContext>(p => p
                 .GetRequiredService<IDbContextFactory<DatabaseContext>>()
                 .CreateDbContext());
 

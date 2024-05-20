@@ -31,17 +31,17 @@ namespace SteamDigiSellerBot
             services.AddDatabaseWithIdentity(Configuration);
             services.AddSingleton<GlobalVault>();
 
-            services.AddScoped<IBotRepository, BotRepository>();
-            services.AddScoped<IBotSendGameAttemptsRepository, BotSendGameAttemptsRepository>();
-            services.AddScoped<IVacGameRepository, VacGameRepository>();
-            services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddTransient<IBotRepository, BotRepository>();
+            services.AddTransient<IBotSendGameAttemptsRepository, BotSendGameAttemptsRepository>();
+            services.AddTransient<IVacGameRepository, VacGameRepository>();
+            services.AddTransient<IItemRepository, ItemRepository>();
+            services.AddTransient<IGameRepository, GameRepository>();
             services.AddTransient<IGameSessionRepository, GameSessionRepository>();
-            services.AddScoped<IGameSessionStatusRepository, GameSessionStatusRepository>();
-            services.AddScoped<ISteamProxyRepository, SteamProxyRepository>();
-            services.AddScoped<ICurrencyDataRepository, CurrencyDataRepository>();
-            services.AddScoped<IUserDBRepository, UserDBRepository>();
-            services.AddScoped<ISteamCountryCodeRepository, SteamCountryCodeRepository>();
+            services.AddTransient<IGameSessionStatusRepository, GameSessionStatusRepository>();
+            services.AddTransient<ISteamProxyRepository, SteamProxyRepository>();
+            services.AddTransient<ICurrencyDataRepository, CurrencyDataRepository>();
+            services.AddTransient<IUserDBRepository, UserDBRepository>();
+            services.AddTransient<ISteamCountryCodeRepository, SteamCountryCodeRepository>();
             services.AddTransient<IGameSessionStatusLogRepository, GameSessionStatusLogRepository>();
 
             services.AddScoped<ICryptographyUtilityService, CryptographyUtilityService>();
@@ -50,7 +50,7 @@ namespace SteamDigiSellerBot
             services.AddScoped<IDigiSellerNetworkService, DigiSellerNetworkService>();
             services.AddScoped<IItemNetworkService, ItemNetworkService>();
             services.AddScoped<IGameSessionService, GameSessionService>();
-            services.AddScoped<IGamePriceRepository, GamePriceRepository>();
+            services.AddTransient<IGamePriceRepository, GamePriceRepository>();
 
             services.AddScoped<ICurrencyDataService, CurrencyDataService>();
 
