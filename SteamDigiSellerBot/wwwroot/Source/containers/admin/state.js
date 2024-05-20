@@ -21,6 +21,9 @@ export const state = entity({
     page: 1,
     size: 50,
   },
+  productsFilter:{
+    appId: '',
+  },
   gameSessionsStatuses: {},
   bots: [],
   proxies: [],
@@ -49,6 +52,7 @@ export const state = entity({
   editItemModalIsOpen: false,
   editOrderModalIsOpen: false,
   filterOrdersModalIsOpen: false,
+  filterProductsModalIsOpen:false,
   botRegionSetEditModalIsOpen: false,
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
@@ -575,6 +579,16 @@ export const toggleFilterOrdersModal = async (isOpen) => {
     };
   });
 };
+
+export const toggleFilterProductsModal = async (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      filterProductsModalIsOpen: isOpen,
+    };
+  });
+};
+
 
 export const toggleEditItemModal = async (isOpen) => {
   state.set((value) => {

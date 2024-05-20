@@ -29,6 +29,7 @@ import {
   toggleEditBotModal,
   toggleEditOrderModal,
   toggleFilterOrdersModal,
+  toggleFilterProductsModal,
   toggleOrderCreationInfoModal,
   updateGameSessionsFilter,
   setSelectedBot,
@@ -133,6 +134,16 @@ const leftMenu = () => {
                   }}
                 >
                   <div className={css.title}>Массовое вкл/выкл товаров</div>
+                </Section>
+                <Section
+                  className={css.massButton}
+                  height={49}
+                  width={254}
+                  onClick={() => {
+                    toggleFilterProductsModal(true);
+                  }}
+                >
+                  <div className={css.title}>Фильтр отображения</div>
                 </Section>
               </>
             ) : null

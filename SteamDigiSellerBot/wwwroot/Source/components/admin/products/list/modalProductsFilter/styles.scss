@@ -1,0 +1,39 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding: 48px 70px 0 115px;
+
+    overflow-y: auto;
+    height: 619px;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .formItem {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 31px;
+
+        .name {
+            padding-top: 18px;
+            padding-right: 40px;
+        }
+
+        .doubleControl {
+            display: flex;
+        }
+    }
+}
+
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    flex: 0 1 123px;
+    margin-bottom: 40px;
+}
