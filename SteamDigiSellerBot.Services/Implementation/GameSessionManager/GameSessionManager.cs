@@ -28,15 +28,15 @@ namespace SteamDigiSellerBot.Services.Implementation
         private Dictionary<int, CancelationData> cancelation;
         private readonly IGameSessionRepository gsr;
         private readonly IGameSessionService gss;
+
         public GameSessionManager(ILogger<GameSessionManager> logger,
             IGameSessionRepository gsr,
-            IGameSessionService gss,
             IServiceProvider sp)
         {
             //using var scope = sp.CreateScope();
             _logger = logger;
             this.gsr  = gsr;
-            this.gss = gss;
+            this.gss = sp.CreateScope().ServiceProvider.GetService<IGameSessionService>();
             //_gsRepo = scope.ServiceProvider.GetRequiredService<IGameSessionRepository>();
 
             WaitConfirmationGSQ = new WaitConfirmationGSQ(this, _logger, gsr);
@@ -49,6 +49,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             cancelation = new Dictionary<int, CancelationData>();
             Init();
         }
+
 
         private async void Init()
         {
