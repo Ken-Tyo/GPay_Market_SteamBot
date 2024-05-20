@@ -197,7 +197,7 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 GC.Collect();
-                using var db = botRepository.GetContext();
+                await using var db = botRepository.GetContext();
                 List<Bot> bots = await botRepository.ListAsync(db,
                     b => b.IsON && b.State == BotState.tempLimit);
 

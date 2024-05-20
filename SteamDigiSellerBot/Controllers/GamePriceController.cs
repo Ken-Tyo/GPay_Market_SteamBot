@@ -45,7 +45,7 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/price/{gpId}/{newPrice}"), ValidationActionFilter]
         public async Task<IActionResult> SetItemPrice(int gpId, decimal newPrice)
         {
-            using var db = _gamePriceRepository.GetContext();
+            await using var db = _gamePriceRepository.GetContext();
             var gp = await _gamePriceRepository.GetByIdAsync(db, gpId);
             if (gp == null)
                 return NotFound();

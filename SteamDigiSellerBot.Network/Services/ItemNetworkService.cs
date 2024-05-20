@@ -136,7 +136,7 @@ namespace SteamDigiSellerBot.Network.Services
 
         public async Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId)
         {
-            using var db = _contextFactory.CreateDbContext();
+            await using var db = _contextFactory.CreateDbContext();
             // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
             var toUpdate = await db.Items.Include(i => i.GamePrices).Where(i => itemsId.Contains(i.Id)).ToListAsync();
             _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: items to update " + toUpdate.Count);

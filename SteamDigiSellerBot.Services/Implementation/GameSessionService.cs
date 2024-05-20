@@ -41,8 +41,6 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly IGameSessionStatusLogRepository _gameSessionStatusLogRepository;
         private readonly ILogger<GameSessionService> _logger;
-        //TODO: его тут не должно быть, но это больше системная проблема
-        private readonly DatabaseContext _dbContext;
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -56,8 +54,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             IUserDBRepository userDBRepository,
             IDigiSellerNetworkService digiSellerNetworkService,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
-            ILogger<GameSessionService> logger,
-            DatabaseContext dbContext = null)
+            ILogger<GameSessionService> logger)
         {
             _steamNetworkService = steamNetworkService;
             _gameSessionRepository = gameSessionRepository;
@@ -71,7 +68,6 @@ namespace SteamDigiSellerBot.Services.Implementation
             _digiSellerNetworkService = digiSellerNetworkService;
             this._gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             _logger = logger;
-            _dbContext = dbContext;
         }
 
         public async Task SetSteamContact(GameSession gs, params Option[] opts)
@@ -247,9 +243,9 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 if (gs.Item.HasEndlessDiscount)
                 {
-                    await _steamNetworkService.UpdateDiscountTimersAndIsBundleField(gs.Item.AppId, _dbContext, new List<Game>() {gs.Item });
-                    //TODO в идеале тут должен быть контекст тот же, чтобы не перезапрашивать данные. Это системная ошибка.
-                    gs = await _gameSessionRepository.GetByIdAsync(gs.Id);
+                    await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+                    await _steamNetworkService.UpdateDiscountTimersAndIsBundleField(gs.Item.AppId, db, new List<Game>() {gs.Item });
+                    gs = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
                     item = gs.Item;
                 }
                 var exp = gs.Item.DiscountEndTimeUtc;
@@ -273,7 +269,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (res)
             {
-                using var db = _gameSessionRepository.GetContext();
+                await using var db = _gameSessionRepository.GetContext();
                 var trackedGs = await _gameSessionRepository.GetByIdAsync(db,gs.Id);
                 trackedGs.StatusId = newStatus;
                 await _gameSessionRepository.UpdateFieldAsync(db,trackedGs, gs => gs.StatusId);

@@ -217,7 +217,7 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
         {
-            using var db = _gameSessionRepository.GetContext();
+            await using var db = _gameSessionRepository.GetContext();
             GameSession gameSession = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
             if (gameSession == null)
                 return BadRequest();
