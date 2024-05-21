@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SteamDigiSellerBot.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 
 namespace SteamDigiSellerBot.Services.Implementation
@@ -40,9 +41,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                 try
                 {
                     //берем сессии где ожидается подтвреждение аккаунта и пришло время автоотправки
+                    await using var db = gsr.GetContext() as DatabaseContext;
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 18).Result;
-                        .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.SendGame);
+                        .GetGameSessionForPipline(db,gs => gs.Stage == Database.Entities.GameSessionStage.SendGame);
 
                     foreach (var gs in sess)
                     {
