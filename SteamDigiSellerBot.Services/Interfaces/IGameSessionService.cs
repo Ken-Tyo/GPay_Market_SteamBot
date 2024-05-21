@@ -16,7 +16,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
         Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode);
         Task<bool> CheckGameSessionExpiredAndHandle(GameSession gs);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId);
-        Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(GameSession gs, DateTimeOffset? timeForTest = null);
+        Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null);
         Task<(GetBotForSendGameStatus, BotFilterParams, SuperBot)> GetBotForSendGame(DatabaseContext db, GameSession gs);
         Task<AddToFriendStatus> AddToFriend(int gsId);
         Task<AddToFriendStatus> AddToFriend(DatabaseContext db, GameSession gs);

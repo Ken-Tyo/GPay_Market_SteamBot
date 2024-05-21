@@ -1175,12 +1175,12 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId)
         {
-            await using var db = _gameSessionRepository.GetContext();
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             var gs = await _gameSessionRepository.GetByIdAsync(db,gsId);
-            return await SendGame(gs);
+            return await SendGame(db, gs);
         }
 
-        public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(GameSession gs, DateTimeOffset? timeForTest = null)
+        public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null)
         {
             var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             SendGameStatus sendStatus;
@@ -1210,7 +1210,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                 });
                 //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
-                await _gameSessionRepository.EditAsync(gs);
+                await _gameSessionRepository.EditAsync(db,gs);
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch ); //readyState
             }
 
@@ -1249,7 +1249,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             GameSessionStatusLog.ValueJson valueJson = null;
             if (sendRes.result == SendeGameResult.sended)
             {
-                var region = await _steamCountryCodeRepository.GetByPredicateAsync(r => r.Code == gs.Bot.Region);
+                var region = await _steamCountryCodeRepository.GetByPredicateAsync(db, r => r.Code == gs.Bot.Region);
                 gs.Item.LastSendedRegion = region;
                 gs.SendRegion = region;
                 gs.StatusId = GameSessionStatusEnum.Received;//Игра получена
@@ -1316,7 +1316,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             };
             gs.GameSessionStatusLogs.Add(log);
             //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
             await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
 
@@ -1373,7 +1373,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //    })
             //});
 
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             return (sendRes.result == SendeGameResult.sended
                 ? SendGameStatus.sended
                 : SendGameStatus.otherError,
