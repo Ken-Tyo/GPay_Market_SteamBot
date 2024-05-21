@@ -620,8 +620,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<AddToFriendStatus> AddToFriend(int gsId)
         {
-            await using var db = _gameSessionRepository.GetContext();
-            var gs = await _gameSessionRepository.GetByIdAsync(db, gsId);
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+            var gs = await db!.GameSessions.Include(x => x.Item).ThenInclude(x => x.GamePrices).FirstAsync(x => x.Id == gsId);
             return await AddToFriend(gs);
         }
 

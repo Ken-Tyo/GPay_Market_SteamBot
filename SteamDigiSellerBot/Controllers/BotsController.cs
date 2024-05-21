@@ -109,7 +109,7 @@ namespace SteamDigiSellerBot.Controllers
                 && bot.SteamGuardAccount.AccountName.Equals(model.UserName))
             {
                 CurrencyData currencyData = await _currencyDataService.GetCurrencyData();
-                List<VacGame> vacCheckList = await _vacGamesRepository.ListAsync();
+                List<VacGame> vacCheckList = await _vacGamesRepository.ListAsync(db);
 
                 SuperBot superBot;
 
