@@ -26,6 +26,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SteamDigiSellerBot.Database.Contexts;
+using SteamDigiSellerBot.Services.Implementation;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -66,7 +68,8 @@ namespace SteamDigiSellerBot.Controllers
             IMemoryCache memoryCache,
             IWsNotificationSender wsNotificationSender,
             ISuperBotPool superBotPool,
-            ICurrencyDataService currencyDataService)
+            ICurrencyDataService currencyDataService,
+            GameSessionManager gameSessionManager)
         {
             _logger = logger;
 
@@ -128,12 +131,12 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             GameSession gs = null;
-
+            await using var db = _gameSessionRepository.GetContext();
             if (!string.IsNullOrWhiteSpace(uniquecode) && uniquecode.Length > 15)
             {
                 lock(obj)
                 {
-                    using var db = _gameSessionRepository.GetContext();
+                    
                     gs = _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode)).Result;
 
                     if (gs == null)
@@ -198,10 +201,10 @@ namespace SteamDigiSellerBot.Controllers
         private async Task<(bool, GameSession)> CreateGameSession(string uniquecode)
         {
             GameSession gs = null;
-            bool isCorrectCode = false;
-
+            bool isCorrectCode = false; 
+            await using var db= _userDBRepository.GetContext();
             UserDB user = (await _userDBRepository
-                            .ListAsync(u => u.AspNetUser.Id == _configuration.GetSection("adminID").Value))
+                            .ListAsync(db,u => u.AspNetUser.Id == _configuration.GetSection("adminID").Value))
                             .FirstOrDefault();
 
             //if (user == null)
@@ -213,7 +216,7 @@ namespace SteamDigiSellerBot.Controllers
             if (soldItem != null)
             {
                 isCorrectCode = true;
-                Item item = await _itemRepository.GetByPredicateAsync(x => x.Active && x.DigiSellerIds.Contains(soldItem.ItemId.ToString()));
+                Item item = await _itemRepository.GetByPredicateAsync(db, x => x.Active && x.DigiSellerIds.Contains(soldItem.ItemId.ToString()));
 
                 if (item != null)
                 {
@@ -234,7 +237,7 @@ namespace SteamDigiSellerBot.Controllers
                         PriorityPrice = priorityPriceRub,
                         MaxSellPercent = null
                     };
-                    await _gameSessionRepository.AddAsync(gs);
+                    await _gameSessionRepository.AddAsync(db, gs);
                     await _gameSessionService.SetSteamContact(gs, soldItem.Options.ToArray());
                 }
                 else
@@ -264,7 +267,8 @@ namespace SteamDigiSellerBot.Controllers
 
         public async Task<IActionResult> LastOrders()
         {
-            var gameSessions = await _gameSessionRepository.GetLastValidGameSessions(10);
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+            var gameSessions = await _gameSessionRepository.GetLastValidGameSessions(db,10);
             return Ok(_mapper.Map<List<LastOrder>>(gameSessions));
         }
         //public async Task<IActionResult> Index2(string uniquecode = "", string seller_id = "")

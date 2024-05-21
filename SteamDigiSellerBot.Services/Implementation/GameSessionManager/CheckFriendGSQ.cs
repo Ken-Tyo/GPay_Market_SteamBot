@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Services.Interfaces;
 using System.Linq;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 
 namespace SteamDigiSellerBot.Services.Implementation
@@ -40,7 +41,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
                     //берем сессии где ожидается принятия заявки в друзья
                     //var sess = gsr.ListAsync(gs => gs.StatusId == 6).Result;
-                    var sess = await gsr.GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.CheckFriend);
+                    await using var db = gsr.GetContext() as DatabaseContext;
+                    var sess = await gsr.GetGameSessionForPipline(db,gs => gs.Stage == Database.Entities.GameSessionStage.CheckFriend);
 
                     foreach (var gs in sess)
                     {

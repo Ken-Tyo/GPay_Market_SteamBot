@@ -32,6 +32,7 @@ namespace SteamDigiSellerBot.Services
             _logger = logger;
             _configuration = configuration;
             _itemRepository = itemRepository;
+            _serviceProvider = sp;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

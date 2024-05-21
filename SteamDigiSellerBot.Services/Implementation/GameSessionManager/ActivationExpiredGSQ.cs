@@ -39,8 +39,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 try
                 {
                     //берем сессии где возможна просрочка времени на получение игры
+                    await using var db = gsr.GetContext();
                     var sess = await gsr
-                        .ListAsync(gs => GameSessionService.BeforeExpStatuses.Contains(gs.StatusId));
+                        .ListAsync(db, gs => GameSessionService.BeforeExpStatuses.Contains(gs.StatusId));
 
                     foreach (var gs in sess)
                     {

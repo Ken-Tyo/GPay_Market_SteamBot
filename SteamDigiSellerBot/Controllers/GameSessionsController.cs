@@ -24,6 +24,7 @@ using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.Network;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using SteamDigiSellerBot.Database.Contexts;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -111,7 +112,8 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpGet, Route("gamesessions/{id}"), ValidationActionFilter]
         public async Task<IActionResult> GetGameSession(int id)
         {
-            var gameSessions = await _gameSessionRepository.GetByIdAsync(id);
+            await using var db = _gameSessionRepository.GetContext();
+            var gameSessions = await _gameSessionRepository.GetByIdAsync(db, id);
 
             var gsi = _mapper.Map<GameSessionItemView>(gameSessions);
             //var currency = await _currencyDataRepository?.GetCurrencyDictionary();
@@ -160,7 +162,8 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/reset")]
         public async Task<IActionResult> ResetGameSession(ResetGameSessionRequest req)
         {
-            GameSession gs = await _gameSessionRepository.GetForReset(req.GameSessionId);
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+            GameSession gs = await _gameSessionRepository.GetForReset(db, req.GameSessionId);
             if (gs == null)
                 return BadRequest();
 
@@ -208,7 +211,7 @@ namespace SteamDigiSellerBot.Controllers
                 Value = new ValueJson { message = "Сброс заказа" }
             });
 
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db,gs);
             await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
 
             return Ok();
@@ -231,8 +234,9 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesession"), ValidationActionFilter]
         public async Task<IActionResult> Gamesession(CreateGameSessionRequest req)
         {
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             var item = (await _itemRepository
-                .ListAsync(i => i.IsDlc == req.IsDlc
+                .ListAsync(db, i => i.IsDlc == req.IsDlc
                              && i.AppId == req.AppId
                              && i.SubId == req.SubId))
                 .FirstOrDefault();
@@ -272,7 +276,7 @@ namespace SteamDigiSellerBot.Controllers
                     new GameSessionStatusLog { StatusId = gs.StatusId }
                 };
 
-                await _gameSessionRepository.AddAsync(gs);
+                await _gameSessionRepository.AddAsync(db,gs);
                 respUniqueCodes.Add(gs.UniqueCode);
             }
 
@@ -284,8 +288,8 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
-
-            var gs = await _gameSessionRepository.GetByPredicateAsync(x => x.UniqueCode.Equals(req.Uniquecode));
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+            var gs = await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(req.Uniquecode));
             if (gs == null)
             {
                 ModelState.AddModelError("", "такой заказ не найден");

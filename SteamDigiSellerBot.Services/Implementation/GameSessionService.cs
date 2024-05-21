@@ -880,7 +880,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<CheckFriendAddedResult> CheckFriendAddedStatus(int gsId)
         {
-            var gs = await _gameSessionRepository.GetByIdAsync(gsId);
+            await using var db = _gameSessionRepository.GetContext(); 
+            var gs = await _gameSessionRepository.GetByIdAsync(db, gsId);
             return await CheckFriendAddedStatus(gs);
         }
 
@@ -898,8 +899,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                     };
                     await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
                     await _gameSessionStatusLogRepository.AddAsync(log);
-
-                    var user = await _userDBRepository.GetByIdAsync(gs.UserId);
+                    await using var db = _userDBRepository.GetContext();
+                    var user = await _userDBRepository.GetByIdAsync(db, gs.UserId);
                     await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
                     await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
                 });

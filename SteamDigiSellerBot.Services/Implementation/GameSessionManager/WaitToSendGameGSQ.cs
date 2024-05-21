@@ -38,10 +38,11 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
+                    await using var db = gsr.GetContext();
                     //берем сессии где ожидается подтвреждение аккаунта и пришло время автоотправки
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 19).Result;
-                        .ListAsync(gs => gs.Stage == Database.Entities.GameSessionStage.WaitToSend);
+                        .ListAsync(db, gs => gs.Stage == Database.Entities.GameSessionStage.WaitToSend);
 
                     foreach (var gs in sess)
                     {
