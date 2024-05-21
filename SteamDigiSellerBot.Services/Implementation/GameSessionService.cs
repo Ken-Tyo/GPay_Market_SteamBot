@@ -620,7 +620,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<AddToFriendStatus> AddToFriend(int gsId)
         {
-            var gs = await _gameSessionRepository.GetByIdAsync(gsId);
+            await using var db = _gameSessionRepository.GetContext();
+            var gs = await _gameSessionRepository.GetByIdAsync(db, gsId);
             return await AddToFriend(gs);
         }
 
@@ -1175,7 +1176,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId)
         {
-            var gs = await _gameSessionRepository.GetByIdAsync(gsId);
+            await using var db = _gameSessionRepository.GetContext();
+            var gs = await _gameSessionRepository.GetByIdAsync(db,gsId);
             return await SendGame(gs);
         }
 
