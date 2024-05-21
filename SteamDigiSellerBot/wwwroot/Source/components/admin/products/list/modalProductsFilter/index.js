@@ -60,6 +60,17 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         </div>
         <div className={css.actions}>
         <Button
+          text={'Отобразить'}
+          style={{
+            backgroundColor: '#A348CE',
+            marginRight: '24px',
+            width: '322px',
+          }}
+          onClick={() => {
+            onSave(item);
+          }}
+        />
+        <Button
           text={'Отмена'}
           onClick={async () => {
             if (onCancel) onCancel();

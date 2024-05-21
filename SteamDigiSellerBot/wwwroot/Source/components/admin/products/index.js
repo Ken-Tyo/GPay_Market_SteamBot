@@ -7,7 +7,7 @@ import ModalFilter from './list/modalProductsFilter';
 import {
   state,
   toggleFilterProductsModal,
-  //updateProductsFilter,
+  updateProductsFilter,
 } from '../../../containers/admin/state';
 const products = () => {
 
@@ -22,6 +22,10 @@ const products = () => {
           isOpen={filterProductsModalIsOpen}
           value={productsFilter}
           onCancel={() => {
+            toggleFilterProductsModal(false);
+          }}
+          onSave={(val) => {
+            updateProductsFilter({ ...val, page: 1 });
             toggleFilterProductsModal(false);
           }}
       />

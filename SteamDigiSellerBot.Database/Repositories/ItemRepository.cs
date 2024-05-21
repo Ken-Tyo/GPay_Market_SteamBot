@@ -19,6 +19,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetByAppIdAndSubId(string appId, string subId);
         Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items);
+        Task<(List<Item> result, int count)> Filter(string appId);
     }
 
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
@@ -33,19 +34,62 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<List<Item>> GetSortedItems()
         {
             await using var db = dbContextFactory.CreateDbContext();
-            List<Item> items = await db.Items
+            var query = db.Items
                 .AsNoTracking()
                 .Include(i => i.GamePrices)
                 .Include(i => i.Region)
                 .Include(i => i.LastSendedRegion)
                 .Where(i => !i.IsDeleted)
                 .OrderBy(x => x.AddedDateTime)
-                .ThenBy(x => x.AppId)
+                .ThenBy(x => x.AppId);
+
+            List<Item> items = await query
                 .ToListAsync();
 
             return items;
         }
 
+
+        public async Task<(List<Item> result, int count)> Filter(string appId)
+        {
+            await using var db = dbContextFactory.CreateDbContext();
+            var sortedQuery = db.Items
+                .AsNoTracking()
+                .Include(i => i.GamePrices)
+                .Include(i => i.Region)
+                .Include(i => i.LastSendedRegion)
+                .Where(i => !i.IsDeleted)
+                .OrderBy(x => x.AddedDateTime)
+                .ThenBy(x => x.AppId);
+
+            Expression<Func<Item, bool>> predicate = (item) =>
+
+                    (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId));
+
+            var total = await db.Items
+                .CountAsync(predicate);
+
+            var result = await sortedQuery.Where(predicate)
+                .ToListAsync();
+
+            return await Task.FromResult((result, result.Count));
+        }
+
+
+        private async Task<IQueryable<Item>> GetSortedItemsAsQuery()
+        {
+            await using var db = dbContextFactory.CreateDbContext();
+            var items = db.Items
+                .AsNoTracking()
+                .Include(i => i.GamePrices)
+                .Include(i => i.Region)
+                .Include(i => i.LastSendedRegion)
+                .Where(i => !i.IsDeleted)
+                .OrderBy(x => x.AddedDateTime)
+                .ThenBy(x => x.AppId);
+
+            return items;
+        }
         public async Task UpdateGamePrices(List<GamePrice> gamePrices)
         {
             await using var db = dbContextFactory.CreateDbContext();

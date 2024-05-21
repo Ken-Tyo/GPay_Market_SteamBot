@@ -192,8 +192,14 @@ export const setActiveMenuLink = (name) => {
   });
 };
 
-export const apiFetchItems = async () => {
-  let res = await fetch('/items/list');
+export const apiFetchItems = async (filter) => {
+  let requestData = {method:'POST'};
+  if(filter != null){
+    requestData.body = mapToFormData({
+      appId: filter.appId
+    });
+  }
+  let res = await fetch('/items/list', requestData);
   setItems(await res.json());
 };
 
@@ -764,6 +770,18 @@ export const updateGameSessionsFilter = async (newData) => {
 
   setStateProp('gameSessionsFilter', newFilter);
   await apiFetchGameSessions(newFilter);
+};
+
+export const updateProductsFilter = async (newData) => {
+  const { productsFilter } = state.get();
+  let newFilter = {
+    ...productsFilter,
+    ...newData,
+  };
+  console.log('new f', newFilter);
+
+  setStateProp('productsFilter', newFilter);
+  await apiFetchItems(newFilter);
 };
 
 export const apiAddGameSession = async (data) => {

@@ -26487,28 +26487,36 @@ var setActiveMenuLink = function setActiveMenuLink(name) {
   });
 };
 var apiFetchItems = /*#__PURE__*/function () {
-  var _ref6 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee6() {
-    var res;
+  var _ref6 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee6(filter) {
+    var requestData, res;
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          _context6.next = 2;
-          return fetch('/items/list');
-        case 2:
+          requestData = {
+            method: 'POST'
+          };
+          if (filter != null) {
+            requestData.body = mapToFormData({
+              appId: filter.appId
+            });
+          }
+          _context6.next = 4;
+          return fetch('/items/list', requestData);
+        case 4:
           res = _context6.sent;
           _context6.t0 = setItems;
-          _context6.next = 6;
+          _context6.next = 8;
           return res.json();
-        case 6:
+        case 8:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 8:
+        case 10:
         case "end":
           return _context6.stop();
       }
     }, _callee6);
   }));
-  return function apiFetchItems() {
+  return function apiFetchItems(_x4) {
     return _ref6.apply(this, arguments);
   };
 }();
@@ -26537,7 +26545,7 @@ var setItemPrice = /*#__PURE__*/function () {
       }
     }, _callee7);
   }));
-  return function setItemPrice(_x4, _x5, _x6) {
+  return function setItemPrice(_x5, _x6, _x7) {
     return _ref7.apply(this, arguments);
   };
 }();
@@ -26560,7 +26568,7 @@ var apiSetItemPrice = /*#__PURE__*/function () {
       }
     }, _callee8);
   }));
-  return function apiSetItemPrice(_x7, _x8) {
+  return function apiSetItemPrice(_x8, _x9) {
     return _ref8.apply(this, arguments);
   };
 }();
@@ -26589,7 +26597,7 @@ var setItemPricePriority = /*#__PURE__*/function () {
       }
     }, _callee9);
   }));
-  return function setItemPricePriority(_x9, _x10) {
+  return function setItemPricePriority(_x10, _x11) {
     return _ref9.apply(this, arguments);
   };
 }();
@@ -26613,7 +26621,7 @@ var apiSetItemPricePriority = /*#__PURE__*/function () {
       }
     }, _callee10);
   }));
-  return function apiSetItemPricePriority(_x11) {
+  return function apiSetItemPricePriority(_x12) {
     return _ref10.apply(this, arguments);
   };
 }();
@@ -26651,7 +26659,7 @@ var apiFetchGameSessions = /*#__PURE__*/function () {
       }
     }, _callee11);
   }));
-  return function apiFetchGameSessions(_x12) {
+  return function apiFetchGameSessions(_x13) {
     return _ref11.apply(this, arguments);
   };
 }();
@@ -26701,7 +26709,7 @@ var apiFetchGameSession = /*#__PURE__*/function () {
       }
     }, _callee13);
   }));
-  return function apiFetchGameSession(_x13) {
+  return function apiFetchGameSession(_x14) {
     return _ref13.apply(this, arguments);
   };
 }();
@@ -26815,7 +26823,7 @@ var apiSetItemActiveStatus = /*#__PURE__*/function () {
       }
     }, _callee17);
   }));
-  return function apiSetItemActiveStatus(_x14) {
+  return function apiSetItemActiveStatus(_x15) {
     return _ref17.apply(this, arguments);
   };
 }();
@@ -26844,7 +26852,7 @@ var apiDeleteItem = /*#__PURE__*/function () {
       }
     }, _callee18);
   }));
-  return function apiDeleteItem(_x15) {
+  return function apiDeleteItem(_x16) {
     return _ref18.apply(this, arguments);
   };
 }();
@@ -26873,7 +26881,7 @@ var apiBulkDeleteItem = /*#__PURE__*/function () {
       }
     }, _callee19);
   }));
-  return function apiBulkDeleteItem(_x16) {
+  return function apiBulkDeleteItem(_x17) {
     return _ref19.apply(this, arguments);
   };
 }();
@@ -26902,7 +26910,7 @@ var apiDeleteProxy = /*#__PURE__*/function () {
       }
     }, _callee20);
   }));
-  return function apiDeleteProxy(_x17) {
+  return function apiDeleteProxy(_x18) {
     return _ref20.apply(this, arguments);
   };
 }();
@@ -26929,7 +26937,7 @@ var apiDeleteProxyAll = /*#__PURE__*/function () {
       }
     }, _callee21);
   }));
-  return function apiDeleteProxyAll(_x18) {
+  return function apiDeleteProxyAll(_x19) {
     return _ref21.apply(this, arguments);
   };
 }();
@@ -26961,7 +26969,7 @@ var apiLoadNewProxy = /*#__PURE__*/function () {
       }
     }, _callee22);
   }));
-  return function apiLoadNewProxy(_x19) {
+  return function apiLoadNewProxy(_x20) {
     return _ref22.apply(this, arguments);
   };
 }();
@@ -27018,7 +27026,7 @@ var apiEditBot = /*#__PURE__*/function () {
       }
     }, _callee23);
   }));
-  return function apiEditBot(_x20) {
+  return function apiEditBot(_x21) {
     return _ref23.apply(this, arguments);
   };
 }();
@@ -27047,7 +27055,7 @@ var apiDeleteBot = /*#__PURE__*/function () {
       }
     }, _callee24);
   }));
-  return function apiDeleteBot(_x21) {
+  return function apiDeleteBot(_x22) {
     return _ref24.apply(this, arguments);
   };
 }();
@@ -27073,7 +27081,7 @@ var apiBotSetIsOn = /*#__PURE__*/function () {
       }
     }, _callee25);
   }));
-  return function apiBotSetIsOn(_x22, _x23) {
+  return function apiBotSetIsOn(_x23, _x24) {
     return _ref25.apply(this, arguments);
   };
 }();
@@ -27130,7 +27138,7 @@ var apiSaveBotRegionSettings = /*#__PURE__*/function () {
       }
     }, _callee26);
   }));
-  return function apiSaveBotRegionSettings(_x24) {
+  return function apiSaveBotRegionSettings(_x25) {
     return _ref26.apply(this, arguments);
   };
 }();
@@ -27168,7 +27176,7 @@ var apiChangeItem = /*#__PURE__*/function () {
       }
     }, _callee27);
   }));
-  return function apiChangeItem(_x25) {
+  return function apiChangeItem(_x26) {
     return _ref27.apply(this, arguments);
   };
 }();
@@ -27206,7 +27214,7 @@ var apiCreateItem = /*#__PURE__*/function () {
       }
     }, _callee28);
   }));
-  return function apiCreateItem(_x26) {
+  return function apiCreateItem(_x27) {
     return _ref28.apply(this, arguments);
   };
 }();
@@ -27260,7 +27268,7 @@ var toggleDigisellerEditModal = /*#__PURE__*/function () {
       }
     }, _callee29);
   }));
-  return function toggleDigisellerEditModal(_x27) {
+  return function toggleDigisellerEditModal(_x28) {
     return _ref29.apply(this, arguments);
   };
 }();
@@ -27287,7 +27295,7 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
       }
     }, _callee30);
   }));
-  return function toggleExchangeRatesModal(_x28) {
+  return function toggleExchangeRatesModal(_x29) {
     return _ref30.apply(this, arguments);
   };
 }();
@@ -27310,7 +27318,7 @@ var toggleChangePasswordModal = /*#__PURE__*/function () {
       }
     }, _callee31);
   }));
-  return function toggleChangePasswordModal(_x29) {
+  return function toggleChangePasswordModal(_x30) {
     return _ref31.apply(this, arguments);
   };
 }();
@@ -27330,7 +27338,7 @@ var toggleEditBotModal = /*#__PURE__*/function () {
       }
     }, _callee32);
   }));
-  return function toggleEditBotModal(_x30) {
+  return function toggleEditBotModal(_x31) {
     return _ref32.apply(this, arguments);
   };
 }();
@@ -27350,7 +27358,7 @@ var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
       }
     }, _callee33);
   }));
-  return function toggleEditBotRegionSetModal(_x31) {
+  return function toggleEditBotRegionSetModal(_x32) {
     return _ref33.apply(this, arguments);
   };
 }();
@@ -27370,7 +27378,7 @@ var toggleEditOrderModal = /*#__PURE__*/function () {
       }
     }, _callee34);
   }));
-  return function toggleEditOrderModal(_x32) {
+  return function toggleEditOrderModal(_x33) {
     return _ref34.apply(this, arguments);
   };
 }();
@@ -27390,7 +27398,7 @@ var toggleFilterOrdersModal = /*#__PURE__*/function () {
       }
     }, _callee35);
   }));
-  return function toggleFilterOrdersModal(_x33) {
+  return function toggleFilterOrdersModal(_x34) {
     return _ref35.apply(this, arguments);
   };
 }();
@@ -27410,7 +27418,7 @@ var toggleFilterProductsModal = /*#__PURE__*/function () {
       }
     }, _callee36);
   }));
-  return function toggleFilterProductsModal(_x34) {
+  return function toggleFilterProductsModal(_x35) {
     return _ref36.apply(this, arguments);
   };
 }();
@@ -27430,7 +27438,7 @@ var toggleEditItemModal = /*#__PURE__*/function () {
       }
     }, _callee37);
   }));
-  return function toggleEditItemModal(_x35) {
+  return function toggleEditItemModal(_x36) {
     return _ref37.apply(this, arguments);
   };
 }();
@@ -27450,7 +27458,7 @@ var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
       }
     }, _callee38);
   }));
-  return function toggleOrderCreationInfoModal(_x36) {
+  return function toggleOrderCreationInfoModal(_x37) {
     return _ref38.apply(this, arguments);
   };
 }();
@@ -27481,7 +27489,7 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
       }
     }, _callee39);
   }));
-  return function apiChangeItemBulk(_x37, _x38) {
+  return function apiChangeItemBulk(_x38, _x39) {
     return _ref39.apply(this, arguments);
   };
 }();
@@ -27504,7 +27512,7 @@ var apiChangeDigisellerData = /*#__PURE__*/function () {
       }
     }, _callee40);
   }));
-  return function apiChangeDigisellerData(_x39) {
+  return function apiChangeDigisellerData(_x40) {
     return _ref40.apply(this, arguments);
   };
 }();
@@ -27528,7 +27536,7 @@ var apiChangeUserPassword = /*#__PURE__*/function () {
       }
     }, _callee41);
   }));
-  return function apiChangeUserPassword(_x40) {
+  return function apiChangeUserPassword(_x41) {
     return _ref41.apply(this, arguments);
   };
 }();
@@ -27609,7 +27617,7 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
       }
     }, _callee44);
   }));
-  return function apiUpdateExchangeDataManual(_x41) {
+  return function apiUpdateExchangeDataManual(_x42) {
     return _ref44.apply(this, arguments);
   };
 }();
@@ -27677,7 +27685,7 @@ var apiGetItem = /*#__PURE__*/function () {
       }
     }, _callee46);
   }));
-  return function apiGetItem(_x42) {
+  return function apiGetItem(_x43) {
     return _ref46.apply(this, arguments);
   };
 }();
@@ -27738,7 +27746,7 @@ var apiSetGameSessionStatus = /*#__PURE__*/function () {
       }
     }, _callee48);
   }));
-  return function apiSetGameSessionStatus(_x43, _x44) {
+  return function apiSetGameSessionStatus(_x44, _x45) {
     return _ref48.apply(this, arguments);
   };
 }();
@@ -27765,7 +27773,7 @@ var apiResetGameSession = /*#__PURE__*/function () {
       }
     }, _callee49);
   }));
-  return function apiResetGameSession(_x45) {
+  return function apiResetGameSession(_x46) {
     return _ref49.apply(this, arguments);
   };
 }();
@@ -27794,7 +27802,7 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
       }
     }, _callee50);
   }));
-  return function apiAddCommentGameSession(_x46, _x47) {
+  return function apiAddCommentGameSession(_x47, _x48) {
     return _ref50.apply(this, arguments);
   };
 }();
@@ -27816,65 +27824,87 @@ var updateGameSessionsFilter = /*#__PURE__*/function () {
       }
     }, _callee51);
   }));
-  return function updateGameSessionsFilter(_x48) {
+  return function updateGameSessionsFilter(_x49) {
     return _ref51.apply(this, arguments);
   };
 }();
-var apiAddGameSession = /*#__PURE__*/function () {
-  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(data) {
-    var res, errors, _state$get7, gameSessionsFilter, newUniqueCodes;
+var updateProductsFilter = /*#__PURE__*/function () {
+  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(newData) {
+    var _state$get7, productsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
       while (1) switch (_context52.prev = _context52.next) {
+        case 0:
+          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          console.log('new f', newFilter);
+          setStateProp('productsFilter', newFilter);
+          _context52.next = 6;
+          return apiFetchItems(newFilter);
+        case 6:
+        case "end":
+          return _context52.stop();
+      }
+    }, _callee52);
+  }));
+  return function updateProductsFilter(_x50) {
+    return _ref52.apply(this, arguments);
+  };
+}();
+var apiAddGameSession = /*#__PURE__*/function () {
+  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(data) {
+    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+    return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
+      while (1) switch (_context53.prev = _context53.next) {
         case 0:
           setStateProp('editOrderResponse', {
             loading: true,
             errors: []
           });
-          _context52.next = 3;
+          _context53.next = 3;
           return fetch("/gamesession", {
             method: 'POST',
             body: mapToFormData(data)
           });
         case 3:
-          res = _context52.sent;
+          res = _context53.sent;
           errors = [];
           if (!res.ok) {
-            _context52.next = 12;
+            _context53.next = 12;
             break;
           }
-          _state$get7 = state.get(), gameSessionsFilter = _state$get7.gameSessionsFilter;
-          _context52.next = 9;
+          _state$get8 = state.get(), gameSessionsFilter = _state$get8.gameSessionsFilter;
+          _context53.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
           toggleEditOrderModal(false);
-          _context52.next = 19;
+          _context53.next = 19;
           break;
         case 12:
           if (!(res.status === 500)) {
-            _context52.next = 16;
+            _context53.next = 16;
             break;
           }
           errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
-          _context52.next = 19;
+          _context53.next = 19;
           break;
         case 16:
-          _context52.next = 18;
+          _context53.next = 18;
           return res.json();
         case 18:
-          errors = _context52.sent.errors;
+          errors = _context53.sent.errors;
         case 19:
           setStateProp('editOrderResponse', {
             loading: false,
             errors: errors
           });
           if (!res.ok) {
-            _context52.next = 27;
+            _context53.next = 27;
             break;
           }
-          _context52.next = 23;
+          _context53.next = 23;
           return res.json();
         case 23:
-          newUniqueCodes = _context52.sent;
+          newUniqueCodes = _context53.sent;
           console.log(newUniqueCodes);
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -27884,12 +27914,12 @@ var apiAddGameSession = /*#__PURE__*/function () {
           toggleOrderCreationInfoModal(true);
         case 27:
         case "end":
-          return _context52.stop();
+          return _context53.stop();
       }
-    }, _callee52);
+    }, _callee53);
   }));
-  return function apiAddGameSession(_x49) {
-    return _ref52.apply(this, arguments);
+  return function apiAddGameSession(_x51) {
+    return _ref53.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -45020,6 +45050,16 @@ var ModalFilter = function ModalFilter(_ref2) {
   })), /*#__PURE__*/react.createElement("div", {
     className: modalProductsFilter_styles.actions
   }, /*#__PURE__*/react.createElement(shared_button, {
+    text: 'Отобразить',
+    style: {
+      backgroundColor: '#A348CE',
+      marginRight: '24px',
+      width: '322px'
+    },
+    onClick: function onClick() {
+      onSave(item);
+    }
+  }), /*#__PURE__*/react.createElement(shared_button, {
     text: 'Отмена',
     onClick: /*#__PURE__*/modalProductsFilter_asyncToGenerator( /*#__PURE__*/modalProductsFilter_regeneratorRuntime().mark(function _callee() {
       return modalProductsFilter_regeneratorRuntime().wrap(function _callee$(_context) {
@@ -45041,6 +45081,12 @@ var ModalFilter = function ModalFilter(_ref2) {
 };
 /* harmony default export */ const modalProductsFilter = (ModalFilter);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/index.js
+function products_typeof(o) { "@babel/helpers - typeof"; return products_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, products_typeof(o); }
+function products_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function products_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? products_ownKeys(Object(t), !0).forEach(function (r) { products_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : products_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function products_defineProperty(obj, key, value) { key = products_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function products_toPropertyKey(t) { var i = products_toPrimitive(t, "string"); return "symbol" == products_typeof(i) ? i : i + ""; }
+function products_toPrimitive(t, r) { if ("object" != products_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != products_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -45061,6 +45107,12 @@ var products_products = function products() {
     isOpen: filterProductsModalIsOpen,
     value: productsFilter,
     onCancel: function onCancel() {
+      toggleFilterProductsModal(false);
+    },
+    onSave: function onSave(val) {
+      updateProductsFilter(products_objectSpread(products_objectSpread({}, val), {}, {
+        page: 1
+      }));
       toggleFilterProductsModal(false);
     }
   }), /*#__PURE__*/react.createElement("div", {

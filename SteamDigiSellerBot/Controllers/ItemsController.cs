@@ -60,11 +60,20 @@ namespace SteamDigiSellerBot.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("items/list")]
-        public async Task<IActionResult> GetItems()
+        public async Task<IActionResult> GetItems(ProductsFilter productsFilter)
         {
-            List<Item> items = await _itemRepository.GetSortedItems();
+
+            List<Item> items;
+            if(productsFilter != null)
+            {
+                items = (await _itemRepository.Filter(productsFilter.AppId)).result;
+            }
+            else
+            {
+                items = await _itemRepository.GetSortedItems();
+            }
 
             var itemsView = _mapper.Map<List<ItemViewModel>>(items);
             var currencies = await _currencyDataService.GetCurrencyDictionary();
