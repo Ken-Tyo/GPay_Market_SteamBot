@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using User = SteamDigiSellerBot.Database.Models.User;
+using SteamDigiSellerBot.Database.Contexts;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -203,12 +204,13 @@ namespace SteamDigiSellerBot.Controllers
 
             if (item != null)
             {
+                await using var db = _itemRepository.GetContext();
                 User user = await _userManager.GetUserAsync(User);
                 Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
-                    await _itemRepository.AddAsync(item);
+                    await _itemRepository.AddAsync(db, item);
                 }
                 else
                 {
@@ -216,7 +218,7 @@ namespace SteamDigiSellerBot.Controllers
                     item.IsDeleted = false;
                     item.Active = false;
                     item.AddedDateTime = DateTime.UtcNow;
-                    await _itemRepository.ReplaceAsync(oldItem, item);//.EditAsync(oldItem);
+                    await _itemRepository.ReplaceAsync(db, oldItem, item);//.EditAsync(oldItem);
                 }
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
@@ -229,7 +231,8 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/edit/{id}"), ValidationActionFilter]
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
-            Item item = await _itemRepository.GetByIdAsync(id);
+            await using var db = _itemRepository.GetContext();
+            Item item = await _itemRepository.GetByIdAsync(db,id);
             if (item.IsDeleted)
                 return BadRequest();
 
@@ -239,7 +242,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 Item editedItem = _mapper.Map<AddItemRequest, Item>(model, item);
 
-                await _itemRepository.ReplaceAsync(item, editedItem);
+                await _itemRepository.ReplaceAsync(db, item, editedItem);
 
                 await _itemNetworkService.SetPrices(
                     item.AppId,
@@ -281,8 +284,9 @@ namespace SteamDigiSellerBot.Controllers
         {
             
             HashSet<int> idHashSet = new();
+            await using var db = _itemRepository.GetContext();
             List<Item> items = await _itemRepository
-                .ListAsync(i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
+                .ListAsync(db,i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
 
             User user = await _userManager.GetUserAsync(User);
 
@@ -297,8 +301,9 @@ namespace SteamDigiSellerBot.Controllers
         {
 
             HashSet<int> idHashSet = new();
+            await using var db = _itemRepository.GetContext();
             List<int> items = (await _itemRepository
-                .ListAsync(i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted)
+                .ListAsync(db, i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted)
                 ).Select(x=> x.Id).Distinct().ToList();
 
             User user = await _userManager.GetUserAsync(User);
@@ -314,7 +319,8 @@ namespace SteamDigiSellerBot.Controllers
         {
             foreach (var id in request.Ids)
             {
-                Item item = await _itemRepository.GetByIdAsync(id);
+                  await using var db = _itemRepository.GetContext();
+                Item item = await _itemRepository.GetByIdAsync(db,id);
 
                 if (item != null)
                 {
@@ -365,7 +371,8 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (id > 0)
             {
-                Item item = await _itemRepository.GetByIdAsync(id);
+                await using var db = _itemRepository.GetContext();
+                Item item = await _itemRepository.GetByIdAsync(db,id);
                 if (item != null)
                 {
                     await _itemRepository.DeleteItemAsync(item);

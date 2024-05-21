@@ -15,7 +15,7 @@ namespace SteamDigiSellerBot.Database.Repositories
     public interface IGameSessionRepository : IBaseRepositoryEx<GameSession>
     {
         Task<List<GameSession>> Sort(GameSessionSort gameSessionSort);
-        Task<List<GameSession>> GetLastValidGameSessions(int size = 10);
+        Task<List<GameSession>> GetLastValidGameSessions(DatabaseContext context, int size = 10);
         Task<List<int>> GetGameSessionIds(DatabaseContext context, Expression<Func<GameSession, bool>> predicate);
         Task<List<int>> GetGameSessionIds(Expression<Func<GameSession, bool>> predicate);
         Task<(List<GameSession>, int)> Filter(string appId,
@@ -28,7 +28,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? page = 1,
             int? size = 50);
 
-        Task<GameSession> GetForReset(int id);
+        Task<GameSession> GetForReset(DatabaseContext db, int id);
         Task UpdateQueueInfo(GameSession gs);
         Task<GameSessionStage> GetStageBy(int gsId);
         Task<List<GameSession>> GetGameSessionForPipline(DatabaseContext db, Expression<Func<GameSession, bool>> predicate);
@@ -114,9 +114,8 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
         }
 
-        public async Task<List<GameSession>> GetLastValidGameSessions(int size = 10)
+        public async Task<List<GameSession>> GetLastValidGameSessions(DatabaseContext db, int size = 10)
         {
-            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .Where(gs => !string.IsNullOrEmpty(gs.SteamProfileName))
                 .OrderByDescending(gs => gs.AddedDateTime)
@@ -157,9 +156,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .ToListAsync();
         }
 
-        public async Task<GameSession> GetForReset(int id)
+        public async Task<GameSession> GetForReset(DatabaseContext db, int id)
         {
-            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .Include(gs => gs.Item)
                 .ThenInclude(gs => gs.GamePrices)

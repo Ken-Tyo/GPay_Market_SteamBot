@@ -51,7 +51,8 @@ namespace SteamDigiSellerBot.Controllers
         [HttpGet, Route("bots/list")]
         public async Task<IActionResult> BotsList()
         {
-            List<Bot> bots = await _steamBotRepository.ListAsync();
+            await using var db = _steamBotRepository.GetContext();
+            List<Bot> bots = await _steamBotRepository.ListAsync(db);
             bots.ForEach(e =>
             {
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
@@ -74,7 +75,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 return BadRequest(new { errors });
             };
-
+            await using var db = _steamBotRepository.GetContext();
             Bot bot = _mapper.Map<Bot>(model);
             Bot oldBot = null;
             if (!model.Id.HasValue && model.MaFile is null)
@@ -82,7 +83,7 @@ namespace SteamDigiSellerBot.Controllers
             
             if (model.Id.HasValue)
             {
-                oldBot = await _steamBotRepository.GetByIdAsync(model.Id.Value);
+                oldBot = await _steamBotRepository.GetByIdAsync(db,model.Id.Value);
                 if ((bot.UserName != oldBot.UserName || bot.Password != oldBot.Password)
                  && model.MaFile is null)
                 {
@@ -128,7 +129,7 @@ namespace SteamDigiSellerBot.Controllers
                     if (botAuthOK)
                     {
                         await superBot.SetBotCreationData(currencyData, vacCheckList);
-                        await _steamBotRepository.AddAsync(bot);
+                        await _steamBotRepository.AddAsync(db,bot);
                         _botPool.Add(bot);
                     }
                 }
@@ -138,7 +139,7 @@ namespace SteamDigiSellerBot.Controllers
                     {
                         bot.Region = oldBot.Region;
                         await superBot.SetBotCreationData(currencyData, vacCheckList);
-                        await _steamBotRepository.ReplaceAsync(oldBot, bot);
+                        await _steamBotRepository.ReplaceAsync(db, oldBot, bot);
                         _botPool.Update(bot);
                     }
                 }
@@ -162,13 +163,15 @@ namespace SteamDigiSellerBot.Controllers
         [HttpGet, Route("bots/delete")]
         public async Task<IActionResult> BotDelete(int id)
         {
+
             if (id > 0)
             {
-                Bot bot = await _steamBotRepository.GetByIdAsync(id);
+                await using var db = _gameSessionRepository.GetContext();
+                Bot bot = await _steamBotRepository.GetByIdAsync(db,id);
 
                 if (bot != null)
                 {
-                    await using var db = _gameSessionRepository.GetContext();
+                    
                     var gameSessions = await _gameSessionRepository.ListAsync(db, gs => gs.Bot.Id == bot.Id);
                     foreach (var gs in gameSessions)
                     {
@@ -177,7 +180,7 @@ namespace SteamDigiSellerBot.Controllers
                     }
 
                     await _botSendGameAttemptsRepository.DeleteListAsync(bot.SendGameAttempts);
-                    await _steamBotRepository.DeleteAsync(bot);
+                    await _steamBotRepository.DeleteAsync(db,bot);
                     _botPool.Remove(bot);
                 }
             }
