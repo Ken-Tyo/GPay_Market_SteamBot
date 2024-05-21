@@ -623,7 +623,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         {
             await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             var gs = await db!.GameSessions.Include(x => x.Item).ThenInclude(x => x.GamePrices).FirstAsync(x => x.Id == gsId);
-            return await AddToFriend(gs,db);
+            return await AddToFriend(db, gs);
         }
 
         private async Task<string> GetBotRegionName(Bot bot)
@@ -631,7 +631,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             return (await _steamCountryCodeRepository.GetByPredicateAsync(scc => scc.Code == bot.Region))?.Name;
         }
 
-        public async Task<AddToFriendStatus> AddToFriend(GameSession gs, DatabaseContext db)
+        public async Task<AddToFriendStatus> AddToFriend(DatabaseContext db, GameSession gs)
         {
             var user = await _userDBRepository.GetByIdAsync(db, gs.UserId);
             gs.AutoSendInvitationTime = null;
