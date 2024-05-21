@@ -13,7 +13,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
     public interface IGameSessionService
     {
         Task SetSteamContact(DatabaseContext db, GameSession gameSession, params Option[] opts);
-        Task<GameSession> ResetSteamContact(string uniquecode);
+        Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode);
         Task<bool> CheckGameSessionExpiredAndHandle(GameSession gs);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(GameSession gs, DateTimeOffset? timeForTest = null);

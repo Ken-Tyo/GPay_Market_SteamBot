@@ -140,9 +140,8 @@ namespace SteamDigiSellerBot.Services.Implementation
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
         }
     
-        public async Task<GameSession> ResetSteamContact(string uniquecode)
+        public async Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode)
         {
-            await using var db = _gameSessionRepository.GetContext();
             var gs =
                 await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode));
 

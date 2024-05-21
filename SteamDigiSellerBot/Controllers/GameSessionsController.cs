@@ -331,7 +331,7 @@ namespace SteamDigiSellerBot.Controllers
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
 
-            var gs = await _gameSessionService.ResetSteamContact(req.Uniquecode);
+            var gs = await _gameSessionService.ResetSteamContact(db, req.Uniquecode);
             if (gs == null)
             {
                 ModelState.AddModelError("", "такой заказ не найден");
