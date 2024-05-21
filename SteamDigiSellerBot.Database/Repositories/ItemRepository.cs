@@ -14,7 +14,7 @@ namespace SteamDigiSellerBot.Database.Repositories
     {
         Task<List<Item>> GetSortedItems();
         Task UpdateGamePrices(List<GamePrice> gamePrices);
-        Task<Item> GetWithAllPrices(int itemId);
+        Task<Item> GetWithAllPrices(DatabaseContext db, int itemId);
         Task<List<Item>> ListIncludePricesAsync(Expression<Func<Item, bool>> predicate);
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetByAppIdAndSubId(string appId, string subId);
@@ -57,9 +57,8 @@ namespace SteamDigiSellerBot.Database.Repositories
             await db.SaveChangesAsync();
         }
 
-        public async Task<Item> GetWithAllPrices(int itemId)
+        public async Task<Item> GetWithAllPrices(DatabaseContext db,int itemId)
         {
-            await using var db = dbContextFactory.CreateDbContext();
             return await db.Items
                 .Include(i => i.GamePrices)
                 .Where(i => i.Id == itemId)

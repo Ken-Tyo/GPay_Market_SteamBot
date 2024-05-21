@@ -41,7 +41,6 @@ namespace SteamDigiSellerBot.Controllers
 
         private readonly ICurrencyDataService _currencyDataService;
         private readonly IWsNotificationSender _wsNotifSender;
-        private readonly IHubContext<AdminHub> _hub;
         private readonly IUserDBRepository _userDBRepository;
         private readonly GameSessionManager _gameSessionManager;
         private readonly IGameSessionStatusLogRepository gameSessionStatusLogRepository;
@@ -56,7 +55,6 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionService gameSessionService,
             IWsNotificationSender wsNotificationSender,
             ISuperBotPool botPool,
-            IHubContext<AdminHub> hub,
             IUserDBRepository userDBRepository,
             GameSessionManager gameSessionManager,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
@@ -72,7 +70,6 @@ namespace SteamDigiSellerBot.Controllers
             _currencyDataService = currencyDataService;
             _gameSessionService = gameSessionService;
             _wsNotifSender = wsNotificationSender;
-            _hub = hub;
             _userDBRepository = userDBRepository;
             _gameSessionManager = gameSessionManager;
             _botPool = botPool;
