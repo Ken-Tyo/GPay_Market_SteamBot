@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../../../../shared/button';
 import ModalBase from '../../../../shared/modalBase';
-import TextBox from './textbox';
+import SymbolTextBox from '../../../../shared/SymbolTextbox';
 import css from './styles.scss';
 
 const FromItemText = ({ name, onChange, hint, value, symbol }) => {
@@ -9,7 +9,7 @@ const FromItemText = ({ name, onChange, hint, value, symbol }) => {
       <div className={css.formItem}>
         <div className={css.name}>{name}</div>
         <div>
-          <TextBox
+          <SymbolTextBox
             hint={hint}
             onChange={onChange}
             defaultValue={value}

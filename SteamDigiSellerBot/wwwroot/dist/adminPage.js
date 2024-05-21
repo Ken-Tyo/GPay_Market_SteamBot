@@ -44904,13 +44904,13 @@ var pageHeader = function pageHeader(_ref) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/textbox/styles.scss
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalProductsFilter_textbox_styles = ({"wrapper":"styles__wrapper--SdU1R","inputControl":"styles__inputControl--Ao0DX","inputArea":"styles__inputArea--oK_Wa","symbol":"styles__symbol--nkGDn","hint":"styles__hint--Qp_Tw"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/textbox/index.js
+/* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/index.js
 
 
-var modalProductsFilter_textbox_TextBox = function TextBox(_ref) {
+var SymbolTextBox = function SymbolTextBox(_ref) {
   var hint = _ref.hint,
     onChange = _ref.onChange,
     defaultValue = _ref.defaultValue,
@@ -44921,25 +44921,25 @@ var modalProductsFilter_textbox_TextBox = function TextBox(_ref) {
     if (onChange) onChange(val);
   };
   return /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_textbox_styles.wrapper,
+    className: SymbolTextbox_styles.wrapper,
     onChange: onChangeText,
     style: {
       width: width
     }
   }, /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_textbox_styles.inputControl
+    className: SymbolTextbox_styles.inputControl
   }, /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_textbox_styles.inputArea
+    className: SymbolTextbox_styles.inputArea
   }, /*#__PURE__*/react.createElement("input", {
     type: 'text',
     defaultValue: defaultValue
   }), symbol && /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_textbox_styles.symbol
+    className: SymbolTextbox_styles.symbol
   }, symbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_textbox_styles.hint
+    className: SymbolTextbox_styles.hint
   }, hint));
 };
-/* harmony default export */ const modalProductsFilter_textbox = (modalProductsFilter_textbox_TextBox);
+/* harmony default export */ const SymbolTextbox = (SymbolTextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalProductsFilter_styles = ({"content":"styles__content--HSI89","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","actions":"styles__actions--iuJTu"});
@@ -44974,7 +44974,7 @@ var modalProductsFilter_FromItemText = function FromItemText(_ref) {
     className: modalProductsFilter_styles.formItem
   }, /*#__PURE__*/react.createElement("div", {
     className: modalProductsFilter_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalProductsFilter_textbox, {
+  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(SymbolTextbox, {
     hint: hint,
     onChange: onChange,
     defaultValue: value,
@@ -51458,42 +51458,6 @@ var headers = {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const orders_styles = ({"wrapper":"styles__wrapper--xtlFR","section":"styles__section--rwRse","titleSection":"styles__titleSection--zYrhD","title":"styles__title--WKZpi","subTitle":"styles__subTitle--js79u","content":"styles__content--Sp65e"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalFilter/textbox/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const modalFilter_textbox_styles = ({"wrapper":"styles__wrapper--Zuew1","inputControl":"styles__inputControl--kBAuZ","inputArea":"styles__inputArea--yZtaa","symbol":"styles__symbol--p1lOD","hint":"styles__hint--ywZQl"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalFilter/textbox/index.js
-
-
-var modalFilter_textbox_TextBox = function TextBox(_ref) {
-  var hint = _ref.hint,
-    onChange = _ref.onChange,
-    defaultValue = _ref.defaultValue,
-    symbol = _ref.symbol,
-    width = _ref.width;
-  var onChangeText = function onChangeText(event) {
-    var val = event.target.value;
-    if (onChange) onChange(val);
-  };
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_textbox_styles.wrapper,
-    onChange: onChangeText,
-    style: {
-      width: width
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), symbol && /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_textbox_styles.symbol
-  }, symbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_textbox_styles.hint
-  }, hint));
-};
-/* harmony default export */ const modalFilter_textbox = (modalFilter_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalFilter/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalFilter_styles = ({"content":"styles__content--LLrX9","formItem":"styles__formItem--Q9nn_","name":"styles__name--DEGFv","doubleControl":"styles__doubleControl--xN7Ry","actions":"styles__actions--HJ7Es"});
@@ -51534,7 +51498,7 @@ var modalFilter_FromItemText = function FromItemText(_ref) {
     className: modalFilter_styles.formItem
   }, /*#__PURE__*/react.createElement("div", {
     className: modalFilter_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalFilter_textbox, {
+  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(SymbolTextbox, {
     hint: hint,
     onChange: onChange,
     defaultValue: value,

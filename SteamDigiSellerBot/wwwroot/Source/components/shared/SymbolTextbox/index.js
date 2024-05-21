@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './styles.scss';
 
-const TextBox = ({ hint, onChange, defaultValue, symbol, width }) => {
+const SymbolTextBox = ({ hint, onChange, defaultValue, symbol, width }) => {
   const onChangeText = (event) => {
     let val = event.target.value;
     if (onChange) onChange(val);
@@ -24,4 +24,4 @@ const TextBox = ({ hint, onChange, defaultValue, symbol, width }) => {
   );
 };
 
-export default TextBox;
+export default SymbolTextBox;
