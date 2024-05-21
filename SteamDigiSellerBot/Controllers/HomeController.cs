@@ -239,7 +239,7 @@ namespace SteamDigiSellerBot.Controllers
                         MaxSellPercent = null
                     };
                     await _gameSessionRepository.AddAsync(db, gs);
-                    await _gameSessionService.SetSteamContact(gs, soldItem.Options.ToArray());
+                    await _gameSessionService.SetSteamContact(db, gs, soldItem.Options.ToArray());
                 }
                 else
                 {

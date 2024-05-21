@@ -70,7 +70,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             _logger = logger;
         }
 
-        public async Task SetSteamContact(GameSession gs, params Option[] opts)
+        public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
         {
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
 
@@ -136,7 +136,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             });
             gs.BotSwitchList = new();
 
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
         }
     

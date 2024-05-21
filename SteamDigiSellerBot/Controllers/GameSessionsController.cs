@@ -293,7 +293,7 @@ namespace SteamDigiSellerBot.Controllers
             }
             
             var opt = new Option { Value = req.SteamContact };
-            await _gameSessionService.SetSteamContact(gs, opt);
+            await _gameSessionService.SetSteamContact(db, gs, opt);
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
             return Ok(gsi);
