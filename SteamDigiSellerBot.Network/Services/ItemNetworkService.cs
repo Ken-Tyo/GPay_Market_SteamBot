@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Contexts;

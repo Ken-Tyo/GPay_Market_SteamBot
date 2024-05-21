@@ -54,6 +54,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IWsNotificationSender _wsNotifSender;
         private readonly ISuperBotPool _superBotPool;
         private readonly ICurrencyDataService _currencyDataService;
+        private readonly DatabaseContext db;
 
         private object obj = new object();
         public HomeController(ILogger<HomeController> logger,
@@ -69,7 +70,8 @@ namespace SteamDigiSellerBot.Controllers
             IWsNotificationSender wsNotificationSender,
             ISuperBotPool superBotPool,
             ICurrencyDataService currencyDataService,
-            GameSessionManager gameSessionManager)
+            GameSessionManager gameSessionManager,
+            DatabaseContext db)
         {
             _logger = logger;
 
@@ -91,6 +93,7 @@ namespace SteamDigiSellerBot.Controllers
             _wsNotifSender = wsNotificationSender;
             _superBotPool = superBotPool;
             _currencyDataService = currencyDataService;
+            this.db = db;
         }
 
         public IActionResult Index()
@@ -131,7 +134,6 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             GameSession gs = null;
-            await using var db = _gameSessionRepository.GetContext();
             if (!string.IsNullOrWhiteSpace(uniquecode) && uniquecode.Length > 15)
             {
                 lock(obj)
@@ -202,7 +204,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             GameSession gs = null;
             bool isCorrectCode = false; 
-            await using var db= _userDBRepository.GetContext();
             UserDB user = (await _userDBRepository
                             .ListAsync(db,u => u.AspNetUser.Id == _configuration.GetSection("adminID").Value))
                             .FirstOrDefault();
@@ -267,7 +268,6 @@ namespace SteamDigiSellerBot.Controllers
 
         public async Task<IActionResult> LastOrders()
         {
-            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             var gameSessions = await _gameSessionRepository.GetLastValidGameSessions(db,10);
             return Ok(_mapper.Map<List<LastOrder>>(gameSessions));
         }

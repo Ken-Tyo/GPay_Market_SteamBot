@@ -31,7 +31,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         Task<GameSession> GetForReset(DatabaseContext db, int id);
         Task UpdateQueueInfo(GameSession gs);
         Task<GameSessionStage> GetStageBy(int gsId);
-        Task<List<GameSession>> GetGameSessionForPipline(DatabaseContext db, Expression<Func<GameSession, bool>> predicate);
+        Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate);
     }
 
     public class GameSessionRepository : BaseRepositoryEx<GameSession>, IGameSessionRepository
@@ -139,8 +139,9 @@ namespace SteamDigiSellerBot.Database.Repositories
             return await GetGameSessionIds(db, predicate);
         }
 
-        public async Task<List<GameSession>> GetGameSessionForPipline(DatabaseContext db, Expression<Func<GameSession, bool>> predicate)
+        public async Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate)
         {
+            await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
                 .Include(x=> x.Item)
                 .Include(x=> x.GameSessionStatusLogs)
