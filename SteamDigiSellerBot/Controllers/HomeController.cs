@@ -27,6 +27,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SteamDigiSellerBot.Database.Contexts;
+using SteamDigiSellerBot.Services.Implementation;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -67,7 +68,8 @@ namespace SteamDigiSellerBot.Controllers
             IMemoryCache memoryCache,
             IWsNotificationSender wsNotificationSender,
             ISuperBotPool superBotPool,
-            ICurrencyDataService currencyDataService)
+            ICurrencyDataService currencyDataService,
+            GameSessionManager gameSessionManager)
         {
             _logger = logger;
 
@@ -129,12 +131,12 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             GameSession gs = null;
-
+            await using var db = _gameSessionRepository.GetContext();
             if (!string.IsNullOrWhiteSpace(uniquecode) && uniquecode.Length > 15)
             {
                 lock(obj)
                 {
-                    using var db = _gameSessionRepository.GetContext();
+                    
                     gs = _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode)).Result;
 
                     if (gs == null)
