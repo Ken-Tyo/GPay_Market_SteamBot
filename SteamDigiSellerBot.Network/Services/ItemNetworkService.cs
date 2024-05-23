@@ -210,7 +210,7 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         var finalPrice = digiSellerPriceWithAllSales + item.AddPrice;
                         if ((item.CurrentDigiSellerPrice != finalPrice || reUpdate || (prices != null &&
-                                ids.Any(id => prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice))))) &&
+                                ids.Any(id => prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice))>1))) &&
                             currentSteamPrice > 0)
                         {
                             if (item.CurrentDigiSellerPrice != finalPrice)
