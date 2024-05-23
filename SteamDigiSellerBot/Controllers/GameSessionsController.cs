@@ -242,6 +242,7 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var user = await _userDBRepository.GetByAspNetUserName(User.Identity.Name);
+            db.Attach(user);
             var (_, prices) = _gameSessionService.GetSortedPriorityPrices(item);
             var firstPrice = prices.FirstOrDefault();
             if (firstPrice == null)
@@ -261,7 +262,7 @@ namespace SteamDigiSellerBot.Controllers
             {
                 var gs = _mapper.Map<GameSession>(req);
 
-                gs.User = user;
+                gs.UserId = user.Id;
                 gs.Item = item;
                 gs.StatusId = GameSessionStatusEnum.ProfileNoSet;
                 gs.PriorityPrice = priorityPriceRub;

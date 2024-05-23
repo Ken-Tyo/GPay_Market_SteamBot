@@ -142,17 +142,35 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate)
         {
             await using var db = _dbContextFactory.CreateDbContext();
-            return await db.GameSessions
-                .AsNoTracking()
-                .Where(predicate)
-                .Select(gs => new GameSession
-                {
-                    Id = gs.Id,
-                    StatusId = gs.StatusId,
-                    Stage = gs.Stage,
-                    AutoSendInvitationTime = gs.AutoSendInvitationTime
-                })
-                .ToListAsync();
+            try
+            {
+                return await db.GameSessions
+                    .AsNoTracking()
+                    .Where(predicate)
+                    .Select(gs => new GameSession
+                    {
+                        Id = gs.Id,
+                        StatusId = gs.StatusId,
+                        Stage = gs.Stage,
+                        AutoSendInvitationTime = gs.AutoSendInvitationTime
+                    })
+                    .ToListAsync();
+            }
+            catch
+            {
+                await Task.Delay(TimeSpan.FromSeconds(3));
+                return await db.GameSessions
+                    .AsNoTracking()
+                    .Where(predicate)
+                    .Select(gs => new GameSession
+                    {
+                        Id = gs.Id,
+                        StatusId = gs.StatusId,
+                        Stage = gs.Stage,
+                        AutoSendInvitationTime = gs.AutoSendInvitationTime
+                    })
+                    .ToListAsync();
+            }
         }
 
         public async Task<GameSession> GetForReset(DatabaseContext db, int id)
