@@ -221,7 +221,7 @@ namespace SteamDigiSellerBot.Network.Services
                                          prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice))))
                             {
                                 var id = ids.First(id =>
-                                    prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice)));
+                                    prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice)) > 1);
                                 _logger.LogWarning(
                                     $"SetPrices Update: {item.Id} {id} обновление цены диги {Math.Round(prices[id])} -> {Math.Round(finalPrice)}");
 
