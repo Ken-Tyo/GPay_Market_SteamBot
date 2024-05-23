@@ -174,7 +174,7 @@ namespace SteamDigiSellerBot.Network.Services
                 while (requestLocker)
                     await Task.Delay(25);
                 var dbItems = await db.Items.Include(i => i.GamePrices)
-                    .Where(i => i.AppId == appId && items.Contains(i.SubId)).ToListAsync();
+                    .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
 
                 var currencyForParse = allCurrencies;
                 var currencyDataLastUpdate = currencyData?.LastUpdateDateTime ?? DateTime.MinValue;
