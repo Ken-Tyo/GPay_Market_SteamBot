@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Network.Services
                         {
                             if (item.CurrentDigiSellerPrice != finalPrice)
                                 _logger.LogWarning(
-                                $"SetPrices Update: обновление цены {item.CurrentDigiSellerPrice} -> {finalPrice}");
+                                $"SetPrices Update: {item.Id} обновление цены {item.CurrentDigiSellerPrice} -> {finalPrice}");
                             else if (prices != null &&
                                      ids.Any(id =>
                                          prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice))))
@@ -223,7 +223,7 @@ namespace SteamDigiSellerBot.Network.Services
                                 var id = ids.First(id =>
                                     prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice)));
                                 _logger.LogWarning(
-                                    $"SetPrices Update: обновление цены диги {Math.Round(prices[id])} -> {Math.Round(finalPrice)}");
+                                    $"SetPrices Update: {item.Id} {id} обновление цены диги {Math.Round(prices[id])} -> {Math.Round(finalPrice)}");
 
                             }
 
