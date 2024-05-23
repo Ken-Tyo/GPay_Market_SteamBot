@@ -173,8 +173,18 @@ namespace SteamDigiSellerBot.Network.Services
                 // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
                 while (requestLocker)
                     await Task.Delay(25);
-                var dbItems = await db.Items.Include(i => i.GamePrices)
-                    .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                List<Item> dbItems;
+                try
+                {
+                    dbItems = await db.Items.Include(i => i.GamePrices)
+                        .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                }
+                catch
+                {
+                    await Task.Delay(1000);
+                    dbItems = await db.Items.Include(i => i.GamePrices)
+                        .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                }
 
                 var currencyForParse = allCurrencies;
                 var currencyDataLastUpdate = currencyData?.LastUpdateDateTime ?? DateTime.MinValue;
@@ -203,11 +213,25 @@ namespace SteamDigiSellerBot.Network.Services
                                 ids.Any(id => prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice))))) &&
                             currentSteamPrice > 0)
                         {
+                            if (item.CurrentDigiSellerPrice != finalPrice)
+                                _logger.LogWarning(
+                                $"SetPrices Update: обновление цены {item.CurrentDigiSellerPrice} -> {finalPrice}");
+                            else if (prices != null &&
+                                     ids.Any(id =>
+                                         prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice))))
+                            {
+                                var id = ids.First(id =>
+                                    prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice)));
+                                _logger.LogWarning(
+                                    $"SetPrices Update: обновление цены диги {Math.Round(prices[id])} -> {Math.Round(finalPrice)}");
+
+                            }
+
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
                                 finalPrice / item.CurrentDigiSellerPrice < 0.1M)
                             {
                                 _logger.LogWarning(
-                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой в {(finalPrice / item.CurrentDigiSellerPrice * 10):0.0}%");
+                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%");
                                 item.CurrentDigiSellerPriceNeedAttention = true;
                             }
                             else

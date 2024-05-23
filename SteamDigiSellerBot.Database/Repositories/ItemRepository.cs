@@ -41,6 +41,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .Where(i => !i.IsDeleted)
                 .OrderBy(x => x.AddedDateTime)
                 .ThenBy(x => x.AppId)
+                .AsSplitQuery()
                 .ToListAsync();
 
             return items;
@@ -70,6 +71,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             await using var db = dbContextFactory.CreateDbContext();
             return await db.Items
                 .Include(i => i.GamePrices)
+                .AsSplitQuery()
                 .Where(predicate).ToListAsync();
         }
 
