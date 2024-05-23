@@ -143,8 +143,6 @@ namespace SteamDigiSellerBot.Database.Repositories
         {
             await using var db = _dbContextFactory.CreateDbContext();
             return await db.GameSessions
-                .Include(x=> x.Item)
-                .Include(x=> x.GameSessionStatusLogs)
                 .AsNoTracking()
                 .Where(predicate)
                 .Select(gs => new GameSession
