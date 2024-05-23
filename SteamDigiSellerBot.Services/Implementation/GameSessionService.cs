@@ -596,6 +596,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                         sbot = sb;
                         break;
                     }
+                    if (i == 1)
+                        _botPool.ReLogin(bot);
+                    await Task.Delay(TimeSpan.FromSeconds(5));
                 }
 
                 if (!successLogin)
