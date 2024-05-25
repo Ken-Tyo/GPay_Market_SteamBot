@@ -147,6 +147,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {
             await using var db = _dbContextFactory.CreateDbContext();
+            db.Entry(currencyData);
             _global.currencyCache = null;
             var client = new System.Net.Http.HttpClient();
             var timeoutSec = 61;
@@ -171,9 +172,8 @@ namespace SteamDigiSellerBot.Database.Repositories
 
                     if (currency.Value != curToRub)
                     {
-
-                        currency.Value = curToRub;
                         db.Entry(currency);
+                        currency.Value = curToRub;
                     }
 
                     i++;
@@ -201,6 +201,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
             await EditAsync(db,currencyData);
+            _global.currencyCache = null;
             //await context.SaveChangesAsync();
         }
 
