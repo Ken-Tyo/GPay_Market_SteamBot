@@ -147,7 +147,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {
             await using var db = _dbContextFactory.CreateDbContext();
-            db.Entry(currencyData);
+          
             var client = new System.Net.Http.HttpClient();
             var timeoutSec = 61;
             var res = await client.GetAsync("http://steamcommunity.com/market/priceoverview/?appid=440&currency=1&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
@@ -172,8 +172,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                         $"UpdateCurrencyData ({currencyData.Id}) currency {currency.SteamId} {currency.SteamSymbol}: old value {currency.Value} new value {curToRub}");
                     if (currency.Value != curToRub)
                     {
-                        db.Entry(currency);
                         currency.Value = curToRub;
+                        db.Entry(currency).State= EntityState.Modified;
                     }
 
                     i++;
@@ -200,6 +200,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
+            db.Entry(currencyData).State= EntityState.Modified;
             //await EditAsync(db,currencyData);
             await db.SaveChangesAsync();
             _global.currencyCache = null;
