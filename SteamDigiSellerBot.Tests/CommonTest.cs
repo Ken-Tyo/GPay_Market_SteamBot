@@ -25,6 +25,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using SteamDigiSellerBot.Utilities.Models;
 using xNet;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace SteamDigiSellerBot.Tests
 {
@@ -388,6 +390,65 @@ namespace SteamDigiSellerBot.Tests
                 Game g = new();
                 SteamNetworkService.ParseHtmlDiscountCountdown(edition,g);
             }
+        }
+
+        [Test]
+        public async Task CurrencyCurrent()
+        {
+            var currencyData = new CurrencyData();
+
+            foreach (var cur in CurrencyDataRepository.DefaultSteamCurrencies)
+            {
+                currencyData.Currencies.Add(cur);
+            }
+            var client = new System.Net.Http.HttpClient();
+            var timeoutSec = 61;
+            var res = await client.GetAsync("http://steamcommunity.com/market/priceoverview/?appid=440&currency=1&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
+            var json = await res.Content.ReadAsStringAsync();
+            var usdPrice = JsonConvert.DeserializeObject<SteamMarketPriceOwerview>(json).GetPrice();
+
+
+            int reqCount = 0;
+            for (int i = 0; i < currencyData.Currencies.Count;)
+            //            foreach (Currency currency in currencyData.Currencies)
+            {
+                var currency = currencyData.Currencies[i];
+                try
+                {
+                    //https://store.steampowered.com/api/appdetails?appids=236790&filters=price_overview&cc=US
+                    res = await client.GetAsync(
+                        $"http://steamcommunity.com/market/priceoverview/?appid=440&currency={currency.SteamId}&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
+                    json = await res.Content.ReadAsStringAsync();
+                    var currPrice = JsonConvert.DeserializeObject<SteamMarketPriceOwerview>(json).GetPrice();
+                    var curToRub = currPrice / usdPrice;
+
+                    if (currency.Value != curToRub)
+                    {
+                        currency.Value = curToRub;
+                    }
+
+                    i++;
+                    reqCount++;
+                    if (reqCount % 10 == 0)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
+                        Debug.WriteLine("pause");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("\n------------\n");
+                    Console.WriteLine($"UpdateCurrencyData - {ex.Message}\n{ex.StackTrace}\n");
+                    Console.WriteLine($"{currency.Code} - {currency.Name}\n");
+                    Console.WriteLine($"TIMEOUT - {timeoutSec} sec");
+                    Console.WriteLine("\n------------\n");
+
+                    reqCount = 0;
+                    await Task.Delay(TimeSpan.FromSeconds(timeoutSec));
+                }
+            }
+
+            currencyData.LastUpdateDateTime = DateTime.UtcNow;
         }
 
     }
