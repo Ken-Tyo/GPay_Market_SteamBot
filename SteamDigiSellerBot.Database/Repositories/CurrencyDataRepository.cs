@@ -148,7 +148,6 @@ namespace SteamDigiSellerBot.Database.Repositories
         {
             await using var db = _dbContextFactory.CreateDbContext();
             db.Entry(currencyData);
-            _global.currencyCache = null;
             var client = new System.Net.Http.HttpClient();
             var timeoutSec = 61;
             var res = await client.GetAsync("http://steamcommunity.com/market/priceoverview/?appid=440&currency=1&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
@@ -169,7 +168,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                     json = await res.Content.ReadAsStringAsync();
                     var currPrice = JsonConvert.DeserializeObject<SteamMarketPriceOwerview>(json).GetPrice();
                     var curToRub = currPrice / usdPrice;
-
+                    _logger.LogInformation(
+                        $"UpdateCurrencyData ({currencyData.Id}) currency {currency.SteamId} {currency.SteamSymbol}: old value {currency.Value} new value {curToRub}");
                     if (currency.Value != curToRub)
                     {
                         db.Entry(currency);
@@ -200,14 +200,15 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
-            await EditAsync(db,currencyData);
+            //await EditAsync(db,currencyData);
+            await db.SaveChangesAsync();
             _global.currencyCache = null;
-            //await context.SaveChangesAsync();
+            
         }
 
         public async Task UpdateCurrencyDataManual(CurrencyData newCurrencyData)
         {
-            _global.currencyCache = null;
+
             CurrencyData currencyData = await InitCurrencyData();
 
             foreach (Currency currency in currencyData.Currencies)
@@ -221,6 +222,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
             await EditAsync(currencyData);
+            _global.currencyCache = null;
         }
 
         public async Task<Dictionary<int, Currency>> GetCurrencyDictionary(bool useCache = false)

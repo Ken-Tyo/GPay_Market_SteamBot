@@ -399,6 +399,7 @@ namespace SteamDigiSellerBot.Tests
 
             foreach (var cur in CurrencyDataRepository.DefaultSteamCurrencies)
             {
+                if (cur.SteamId==5)
                 currencyData.Currencies.Add(cur);
             }
             var client = new System.Net.Http.HttpClient();
