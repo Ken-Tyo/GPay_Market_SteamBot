@@ -24,8 +24,8 @@ export const state = entity({
   productsFilter:{
       appId: '',
       productName:"",
-      steamCurrencyId: null,
-      steamCountryCodeId: null,
+      steamCurrencyId: [],
+      steamCountryCodeId: [],
       digiSellerId: ""
   },
   gameSessionsStatuses: {},

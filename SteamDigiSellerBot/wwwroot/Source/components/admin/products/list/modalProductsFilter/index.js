@@ -8,12 +8,32 @@ import { state } from '../../../../../containers/admin/state';
 import TextBox from '../../../../shared/textbox2';
 import Select from '../../../../shared/select';
 
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import MUISelect from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     const initial = {
       appId: '',
       productName:"",
-      steamCurrencyId: 5,
-      steamCountryCodeId: 28,
+      steamCurrencyId: [5],
+      steamCountryCodeId: [28],
       digiSellerIds: "",
       ThirdPartyPriceValue: null,
       ThirdPartyPriceType: 0,
@@ -28,7 +48,6 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           ...value,
         };
   
-        if (!stateVal.steamCurrencyId) stateVal.steamCurrencyId = 0;
         if (!stateVal.statusId) stateVal.statusId = 0;
   
         setItem(stateVal);
@@ -51,7 +70,14 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     
       const handleChange = (prop) => (val) => {
         if (prop === 'steamCurrencyId') {
-          val = currencies.find((c) => c.name === val).id;
+          if(val != null){
+            //var newVal = val.targer.value;
+            //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
+            val = val.target.value;
+        }
+        else{
+          return;
+        }
         } else if (prop === 'steamCountryCodeId') {
           val = regions.find((c) => c.name === val).id;
         }
@@ -65,8 +91,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       };
     
       const currencyVal = (
-        currencies.find((c) => c.id === item.steamCurrencyId) || {}
-      ).name;
+        item.steamCurrencyId || []
+      );
     
       const regionVal = (
         regions.find((c) => c.id === item.steamCountryCodeId) || {}
@@ -99,12 +125,29 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                     onChange={handleChange('steamCountryCodeId')}
                     value={regionVal}
                 />
-                <FormItemSelect
-                    name={'Ценовая основа:'}
-                    options={currencies}
-                    onChange={handleChange('steamCurrencyId')}
-                    value={currencyVal}
-                />
+                <div className={css.formItem}>
+                    <div className={css.name}>Ценовая основа:</div>
+
+                    <div className={css.wrapper}>
+                      <div>
+                        <FormControl className={css.formItem} sx={{ m: 1, width: 300 }}>
+                          <Select
+                            multiple={false}
+                            value={item.steamCurrencyId}
+                            onChange={handleChange('steamCurrencyId')}
+                            input={<OutlinedInput label="Tag" />}
+                            renderValue={(selected) => selected.map(e => e.name).join(", ")}
+                            MenuProps={MenuProps}
+                            options={currencies}
+                            customRenderChild = {(curr) => <MenuItem key={curr.id} value={curr}>
+                                                      <Checkbox checked={item.steamCurrencyId.indexOf(curr.id) > -1} />
+                                                      <ListItemText  primary={curr.name} />
+                                                    </MenuItem>}
+                          />
+                        </FormControl>
+                    </div>
+                  </div>
+                  </div>
 
                 <FormItemText
                     name={'DigisellerIDs:'}

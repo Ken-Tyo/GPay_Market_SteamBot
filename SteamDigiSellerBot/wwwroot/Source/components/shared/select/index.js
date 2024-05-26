@@ -160,8 +160,10 @@ const StyledPopper = styled(PopperUnstyled)`
 `;
 
 export default function MultipleSelectPlaceholder({
+  props,
+  customRenderChild = null,
   options,
-  multiple,
+  multiple = false,
   defaultValue,
   onChange,
   hint,
@@ -185,19 +187,21 @@ export default function MultipleSelectPlaceholder({
 
     return <SelectUnstyled {...props} ref={ref} slots={slots} />;
   });
-
+  const renderItem = customRenderChild == null?(i) => i.name:(i) => customRenderChild(i);
   return (
     <div className={css.wrapper} style={{ width: width }}>
-      <CustomSelect defaultValue={defaultValue} onChange={handleChange}>
+      <CustomSelect {...props} defaultValue={defaultValue} onChange={handleChange} multiple={multiple}>
+        
         {(options || []).map((i) => (
           <StyledOption
             key={i.name}
             value={i.name}
             style={{ color: i.color || '#B3B3B3' }}
-          >
-            {i.name}
+          > 
+          {renderItem(i)}
           </StyledOption>
         ))}
+
       </CustomSelect>
       {hint && <div className={css.hint}>{hint}</div>}
     </div>
