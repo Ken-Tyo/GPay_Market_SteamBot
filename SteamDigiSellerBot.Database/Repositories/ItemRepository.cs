@@ -19,7 +19,12 @@ namespace SteamDigiSellerBot.Database.Repositories
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetByAppIdAndSubId(string appId, string subId);
         Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items);
-        Task<(List<Item> result, int count)> Filter(string appId);
+        Task<(List<Item> result, int count)> Filter(
+            string appId,
+            string productName,
+            int? steamCountryCodeId,
+            int? steamCurrencyId,
+            string digiSellerId);
     }
 
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
@@ -50,7 +55,12 @@ namespace SteamDigiSellerBot.Database.Repositories
         }
 
 
-        public async Task<(List<Item> result, int count)> Filter(string appId)
+        public async Task<(List<Item> result, int count)> Filter(
+            string appId, 
+            string productName, 
+            int? steamCountryCodeId,
+            int? steamCurrencyId,
+            string digiSellerId)
         {
             await using var db = dbContextFactory.CreateDbContext();
             var sortedQuery = db.Items
@@ -63,8 +73,11 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .ThenBy(x => x.AppId);
 
             Expression<Func<Item, bool>> predicate = (item) =>
-
-                    (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId));
+                    (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
+                    && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
+                    && (!steamCurrencyId.HasValue || steamCurrencyId <= 0 || steamCurrencyId == item.SteamCurrencyId)
+                    && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
+                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId));
 
             var total = await db.Items
                 .CountAsync(predicate);

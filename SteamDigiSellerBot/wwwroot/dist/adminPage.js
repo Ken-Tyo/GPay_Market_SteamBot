@@ -25201,7 +25201,6 @@ if (true) {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-var __webpack_unused_export__;
 /**
  * @license React
  * react-jsx-runtime.production.min.js
@@ -25212,7 +25211,7 @@ var __webpack_unused_export__;
  * LICENSE file in the root directory of this source tree.
  */
 var f=__webpack_require__(6540),k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:!0,ref:!0,__self:!0,__source:!0};
-function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a)void 0===d[b]&&(d[b]=a[b]);return{$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}__webpack_unused_export__=l;exports.jsx=q;exports.jsxs=q;
+function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a)void 0===d[b]&&(d[b]=a[b]);return{$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}exports.Fragment=l;exports.jsx=q;exports.jsxs=q;
 
 
 /***/ }),
@@ -25825,6 +25824,8 @@ var moment_default = /*#__PURE__*/__webpack_require__.n(moment);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/listCheckBox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const styles = ({"wrapper":"styles__wrapper--MfZIw","checked":"styles__checked--ZUWx4"});
+// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
+var jsx_runtime = __webpack_require__(4848);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/listCheckBox/index.js
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -25832,6 +25833,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 var listCheckBox = function listCheckBox(_ref) {
@@ -25844,16 +25846,17 @@ var listCheckBox = function listCheckBox(_ref) {
   react.useEffect(function () {
     setChecked(value);
   }, [value]);
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
     onClick: function onClick() {
       var newVal = !checked;
       setChecked(newVal);
       if (_onClick) _onClick(newVal);
-    }
-  }, checked && /*#__PURE__*/react.createElement("div", {
-    className: styles.checked
-  }));
+    },
+    children: checked && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: styles.checked
+    })
+  });
 };
 /* harmony default export */ const list_listCheckBox = (listCheckBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/section/index.js
@@ -25880,13 +25883,14 @@ var Section = function Section(_ref) {
     height: height || '65px',
     width: width
   }, styles);
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     style: style,
     className: className,
     onClick: function onClick() {
       if (_onClick) _onClick();
-    }
-  }, children);
+    },
+    children: children
+  });
 };
 /* harmony default export */ const section = (Section);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/iconButton/styles.scss
@@ -25901,6 +25905,7 @@ function iconButton_toPropertyKey(t) { var i = iconButton_toPrimitive(t, "string
 function iconButton_toPrimitive(t, r) { if ("object" != iconButton_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != iconButton_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
+
 var iconButton = function iconButton(_ref) {
   var icon = _ref.icon,
     _onClick = _ref.onClick,
@@ -25911,17 +25916,19 @@ var iconButton = function iconButton(_ref) {
     opacity: '80%',
     cursor: 'inherit'
   } : {};
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: iconButton_styles.button + ' ' + (className || ''),
     style: iconButton_objectSpread({}, disabledStyle),
     onClick: function onClick() {
       if (_onClick && !disabled) _onClick();
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: iconButton_styles.icon
-  }, /*#__PURE__*/react.createElement("img", {
-    src: icon
-  })));
+    },
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: iconButton_styles.icon,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+        src: icon
+      })
+    })
+  });
 };
 /* harmony default export */ const shared_iconButton = (iconButton);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/button/styles.scss
@@ -25936,13 +25943,14 @@ function button_toPropertyKey(t) { var i = button_toPrimitive(t, "string"); retu
 function button_toPrimitive(t, r) { if ("object" != button_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != button_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
+
 var Button = function Button(_ref) {
   var text = _ref.text,
     _onClick = _ref.onClick,
     width = _ref.width,
     height = _ref.height,
     style = _ref.style;
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     style: button_objectSpread({
       width: width || 221,
       height: height || 65
@@ -25950,8 +25958,9 @@ var Button = function Button(_ref) {
     className: button_styles.wrapper + ' ' + button_styles.pointer,
     onClick: function onClick() {
       if (_onClick) _onClick();
-    }
-  }, text);
+    },
+    children: text
+  });
 };
 /* harmony default export */ const shared_button = (Button);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/switch/styles.scss
@@ -25972,6 +25981,7 @@ function switch_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefin
 function switch_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
+
 var SwitchBtn = function SwitchBtn(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
@@ -25983,18 +25993,20 @@ var SwitchBtn = function SwitchBtn(_ref) {
   react.useEffect(function () {
     setChecked(value);
   }, [value]);
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: switch_styles.wrapper,
-    style: switch_objectSpread({}, style)
-  }, /*#__PURE__*/react.createElement("div", {
-    className: switch_styles.track + ' ' + (checked ? switch_styles.checked : ''),
-    onClick: function onClick() {
-      if (onChange) onChange(!checked);
-      setChecked(!checked);
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: switch_styles.thumb + ' ' + (checked ? switch_styles.checked : '')
-  })));
+    style: switch_objectSpread({}, style),
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: switch_styles.track + ' ' + (checked ? switch_styles.checked : ''),
+      onClick: function onClick() {
+        if (onChange) onChange(!checked);
+        setChecked(!checked);
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: switch_styles.thumb + ' ' + (checked ? switch_styles.checked : '')
+      })
+    })
+  });
 };
 /* harmony default export */ const shared_switch = (SwitchBtn);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/styles.scss
@@ -26245,7 +26257,11 @@ var state = es_entity({
     size: 50
   },
   productsFilter: {
-    appId: ''
+    appId: '',
+    productName: "",
+    steamCurrencyId: null,
+    steamCountryCodeId: null,
+    digiSellerId: ""
   },
   gameSessionsStatuses: {},
   bots: [],
@@ -26496,9 +26512,7 @@ var apiFetchItems = /*#__PURE__*/function () {
             method: 'POST'
           };
           if (filter != null) {
-            requestData.body = mapToFormData({
-              appId: filter.appId
-            });
+            requestData.body = mapToFormData(filter);
           }
           _context6.next = 4;
           return fetch('/items/list', requestData);
@@ -33057,8 +33071,6 @@ function getDialogActionsUtilityClass(slot) {
 }
 const dialogActionsClasses = generateUtilityClasses('MuiDialogActions', ['root', 'spacing']);
 /* harmony default export */ const DialogActions_dialogActionsClasses = ((/* unused pure expression or super */ null && (dialogActionsClasses)));
-// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
-var jsx_runtime = __webpack_require__(4848);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/DialogActions/DialogActions.js
 
 
@@ -36433,6 +36445,7 @@ const CircularProgress = /*#__PURE__*/react.forwardRef(function CircularProgress
 
 
 
+
 function ModalBase(_ref) {
   var isOpen = _ref.isOpen,
     children = _ref.children,
@@ -36440,69 +36453,76 @@ function ModalBase(_ref) {
     height = _ref.height,
     width = _ref.width,
     isLoading = _ref.isLoading;
-  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(Dialog_Dialog, {
-    open: isOpen,
-    "aria-labelledby": "alert-dialog-title",
-    "aria-describedby": "alert-dialog-description",
-    sx: {
-      '& .MuiPaper-root': {
-        borderRadius: '34px',
-        backgroundColor: '#7935A3',
-        height: height || 212,
-        width: width || 705,
-        maxWidth: width || 705,
-        overflowY: 'hidden',
-        '&::-webkit-scrollbar': {
-          width: '0px'
-        },
-        '&::-webkit-scrollbar-track': {
-          backgroundColor: 'transparent'
-        },
-        '&::-webkit-scrollbar-thumb': {
-          //background-color: #7D5292;
-          backgroundColor: 'transparent',
-          marginTop: '30px'
-          //box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)(Dialog_Dialog, {
+      open: isOpen,
+      "aria-labelledby": "alert-dialog-title",
+      "aria-describedby": "alert-dialog-description",
+      sx: {
+        '& .MuiPaper-root': {
+          borderRadius: '34px',
+          backgroundColor: '#7935A3',
+          height: height || 212,
+          width: width || 705,
+          maxWidth: width || 705,
+          overflowY: 'hidden',
+          '&::-webkit-scrollbar': {
+            width: '0px'
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'transparent'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            //background-color: #7D5292;
+            backgroundColor: 'transparent',
+            marginTop: '30px'
+            //box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          }
         }
-      }
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      display: 'flex',
-      flexDirection: 'column',
-      //flexFlow: 'column',
-      height: '100%'
-    }
-  }, title && /*#__PURE__*/react.createElement("div", {
-    style: {
-      flex: '0 1 auto'
-    }
-  }, /*#__PURE__*/react.createElement(DialogTitle_DialogTitle, {
-    sx: {
-      color: '#FFFFFF',
-      fontSize: '28px',
-      lineHeight: '28px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: '17px'
-    },
-    id: "alert-dialog-title"
-  }, title)), !isLoading && children, isLoading && /*#__PURE__*/react.createElement("div", {
-    style: {
-      color: 'white',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '619px'
-    }
-  }, /*#__PURE__*/react.createElement(CircularProgress_CircularProgress, {
-    color: "inherit",
-    sx: {
-      height: '99px !important',
-      width: '99px !important'
-    }
-  })))));
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          //flexFlow: 'column',
+          height: '100%'
+        },
+        children: [title && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: {
+            flex: '0 1 auto'
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(DialogTitle_DialogTitle, {
+            sx: {
+              color: '#FFFFFF',
+              fontSize: '28px',
+              lineHeight: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '17px'
+            },
+            id: "alert-dialog-title",
+            children: title
+          })
+        }), !isLoading && children, isLoading && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: {
+            color: 'white',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '619px'
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
+            color: "inherit",
+            sx: {
+              height: '99px !important',
+              width: '99px !important'
+            }
+          })
+        })]
+      })
+    })
+  });
 }
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalConfirm/styles.scss
 // extracted by mini-css-extract-plugin
@@ -36519,6 +36539,7 @@ function modalConfirm_toPrimitive(t, r) { if ("object" != modalConfirm_typeof(t)
 
 
 
+
 function ConfirmModal(_ref) {
   var isOpen = _ref.isOpen,
     title = _ref.title,
@@ -36529,40 +36550,46 @@ function ConfirmModal(_ref) {
   var confirmBgStyle = onConfirm !== null && onConfirm !== void 0 && onConfirm.bg ? {
     backgroundColor: onConfirm.bg
   } : {};
-  return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(ModalBase, {
-    isOpen: isOpen,
-    title: title,
-    height: height
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalConfirm_styles.content
-  }, content), /*#__PURE__*/react.createElement(DialogActions_DialogActions, {
-    className: modalConfirm_styles.actions,
-    sx: {
-      paddingTop: 0,
-      paddingBottom: '0 !important'
-    }
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: (onConfirm === null || onConfirm === void 0 ? void 0 : onConfirm.text) || 'Удалить',
-    onClick: function onClick() {
-      if (onConfirm !== null && onConfirm !== void 0 && onConfirm.action) onConfirm.action();
-    },
-    style: modalConfirm_objectSpread({
-      marginRight: '28px'
-    }, confirmBgStyle)
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: (onCancel === null || onCancel === void 0 ? void 0 : onCancel.text) || 'Отмена',
-    onClick: function onClick() {
-      if (onCancel !== null && onCancel !== void 0 && onCancel.action) onCancel.action();
-    },
-    style: {
-      backgroundColor: '#9A7AA9'
-    }
-  }))));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+      isOpen: isOpen,
+      title: title,
+      height: height,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalConfirm_styles.content,
+        children: content
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)(DialogActions_DialogActions, {
+        className: modalConfirm_styles.actions,
+        sx: {
+          paddingTop: 0,
+          paddingBottom: '0 !important'
+        },
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: (onConfirm === null || onConfirm === void 0 ? void 0 : onConfirm.text) || 'Удалить',
+          onClick: function onClick() {
+            if (onConfirm !== null && onConfirm !== void 0 && onConfirm.action) onConfirm.action();
+          },
+          style: modalConfirm_objectSpread({
+            marginRight: '28px'
+          }, confirmBgStyle)
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: (onCancel === null || onCancel === void 0 ? void 0 : onCancel.text) || 'Отмена',
+          onClick: function onClick() {
+            if (onCancel !== null && onCancel !== void 0 && onCancel.action) onCancel.action();
+          },
+          style: {
+            backgroundColor: '#9A7AA9'
+          }
+        })]
+      })]
+    })
+  });
 }
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalEdit/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const textbox_styles = ({"wrapper":"styles__wrapper--ozQiP","inputControl":"styles__inputControl--EP9w5","inputArea":"styles__inputArea--Xc622","cymbol":"styles__cymbol--IkbKt","hint":"styles__hint--wejYH"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalEdit/textbox/index.js
+
 
 
 var textbox_TextBox = function TextBox(_ref) {
@@ -36575,24 +36602,29 @@ var textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: textbox_styles.wrapper,
     onChange: onChangeText,
     style: {
       width: width
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), cymbol && /*#__PURE__*/react.createElement("div", {
-    className: textbox_styles.cymbol
-  }, cymbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: textbox_styles.hint
-  }, hint));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: textbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: textbox_styles.cymbol,
+          children: cymbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const textbox = (textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalEdit/textSwitch/styles.scss
@@ -36607,6 +36639,7 @@ function textSwitch_iterableToArrayLimit(r, l) { var t = null == r ? null : "und
 function textSwitch_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
+
 var TextSwitch = function TextSwitch(_ref) {
   var onChange = _ref.onChange,
     options = _ref.options,
@@ -36618,19 +36651,26 @@ var TextSwitch = function TextSwitch(_ref) {
   react.useEffect(function () {
     setChecked(defaultValue);
   }, [defaultValue]);
-  return /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.track,
-    onClick: function onClick() {
-      if (onChange) onChange(!checked);
-      setChecked(!checked);
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.options
-  }, /*#__PURE__*/react.createElement("div", null, options[0]), /*#__PURE__*/react.createElement("div", null, options[1])), /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.thumb + ' ' + (checked ? textSwitch_styles.checked : '')
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: textSwitch_styles.wrapper,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: textSwitch_styles.track,
+      onClick: function onClick() {
+        if (onChange) onChange(!checked);
+        setChecked(!checked);
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: textSwitch_styles.options,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: options[0]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: options[1]
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: textSwitch_styles.thumb + ' ' + (checked ? textSwitch_styles.checked : '')
+      })]
+    })
+  });
 };
 /* harmony default export */ const textSwitch = (TextSwitch);
 ;// CONCATENATED MODULE: ./node_modules/@mui/base/Select/selectClasses.js
@@ -41089,13 +41129,13 @@ const esm_styled_styled = createStyled_createStyled();
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalEdit/select/index.js
 function select_typeof(o) { "@babel/helpers - typeof"; return select_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, select_typeof(o); }
 var _templateObject;
-function select_extends() { select_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return select_extends.apply(this, arguments); }
 function select_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function select_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? select_ownKeys(Object(t), !0).forEach(function (r) { select_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : select_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function select_defineProperty(obj, key, value) { key = select_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function select_toPropertyKey(t) { var i = select_toPrimitive(t, "string"); return "symbol" == select_typeof(i) ? i : i + ""; }
 function select_toPrimitive(t, r) { if ("object" != select_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != select_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 
 
 
@@ -41163,27 +41203,30 @@ function MultipleSelectPlaceholder(_ref4) {
       listbox: CreateStyledListbox(width, height),
       popper: StyledPopper
     }, props.slots);
-    return /*#__PURE__*/react.createElement(Select_Select, select_extends({}, props, {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(Select_Select, select_objectSpread(select_objectSpread({}, props), {}, {
       ref: ref,
       slots: slots
     }));
   });
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: select_styles.wrapper,
     style: {
       width: width
-    }
-  }, /*#__PURE__*/react.createElement(CustomSelect, {
-    defaultValue: defaultValue,
-    onChange: handleChange
-  }, (options || []).map(function (i) {
-    return /*#__PURE__*/react.createElement(StyledOption, {
-      key: i.name,
-      value: i.name
-    }, i.name);
-  })), hint && /*#__PURE__*/react.createElement("div", {
-    className: select_styles.hint
-  }, hint));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect, {
+      defaultValue: defaultValue,
+      onChange: handleChange,
+      children: (options || []).map(function (i) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)(StyledOption, {
+          value: i.name,
+          children: i.name
+        }, i.name);
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: select_styles.hint,
+      children: hint
+    })]
+  });
 }
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalEdit/styles.scss
 // extracted by mini-css-extract-plugin
@@ -41214,43 +41257,51 @@ function modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     cymbol = _ref.cymbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(textbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    cymbol: cymbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(textbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        cymbol: cymbol
+      })
+    })]
+  });
 };
 var FromItemSwitch = function FromItemSwitch(_ref2) {
   var name = _ref2.name,
     onChange = _ref2.onChange,
     value = _ref2.value;
-  return /*#__PURE__*/React.createElement("div", {
-    className: css.formItem
-  }, /*#__PURE__*/React.createElement("div", {
-    className: css.name
-  }, name), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: '226px',
-      height: '51px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
-  }, /*#__PURE__*/React.createElement(Switch, {
-    value: value,
-    onChange: onChange
-  })));
+  return /*#__PURE__*/_jsxs("div", {
+    className: css.formItem,
+    children: [/*#__PURE__*/_jsx("div", {
+      className: css.name,
+      children: name
+    }), /*#__PURE__*/_jsx("div", {
+      style: {
+        width: '226px',
+        height: '51px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      children: /*#__PURE__*/_jsx(Switch, {
+        value: value,
+        onChange: onChange
+      })
+    })]
+  });
 };
 var FromItemSelect = function FromItemSelect(_ref3) {
   var name = _ref3.name,
@@ -41258,31 +41309,39 @@ var FromItemSelect = function FromItemSelect(_ref3) {
     value = _ref3.value,
     options = _ref3.options,
     hint = _ref3.hint;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(MultipleSelectPlaceholder, {
-    options: options,
-    defaultValue: value,
-    onChange: onChange,
-    hint: hint
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(MultipleSelectPlaceholder, {
+        options: options,
+        defaultValue: value,
+        onChange: onChange,
+        hint: hint
+      })
+    })]
+  });
 };
 var FromItemTextSwitch = function FromItemTextSwitch(_ref4) {
   var name = _ref4.name,
     onChange = _ref4.onChange,
     value = _ref4.value,
     options = _ref4.options;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(textSwitch, {
-    defaultValue: value,
-    onChange: onChange,
-    options: options
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(textSwitch, {
+        defaultValue: value,
+        onChange: onChange,
+        options: options
+      })
+    })]
+  });
 };
 var ModalEdit = function ModalEdit(_ref5) {
   var isOpen = _ref5.isOpen,
@@ -41352,124 +41411,138 @@ var ModalEdit = function ModalEdit(_ref5) {
     return c.id === item.steamCountryCodeId;
   }) || {}).name;
   var isFixedPriceVal = item.isFixedPrice ? digiPriceSetType[1].name : digiPriceSetType[0].name;
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: item.id ? 'Редактировать товар Digiseller' : 'Добавить товар Digiseller',
     width: 554,
-    height: 819
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.content
-  }, /*#__PURE__*/react.createElement(FromItemTextSwitch, {
-    name: 'Тип товара:',
-    onChange: handleChange('isDlc'),
-    value: item.isDlc,
-    options: ['Игра', 'DLC']
-  }), /*#__PURE__*/react.createElement(FromItemText, {
-    name: 'AppID:',
-    onChange: handleChange('appId'),
-    value: item.appId
-  }), /*#__PURE__*/react.createElement(FromItemText, {
-    name: 'Издание (SubID):',
-    onChange: handleChange('subId'),
-    value: item.subId
-  }), /*#__PURE__*/react.createElement(FromItemText, {
-    name: 'Digiseller ID’s:',
-    hint: 'Можно указать несколько позиций, разделять запятой',
-    onChange: handleChange('digiSellerIds'),
-    value: item.digiSellerIds
-  }), /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.name
-  }, !item.isFixedPrice ? 'Процент от Steam:' : 'Цена Digiseller'), /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.doubleControl
-  }, !item.isFixedPrice && /*#__PURE__*/react.createElement(textbox, {
-    onChange: handleChange('steamPercent'),
-    defaultValue: item.steamPercent,
-    width: 157
-  }), item.isFixedPrice && /*#__PURE__*/react.createElement(textbox, {
-    onChange: handleChange('fixedDigiSellerPrice'),
-    defaultValue: item.fixedDigiSellerPrice,
-    width: 157
-  }), /*#__PURE__*/react.createElement(MultipleSelectPlaceholder, {
-    options: digiPriceSetType,
-    defaultValue: isFixedPriceVal,
-    onChange: handleChange('isFixedPrice'),
-    width: 69,
-    height: 75
-  }))), !item.isFixedPrice && /*#__PURE__*/react.createElement(FromItemText, {
-    name: 'Доп. ценовой параметр:',
-    hint: 'Данный параметр будет прибавляться или убавляться от итоговой расценки товара',
-    onChange: handleChange('addPrice'),
-    value: item.addPrice
-  }), item.isFixedPrice && /*#__PURE__*/react.createElement(FromItemText, {
-    name: 'Мин. порог актуальности:',
-    hint: /*#__PURE__*/react.createElement("div", null, "\u0415\u0441\u043B\u0438 \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043D\u0430\u044F \u0446\u0435\u043D\u0430 \u0431\u0443\u0434\u0435\u0442 \u043D\u0438\u0436\u0435 \u0434\u0430\u043D\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F - \u0442\u043E\u0432\u0430\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438", /*#__PURE__*/react.createElement("div", {
-      style: {
-        marginTop: '9px',
-        display: 'flex',
-        color: 'white',
-        fontSize: '12px',
-        alignItems: 'center'
-      }
-    }, /*#__PURE__*/react.createElement("div", null, "\u0410\u0432\u0442\u043E-\u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u044F:"), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(shared_switch, {
-      value: item.isAutoActivation,
-      onChange: handleChange('isAutoActivation'),
-      style: {
-        transform: 'scale(0.6)'
-      }
-    })))),
-    onChange: handleChange('minActualThreshold'),
-    value: item.minActualThreshold,
-    cymbol: '%'
-  }), /*#__PURE__*/react.createElement(FromItemSelect, {
-    name: 'Регион получения:',
-    options: regions,
-    onChange: handleChange('steamCountryCodeId'),
-    value: regionVal
-  }), /*#__PURE__*/react.createElement(FromItemSelect, {
-    name: 'Ценовая основа:',
-    options: currencies,
-    onChange: handleChange('steamCurrencyId'),
-    value: currencyVal,
-    hint: 'Валюта, которая будет браться за основу цены товара. Стоимость будет конвертирована и установлена в рублях исходя из установленного курса в настройках'
-  })), /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: item.id ? 'Сохранить' : 'Добавить',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '24px',
-      width: '271px'
-    },
-    onClick: function onClick() {
-      onSave(item);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: /*#__PURE__*/modalEdit_asyncToGenerator( /*#__PURE__*/modalEdit_regeneratorRuntime().mark(function _callee() {
-      return modalEdit_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            if (onCancel) onCancel();
-            //await setItem(initial);
-          case 1:
-          case "end":
-            return _context.stop();
+    height: 819,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalEdit_styles.content,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(FromItemTextSwitch, {
+        name: 'Тип товара:',
+        onChange: handleChange('isDlc'),
+        value: item.isDlc,
+        options: ['Игра', 'DLC']
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemText, {
+        name: 'AppID:',
+        onChange: handleChange('appId'),
+        value: item.appId
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemText, {
+        name: 'Издание (SubID):',
+        onChange: handleChange('subId'),
+        value: item.subId
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemText, {
+        name: 'Digiseller ID’s:',
+        hint: 'Можно указать несколько позиций, разделять запятой',
+        onChange: handleChange('digiSellerIds'),
+        value: item.digiSellerIds
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalEdit_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalEdit_styles.name,
+          children: !item.isFixedPrice ? 'Процент от Steam:' : 'Цена Digiseller'
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalEdit_styles.doubleControl,
+          children: [!item.isFixedPrice && /*#__PURE__*/(0,jsx_runtime.jsx)(textbox, {
+            onChange: handleChange('steamPercent'),
+            defaultValue: item.steamPercent,
+            width: 157
+          }), item.isFixedPrice && /*#__PURE__*/(0,jsx_runtime.jsx)(textbox, {
+            onChange: handleChange('fixedDigiSellerPrice'),
+            defaultValue: item.fixedDigiSellerPrice,
+            width: 157
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(MultipleSelectPlaceholder, {
+            options: digiPriceSetType,
+            defaultValue: isFixedPriceVal,
+            onChange: handleChange('isFixedPrice'),
+            width: 69,
+            height: 75
+          })]
+        })]
+      }), !item.isFixedPrice && /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemText, {
+        name: 'Доп. ценовой параметр:',
+        hint: 'Данный параметр будет прибавляться или убавляться от итоговой расценки товара',
+        onChange: handleChange('addPrice'),
+        value: item.addPrice
+      }), item.isFixedPrice && /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemText, {
+        name: 'Мин. порог актуальности:',
+        hint: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          children: ["\u0415\u0441\u043B\u0438 \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u043D\u0430\u044F \u0446\u0435\u043D\u0430 \u0431\u0443\u0434\u0435\u0442 \u043D\u0438\u0436\u0435 \u0434\u0430\u043D\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F - \u0442\u043E\u0432\u0430\u0440 \u0431\u0443\u0434\u0435\u0442 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438", /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            style: {
+              marginTop: '9px',
+              display: 'flex',
+              color: 'white',
+              fontSize: '12px',
+              alignItems: 'center'
+            },
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              children: "\u0410\u0432\u0442\u043E-\u0430\u043A\u0442\u0438\u0432\u0430\u0446\u0438\u044F:"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
+                value: item.isAutoActivation,
+                onChange: handleChange('isAutoActivation'),
+                style: {
+                  transform: 'scale(0.6)'
+                }
+              })
+            })]
+          })]
+        }),
+        onChange: handleChange('minActualThreshold'),
+        value: item.minActualThreshold,
+        cymbol: '%'
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemSelect, {
+        name: 'Регион получения:',
+        options: regions,
+        onChange: handleChange('steamCountryCodeId'),
+        value: regionVal
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(FromItemSelect, {
+        name: 'Ценовая основа:',
+        options: currencies,
+        onChange: handleChange('steamCurrencyId'),
+        value: currencyVal,
+        hint: 'Валюта, которая будет браться за основу цены товара. Стоимость будет конвертирована и установлена в рублях исходя из установленного курса в настройках'
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalEdit_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: item.id ? 'Сохранить' : 'Добавить',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '24px',
+          width: '271px'
+        },
+        onClick: function onClick() {
+          onSave(item);
         }
-      }, _callee);
-    })),
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: /*#__PURE__*/modalEdit_asyncToGenerator( /*#__PURE__*/modalEdit_regeneratorRuntime().mark(function _callee() {
+          return modalEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                if (onCancel) onCancel();
+                //await setItem(initial);
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        })),
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalEdit = (ModalEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPercentEdit/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalBulkPercentEdit_textbox_styles = ({"wrapper":"styles__wrapper--ispxo","inputControl":"styles__inputControl--N6zn4","inputArea":"styles__inputArea--QoNMg","cymbol":"styles__cymbol--dlwCA","hint":"styles__hint--IhFHo"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPercentEdit/textbox/index.js
+
 
 
 var modalBulkPercentEdit_textbox_TextBox = function TextBox(_ref) {
@@ -41481,21 +41554,26 @@ var modalBulkPercentEdit_textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalBulkPercentEdit_textbox_styles.wrapper,
-    onChange: onChangeText
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), cymbol && /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_textbox_styles.cymbol
-  }, cymbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_textbox_styles.hint
-  }, hint));
+    onChange: onChangeText,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPercentEdit_textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalBulkPercentEdit_textbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalBulkPercentEdit_textbox_styles.cymbol,
+          children: cymbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPercentEdit_textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const modalBulkPercentEdit_textbox = (modalBulkPercentEdit_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPercentEdit/styles.scss
@@ -41513,22 +41591,27 @@ function modalBulkPercentEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) retu
 
 
 
+
 var modalBulkPercentEdit_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     cymbol = _ref.cymbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalBulkPercentEdit_textbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    cymbol: cymbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalBulkPercentEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPercentEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPercentEdit_textbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        cymbol: cymbol
+      })
+    })]
+  });
 };
 var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref2) {
   var isOpen = _ref2.isOpen,
@@ -41542,42 +41625,45 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref2) {
   var handleChange = function handleChange(val) {
     setVal(val);
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Массовая смена цен',
     width: 554,
-    height: 272
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_styles.content
-  }, /*#__PURE__*/react.createElement(modalBulkPercentEdit_FromItemText, {
-    name: 'Введите цену в процентах. Цена будет рассчитываться от цены игр в Steam',
-    onChange: handleChange,
-    value: val,
-    cymbol: '%'
-  })), /*#__PURE__*/react.createElement("div", {
-    className: modalBulkPercentEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Подтвердить',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '24px',
-      width: '271px'
-    },
-    onClick: function onClick() {
-      onSave(val);
-      setVal('');
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-      setVal('');
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+    height: 272,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPercentEdit_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPercentEdit_FromItemText, {
+        name: 'Введите цену в процентах. Цена будет рассчитываться от цены игр в Steam',
+        onChange: handleChange,
+        value: val,
+        cymbol: '%'
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalBulkPercentEdit_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Подтвердить',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '24px',
+          width: '271px'
+        },
+        onClick: function onClick() {
+          onSave(val);
+          setVal('');
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+          setVal('');
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalBulkPercentEdit = (ModalBulkPercentEdit);
 ;// CONCATENATED MODULE: ./node_modules/@mui/utils/debounce/debounce.js
@@ -42115,6 +42201,7 @@ const Popover = /*#__PURE__*/react.forwardRef(function Popover(inProps, ref) {
 
 
 
+
 var list = function list(_ref) {
   var data = _ref.data,
     headers = _ref.headers,
@@ -42122,33 +42209,48 @@ var list = function list(_ref) {
     isLoading = _ref.isLoading,
     loadingText = _ref.loadingText;
   var headerIdx = 0;
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_list_styles.wrapper,
     style: {
       overflow: isLoading ? 'hidden' : 'inherit'
-    }
-  }, /*#__PURE__*/react.createElement("table", null, /*#__PURE__*/react.createElement("thead", null, /*#__PURE__*/react.createElement("tr", {
-    "class": "head"
-  }, headers === null || headers === void 0 ? void 0 : headers.map(function (h) {
-    var positionCss = '';
-    if (headerIdx === 0) positionCss = shared_list_styles.first;else if (headerIdx === headers.length - 1) positionCss = shared_list_styles.last;
-    headerIdx++;
-    return /*#__PURE__*/react.createElement("th", null, /*#__PURE__*/react.createElement("div", {
-      className: positionCss
-    }, h));
-  }))), /*#__PURE__*/react.createElement("tbody", null, data === null || data === void 0 ? void 0 : data.map(function (i) {
-    return itemRenderer(i);
-  }))), isLoading && /*#__PURE__*/react.createElement("div", {
-    className: shared_list_styles.dump
-  }, /*#__PURE__*/react.createElement("div", {
-    className: shared_list_styles.loader
-  }, /*#__PURE__*/react.createElement(CircularProgress_CircularProgress, {
-    color: "inherit",
-    sx: {
-      height: '99px !important',
-      width: '99px !important'
-    }
-  })), /*#__PURE__*/react.createElement("div", null, loadingText)));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("table", {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("thead", {
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("tr", {
+          "class": "head",
+          children: headers === null || headers === void 0 ? void 0 : headers.map(function (h) {
+            var positionCss = '';
+            if (headerIdx === 0) positionCss = shared_list_styles.first;else if (headerIdx === headers.length - 1) positionCss = shared_list_styles.last;
+            headerIdx++;
+            return /*#__PURE__*/(0,jsx_runtime.jsx)("th", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: positionCss,
+                children: h
+              })
+            });
+          })
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("tbody", {
+        children: data === null || data === void 0 ? void 0 : data.map(function (i) {
+          return itemRenderer(i);
+        })
+      })]
+    }), isLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: shared_list_styles.dump,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: shared_list_styles.loader,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
+          color: "inherit",
+          sx: {
+            height: '99px !important',
+            width: '99px !important'
+          }
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: loadingText
+      })]
+    })]
+  });
 };
 /* harmony default export */ const shared_list = (list);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/index.js
@@ -42166,6 +42268,7 @@ function list_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof
 function list_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function list_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -42228,369 +42331,445 @@ var products = function products() {
   var headers = {
     checkbox: '',
     game: 'Игра',
-    product: /*#__PURE__*/react.createElement("div", {
+    product: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       style: {
         display: 'flex',
         alignItems: 'center'
-      }
-    }, /*#__PURE__*/react.createElement("div", null, "\u0422\u043E\u0432\u0430\u0440"), /*#__PURE__*/react.createElement("img", {
-      src: additem_namespaceObject,
-      style: {
-        marginLeft: '10px',
-        cursor: 'pointer'
       },
-      onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee() {
-        return list_regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return setSelectedItem({
-                steamCurrencyId: 5
-              });
-            case 2:
-              toggleEditItemModal(true);
-            case 3:
-            case "end":
-              return _context.stop();
-          }
-        }, _callee);
-      }))
-    })),
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: "\u0422\u043E\u0432\u0430\u0440"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+        src: additem_namespaceObject,
+        style: {
+          marginLeft: '10px',
+          cursor: 'pointer'
+        },
+        onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee() {
+          return list_regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return setSelectedItem({
+                  steamCurrencyId: 5
+                });
+              case 2:
+                toggleEditItemModal(true);
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        }))
+      })]
+    }),
     price: 'Цена',
     lastRegion: '',
     discount: '',
     options: 'Опции',
     active: ''
   };
-  return /*#__PURE__*/react.createElement("div", {
-    className: list_styles.wrapper
-  }, /*#__PURE__*/react.createElement(shared_list, {
-    headers: Object.values(headers),
-    data: _toConsumableArray(items),
-    isLoading: itemsLoading,
-    loadingText: 'Происходит обновление цен',
-    itemRenderer: function itemRenderer(i) {
-      var priceColor = '#D4D4D4';
-      if (i.currentDigiSellerPrice > i.currentSteamPriceRub) priceColor = '#EDBE16';else if (i.currentDigiSellerPrice < i.currentSteamPriceRub) priceColor = '#13E428';
-      var activeRow = '';
-      if (selectedItems.indexOf(i.id) !== -1) activeRow = list_styles.active;
-      var discountEndTime = '';
-      var discountEndTimeExpired = !i.isDiscount;
-      if (i.isDiscount) {
-        if (i.discountEndTime == INFINTITY_DATE) {
-          discountEndTime = "∞";
-        } else {
-          var offset = new Date().getTimezoneOffset();
-          var det = moment_default()(i.discountEndTime).add(-1 * offset, 'minutes');
-          var last = moment_default().duration(det.diff(moment_default()()));
-          var hoursToShowCountDown = 24;
-          if (last.asHours() > hoursToShowCountDown) {
-            discountEndTime = 'до ' + det.format('DD.MM');
-          } else if (last.asHours() > 0 && last.asHours() <= hoursToShowCountDown) {
-            discountEndTime = "".concat(last.hours().toFixed(0).padStart(2, '0'), "\u0447. ").concat((last.minutes() % 60).toFixed(0).padStart(2, '0'), "\u043C.");
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: list_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
+      headers: Object.values(headers),
+      data: _toConsumableArray(items),
+      isLoading: itemsLoading,
+      loadingText: 'Происходит обновление цен',
+      itemRenderer: function itemRenderer(i) {
+        var priceColor = '#D4D4D4';
+        if (i.currentDigiSellerPrice > i.currentSteamPriceRub) priceColor = '#EDBE16';else if (i.currentDigiSellerPrice < i.currentSteamPriceRub) priceColor = '#13E428';
+        var activeRow = '';
+        if (selectedItems.indexOf(i.id) !== -1) activeRow = list_styles.active;
+        var discountEndTime = '';
+        var discountEndTimeExpired = !i.isDiscount;
+        if (i.isDiscount) {
+          if (i.discountEndTime == INFINTITY_DATE) {
+            discountEndTime = "∞";
           } else {
-            discountEndTimeExpired = true;
-          }
-        }
-      }
-      var steamPriceColor = discountEndTimeExpired ? '#D4D4D4' : '#CCCF1C';
-      var getDiffPriceInPercent = function getDiffPriceInPercent() {
-        if (i.currentSteamPriceRub === 0) return 0;
-        return (i.currentDigiSellerPrice * 100 / i.currentSteamPriceRub).toFixed(0);
-      };
-      var additionalInfo = i.isFixedPrice ? "".concat(getDiffPriceInPercent(), "%") : "".concat(i.steamPercent, "% ").concat(i.addPrice, " rub");
-      return /*#__PURE__*/react.createElement("tr", {
-        key: i.id,
-        className: activeRow
-      }, /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.listItemCheckbox
-      }, /*#__PURE__*/react.createElement(list_listCheckBox, {
-        onClick: function onClick(val) {
-          if (val) {
-            var newArr = _toConsumableArray(selectedItems);
-            newArr.push(i.id);
-            setSelectedItems(newArr);
-          } else {
-            var _newArr = selectedItems.filter(function (id) {
-              return id != i.id;
-            });
-            setSelectedItems(_newArr);
-          }
-        },
-        value: selectedItems.indexOf(i.id) !== -1
-      })))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.game
-      }, /*#__PURE__*/react.createElement("div", null, i.appId), /*#__PURE__*/react.createElement("div", null, "(", i.subId, ")", ' ', i.isDlc && /*#__PURE__*/react.createElement("span", {
-        className: list_styles.dlc
-      }, "DLC"))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell,
-        style: {
-          justifyContent: 'start'
-        }
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.product
-      }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("span", {
-        style: i.name === "Error" ? {
-          color: "#A12C2C"
-        } : {}
-      }, i.name)), /*#__PURE__*/react.createElement("div", null, i.digiSellerIds && i.digiSellerIds.join(','))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.price
-      }, !i.isPriceParseError && /*#__PURE__*/react.createElement("div", {
-        className: list_styles.items
-      }, /*#__PURE__*/react.createElement("div", {
-        style: {
-          cursor: 'pointer'
-        },
-        onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee2() {
-          var item;
-          return list_regeneratorRuntime().wrap(function _callee2$(_context2) {
-            while (1) switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return apiGetItem(i.id);
-              case 2:
-                item = _context2.sent;
-                setSelectedItem(item);
-                setStateProp('itemsMode', common_itemsMode[2]);
-              case 5:
-              case "end":
-                return _context2.stop();
+            var offset = new Date().getTimezoneOffset();
+            var det = moment_default()(i.discountEndTime).add(-1 * offset, 'minutes');
+            var last = moment_default().duration(det.diff(moment_default()()));
+            var hoursToShowCountDown = 24;
+            if (last.asHours() > hoursToShowCountDown) {
+              discountEndTime = 'до ' + det.format('DD.MM');
+            } else if (last.asHours() > 0 && last.asHours() <= hoursToShowCountDown) {
+              discountEndTime = "".concat(last.hours().toFixed(0).padStart(2, '0'), "\u0447. ").concat((last.minutes() % 60).toFixed(0).padStart(2, '0'), "\u043C.");
+            } else {
+              discountEndTimeExpired = true;
             }
-          }, _callee2);
-        }))
-      }, /*#__PURE__*/react.createElement("span", {
-        style: {
-          color: priceColor
-        }
-      }, i.currentDigiSellerPrice.toFixed(0), " rub"), ' ', "|", ' ', /*#__PURE__*/react.createElement("span", null, i.currentSteamPrice, ' ', currencyDict[i.steamCurrencyId].steamSymbol)), /*#__PURE__*/react.createElement("div", {
-        style: {
-          color: steamPriceColor
-        }
-      }, additionalInfo)), i.isPriceParseError && /*#__PURE__*/react.createElement("div", {
-        className: list_styles.priceParseErr
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.errMes
-      }, /*#__PURE__*/react.createElement("div", null, "\u041E\u0448\u0438\u0431\u043A\u0430"), /*#__PURE__*/react.createElement(Typography_Typography, {
-        "aria-owns": open ? 'mouse-over-popover' : undefined,
-        "aria-haspopup": "true",
-        onMouseEnter: function onMouseEnter(event) {
-          setAnchorEl(event.currentTarget);
-          if (i.currentSteamPriceRub < 0) {
-            setErrParsePriceText('Возможно проблема связана с парсингом цены и валютой.');
-            return;
           }
-          i.isBundle ? setErrParsePriceText('Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно') : setErrParsePriceText('Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены');
-        },
-        onMouseLeave: function onMouseLeave() {
-          setAnchorEl(null);
         }
-      }, /*#__PURE__*/react.createElement("img", {
-        src: warning_namespaceObject
-      }))), /*#__PURE__*/react.createElement("div", {
-        className: list_styles.errState
-      }, "95% - ", /*#__PURE__*/react.createElement("span", {
-        style: {
-          color: '#A12C2C'
-        }
-      }, "\u041E\u0428\u0418\u0411\u041A\u0410")))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, i.lastSendedRegionCode && /*#__PURE__*/react.createElement("div", {
-        className: list_styles.lastSendedRegion
-      }, i.lastSendedRegionCode))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, i.isDiscount && !discountEndTimeExpired && /*#__PURE__*/react.createElement("div", {
-        className: list_styles.discount
-      }, /*#__PURE__*/react.createElement(section, {
-        className: list_styles.badge,
-        bgcolor: '#A9AC26',
-        height: 39,
-        width: 116
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.text
-      }, "-", i.discountPercent, "%")), /*#__PURE__*/react.createElement("div", {
-        className: list_styles.date
-      }, discountEndTime == "∞" ? /*#__PURE__*/react.createElement("img", {
-        src: infinity_namespaceObject
-      }) : discountEndTime)))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.buttons
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.btnWrapper
-      }, /*#__PURE__*/react.createElement(shared_iconButton, {
-        icon: pen_namespaceObject,
-        onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee3() {
-          return list_regeneratorRuntime().wrap(function _callee3$(_context3) {
-            while (1) switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return setSelectedItem(i);
-              case 2:
-                toggleEditItemModal(true);
-              case 3:
-              case "end":
-                return _context3.stop();
+        var steamPriceColor = discountEndTimeExpired ? '#D4D4D4' : '#CCCF1C';
+        var getDiffPriceInPercent = function getDiffPriceInPercent() {
+          if (i.currentSteamPriceRub === 0) return 0;
+          return (i.currentDigiSellerPrice * 100 / i.currentSteamPriceRub).toFixed(0);
+        };
+        var additionalInfo = i.isFixedPrice ? "".concat(getDiffPriceInPercent(), "%") : "".concat(i.steamPercent, "% ").concat(i.addPrice, " rub");
+        return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
+          className: activeRow,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.listItemCheckbox,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(list_listCheckBox, {
+                  onClick: function onClick(val) {
+                    if (val) {
+                      var newArr = _toConsumableArray(selectedItems);
+                      newArr.push(i.id);
+                      setSelectedItems(newArr);
+                    } else {
+                      var _newArr = selectedItems.filter(function (id) {
+                        return id != i.id;
+                      });
+                      setSelectedItems(_newArr);
+                    }
+                  },
+                  value: selectedItems.indexOf(i.id) !== -1
+                })
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: list_styles.game,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: i.appId
+                }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: ["(", i.subId, ")", ' ', i.isDlc && /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                    className: list_styles.dlc,
+                    children: "DLC"
+                  })]
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              style: {
+                justifyContent: 'start'
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: list_styles.product,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                    style: i.name === "Error" ? {
+                      color: "#A12C2C"
+                    } : {},
+                    children: i.name
+                  })
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: i.digiSellerIds && i.digiSellerIds.join(',')
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: list_styles.price,
+                children: [!i.isPriceParseError && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.items,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    style: {
+                      cursor: 'pointer'
+                    },
+                    onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee2() {
+                      var item;
+                      return list_regeneratorRuntime().wrap(function _callee2$(_context2) {
+                        while (1) switch (_context2.prev = _context2.next) {
+                          case 0:
+                            _context2.next = 2;
+                            return apiGetItem(i.id);
+                          case 2:
+                            item = _context2.sent;
+                            setSelectedItem(item);
+                            setStateProp('itemsMode', common_itemsMode[2]);
+                          case 5:
+                          case "end":
+                            return _context2.stop();
+                        }
+                      }, _callee2);
+                    })),
+                    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                      style: {
+                        color: priceColor
+                      },
+                      children: [i.currentDigiSellerPrice.toFixed(0), " rub"]
+                    }), ' ', "|", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                      children: [i.currentSteamPrice, ' ', currencyDict[i.steamCurrencyId].steamSymbol]
+                    })]
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    style: {
+                      color: steamPriceColor
+                    },
+                    children: additionalInfo
+                  })]
+                }), i.isPriceParseError && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.priceParseErr,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    className: list_styles.errMes,
+                    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                      children: "\u041E\u0448\u0438\u0431\u043A\u0430"
+                    }), /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, {
+                      "aria-owns": open ? 'mouse-over-popover' : undefined,
+                      "aria-haspopup": "true",
+                      onMouseEnter: function onMouseEnter(event) {
+                        setAnchorEl(event.currentTarget);
+                        if (i.currentSteamPriceRub < 0) {
+                          setErrParsePriceText('Возможно проблема связана с парсингом цены и валютой.');
+                          return;
+                        }
+                        i.isBundle ? setErrParsePriceText('Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно') : setErrParsePriceText('Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены');
+                      },
+                      onMouseLeave: function onMouseLeave() {
+                        setAnchorEl(null);
+                      },
+                      children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                        src: warning_namespaceObject
+                      })
+                    })]
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    className: list_styles.errState,
+                    children: ["95% - ", /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                      style: {
+                        color: '#A12C2C'
+                      },
+                      children: "\u041E\u0428\u0418\u0411\u041A\u0410"
+                    })]
+                  })]
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: i.lastSendedRegionCode && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.lastSendedRegion,
+                children: i.lastSendedRegionCode
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: i.isDiscount && !discountEndTimeExpired && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: list_styles.discount,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+                  className: list_styles.badge,
+                  bgcolor: '#A9AC26',
+                  height: 39,
+                  width: 116,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    className: list_styles.text,
+                    children: ["-", i.discountPercent, "%"]
+                  })
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.date,
+                  children: discountEndTime == "∞" ? /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                    src: infinity_namespaceObject
+                  }) : discountEndTime
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: list_styles.buttons,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.btnWrapper,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                    icon: pen_namespaceObject,
+                    onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee3() {
+                      return list_regeneratorRuntime().wrap(function _callee3$(_context3) {
+                        while (1) switch (_context3.prev = _context3.next) {
+                          case 0:
+                            _context3.next = 2;
+                            return setSelectedItem(i);
+                          case 2:
+                            toggleEditItemModal(true);
+                          case 3:
+                          case "end":
+                            return _context3.stop();
+                        }
+                      }, _callee3);
+                    }))
+                  })
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.btnWrapper,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                    icon: trash_namespaceObject,
+                    onClick: function onClick() {
+                      setSelectedItem(i);
+                      setOpenDelConfirm(!openDelConfirm);
+                    }
+                  })
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.buttons,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  style: {
+                    marginLeft: '30px',
+                    marginRight: '15px'
+                  },
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
+                    value: i.active,
+                    onChange: function onChange() {
+                      apiSetItemActiveStatus([i.id]);
+                    }
+                  })
+                })
+              })
+            })
+          })]
+        }, i.id);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: list_styles.massChangeMenu + ' ' + (selectedItems.length > 0 ? list_styles.active : ''),
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: list_styles.title,
+        children: ["\u0412\u044B\u0434\u0435\u043B\u0435\u043D\u043E: ", selectedItems.length]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: list_styles.actions,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: list_styles.btnWrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: selectedItems.length === items.length ? 'Снять выделения' : 'Выделить все',
+            style: massChangeButStyle,
+            onClick: function onClick() {
+              if (selectedItems.length === items.length) {
+                setSelectedItems([]);
+              } else {
+                setSelectedItems(items.map(function (i) {
+                  return i.id;
+                }));
+              }
             }
-          }, _callee3);
-        }))
-      })), /*#__PURE__*/react.createElement("div", {
-        className: list_styles.btnWrapper
-      }, /*#__PURE__*/react.createElement(shared_iconButton, {
-        icon: trash_namespaceObject,
-        onClick: function onClick() {
-          setSelectedItem(i);
-          setOpenDelConfirm(!openDelConfirm);
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: list_styles.btnWrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Вкл/выкл группу',
+            style: massChangeButStyle,
+            onClick: function onClick() {
+              apiSetItemActiveStatus(selectedItems);
+            }
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: list_styles.btnWrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Массовая смена цен',
+            style: massChangeButStyle,
+            onClick: function onClick() {
+              toggleBulkEditPercentModal(true);
+            }
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: list_styles.btnWrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Удалить все',
+            style: massChangeButStyle,
+            onClick: function onClick() {
+              setOpenMassDelConfirm(true);
+            }
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit, {
+      isOpen: editItemModalIsOpen,
+      value: selectedItem,
+      onCancel: function onCancel() {
+        toggleEditItemModal(false);
+      },
+      onSave: function onSave(newItem) {
+        console.log(newItem);
+        if (newItem.id) apiChangeItem(newItem);else apiCreateItem(newItem);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+      title: 'Подтвердите удаление',
+      content: "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C ".concat(selectedItems.length, " \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0445 \u043F\u043E\u0437\u0438\u0446\u0438\u0439?"),
+      isOpen: openMassDelConfirm,
+      onConfirm: {
+        action: function action() {
+          apiBulkDeleteItem(selectedItems);
+          setSelectedItems([]);
+          setOpenMassDelConfirm(false);
         }
-      }))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: list_styles.buttons
-      }, /*#__PURE__*/react.createElement("div", {
-        style: {
-          marginLeft: '30px',
-          marginRight: '15px'
+      },
+      onCancel: {
+        action: function action() {
+          setOpenMassDelConfirm(false);
         }
-      }, /*#__PURE__*/react.createElement(shared_switch, {
-        value: i.active,
-        onChange: function onChange() {
-          apiSetItemActiveStatus([i.id]);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+      title: 'Подтвердите удаление',
+      content: selectedItem && selectedItem.name,
+      isOpen: openDelConfirm,
+      onConfirm: {
+        action: function action() {
+          apiDeleteItem(selectedItem.id);
+          setSelectedItems(selectedItems.filter(function (id) {
+            return id != selectedItem.id;
+          }));
+          setOpenDelConfirm(false);
         }
-      }))))));
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    className: list_styles.massChangeMenu + ' ' + (selectedItems.length > 0 ? list_styles.active : '')
-  }, /*#__PURE__*/react.createElement("div", {
-    className: list_styles.title
-  }, "\u0412\u044B\u0434\u0435\u043B\u0435\u043D\u043E: ", selectedItems.length), /*#__PURE__*/react.createElement("div", {
-    className: list_styles.actions
-  }, /*#__PURE__*/react.createElement("div", {
-    className: list_styles.btnWrapper
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: selectedItems.length === items.length ? 'Снять выделения' : 'Выделить все',
-    style: massChangeButStyle,
-    onClick: function onClick() {
-      if (selectedItems.length === items.length) {
-        setSelectedItems([]);
-      } else {
-        setSelectedItems(items.map(function (i) {
-          return i.id;
-        }));
+      },
+      onCancel: {
+        action: function action() {
+          setOpenDelConfirm(false);
+        }
       }
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: list_styles.btnWrapper
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Вкл/выкл группу',
-    style: massChangeButStyle,
-    onClick: function onClick() {
-      apiSetItemActiveStatus(selectedItems);
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: list_styles.btnWrapper
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Массовая смена цен',
-    style: massChangeButStyle,
-    onClick: function onClick() {
-      toggleBulkEditPercentModal(true);
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: list_styles.btnWrapper
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Удалить все',
-    style: massChangeButStyle,
-    onClick: function onClick() {
-      setOpenMassDelConfirm(true);
-    }
-  })))), /*#__PURE__*/react.createElement(modalEdit, {
-    isOpen: editItemModalIsOpen,
-    value: selectedItem,
-    onCancel: function onCancel() {
-      toggleEditItemModal(false);
-    },
-    onSave: function onSave(newItem) {
-      console.log(newItem);
-      if (newItem.id) apiChangeItem(newItem);else apiCreateItem(newItem);
-    }
-  }), /*#__PURE__*/react.createElement(ConfirmModal, {
-    title: 'Подтвердите удаление',
-    content: "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C ".concat(selectedItems.length, " \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0445 \u043F\u043E\u0437\u0438\u0446\u0438\u0439?"),
-    isOpen: openMassDelConfirm,
-    onConfirm: {
-      action: function action() {
-        apiBulkDeleteItem(selectedItems);
-        setSelectedItems([]);
-        setOpenMassDelConfirm(false);
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPercentEdit, {
+      isOpen: bulkEditPercentModalIsOpen,
+      onCancel: function onCancel() {
+        toggleBulkEditPercentModal(false);
+      },
+      onSave: function onSave(val) {
+        toggleBulkEditPercentModal(false);
+        apiChangeItemBulk(val, selectedItems);
       }
-    },
-    onCancel: {
-      action: function action() {
-        setOpenMassDelConfirm(false);
-      }
-    }
-  }), /*#__PURE__*/react.createElement(ConfirmModal, {
-    title: 'Подтвердите удаление',
-    content: selectedItem && selectedItem.name,
-    isOpen: openDelConfirm,
-    onConfirm: {
-      action: function action() {
-        apiDeleteItem(selectedItem.id);
-        setSelectedItems(selectedItems.filter(function (id) {
-          return id != selectedItem.id;
-        }));
-        setOpenDelConfirm(false);
-      }
-    },
-    onCancel: {
-      action: function action() {
-        setOpenDelConfirm(false);
-      }
-    }
-  }), /*#__PURE__*/react.createElement(modalBulkPercentEdit, {
-    isOpen: bulkEditPercentModalIsOpen,
-    onCancel: function onCancel() {
-      toggleBulkEditPercentModal(false);
-    },
-    onSave: function onSave(val) {
-      toggleBulkEditPercentModal(false);
-      apiChangeItemBulk(val, selectedItems);
-    }
-  }), /*#__PURE__*/react.createElement(Popover_Popover, {
-    id: "mouse-over-popover",
-    sx: {
-      pointerEvents: 'none'
-    },
-    open: open,
-    anchorEl: anchorEl,
-    anchorOrigin: {
-      vertical: 'bottom',
-      horizontal: 'left'
-    },
-    transformOrigin: {
-      vertical: 'top',
-      horizontal: 'left'
-    },
-    onClose: function onClose() {
-      setAnchorEl(null);
-    },
-    disableRestoreFocus: true
-  }, /*#__PURE__*/react.createElement(Typography_Typography, {
-    sx: {
-      width: '327px',
-      //height: '50px',
-      color: '#D4D4D4',
-      backgroundColor: '#43294B',
-      padding: '14px 21px 13px 18px',
-      fontSize: '16px',
-      lineHeight: '20px',
-      borderRadius: 'none'
-    }
-  }, /*#__PURE__*/react.createElement("div", null, errParsePriceText))));
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(Popover_Popover, {
+      id: "mouse-over-popover",
+      sx: {
+        pointerEvents: 'none'
+      },
+      open: open,
+      anchorEl: anchorEl,
+      anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'left'
+      },
+      transformOrigin: {
+        vertical: 'top',
+        horizontal: 'left'
+      },
+      onClose: function onClose() {
+        setAnchorEl(null);
+      },
+      disableRestoreFocus: true,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, {
+        sx: {
+          width: '327px',
+          //height: '50px',
+          color: '#D4D4D4',
+          backgroundColor: '#43294B',
+          padding: '14px 21px 13px 18px',
+          fontSize: '16px',
+          lineHeight: '20px',
+          borderRadius: 'none'
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: errParsePriceText
+        })
+      })
+    })]
+  });
 };
 /* harmony default export */ const products_list = (products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/styles.scss
@@ -44625,6 +44804,7 @@ var useTransformEffect = function (callback) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/modalSetPriceManual/textbox/index.js
 
 
+
 var modalSetPriceManual_textbox_TextBox = function TextBox(_ref) {
   var hint = _ref.hint,
     onChange = _ref.onChange,
@@ -44634,21 +44814,26 @@ var modalSetPriceManual_textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalSetPriceManual_textbox_styles.wrapper,
-    onChange: onChangeText
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), cymbol && /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_textbox_styles.cymbol
-  }, cymbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_textbox_styles.hint
-  }, hint));
+    onChange: onChangeText,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalSetPriceManual_textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalSetPriceManual_textbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalSetPriceManual_textbox_styles.cymbol,
+          children: cymbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalSetPriceManual_textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const modalSetPriceManual_textbox = (modalSetPriceManual_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/modalSetPriceManual/styles.scss
@@ -44666,22 +44851,27 @@ function modalSetPriceManual_arrayWithHoles(arr) { if (Array.isArray(arr)) retur
 
 
 
+
 var modalSetPriceManual_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     cymbol = _ref.cymbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalSetPriceManual_textbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    cymbol: cymbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalSetPriceManual_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalSetPriceManual_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalSetPriceManual_textbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        cymbol: cymbol
+      })
+    })]
+  });
 };
 var ModalSetItemPriceManual = function ModalSetItemPriceManual(_ref2) {
   var _value$priceRubRaw;
@@ -44696,47 +44886,51 @@ var ModalSetItemPriceManual = function ModalSetItemPriceManual(_ref2) {
   var handleChange = function handleChange(val) {
     setVal(val);
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Редактировать цену',
     width: 565,
-    height: 355
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_styles.content
-  }, /*#__PURE__*/react.createElement(modalSetPriceManual_FromItemText, {
-    name: value === null || value === void 0 ? void 0 : value.currencyName,
-    onChange: handleChange,
-    value: value === null || value === void 0 || (_value$priceRubRaw = value.priceRubRaw) === null || _value$priceRubRaw === void 0 ? void 0 : _value$priceRubRaw.toFixed(2),
-    cymbol: '₽'
-  }), /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_styles.hint
-  }, "\u041F\u043E\u0441\u043B\u0435 \u0440\u0443\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F - \u0446\u0435\u043D\u0430 \u0432 \u0434\u0430\u043D\u043D\u043E\u0439 \u0432\u0430\u043B\u044E\u0442\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0441\u043E\u0431\u0438\u0440\u0430\u0442\u044C\u0441\u044F \u043D\u0435 \u0431\u0443\u0434\u0435\u0442 \u043F\u043E\u043A\u0430 \u0432\u044B \u0435\u0435 \u043D\u0435 \u043E\u0431\u043D\u0443\u043B\u0438\u0442\u0435!")), /*#__PURE__*/react.createElement("div", {
-    className: modalSetPriceManual_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Готово',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '36px',
-      width: '221px'
-    },
-    onClick: function onClick() {
-      if (onSave) {
-        onSave(val);
-      }
-      setVal('');
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-      setVal('');
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px',
-      width: '221px'
-    }
-  })));
+    height: 355,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalSetPriceManual_styles.content,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalSetPriceManual_FromItemText, {
+        name: value === null || value === void 0 ? void 0 : value.currencyName,
+        onChange: handleChange,
+        value: value === null || value === void 0 || (_value$priceRubRaw = value.priceRubRaw) === null || _value$priceRubRaw === void 0 ? void 0 : _value$priceRubRaw.toFixed(2),
+        cymbol: '₽'
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalSetPriceManual_styles.hint,
+        children: "\u041F\u043E\u0441\u043B\u0435 \u0440\u0443\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F - \u0446\u0435\u043D\u0430 \u0432 \u0434\u0430\u043D\u043D\u043E\u0439 \u0432\u0430\u043B\u044E\u0442\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0441\u043E\u0431\u0438\u0440\u0430\u0442\u044C\u0441\u044F \u043D\u0435 \u0431\u0443\u0434\u0435\u0442 \u043F\u043E\u043A\u0430 \u0432\u044B \u0435\u0435 \u043D\u0435 \u043E\u0431\u043D\u0443\u043B\u0438\u0442\u0435!"
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalSetPriceManual_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Готово',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '36px',
+          width: '221px'
+        },
+        onClick: function onClick() {
+          if (onSave) {
+            onSave(val);
+          }
+          setVal('');
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+          setVal('');
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px',
+          width: '221px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalSetPriceManual = (ModalSetItemPriceManual);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/index.js
@@ -44746,6 +44940,7 @@ function priceHierarchy_unsupportedIterableToArray(o, minLen) { if (!o) return; 
 function priceHierarchy_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function priceHierarchy_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function priceHierarchy_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -44772,140 +44967,167 @@ var priceHierarchy = function priceHierarchy() {
     _useState4 = priceHierarchy_slicedToArray(_useState3, 2),
     isOpen = _useState4[0],
     setIsOpen = _useState4[1];
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalBase, {
     isOpen: itemsMode === common_itemsMode[2],
     width: "80%",
-    height: "80%"
-  }, /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.priceHierarchyWrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.header
-  }, /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.left
-  }, /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.backBut
-  }, /*#__PURE__*/react.createElement(shared_iconButton, {
-    icon: left_namespaceObject,
-    className: priceHierarchy_styles.but,
-    onClick: function onClick() {
-      setStateProp('itemsMode', common_itemsMode[1]);
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.title
-  }, "\u0426\u0435\u043D\u043E\u0432\u0430\u044F \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u044F -", /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.gameName
-  }, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.name))), /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.right
-  }, "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u0438\u043B\u0430")), /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.content
-  }, /*#__PURE__*/react.createElement(TransformWrapper, {
-    initialScale: 1,
-    minScale: 0.6,
-    limitToBounds: false,
-    doubleClick: {
-      disabled: true
-    },
-    panning: {
-      velocityDisabled: true,
-      activationKeys: ['Control']
-    },
-    wheel: {
-      step: 0.05
-    }
-  }, /*#__PURE__*/react.createElement(TransformComponent, {
-    contentStyle: {
-      height: '100%',
-      width: '100%'
-    },
-    wrapperStyle: {
-      height: '100%',
-      width: '100%'
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: priceHierarchy_styles.hierarchy
-  }, Object.keys(prices || {}).map(function (levNum, idx) {
-    var items = prices[levNum];
-    return /*#__PURE__*/react.createElement("div", {
-      className: priceHierarchy_styles.level
-    }, /*#__PURE__*/react.createElement("div", {
-      className: priceHierarchy_styles.prices
-    }, items.map(function (i, itemIdx) {
-      var dotColor = '#B1A9A9';
-      var nameColor = '#fff';
-      if (i.isPriority) {
-        nameColor = dotColor = '#77C863';
-        if (i.isNotBotExists) {
-          nameColor = dotColor = '#C6C93F';
-        }
-        if (i.failUsingCount >= 3) {
-          nameColor = dotColor = '#C82F2F';
-        }
-      }
-      return /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.priceItemWrapper
-      }, /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.priceItem
-      }, /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.nameRow,
-        onClick: function onClick(e) {
-          if (!e.ctrlKey) {
-            setItemPricePriority(i.id, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.id);
-          }
-        }
-      }, /*#__PURE__*/react.createElement("div", {
-        style: {
-          backgroundColor: dotColor
+    height: "80%",
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: priceHierarchy_styles.priceHierarchyWrapper,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: priceHierarchy_styles.header,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: priceHierarchy_styles.left,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: priceHierarchy_styles.backBut,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+              icon: left_namespaceObject,
+              className: priceHierarchy_styles.but,
+              onClick: function onClick() {
+                setStateProp('itemsMode', common_itemsMode[1]);
+              }
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: priceHierarchy_styles.title,
+            children: ["\u0426\u0435\u043D\u043E\u0432\u0430\u044F \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u044F -", /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: priceHierarchy_styles.gameName,
+              children: selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.name
+            })]
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: priceHierarchy_styles.right,
+          children: "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u043F\u0440\u0430\u0432\u0438\u043B\u0430"
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: priceHierarchy_styles.content,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(TransformWrapper, {
+          initialScale: 1,
+          minScale: 0.6,
+          limitToBounds: false,
+          doubleClick: {
+            disabled: true
+          },
+          panning: {
+            velocityDisabled: true,
+            activationKeys: ['Control']
+          },
+          wheel: {
+            step: 0.05
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(TransformComponent, {
+            contentStyle: {
+              height: '100%',
+              width: '100%'
+            },
+            wrapperStyle: {
+              height: '100%',
+              width: '100%'
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: priceHierarchy_styles.hierarchy,
+              children: Object.keys(prices || {}).map(function (levNum, idx) {
+                var items = prices[levNum];
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: priceHierarchy_styles.level,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: priceHierarchy_styles.prices,
+                    children: items.map(function (i, itemIdx) {
+                      var dotColor = '#B1A9A9';
+                      var nameColor = '#fff';
+                      if (i.isPriority) {
+                        nameColor = dotColor = '#77C863';
+                        if (i.isNotBotExists) {
+                          nameColor = dotColor = '#C6C93F';
+                        }
+                        if (i.failUsingCount >= 3) {
+                          nameColor = dotColor = '#C82F2F';
+                        }
+                      }
+                      return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                        className: priceHierarchy_styles.priceItemWrapper,
+                        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                          className: priceHierarchy_styles.priceItem,
+                          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                            className: priceHierarchy_styles.nameRow,
+                            onClick: function onClick(e) {
+                              if (!e.ctrlKey) {
+                                setItemPricePriority(i.id, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.id);
+                              }
+                            },
+                            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                              style: {
+                                backgroundColor: dotColor
+                              },
+                              className: priceHierarchy_styles.dot
+                            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                              style: {
+                                color: nameColor
+                              },
+                              className: priceHierarchy_styles.currName,
+                              children: i.currencyName
+                            })]
+                          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                            className: priceHierarchy_styles.priceRow,
+                            children: [i.isManualSet && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                              className: priceHierarchy_styles.warn,
+                              children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                                src: priceHierarchy_warning_namespaceObject
+                              })
+                            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                              className: priceHierarchy_styles.price,
+                              children: [i.price, " - ", i.priceRub]
+                            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                              className: priceHierarchy_styles.editBut,
+                              onClick: function onClick(e) {
+                                if (!e.ctrlKey) {
+                                  setSelectedPrice(i);
+                                  setIsOpen(true);
+                                  //console.log('click');
+                                }
+                              },
+                              children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                                src: pen10x10_namespaceObject
+                              })
+                            })]
+                          })]
+                        }), itemIdx !== items.length - 1 && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                          className: priceHierarchy_styles.percent,
+                          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                            children: ["(", percentDiff[i.id].toFixed(1), "%)"]
+                          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                            className: priceHierarchy_styles.line
+                          })]
+                        })]
+                      });
+                    })
+                  }), idx !== Object.keys(prices || {}).length - 1 && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    className: priceHierarchy_styles.lineWrapper,
+                    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                      className: priceHierarchy_styles.percent
+                    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                      className: priceHierarchy_styles.line
+                    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      className: priceHierarchy_styles.percent,
+                      children: ["(", percentDiff[items[items.length - 1].id].toFixed(1), "%)"]
+                    })]
+                  })]
+                });
+              })
+            })
+          })
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalSetPriceManual, {
+        isOpen: isOpen,
+        value: selectedPrice,
+        onCancel: function onCancel() {
+          setIsOpen(false);
         },
-        className: priceHierarchy_styles.dot
-      }), /*#__PURE__*/react.createElement("div", {
-        style: {
-          color: nameColor
-        },
-        className: priceHierarchy_styles.currName
-      }, i.currencyName)), /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.priceRow
-      }, i.isManualSet && /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.warn
-      }, /*#__PURE__*/react.createElement("img", {
-        src: priceHierarchy_warning_namespaceObject
-      })), /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.price
-      }, i.price, " - ", i.priceRub), /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.editBut,
-        onClick: function onClick(e) {
-          if (!e.ctrlKey) {
-            setSelectedPrice(i);
-            setIsOpen(true);
-            //console.log('click');
-          }
+        onSave: function onSave(val) {
+          setItemPrice(selectedPrice.id, val, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.id);
+          setIsOpen(false);
         }
-      }, /*#__PURE__*/react.createElement("img", {
-        src: pen10x10_namespaceObject
-      })))), itemIdx !== items.length - 1 && /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.percent
-      }, /*#__PURE__*/react.createElement("div", null, "(", percentDiff[i.id].toFixed(1), "%)"), /*#__PURE__*/react.createElement("div", {
-        className: priceHierarchy_styles.line
-      })));
-    })), idx !== Object.keys(prices || {}).length - 1 && /*#__PURE__*/react.createElement("div", {
-      className: priceHierarchy_styles.lineWrapper
-    }, /*#__PURE__*/react.createElement("div", {
-      className: priceHierarchy_styles.percent
-    }), /*#__PURE__*/react.createElement("div", {
-      className: priceHierarchy_styles.line
-    }), /*#__PURE__*/react.createElement("div", {
-      className: priceHierarchy_styles.percent
-    }, "(", percentDiff[items[items.length - 1].id].toFixed(1), "%)")));
-  }))))), /*#__PURE__*/react.createElement(modalSetPriceManual, {
-    isOpen: isOpen,
-    value: selectedPrice,
-    onCancel: function onCancel() {
-      setIsOpen(false);
-    },
-    onSave: function onSave(val) {
-      setItemPrice(selectedPrice.id, val, selectedItem === null || selectedItem === void 0 ? void 0 : selectedItem.id);
-      setIsOpen(false);
-    }
-  })));
+      })]
+    })
+  });
 };
 /* harmony default export */ const products_priceHierarchy = (priceHierarchy);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/pageHeader/styles.scss
@@ -44915,29 +45137,40 @@ var priceHierarchy = function priceHierarchy() {
 
 
 
+
 var pageHeader = function pageHeader(_ref) {
   var title = _ref.title,
     subTitle = _ref.subTitle;
-  return /*#__PURE__*/react.createElement(section, {
-    className: pageHeader_styles.section
-  }, /*#__PURE__*/react.createElement(section, {
-    className: pageHeader_styles.titleSection,
-    height: 40,
-    width: 203
-  }, /*#__PURE__*/react.createElement("div", {
-    className: pageHeader_styles.title
-  }, title)), /*#__PURE__*/react.createElement("div", {
-    className: pageHeader_styles.subTitle
-  }, /*#__PURE__*/react.createElement("div", null, subTitle)));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(section, {
+    className: pageHeader_styles.section,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+      className: pageHeader_styles.titleSection,
+      height: 40,
+      width: 203,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: pageHeader_styles.title,
+        children: title
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: pageHeader_styles.subTitle,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: subTitle
+      })
+    })]
+  });
 };
 /* harmony default export */ const admin_pageHeader = (pageHeader);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const modalProductsFilter_styles = ({"formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","content":"styles__content--HSI89","actions":"styles__actions--iuJTu"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/index.js
+
 
 
 var SymbolTextBox = function SymbolTextBox(_ref) {
@@ -44950,29 +45183,244 @@ var SymbolTextBox = function SymbolTextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: SymbolTextbox_styles.wrapper,
     onChange: onChangeText,
     style: {
       width: width
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: SymbolTextbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: SymbolTextbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), symbol && /*#__PURE__*/react.createElement("div", {
-    className: SymbolTextbox_styles.symbol
-  }, symbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: SymbolTextbox_styles.hint
-  }, hint));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: SymbolTextbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: SymbolTextbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), symbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: SymbolTextbox_styles.symbol,
+          children: symbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: SymbolTextbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const SymbolTextbox = (SymbolTextBox);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalProductsFilter_styles = ({"content":"styles__content--HSI89","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","actions":"styles__actions--iuJTu"});
+/* harmony default export */ const formItem_styles = ({"formItem":"styles__formItem--xdAfh","name":"styles__name--yx_Cq","doubleControl":"styles__doubleControl--U0Lj5","wrapper":"styles__wrapper--6H6Ar","inputControl":"styles__inputControl--EQ3c1","inputArea":"styles__inputArea--IAL8q","symbol":"styles__symbol--avEND","hint":"styles__hint--D35Jd"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/text/index.js
+
+
+
+var FormItemText = function FormItemText(_ref) {
+  var name = _ref.name,
+    onChange = _ref.onChange,
+    hint = _ref.hint,
+    value = _ref.value,
+    symbol = _ref.symbol;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: formItem_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: formItem_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(SymbolTextbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        symbol: symbol
+      })
+    })]
+  });
+};
+/* harmony default export */ const formItem_text = (FormItemText);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const shared_select_styles = ({"wrapper":"styles__wrapper--nIiPF","hint":"styles__hint--XYoDr"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/index.js
+function shared_select_typeof(o) { "@babel/helpers - typeof"; return shared_select_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, shared_select_typeof(o); }
+var select_templateObject;
+function shared_select_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function shared_select_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? shared_select_ownKeys(Object(t), !0).forEach(function (r) { shared_select_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : shared_select_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function shared_select_defineProperty(obj, key, value) { key = shared_select_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function shared_select_toPropertyKey(t) { var i = shared_select_toPrimitive(t, "string"); return "symbol" == shared_select_typeof(i) ? i : i + ""; }
+function shared_select_toPrimitive(t, r) { if ("object" != shared_select_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != shared_select_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function select_slicedToArray(arr, i) { return select_arrayWithHoles(arr) || select_iterableToArrayLimit(arr, i) || select_unsupportedIterableToArray(arr, i) || select_nonIterableRest(); }
+function select_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function select_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return select_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return select_arrayLikeToArray(o, minLen); }
+function select_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function select_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function select_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function select_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+
+
+
+var shared_select_blue = {
+  100: '#DAECFF',
+  200: '#99CCF3',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  900: '#003A75'
+};
+var shared_select_grey = {
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f'
+};
+var select_CreateStyledButton = function CreateStyledButton(width, color) {
+  return esm_styled('button')(function (_ref) {
+    var theme = _ref.theme;
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ").concat(color || '#FFFFFF', ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === 'dark' ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n      color: #FFFFFF;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n    color: #FFFFFF;\n  }\n  ");
+  });
+};
+var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
+  return esm_styled('ul')(function (_ref2) {
+    var theme = _ref2.theme;
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[300] : shared_select_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
+  });
+};
+var select_StyledOption = esm_styled(Option_Option)(function (_ref3) {
+  var theme = _ref3.theme;
+  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
+});
+var select_StyledPopper = esm_styled(Popper_Popper)(select_templateObject || (select_templateObject = select_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
+function select_MultipleSelectPlaceholder(_ref4) {
+  var options = _ref4.options,
+    multiple = _ref4.multiple,
+    defaultValue = _ref4.defaultValue,
+    onChange = _ref4.onChange,
+    hint = _ref4.hint,
+    width = _ref4.width,
+    height = _ref4.height;
+  var _useState = (0,react.useState)('#FFFFFF'),
+    _useState2 = select_slicedToArray(_useState, 2),
+    rootColor = _useState2[0],
+    setRootColor = _useState2[1];
+  var handleChange = function handleChange(event, newValue) {
+    if (onChange) onChange(newValue);
+    var currOpt = options === null || options === void 0 ? void 0 : options.find(function (o) {
+      return o.name === newValue;
+    });
+    if (currOpt) setRootColor(currOpt.color);
+  };
+  var CustomSelect = /*#__PURE__*/react.forwardRef(function CustomSelect(props, ref) {
+    var slots = shared_select_objectSpread({
+      root: select_CreateStyledButton(width, rootColor),
+      listbox: select_CreateStyledListbox(width, height),
+      popper: select_StyledPopper
+    }, props.slots);
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(Select_Select, shared_select_objectSpread(shared_select_objectSpread({}, props), {}, {
+      ref: ref,
+      slots: slots
+    }));
+  });
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: shared_select_styles.wrapper,
+    style: {
+      width: width
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect, {
+      defaultValue: defaultValue,
+      onChange: handleChange,
+      children: (options || []).map(function (i) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
+          value: i.name,
+          style: {
+            color: i.color || '#B3B3B3'
+          },
+          children: i.name
+        }, i.name);
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: shared_select_styles.hint,
+      children: hint
+    })]
+  });
+}
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/index.js
+
+
+
+
+var FormItemSelect = function FormItemSelect(_ref) {
+  var name = _ref.name,
+    onChange = _ref.onChange,
+    value = _ref.value,
+    options = _ref.options,
+    hint = _ref.hint;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: formItem_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: formItem_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+        options: options,
+        defaultValue: value,
+        onChange: onChange,
+        hint: hint
+      })
+    })]
+  });
+};
+/* harmony default export */ const formItem_select = (FormItemSelect);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const textbox2_styles = ({"wrapper":"styles__wrapper--NNUA1","inputControl":"styles__inputControl--PRK2k","inputArea":"styles__inputArea--lD00m","cymbol":"styles__cymbol--ja7q_","hint":"styles__hint--RpynI"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/index.js
+
+
+
+var textbox2_TextBox = function TextBox(_ref) {
+  var hint = _ref.hint,
+    onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue,
+    cymbol = _ref.cymbol,
+    width = _ref.width;
+  var onChangeText = function onChangeText(event) {
+    var val = event.target.value;
+    if (onChange) onChange(val);
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: textbox2_styles.wrapper,
+    onChange: onChangeText,
+    style: {
+      width: width
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: textbox2_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: textbox2_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: textbox2_styles.cymbol,
+          children: cymbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: textbox2_styles.hint,
+      children: hint
+    })]
+  });
+};
+/* harmony default export */ const textbox2 = (textbox2_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/index.js
 function modalProductsFilter_typeof(o) { "@babel/helpers - typeof"; return modalProductsFilter_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalProductsFilter_typeof(o); }
 function modalProductsFilter_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalProductsFilter_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalProductsFilter_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalProductsFilter_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -44994,35 +45442,31 @@ function modalProductsFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) retur
 
 
 
-var modalProductsFilter_FromItemText = function FromItemText(_ref) {
-  var name = _ref.name,
-    onChange = _ref.onChange,
-    hint = _ref.hint,
+
+
+
+
+
+var ModalFilter = function ModalFilter(_ref) {
+  var isOpen = _ref.isOpen,
     value = _ref.value,
-    symbol = _ref.symbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(SymbolTextbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    symbol: symbol
-  })));
-};
-var ModalFilter = function ModalFilter(_ref2) {
-  var isOpen = _ref2.isOpen,
-    value = _ref2.value,
-    onCancel = _ref2.onCancel,
-    onSave = _ref2.onSave;
+    onCancel = _ref.onCancel,
+    onSave = _ref.onSave;
   var initial = {
-    appId: ''
+    appId: '',
+    productName: "",
+    steamCurrencyId: 5,
+    steamCountryCodeId: 28,
+    digiSellerIds: "",
+    ThirdPartyPriceValue: null,
+    ThirdPartyPriceType: 0
   };
   var _useState = (0,react.useState)(initial),
     _useState2 = modalProductsFilter_slicedToArray(_useState, 2),
     item = _useState2[0],
     setItem = _useState2[1];
+  var _state$use = state.use(),
+    digiPriceSetType = _state$use.digiPriceSetType;
   (0,react.useEffect)(function () {
     if (value) {
       var stateVal = modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, initial), value);
@@ -45031,53 +45475,129 @@ var ModalFilter = function ModalFilter(_ref2) {
       setItem(stateVal);
     }
   }, [value]);
+  var currencies = state.use().currencies.map(function (c) {
+    return {
+      id: c.steamId,
+      name: c.code
+    };
+  });
+  var regions = state.use().steamRegions.map(function (c) {
+    return {
+      id: c.id,
+      name: c.name
+    };
+  });
   var handleChange = function handleChange(prop) {
     return function (val) {
+      if (prop === 'steamCurrencyId') {
+        val = currencies.find(function (c) {
+          return c.name === val;
+        }).id;
+      } else if (prop === 'steamCountryCodeId') {
+        val = regions.find(function (c) {
+          return c.name === val;
+        }).id;
+      } else if (prop === 'ThirdPartyPriceType') {
+        val = val === '₽';
+      }
+      console.log(prop, val);
       setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, val)));
     };
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  var currencyVal = (currencies.find(function (c) {
+    return c.id === item.steamCurrencyId;
+  }) || {}).name;
+  var regionVal = (regions.find(function (c) {
+    return c.id === item.steamCountryCodeId;
+  }) || {}).name;
+  var ThirdPartyPriceTypeVal = item.ThirdPartyPriceType ? digiPriceSetType[1].name : digiPriceSetType[0].name;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Фильтры отображения',
     width: 705,
-    height: 734
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_styles.content
-  }, /*#__PURE__*/react.createElement(modalProductsFilter_FromItemText, {
-    name: 'AppID:',
-    onChange: handleChange('appId'),
-    value: item.appId
-  })), /*#__PURE__*/react.createElement("div", {
-    className: modalProductsFilter_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отобразить',
-    style: {
-      backgroundColor: '#A348CE',
-      marginRight: '24px',
-      width: '322px'
-    },
-    onClick: function onClick() {
-      onSave(item);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: /*#__PURE__*/modalProductsFilter_asyncToGenerator( /*#__PURE__*/modalProductsFilter_regeneratorRuntime().mark(function _callee() {
-      return modalProductsFilter_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            if (onCancel) onCancel();
-            //await setItem(initial);
-          case 1:
-          case "end":
-            return _context.stop();
+    height: 734,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalProductsFilter_styles.content,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
+        name: 'AppID:',
+        onChange: handleChange('appId'),
+        value: item.appId
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
+        name: 'Название товара:',
+        onChange: handleChange('productName'),
+        value: item.itemName
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_select, {
+        name: 'Регион получения:',
+        options: regions,
+        onChange: handleChange('steamCountryCodeId'),
+        value: regionVal
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_select, {
+        name: 'Ценовая основа:',
+        options: currencies,
+        onChange: handleChange('steamCurrencyId'),
+        value: currencyVal
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
+        name: 'DigisellerIDs:',
+        onChange: handleChange('digiSellerIds'),
+        value: item.digiSellerId
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name,
+          children: !item.ThirdPartyPriceType ? 'Процент от Steam:' : 'Цена Digiseller'
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: modalProductsFilter_styles.wrapper,
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: modalProductsFilter_styles.doubleControl,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
+                onChange: handleChange('ThirdPartyPriceValue'),
+                defaultValue: item.ThirdPartyPriceValue,
+                width: 157
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+                options: digiPriceSetType,
+                defaultValue: ThirdPartyPriceTypeVal,
+                onChange: handleChange('ThirdPartyPriceType'),
+                width: 69,
+                height: 75
+              })]
+            })
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalProductsFilter_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отобразить',
+        style: {
+          backgroundColor: '#A348CE',
+          marginRight: '24px',
+          width: '322px'
+        },
+        onClick: function onClick() {
+          onSave(item);
         }
-      }, _callee);
-    })),
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: /*#__PURE__*/modalProductsFilter_asyncToGenerator( /*#__PURE__*/modalProductsFilter_regeneratorRuntime().mark(function _callee() {
+          return modalProductsFilter_regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                if (onCancel) onCancel();
+                //await setItem(initial);
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        })),
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalProductsFilter = (ModalFilter);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/index.js
@@ -45094,30 +45614,33 @@ function products_toPrimitive(t, r) { if ("object" != products_typeof(t) || !t) 
 
 
 
+
 var products_products = function products() {
   var _state$use = state.use(),
     productsFilter = _state$use.productsFilter,
     filterProductsModalIsOpen = _state$use.filterProductsModalIsOpen;
-  return /*#__PURE__*/react.createElement("div", {
-    className: products_styles.wrapper
-  }, /*#__PURE__*/react.createElement(admin_pageHeader, {
-    title: "Digiseller",
-    subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
-  }), /*#__PURE__*/react.createElement(modalProductsFilter, {
-    isOpen: filterProductsModalIsOpen,
-    value: productsFilter,
-    onCancel: function onCancel() {
-      toggleFilterProductsModal(false);
-    },
-    onSave: function onSave(val) {
-      updateProductsFilter(products_objectSpread(products_objectSpread({}, val), {}, {
-        page: 1
-      }));
-      toggleFilterProductsModal(false);
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    className: products_styles.content
-  }, /*#__PURE__*/react.createElement(products_list, null)), /*#__PURE__*/react.createElement(products_priceHierarchy, null));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: products_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
+      title: "Digiseller",
+      subTitle: "\u041F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F Digiseller \u0431\u043E\u0442\u043E\u043C"
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalProductsFilter, {
+      isOpen: filterProductsModalIsOpen,
+      value: productsFilter,
+      onCancel: function onCancel() {
+        toggleFilterProductsModal(false);
+      },
+      onSave: function onSave(val) {
+        updateProductsFilter(products_objectSpread(products_objectSpread({}, val), {}, {
+          page: 1
+        }));
+        toggleFilterProductsModal(false);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: products_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(products_list, {})
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(products_priceHierarchy, {})]
+  });
 };
 /* harmony default export */ const admin_products = (products_products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/modalSaveText/styles.scss
@@ -45130,6 +45653,7 @@ function modalSaveText_unsupportedIterableToArray(o, minLen) { if (!o) return; i
 function modalSaveText_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalSaveText_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalSaveText_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -45148,46 +45672,52 @@ var modalSaveText = function modalSaveText(_ref) {
     _useState2 = modalSaveText_slicedToArray(_useState, 2),
     val = _useState2[0],
     setVal = _useState2[1];
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: title,
     width: width || 705,
-    height: height || 527
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSaveText_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalSaveText_styles.boxes
-  }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
-    onInput: function onInput(e) {
-      setVal(e.target.value);
-    },
-    rows: "18",
-    "class": modalSaveText_styles.textarea,
-    placeholder: placeholder,
-    defaultValue: defaultValue
-  })))), /*#__PURE__*/react.createElement("div", {
-    className: modalSaveText_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: onSave.label,
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '36px',
-      width: '284px'
-    },
-    onClick: function onClick() {
-      if (onSave.action) onSave.action(val);
-      setVal('');
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: onCancel.label || 'Отмена',
-    onClick: function onClick() {
-      if (onCancel.action) onCancel.action();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+    height: height || 527,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalSaveText_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalSaveText_styles.boxes,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("textarea", {
+            onInput: function onInput(e) {
+              setVal(e.target.value);
+            },
+            rows: "18",
+            "class": modalSaveText_styles.textarea,
+            placeholder: placeholder,
+            defaultValue: defaultValue
+          })
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalSaveText_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: onSave.label,
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '36px',
+          width: '284px'
+        },
+        onClick: function onClick() {
+          if (onSave.action) onSave.action(val);
+          setVal('');
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: onCancel.label || 'Отмена',
+        onClick: function onClick() {
+          if (onCancel.action) onCancel.action();
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const shared_modalSaveText = (modalSaveText);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/styles.scss
@@ -45203,24 +45733,28 @@ const history_namespaceObject = __webpack_require__.p + "0550f86529e8bf1b3ba6.sv
 
 
 
+
 var statusBadge = function statusBadge(_ref) {
   var data = _ref.data,
     _onClick = _ref.onClick;
-  return /*#__PURE__*/react.createElement("div", {
-    className: statusBadge_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: statusBadge_styles.nameText,
-    style: {
-      color: data === null || data === void 0 ? void 0 : data.color
-    }
-  }, data === null || data === void 0 ? void 0 : data.name), /*#__PURE__*/react.createElement("div", {
-    className: statusBadge_styles.historyWrapper,
-    onClick: function onClick() {
-      if (_onClick) _onClick();
-    }
-  }, /*#__PURE__*/react.createElement("img", {
-    src: history_namespaceObject
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: statusBadge_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: statusBadge_styles.nameText,
+      style: {
+        color: data === null || data === void 0 ? void 0 : data.color
+      },
+      children: data === null || data === void 0 ? void 0 : data.name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: statusBadge_styles.historyWrapper,
+      onClick: function onClick() {
+        if (_onClick) _onClick();
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+        src: history_namespaceObject
+      })
+    })]
+  });
 };
 /* harmony default export */ const list_statusBadge = (statusBadge);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/referArrow.svg
@@ -50965,6 +51499,7 @@ function expander_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var Expander = function Expander(_ref) {
   var header = _ref.header,
     content = _ref.content;
@@ -50972,136 +51507,29 @@ var Expander = function Expander(_ref) {
     _useState2 = expander_slicedToArray(_useState, 2),
     isOpen = _useState2[0],
     setIsOpen = _useState2[1];
-  return /*#__PURE__*/react.createElement("div", {
-    className: expander_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: expander_styles.header,
-    onClick: function onClick() {
-      setIsOpen(!isOpen);
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: expander_styles.headerContent
-  }, header), /*#__PURE__*/react.createElement("div", {
-    className: expander_styles.arrow
-  }, /*#__PURE__*/react.createElement("img", {
-    src: isOpen ? arrowUp_namespaceObject : arrowDown_namespaceObject
-  }))), isOpen && /*#__PURE__*/react.createElement("div", {
-    className: expander_styles.content
-  }, content));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: expander_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: expander_styles.header,
+      onClick: function onClick() {
+        setIsOpen(!isOpen);
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: expander_styles.headerContent,
+        children: header
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: expander_styles.arrow,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: isOpen ? arrowUp_namespaceObject : arrowDown_namespaceObject
+        })
+      })]
+    }), isOpen && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: expander_styles.content,
+      children: content
+    })]
+  });
 };
 /* harmony default export */ const expander = (Expander);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const shared_select_styles = ({"wrapper":"styles__wrapper--nIiPF","hint":"styles__hint--XYoDr"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/index.js
-function shared_select_typeof(o) { "@babel/helpers - typeof"; return shared_select_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, shared_select_typeof(o); }
-var select_templateObject;
-function shared_select_extends() { shared_select_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return shared_select_extends.apply(this, arguments); }
-function shared_select_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function shared_select_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? shared_select_ownKeys(Object(t), !0).forEach(function (r) { shared_select_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : shared_select_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function shared_select_defineProperty(obj, key, value) { key = shared_select_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function shared_select_toPropertyKey(t) { var i = shared_select_toPrimitive(t, "string"); return "symbol" == shared_select_typeof(i) ? i : i + ""; }
-function shared_select_toPrimitive(t, r) { if ("object" != shared_select_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != shared_select_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function select_slicedToArray(arr, i) { return select_arrayWithHoles(arr) || select_iterableToArrayLimit(arr, i) || select_unsupportedIterableToArray(arr, i) || select_nonIterableRest(); }
-function select_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function select_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return select_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return select_arrayLikeToArray(o, minLen); }
-function select_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function select_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function select_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function select_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-
-
-
-
-
-var shared_select_blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75'
-};
-var shared_select_grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f'
-};
-var select_CreateStyledButton = function CreateStyledButton(width, color) {
-  return esm_styled('button')(function (_ref) {
-    var theme = _ref.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ").concat(color || '#FFFFFF', ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === 'dark' ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n      color: #FFFFFF;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n    color: #FFFFFF;\n  }\n  ");
-  });
-};
-var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
-  return esm_styled('ul')(function (_ref2) {
-    var theme = _ref2.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[300] : shared_select_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
-  });
-};
-var select_StyledOption = esm_styled(Option_Option)(function (_ref3) {
-  var theme = _ref3.theme;
-  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
-});
-var select_StyledPopper = esm_styled(Popper_Popper)(select_templateObject || (select_templateObject = select_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
-function select_MultipleSelectPlaceholder(_ref4) {
-  var options = _ref4.options,
-    multiple = _ref4.multiple,
-    defaultValue = _ref4.defaultValue,
-    onChange = _ref4.onChange,
-    hint = _ref4.hint,
-    width = _ref4.width,
-    height = _ref4.height;
-  var _useState = (0,react.useState)('#FFFFFF'),
-    _useState2 = select_slicedToArray(_useState, 2),
-    rootColor = _useState2[0],
-    setRootColor = _useState2[1];
-  var handleChange = function handleChange(event, newValue) {
-    if (onChange) onChange(newValue);
-    var currOpt = options === null || options === void 0 ? void 0 : options.find(function (o) {
-      return o.name === newValue;
-    });
-    if (currOpt) setRootColor(currOpt.color);
-  };
-  var CustomSelect = /*#__PURE__*/react.forwardRef(function CustomSelect(props, ref) {
-    var slots = shared_select_objectSpread({
-      root: select_CreateStyledButton(width, rootColor),
-      listbox: select_CreateStyledListbox(width, height),
-      popper: select_StyledPopper
-    }, props.slots);
-    return /*#__PURE__*/react.createElement(Select_Select, shared_select_extends({}, props, {
-      ref: ref,
-      slots: slots
-    }));
-  });
-  return /*#__PURE__*/react.createElement("div", {
-    className: shared_select_styles.wrapper,
-    style: {
-      width: width
-    }
-  }, /*#__PURE__*/react.createElement(CustomSelect, {
-    defaultValue: defaultValue,
-    onChange: handleChange
-  }, (options || []).map(function (i) {
-    return /*#__PURE__*/react.createElement(select_StyledOption, {
-      key: i.name,
-      value: i.name,
-      style: {
-        color: i.color || '#B3B3B3'
-      }
-    }, i.name);
-  })), hint && /*#__PURE__*/react.createElement("div", {
-    className: shared_select_styles.hint
-  }, hint));
-}
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalStatusHistory/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalStatusHistory_styles = ({"content":"styles__content--hKfZx","logGroup":"styles__logGroup--YC0kz","title":"styles__title--mBrxe","expanderWrapper":"styles__expanderWrapper--ImOvt","link":"styles__link--CO39x","name":"styles__name--WnglJ","actions":"styles__actions--VTokv"});
@@ -51110,6 +51538,7 @@ function modalStatusHistory_typeof(o) { "@babel/helpers - typeof"; return modalS
 function modalStatusHistory_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalStatusHistory_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalStatusHistory_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalStatusHistory_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function modalStatusHistory_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function modalStatusHistory_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { modalStatusHistory_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { modalStatusHistory_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -51129,122 +51558,191 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
     statuses = _state$use.gameSessionsStatuses;
   var navigate = dist_useNavigate();
   var createBotLink = function createBotLink(val) {
-    return /*#__PURE__*/react.createElement("span", {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
       className: modalStatusHistory_styles.link,
       onClick: function onClick() {
         navigate('/admin/bots?id=' + val.botId);
         if (onCancel) onCancel();
-      }
-    }, val.botName);
+      },
+      children: val.botName
+    });
   };
   var createUserLink = function createUserLink(val) {
-    return /*#__PURE__*/react.createElement("span", {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
       className: modalStatusHistory_styles.link,
       onClick: function onClick() {
         window.open(val.userProfileUrl, '_blank');
-      }
-    }, val.userNickname);
+      },
+      children: val.userNickname
+    });
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: "\u041B\u043E\u0433 \u0437\u0430\u043A\u0430\u0437\u0430 #".concat(data === null || data === void 0 ? void 0 : data.id),
     width: 582,
-    height: 783
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalStatusHistory_styles.content
-  }, hist && ((_Object$keys = Object.keys(hist)) === null || _Object$keys === void 0 ? void 0 : _Object$keys.map(function (gr) {
-    var grTitle = moment_default()(gr).format('DD.MM.YYYY');
-    return /*#__PURE__*/react.createElement("div", {
-      className: modalStatusHistory_styles.logGroup
-    }, /*#__PURE__*/react.createElement("div", {
-      className: modalStatusHistory_styles.title
-    }, grTitle), hist[gr].map(function (log) {
-      //console.log(log);
-      var logDate = moment_default()(log.insertDate).format('DD.MM.YYYY HH:mm:ss');
-      var status = statuses[log.statusId];
-      var renderContent = function renderContent(log, status) {
-        var val = log.value;
-        var sid = log.statusId;
-        if (sid === 12 && val) {
-          return /*#__PURE__*/react.createElement("div", null, !val.message.includes('Сброс') && !val.message.includes('Смена') && /*#__PURE__*/react.createElement("div", null, val.message), val.oldUserProfileUrl && /*#__PURE__*/react.createElement("div", null, "\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0435\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: ", val.oldUserProfileUrl));
-        } else if (sid === 18 && val) {
-          return /*#__PURE__*/react.createElement("div", null, "\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0438\u0433\u0440\u0443 \u0441 ", createBotLink(val));
-        } else if (sid === 3 && val) {
-          return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", null, status.description), val.message && /*#__PURE__*/react.createElement("div", null, val.message), val.userProfileUrl && /*#__PURE__*/react.createElement("div", null, "\u0417\u043D\u0430\u0447\u0435\u043D\u0438\u0435: ", val.userProfileUrl));
-        } else if (sid === 7 && val) {
-          return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", null, val.message), val.userSteamContact && /*#__PURE__*/react.createElement("div", null, "\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0430\u043A\u0442 \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F:", ' ', val.userSteamContact), val.userProfileUrl && /*#__PURE__*/react.createElement("div", null, "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F:", ' ', val.userProfileUrl), val.botName && val.botId && /*#__PURE__*/react.createElement("div", null, "\u0411\u043E\u0442: ", createBotLink(val)));
-        } else if (sid === 16 && val) {
-          return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", null, val.message), /*#__PURE__*/react.createElement("div", null, "\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0430\u043A\u0442 \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F:", ' ', val.userSteamContact), val.userProfileUrl && /*#__PURE__*/react.createElement("div", null, "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F:", ' ', val.userProfileUrl));
-        } else if (sid === 2 && val) {
-          return /*#__PURE__*/react.createElement("div", null, "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044E \u0441 \u043D\u0438\u043A\u043D\u0435\u0439\u043C\u043E\u043C ", " ", createUserLink(val), " \u0431\u044B\u043B\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0438\u0433\u0440\u0430 \u0441 \u0431\u043E\u0442\u0430 ", createBotLink(val));
-        } else if (sid === 17 && val && val.botFilter) {
-          return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", null, "\u041A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u0446\u0438\u0438:"), /*#__PURE__*/react.createElement("div", null, "\u0440\u0435\u0433\u0438\u043E\u043D - ", val.botFilter.selectedRegion), /*#__PURE__*/react.createElement("div", null, "\u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0431\u043E\u0442\u0430 -", ' ', val.botFilter.withMaxBalance ? 'с большим балансом' : 'меньше всего попыток отправки игр по лимиту за час'));
-        } else if (sid === 4 && val) {
-          return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", null, "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C \u043E\u0442\u043A\u043B\u043E\u043D\u0438\u043B \u0437\u0430\u044F\u0432\u043A\u0443 \u043E\u0442 \u0431\u043E\u0442\u0430", ' ', createBotLink(val)));
-        } else if (sid === 6 && val) {
-          return /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", null, "\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044E \u0441 \u043D\u0438\u043A\u043D\u0435\u0439\u043C\u043E\u043C ", " ", createUserLink(val), " \u0431\u044B\u043B\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0437\u0430\u044F\u0432\u043A\u0430 \u0432 \u0434\u0440\u0443\u0437\u044C\u044F \u0441 \u0431\u043E\u0442\u0430 ", createBotLink(val)), /*#__PURE__*/react.createElement("div", null, "\u0421\u0442\u0440\u0430\u043D\u0430 \u0431\u043E\u0442\u0430:", ' ', /*#__PURE__*/react.createElement("span", {
-            style: {
-              color: '#d836e7'
+    height: 783,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalStatusHistory_styles.content,
+      children: hist && ((_Object$keys = Object.keys(hist)) === null || _Object$keys === void 0 ? void 0 : _Object$keys.map(function (gr) {
+        var grTitle = moment_default()(gr).format('DD.MM.YYYY');
+        return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalStatusHistory_styles.logGroup,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: modalStatusHistory_styles.title,
+            children: grTitle
+          }), hist[gr].map(function (log) {
+            //console.log(log);
+            var logDate = moment_default()(log.insertDate).format('DD.MM.YYYY HH:mm:ss');
+            var status = statuses[log.statusId];
+            var renderContent = function renderContent(log, status) {
+              var val = log.value;
+              var sid = log.statusId;
+              if (sid === 12 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [!val.message.includes('Сброс') && !val.message.includes('Смена') && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: val.message
+                  }), val.oldUserProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0435\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: ", val.oldUserProfileUrl]
+                  })]
+                });
+              } else if (sid === 18 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: ["\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0438\u0433\u0440\u0443 \u0441 ", createBotLink(val)]
+                });
+              } else if (sid === 3 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: status.description
+                  }), val.message && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: val.message
+                  }), val.userProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0417\u043D\u0430\u0447\u0435\u043D\u0438\u0435: ", val.userProfileUrl]
+                  })]
+                });
+              } else if (sid === 7 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: val.message
+                  }), val.userSteamContact && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0430\u043A\u0442 \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F:", ' ', val.userSteamContact]
+                  }), val.userProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F:", ' ', val.userProfileUrl]
+                  }), val.botName && val.botId && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0411\u043E\u0442: ", createBotLink(val)]
+                  })]
+                });
+              } else if (sid === 16 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: val.message
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0430\u043A\u0442 \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F:", ' ', val.userSteamContact]
+                  }), val.userProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F:", ' ', val.userProfileUrl]
+                  })]
+                });
+              } else if (sid === 2 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: ["\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044E \u0441 \u043D\u0438\u043A\u043D\u0435\u0439\u043C\u043E\u043C ", " ", createUserLink(val), " \u0431\u044B\u043B\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0438\u0433\u0440\u0430 \u0441 \u0431\u043E\u0442\u0430 ", createBotLink(val)]
+                });
+              } else if (sid === 17 && val && val.botFilter) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: "\u041A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u0446\u0438\u0438:"
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0440\u0435\u0433\u0438\u043E\u043D - ", val.botFilter.selectedRegion]
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0431\u043E\u0442\u0430 -", ' ', val.botFilter.withMaxBalance ? 'с большим балансом' : 'меньше всего попыток отправки игр по лимиту за час']
+                  })]
+                });
+              } else if (sid === 4 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044C \u043E\u0442\u043A\u043B\u043E\u043D\u0438\u043B \u0437\u0430\u044F\u0432\u043A\u0443 \u043E\u0442 \u0431\u043E\u0442\u0430", ' ', createBotLink(val)]
+                  })
+                });
+              } else if (sid === 6 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u043E\u043B\u0443\u0447\u0430\u0442\u0435\u043B\u044E \u0441 \u043D\u0438\u043A\u043D\u0435\u0439\u043C\u043E\u043C ", " ", createUserLink(val), " \u0431\u044B\u043B\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0430 \u0437\u0430\u044F\u0432\u043A\u0430 \u0432 \u0434\u0440\u0443\u0437\u044C\u044F \u0441 \u0431\u043E\u0442\u0430 ", createBotLink(val)]
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0421\u0442\u0440\u0430\u043D\u0430 \u0431\u043E\u0442\u0430:", ' ', /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                      style: {
+                        color: '#d836e7'
+                      },
+                      children: val.botRegionName || val.botRegionCode
+                    })]
+                  })]
+                });
+              } else {
+                return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: status.description
+                });
+              }
+            };
+            var headerName = status.name;
+            var headerColor = status.color;
+            if (log.statusId === 12) {
+              var mes = log.value && log.value.message || '';
+              if (mes.includes('Сброс') || mes.includes('Смена')) {
+                headerName = mes;
+                headerColor = '#DDE11C';
+              }
             }
-          }, val.botRegionName || val.botRegionCode)));
-        } else {
-          return /*#__PURE__*/react.createElement("div", null, status.description);
+            return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: modalStatusHistory_styles.expanderWrapper,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(expander, {
+                header: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  style: {
+                    fontSize: '14px',
+                    display: 'flex'
+                  },
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    style: {
+                      marginRight: '20px'
+                    },
+                    children: logDate
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    style: {
+                      color: headerColor
+                    },
+                    children: headerName
+                  })]
+                }),
+                content: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  style: {
+                    fontSize: '12px',
+                    wordWrap: 'break-word'
+                  },
+                  children: renderContent(log, status)
+                })
+              })
+            });
+          })]
+        });
+      }))
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalStatusHistory_styles.actions,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Закрыть',
+        onClick: /*#__PURE__*/modalStatusHistory_asyncToGenerator( /*#__PURE__*/modalStatusHistory_regeneratorRuntime().mark(function _callee() {
+          return modalStatusHistory_regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                if (onCancel) onCancel();
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        })),
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
         }
-      };
-      var headerName = status.name;
-      var headerColor = status.color;
-      if (log.statusId === 12) {
-        var mes = log.value && log.value.message || '';
-        if (mes.includes('Сброс') || mes.includes('Смена')) {
-          headerName = mes;
-          headerColor = '#DDE11C';
-        }
-      }
-      return /*#__PURE__*/react.createElement("div", {
-        className: modalStatusHistory_styles.expanderWrapper
-      }, /*#__PURE__*/react.createElement(expander, {
-        header: /*#__PURE__*/react.createElement("div", {
-          style: {
-            fontSize: '14px',
-            display: 'flex'
-          }
-        }, /*#__PURE__*/react.createElement("div", {
-          style: {
-            marginRight: '20px'
-          }
-        }, logDate), /*#__PURE__*/react.createElement("div", {
-          style: {
-            color: headerColor
-          }
-        }, headerName)),
-        content: /*#__PURE__*/react.createElement("div", {
-          style: {
-            fontSize: '12px',
-            wordWrap: 'break-word'
-          }
-        }, renderContent(log, status))
-      }));
-    }));
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: modalStatusHistory_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Закрыть',
-    onClick: /*#__PURE__*/modalStatusHistory_asyncToGenerator( /*#__PURE__*/modalStatusHistory_regeneratorRuntime().mark(function _callee() {
-      return modalStatusHistory_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            if (onCancel) onCancel();
-          case 1:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    })),
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+      })
+    })]
+  });
 };
 /* harmony default export */ const modalStatusHistory = (ModalStatusHistory);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/index.js
@@ -51258,6 +51756,7 @@ function orders_list_unsupportedIterableToArray(o, minLen) { if (!o) return; if 
 function orders_list_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function orders_list_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function orders_list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -51304,159 +51803,211 @@ var list_products = function products() {
   var _window$location = window.location,
     host = _window$location.host,
     origin = _window$location.origin;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orders_list_styles.wrapper
-  }, /*#__PURE__*/react.createElement(shared_list, {
-    data: list_toConsumableArray(gameSessions),
-    headers: Object.values(headers),
-    itemRenderer: function itemRenderer(i) {
-      return /*#__PURE__*/react.createElement("tr", null, /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.id
-      }, "#", i.id))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.uniqueId
-      }, /*#__PURE__*/react.createElement("div", null, i.uniqueCode), /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.ref
-      }, /*#__PURE__*/react.createElement("a", {
-        href: getUniqueCodeHref(i.uniqueCode),
-        target: "_blank"
-      }, /*#__PURE__*/react.createElement("img", {
-        src: referArrow_namespaceObject
-      })))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, i.region)), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell,
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orders_list_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
+      data: list_toConsumableArray(gameSessions),
+      headers: Object.values(headers),
+      itemRenderer: function itemRenderer(i) {
+        return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: orders_list_styles.id,
+                children: ["#", i.id]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: orders_list_styles.uniqueId,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: i.uniqueCode
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: orders_list_styles.ref,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("a", {
+                    href: getUniqueCodeHref(i.uniqueCode),
+                    target: "_blank",
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                      src: referArrow_namespaceObject
+                    })
+                  })
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: i.region
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              style: {
+                justifyContent: 'start',
+                paddingLeft: '20px'
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: orders_list_styles.info,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: i.gameName
+                }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: orders_list_styles.secondRow,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: moment_default()(i.addedDateTime).format('DD.MM.YYYY | HH:mm:ss')
+                  }), i.steamProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: orders_list_styles.profileRef,
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)("a", {
+                      target: "_blank",
+                      href: i.steamProfileUrl,
+                      children: '<профиль>'
+                    })
+                  })]
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: orders_list_styles.comment,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                  src: comment_namespaceObject,
+                  style: {
+                    filter: i.comment ? 'brightness(200%)' : 'brightness(100%)'
+                  },
+                  onClick: function onClick() {
+                    setEditItem(i);
+                    toggleAddGameSesCommentModal(true);
+                  }
+                })
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orders_list_styles.cell,
+              children: [i.itemPrice ? "".concat(i.itemPrice.toFixed(2), " \u20BD") : '-', ' ', i.itemSteamPercent ? "(".concat(i.itemSteamPercent, "%)") : '']
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: i.botName ? i.botName : '-'
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(list_statusBadge, {
+                data: i.status,
+                onClick: function onClick() {
+                  setEditItem(i);
+                  toggleViewStatusHistoryModal(true);
+                }
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: orders_list_styles.buttons,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: orders_list_styles.btnWrapper,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                    icon: check_namespaceObject,
+                    onClick: function onClick() {
+                      var data = getConfirmTypeData(3);
+                      data.onConfirm.action = function () {
+                        setOpenConfirm(false);
+                        apiSetGameSessionStatus(i.id, 1);
+                      };
+                      setConfirmData(data);
+                      setOpenConfirm(true);
+                    },
+                    disabled: i.status.statusId === 1
+                  })
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: orders_list_styles.btnWrapper,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                    icon: retry_namespaceObject,
+                    onClick: function onClick() {
+                      var data = getConfirmTypeData(2);
+                      data.onConfirm.action = function () {
+                        setOpenConfirm(false);
+                        apiResetGameSession(i.id);
+                      };
+                      setConfirmData(data);
+                      setOpenConfirm(true);
+                    }
+                  })
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: orders_list_styles.btnWrapper,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                    icon: stop_namespaceObject,
+                    onClick: function onClick() {
+                      var data = getConfirmTypeData(1);
+                      data.onConfirm.action = function () {
+                        setOpenConfirm(false);
+                        apiSetGameSessionStatus(i.id, 15);
+                      };
+                      setConfirmData(data);
+                      setOpenConfirm(true);
+                    },
+                    disabled: i.status.statusId === 15
+                  })
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orders_list_styles.cell
+            })
+          })]
+        });
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_modalSaveText, {
+      title: 'Комментарий к заказу',
+      defaultValue: editItem === null || editItem === void 0 ? void 0 : editItem.comment,
+      placeholder: 'введите комментарий к заказу. комментарий будет виден только вам',
+      isOpen: addGameSesCommentIsOpen,
+      onSave: {
+        label: 'Сохранить',
+        action: function action(val) {
+          apiAddCommentGameSession(editItem === null || editItem === void 0 ? void 0 : editItem.id, val);
+        }
+      },
+      onCancel: {
+        label: 'Отмена',
+        action: function action() {
+          toggleAddGameSesCommentModal(false);
+        }
+      },
+      height: 551
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+      title: confirmData.title,
+      content: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         style: {
-          justifyContent: 'start',
-          paddingLeft: '20px'
-        }
-      }, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.info
-      }, /*#__PURE__*/react.createElement("div", null, i.gameName), /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.secondRow
-      }, /*#__PURE__*/react.createElement("div", null, moment_default()(i.addedDateTime).format('DD.MM.YYYY | HH:mm:ss')), i.steamProfileUrl && /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.profileRef
-      }, /*#__PURE__*/react.createElement("a", {
-        target: "_blank",
-        href: i.steamProfileUrl
-      }, '<профиль>')))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.comment
-      }, /*#__PURE__*/react.createElement("img", {
-        src: comment_namespaceObject,
-        style: {
-          filter: i.comment ? 'brightness(200%)' : 'brightness(100%)'
+          width: '501px',
+          textAlign: 'center'
         },
-        onClick: function onClick() {
-          setEditItem(i);
-          toggleAddGameSesCommentModal(true);
+        children: confirmData.subtitle
+      }),
+      isOpen: openConfirm,
+      onConfirm: confirmData.onConfirm,
+      height: confirmData.height,
+      onCancel: {
+        action: function action() {
+          setOpenConfirm(false);
         }
-      })))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, i.itemPrice ? "".concat(i.itemPrice.toFixed(2), " \u20BD") : '-', ' ', i.itemSteamPercent ? "(".concat(i.itemSteamPercent, "%)") : '')), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, i.botName ? i.botName : '-')), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, /*#__PURE__*/react.createElement(list_statusBadge, {
-        data: i.status,
-        onClick: function onClick() {
-          setEditItem(i);
-          toggleViewStatusHistoryModal(true);
-        }
-      }))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      }, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.buttons
-      }, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.btnWrapper
-      }, /*#__PURE__*/react.createElement(shared_iconButton, {
-        icon: check_namespaceObject,
-        onClick: function onClick() {
-          var data = getConfirmTypeData(3);
-          data.onConfirm.action = function () {
-            setOpenConfirm(false);
-            apiSetGameSessionStatus(i.id, 1);
-          };
-          setConfirmData(data);
-          setOpenConfirm(true);
-        },
-        disabled: i.status.statusId === 1
-      })), /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.btnWrapper
-      }, /*#__PURE__*/react.createElement(shared_iconButton, {
-        icon: retry_namespaceObject,
-        onClick: function onClick() {
-          var data = getConfirmTypeData(2);
-          data.onConfirm.action = function () {
-            setOpenConfirm(false);
-            apiResetGameSession(i.id);
-          };
-          setConfirmData(data);
-          setOpenConfirm(true);
-        }
-      })), /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.btnWrapper
-      }, /*#__PURE__*/react.createElement(shared_iconButton, {
-        icon: stop_namespaceObject,
-        onClick: function onClick() {
-          var data = getConfirmTypeData(1);
-          data.onConfirm.action = function () {
-            setOpenConfirm(false);
-            apiSetGameSessionStatus(i.id, 15);
-          };
-          setConfirmData(data);
-          setOpenConfirm(true);
-        },
-        disabled: i.status.statusId === 15
-      }))))), /*#__PURE__*/react.createElement("td", null, /*#__PURE__*/react.createElement("div", {
-        className: orders_list_styles.cell
-      })));
-    }
-  }), /*#__PURE__*/react.createElement(shared_modalSaveText, {
-    title: 'Комментарий к заказу',
-    defaultValue: editItem === null || editItem === void 0 ? void 0 : editItem.comment,
-    placeholder: 'введите комментарий к заказу. комментарий будет виден только вам',
-    isOpen: addGameSesCommentIsOpen,
-    onSave: {
-      label: 'Сохранить',
-      action: function action(val) {
-        apiAddCommentGameSession(editItem === null || editItem === void 0 ? void 0 : editItem.id, val);
       }
-    },
-    onCancel: {
-      label: 'Отмена',
-      action: function action() {
-        toggleAddGameSesCommentModal(false);
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalStatusHistory, {
+      isOpen: statusHistoryModalIsOpen,
+      data: editItem,
+      onCancel: function onCancel() {
+        toggleViewStatusHistoryModal(false);
       }
-    },
-    height: 551
-  }), /*#__PURE__*/react.createElement(ConfirmModal, {
-    title: confirmData.title,
-    content: /*#__PURE__*/react.createElement("div", {
-      style: {
-        width: '501px',
-        textAlign: 'center'
-      }
-    }, confirmData.subtitle),
-    isOpen: openConfirm,
-    onConfirm: confirmData.onConfirm,
-    height: confirmData.height,
-    onCancel: {
-      action: function action() {
-        setOpenConfirm(false);
-      }
-    }
-  }), /*#__PURE__*/react.createElement(modalStatusHistory, {
-    isOpen: statusHistoryModalIsOpen,
-    data: editItem,
-    onCancel: function onCancel() {
-      toggleViewStatusHistoryModal(false);
-    }
-  }));
+    })]
+  });
 };
 /* harmony default export */ const orders_list = (list_products);
 var getConfirmTypeData = function getConfirmTypeData(type) {
@@ -51540,22 +52091,27 @@ function modalFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var modalFilter_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     symbol = _ref.symbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(SymbolTextbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    symbol: symbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalFilter_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalFilter_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(SymbolTextbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        symbol: symbol
+      })
+    })]
+  });
 };
 var modalFilter_FromItemSelect = function FromItemSelect(_ref2) {
   var name = _ref2.name,
@@ -51563,17 +52119,21 @@ var modalFilter_FromItemSelect = function FromItemSelect(_ref2) {
     value = _ref2.value,
     options = _ref2.options,
     hint = _ref2.hint;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(select_MultipleSelectPlaceholder, {
-    options: options,
-    defaultValue: value,
-    onChange: onChange,
-    hint: hint,
-    width: 302
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalFilter_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalFilter_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+        options: options,
+        defaultValue: value,
+        onChange: onChange,
+        hint: hint,
+        width: 302
+      })
+    })]
+  });
 };
 var modalFilter_ModalFilter = function ModalFilter(_ref3) {
   var isOpen = _ref3.isOpen,
@@ -51646,74 +52206,77 @@ var modalFilter_ModalFilter = function ModalFilter(_ref3) {
   var statusVal = (statuses.find(function (c) {
     return c.id === item.statusId;
   }) || {}).name;
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Фильтры отображения',
     width: 705,
-    height: 734
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_styles.content
-  }, /*#__PURE__*/react.createElement(modalFilter_FromItemText, {
-    name: 'AppID:',
-    onChange: handleChange('appId'),
-    value: item.appId
-  }), /*#__PURE__*/react.createElement(modalFilter_FromItemText, {
-    name: 'Название игры:',
-    onChange: handleChange('gameName'),
-    value: item.gameName
-  }), /*#__PURE__*/react.createElement(modalFilter_FromItemSelect, {
-    name: 'Регион получения:',
-    options: currencies,
-    onChange: handleChange('steamCurrencyId'),
-    value: currencyVal
-  }), /*#__PURE__*/react.createElement(modalFilter_FromItemText, {
-    name: 'Профиль получателя:',
-    onChange: handleChange('profileStr'),
-    value: item.profileStr
-  }), /*#__PURE__*/react.createElement(modalFilter_FromItemText, {
-    name: 'ID заказа:',
-    onChange: handleChange('orderId'),
-    value: item.orderId
-  }), /*#__PURE__*/react.createElement(modalFilter_FromItemText, {
-    name: 'Уникальный код:',
-    onChange: handleChange('uniqueCodes'),
-    value: item.uniqueCodes
-  }), /*#__PURE__*/react.createElement(modalFilter_FromItemSelect, {
-    name: 'Состояние заказа:',
-    options: statuses,
-    onChange: handleChange('statusId'),
-    value: statusVal
-  })), /*#__PURE__*/react.createElement("div", {
-    className: modalFilter_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отобразить',
-    style: {
-      backgroundColor: '#A348CE',
-      marginRight: '24px',
-      width: '322px'
-    },
-    onClick: function onClick() {
-      onSave(item);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: /*#__PURE__*/modalFilter_asyncToGenerator( /*#__PURE__*/modalFilter_regeneratorRuntime().mark(function _callee() {
-      return modalFilter_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            if (onCancel) onCancel();
-            //await setItem(initial);
-          case 1:
-          case "end":
-            return _context.stop();
+    height: 734,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalFilter_styles.content,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemText, {
+        name: 'AppID:',
+        onChange: handleChange('appId'),
+        value: item.appId
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemText, {
+        name: 'Название игры:',
+        onChange: handleChange('gameName'),
+        value: item.gameName
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemSelect, {
+        name: 'Регион получения:',
+        options: currencies,
+        onChange: handleChange('steamCurrencyId'),
+        value: currencyVal
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemText, {
+        name: 'Профиль получателя:',
+        onChange: handleChange('profileStr'),
+        value: item.profileStr
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemText, {
+        name: 'ID заказа:',
+        onChange: handleChange('orderId'),
+        value: item.orderId
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemText, {
+        name: 'Уникальный код:',
+        onChange: handleChange('uniqueCodes'),
+        value: item.uniqueCodes
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter_FromItemSelect, {
+        name: 'Состояние заказа:',
+        options: statuses,
+        onChange: handleChange('statusId'),
+        value: statusVal
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalFilter_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отобразить',
+        style: {
+          backgroundColor: '#A348CE',
+          marginRight: '24px',
+          width: '322px'
+        },
+        onClick: function onClick() {
+          onSave(item);
         }
-      }, _callee);
-    })),
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: /*#__PURE__*/modalFilter_asyncToGenerator( /*#__PURE__*/modalFilter_regeneratorRuntime().mark(function _callee() {
+          return modalFilter_regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                if (onCancel) onCancel();
+                //await setItem(initial);
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        })),
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalFilter = (modalFilter_ModalFilter);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/index.js
@@ -51729,30 +52292,33 @@ function orders_toPrimitive(t, r) { if ("object" != orders_typeof(t) || !t) retu
 
 
 
+
 var orders = function orders() {
   var _state$use = state.use(),
     gameSessionsFilter = _state$use.gameSessionsFilter,
     filterOrdersModalIsOpen = _state$use.filterOrdersModalIsOpen;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orders_styles.wrapper
-  }, /*#__PURE__*/react.createElement(admin_pageHeader, {
-    title: "\u0417\u0430\u043A\u0430\u0437\u044B",
-    subTitle: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 Digiseller"
-  }), /*#__PURE__*/react.createElement("div", {
-    className: orders_styles.content
-  }, /*#__PURE__*/react.createElement(orders_list, null), /*#__PURE__*/react.createElement(modalFilter, {
-    isOpen: filterOrdersModalIsOpen,
-    value: gameSessionsFilter,
-    onCancel: function onCancel() {
-      toggleFilterOrdersModal(false);
-    },
-    onSave: function onSave(val) {
-      updateGameSessionsFilter(orders_objectSpread(orders_objectSpread({}, val), {}, {
-        page: 1
-      }));
-      toggleFilterOrdersModal(false);
-    }
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orders_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
+      title: "\u0417\u0430\u043A\u0430\u0437\u044B",
+      subTitle: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0437\u0430\u043A\u0430\u0437\u043E\u0432 Digiseller"
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: orders_styles.content,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(orders_list, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(modalFilter, {
+        isOpen: filterOrdersModalIsOpen,
+        value: gameSessionsFilter,
+        onCancel: function onCancel() {
+          toggleFilterOrdersModal(false);
+        },
+        onSave: function onSave(val) {
+          updateGameSessionsFilter(orders_objectSpread(orders_objectSpread({}, val), {}, {
+            page: 1
+          }));
+          toggleFilterOrdersModal(false);
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const admin_orders = (orders);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/grid/styles.scss
@@ -51779,6 +52345,7 @@ function modalBotDetails_unsupportedIterableToArray(o, minLen) { if (!o) return;
 function modalBotDetails_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalBotDetails_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalBotDetails_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -51815,53 +52382,63 @@ var modalBotDetails = function modalBotDetails(_ref) {
     }
   };
   var renderItem = function renderItem(name, val, _onClick) {
-    return /*#__PURE__*/react.createElement("div", {
-      className: modalBotDetails_styles.item
-    }, /*#__PURE__*/react.createElement("div", {
-      className: modalBotDetails_styles.name
-    }, name), /*#__PURE__*/react.createElement("div", {
-      className: modalBotDetails_styles.val + ' ' + (_onClick ? modalBotDetails_styles.copyable : ''),
-      onClick: function onClick() {
-        if (_onClick) _onClick(val);
-      }
-    }, val));
+    return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalBotDetails_styles.item,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalBotDetails_styles.name,
+        children: name
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalBotDetails_styles.val + ' ' + (_onClick ? modalBotDetails_styles.copyable : ''),
+        onClick: function onClick() {
+          if (_onClick) _onClick(val);
+        },
+        children: val
+      })]
+    });
   };
   var copyToClipboard = function copyToClipboard(str) {
     //if (str) navigator.clipboard.writeText(str);
     copy_to_clipboard_default()(str);
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Подробнее о боте',
     width: 554,
-    height: 768
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.boxes
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.infoarea
-  }, renderItem('Login:', val.userName, copyToClipboard), renderItem('Password:', val.password, copyToClipboard), renderItem('Proxy:', val.proxyStr, copyToClipboard), renderItem('User Agent:', val.userAgent, copyToClipboard), renderItem('Состояние:', val.state && /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.botState
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.dot,
-    style: {
-      backgroundColor: "".concat(states[val.state].color)
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.stateName
-  }, states[val.state].name)))))), /*#__PURE__*/react.createElement("div", {
-    className: modalBotDetails_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Закрыть',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+    height: 768,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBotDetails_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalBotDetails_styles.boxes,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalBotDetails_styles.infoarea,
+          children: [renderItem('Login:', val.userName, copyToClipboard), renderItem('Password:', val.password, copyToClipboard), renderItem('Proxy:', val.proxyStr, copyToClipboard), renderItem('User Agent:', val.userAgent, copyToClipboard), renderItem('Состояние:', val.state && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalBotDetails_styles.botState,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: modalBotDetails_styles.dot,
+              style: {
+                backgroundColor: "".concat(states[val.state].color)
+              }
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: modalBotDetails_styles.stateName,
+              children: states[val.state].name
+            })]
+          }))]
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBotDetails_styles.actions,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Закрыть',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })
+    })]
+  });
 };
 /* harmony default export */ const bots_modalBotDetails = (modalBotDetails);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/utils.js
@@ -51948,6 +52525,7 @@ var getFlagByRegionCode = function getFlagByRegionCode(code) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalRegionSettingsEdit/textbox/index.js
 
 
+
 var modalRegionSettingsEdit_textbox_TextBox = function TextBox(_ref) {
   var hint = _ref.hint,
     onChange = _ref.onChange,
@@ -51957,22 +52535,27 @@ var modalRegionSettingsEdit_textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalRegionSettingsEdit_textbox_styles.wrapper,
-    onChange: onChangeText
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'number',
-    defaultValue: defaultValue,
-    step: 0.01
-  }), cymbol && /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_textbox_styles.cymbol
-  }, cymbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_textbox_styles.hint
-  }, hint));
+    onChange: onChangeText,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalRegionSettingsEdit_textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalRegionSettingsEdit_textbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'number',
+          defaultValue: defaultValue,
+          step: 0.01
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalRegionSettingsEdit_textbox_styles.cymbol,
+          children: cymbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalRegionSettingsEdit_textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const modalRegionSettingsEdit_textbox = (modalRegionSettingsEdit_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalRegionSettingsEdit/styles.scss
@@ -51998,24 +52581,29 @@ function modalRegionSettingsEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) r
 
 
 
+
 var modalRegionSettingsEdit_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     cymbol = _ref.cymbol;
-  return /*#__PURE__*/React.createElement("div", {
-    className: css.formItem
-  }, /*#__PURE__*/React.createElement("div", {
-    className: css.name
-  }, name), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(TextBox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    cymbol: cymbol
-  })));
+  return /*#__PURE__*/_jsxs("div", {
+    className: css.formItem,
+    children: [/*#__PURE__*/_jsx("div", {
+      className: css.name,
+      children: name
+    }), /*#__PURE__*/_jsx("div", {
+      children: /*#__PURE__*/_jsx(TextBox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        cymbol: cymbol
+      })
+    })]
+  });
 };
-var FormItemSelect = function FormItemSelect(_ref2) {
+var modalRegionSettingsEdit_FormItemSelect = function FormItemSelect(_ref2) {
   var name = _ref2.name,
     onChange = _ref2.onChange,
     hint = _ref2.hint,
@@ -52023,20 +52611,24 @@ var FormItemSelect = function FormItemSelect(_ref2) {
     options = _ref2.options,
     height = _ref2.height,
     width = _ref2.width;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.name,
-    style: {
-      paddingTop: '5px'
-    }
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(select_MultipleSelectPlaceholder, {
-    options: options,
-    height: height,
-    width: width,
-    onChange: onChange,
-    defaultValue: value
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalRegionSettingsEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalRegionSettingsEdit_styles.name,
+      style: {
+        paddingTop: '5px'
+      },
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+        options: options,
+        height: height,
+        width: width,
+        onChange: onChange,
+        defaultValue: value
+      })
+    })]
+  });
 };
 var modalRegionSettingsEdit_ModalEdit = function ModalEdit(_ref3) {
   var isOpen = _ref3.isOpen,
@@ -52083,137 +52675,167 @@ var modalRegionSettingsEdit_ModalEdit = function ModalEdit(_ref3) {
   }
   var regionName = 'Китай / Япония';
   if (data.region === 'CN') regionName = 'Китай';else if (data.region === 'JP') regionName = 'Япония';
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Настройка бота',
     width: 554,
-    height: modalHeight
-  }, !response.loading && response.errors.length === 0 && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      fontSize: '14px',
-      display: 'flex',
-      justifyContent: 'center'
-    }
-  }, /*#__PURE__*/react.createElement("span", null, "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u044B\u0439 ", str1, ":", ' ', /*#__PURE__*/react.createElement("span", {
-    style: {
-      color: '#B93ED8'
-    }
-  }, " ", regionName), " !")), /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.fields
-  }, /*#__PURE__*/react.createElement(FormItemSelect, {
-    name: 'Планируемая страна отправки гифтов:',
-    height: 75,
-    width: 199,
-    options: [{
-      name: 'Китай (CNY)'
-    }, {
-      name: 'Япония (JPY)'
-    }],
-    value: item.giftSendSteamCurrencyId,
-    onChange: handleChange('giftSendSteamCurrencyId')
-  }), /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.name,
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      paddingTop: '0px'
-    }
-  }, "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u0443\u043C\u043C\u0443 \u0441\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044B\u0445 \u0440\u0430\u043D\u0435\u0435 \u043B\u0438\u0447\u043D\u044B\u0445 \u043F\u043E\u043A\u0443\u043F\u043E\u043A:"), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", {
-    style: {
-      marginBottom: '12px'
-    }
-  }, /*#__PURE__*/react.createElement(modalRegionSettingsEdit_textbox, {
-    onChange: handleChange('previousPurchasesJPY'),
-    cymbol: 'JPY',
-    value: 0
-  })), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalRegionSettingsEdit_textbox, {
-    onChange: handleChange('previousPurchasesCNY'),
-    cymbol: 'CNY',
-    value: 0
-  })))), /*#__PURE__*/react.createElement("div", {
-    style: {
-      display: 'flex',
-      justifyContent: 'center',
-      fontSize: '14px',
-      paddingBottom: '23px'
-    }
-  }, "\u041B\u0438\u0431\u043E"), /*#__PURE__*/react.createElement(FormItemSelect, {
-    name: 'Ранее личные покупки совершались в:',
-    height: 105,
-    width: 199,
-    options: [{
-      name: '-'
-    }, {
-      name: 'CNY'
-    }, {
-      name: 'JPY'
-    }],
-    value: item.previousPurchasesSteamCurrencyId,
-    onChange: handleChange('previousPurchasesSteamCurrencyId')
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.footer
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Сохранить',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '24px',
-      width: '271px'
-    },
-    onClick: function onClick() {
-      var i = modalRegionSettingsEdit_objectSpread({}, item);
-      i.giftSendSteamCurrencyId = i.giftSendSteamCurrencyId === 'Китай (CNY)' ? 23 : 8;
-      if (i.previousPurchasesSteamCurrencyId === '-') i.previousPurchasesSteamCurrencyId = null;else i.previousPurchasesSteamCurrencyId = i.previousPurchasesSteamCurrencyId === 'CNY' ? 23 : 8;
-      onSave(i);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px',
-      width: '183px'
-    }
-  })))), !response.loading && response.errors.length > 0 && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.errors
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.title
-  }, /*#__PURE__*/react.createElement("div", null, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438!")), /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.list
-  }, response.errors.map(function (e) {
-    return /*#__PURE__*/react.createElement("div", {
-      className: modalRegionSettingsEdit_styles.item
-    }, "- ", e);
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.footer
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Закрыть',
-    onClick: function onClick() {
-      if (resetResponse) resetResponse();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px',
-      width: '226px'
-    }
-  })))), response.loading && /*#__PURE__*/react.createElement("div", {
-    className: modalRegionSettingsEdit_styles.loading
-  }, /*#__PURE__*/react.createElement(CircularProgress_CircularProgress, {
-    color: "inherit",
-    sx: {
-      height: '99px !important',
-      width: '99px !important'
-    }
-  })));
+    height: modalHeight,
+    children: [!response.loading && response.errors.length === 0 && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalRegionSettingsEdit_styles.content,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: {
+            fontSize: '14px',
+            display: 'flex',
+            justifyContent: 'center'
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+            children: ["\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u044B\u0439 ", str1, ":", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+              style: {
+                color: '#B93ED8'
+              },
+              children: [" ", regionName]
+            }), " !"]
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalRegionSettingsEdit_styles.fields,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalRegionSettingsEdit_FormItemSelect, {
+            name: 'Планируемая страна отправки гифтов:',
+            height: 75,
+            width: 199,
+            options: [{
+              name: 'Китай (CNY)'
+            }, {
+              name: 'Япония (JPY)'
+            }],
+            value: item.giftSendSteamCurrencyId,
+            onChange: handleChange('giftSendSteamCurrencyId')
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalRegionSettingsEdit_styles.formItem,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: modalRegionSettingsEdit_styles.name,
+              style: {
+                display: 'flex',
+                alignItems: 'center',
+                paddingTop: '0px'
+              },
+              children: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u0443\u043C\u043C\u0443 \u0441\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044B\u0445 \u0440\u0430\u043D\u0435\u0435 \u043B\u0438\u0447\u043D\u044B\u0445 \u043F\u043E\u043A\u0443\u043F\u043E\u043A:"
+            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                style: {
+                  marginBottom: '12px'
+                },
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalRegionSettingsEdit_textbox, {
+                  onChange: handleChange('previousPurchasesJPY'),
+                  cymbol: 'JPY',
+                  value: 0
+                })
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalRegionSettingsEdit_textbox, {
+                  onChange: handleChange('previousPurchasesCNY'),
+                  cymbol: 'CNY',
+                  value: 0
+                })
+              })]
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            style: {
+              display: 'flex',
+              justifyContent: 'center',
+              fontSize: '14px',
+              paddingBottom: '23px'
+            },
+            children: "\u041B\u0438\u0431\u043E"
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalRegionSettingsEdit_FormItemSelect, {
+            name: 'Ранее личные покупки совершались в:',
+            height: 105,
+            width: 199,
+            options: [{
+              name: '-'
+            }, {
+              name: 'CNY'
+            }, {
+              name: 'JPY'
+            }],
+            value: item.previousPurchasesSteamCurrencyId,
+            onChange: handleChange('previousPurchasesSteamCurrencyId')
+          })]
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalRegionSettingsEdit_styles.footer,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalRegionSettingsEdit_styles.actions,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Сохранить',
+            style: {
+              backgroundColor: '#478C35',
+              marginRight: '24px',
+              width: '271px'
+            },
+            onClick: function onClick() {
+              var i = modalRegionSettingsEdit_objectSpread({}, item);
+              i.giftSendSteamCurrencyId = i.giftSendSteamCurrencyId === 'Китай (CNY)' ? 23 : 8;
+              if (i.previousPurchasesSteamCurrencyId === '-') i.previousPurchasesSteamCurrencyId = null;else i.previousPurchasesSteamCurrencyId = i.previousPurchasesSteamCurrencyId === 'CNY' ? 23 : 8;
+              onSave(i);
+            }
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Отмена',
+            onClick: function onClick() {
+              if (onCancel) onCancel();
+            },
+            style: {
+              backgroundColor: '#9A7AA9',
+              marginLeft: '0px',
+              width: '183px'
+            }
+          })]
+        })
+      })]
+    }), !response.loading && response.errors.length > 0 && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalRegionSettingsEdit_styles.errors,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalRegionSettingsEdit_styles.title,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438!"
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalRegionSettingsEdit_styles.list,
+          children: response.errors.map(function (e) {
+            return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: modalRegionSettingsEdit_styles.item,
+              children: ["- ", e]
+            });
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalRegionSettingsEdit_styles.footer,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalRegionSettingsEdit_styles.actions,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Закрыть',
+            onClick: function onClick() {
+              if (resetResponse) resetResponse();
+            },
+            style: {
+              backgroundColor: '#9A7AA9',
+              marginLeft: '0px',
+              width: '226px'
+            }
+          })
+        })
+      })]
+    }), response.loading && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalRegionSettingsEdit_styles.loading,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
+        color: "inherit",
+        sx: {
+          height: '99px !important',
+          width: '99px !important'
+        }
+      })
+    })]
+  });
 };
 /* harmony default export */ const modalRegionSettingsEdit = (modalRegionSettingsEdit_ModalEdit);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/Popper/Popper.js
@@ -52902,7 +53524,6 @@ const Tooltip = /*#__PURE__*/react.forwardRef(function Tooltip(inProps, ref) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/grid/index.js
 function grid_typeof(o) { "@babel/helpers - typeof"; return grid_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, grid_typeof(o); }
 var grid_excluded = ["className"];
-function grid_extends() { grid_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return grid_extends.apply(this, arguments); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = grid_objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function grid_objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function grid_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -52916,6 +53537,7 @@ function grid_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof
 function grid_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function grid_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function grid_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -52953,231 +53575,279 @@ var grid_grid = function grid() {
   currencies.map(function (c) {
     currencyDict[c.steamId] = c;
   });
-  return /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: grid_styles.grid
-  }, bots.map(function (i) {
-    var _currencyDict$i$steam, _currencyDict$i$steam2, _currencyDict$i$steam3;
-    var imgSrc = i.avatarUrl || botavatar_namespaceObject;
-    var state = stateColor[1];
-    if (i.state) {
-      state = stateColor[i.state];
-    }
-    var vacGames = i.vacGames && i.vacGames.filter(function (vg) {
-      return vg.hasVac;
-    });
-    if (showVac[i.id]) {
-      return /*#__PURE__*/react.createElement("div", {
-        className: grid_styles.item,
-        style: {
-          borderLeft: "3px solid ".concat(state)
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: grid_styles.grid,
+      children: [bots.map(function (i) {
+        var _currencyDict$i$steam, _currencyDict$i$steam2, _currencyDict$i$steam3;
+        var imgSrc = i.avatarUrl || botavatar_namespaceObject;
+        var state = stateColor[1];
+        if (i.state) {
+          state = stateColor[i.state];
         }
-      }, /*#__PURE__*/react.createElement("div", {
-        className: grid_styles.vacSide
-      }, /*#__PURE__*/react.createElement("div", {
-        className: grid_styles.list
-      }, vacGames.map(function (vg) {
-        return /*#__PURE__*/react.createElement("div", {
-          className: grid_styles.vacItem
-        }, vg.name);
-      })), /*#__PURE__*/react.createElement("div", {
-        className: grid_styles.vacBackButWrapper
-      }, /*#__PURE__*/react.createElement("img", {
-        src: vacReturn_namespaceObject,
-        className: grid_styles.vacBackBut,
+        var vacGames = i.vacGames && i.vacGames.filter(function (vg) {
+          return vg.hasVac;
+        });
+        if (showVac[i.id]) {
+          return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: grid_styles.item,
+            style: {
+              borderLeft: "3px solid ".concat(state)
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: grid_styles.vacSide,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.list,
+                children: vacGames.map(function (vg) {
+                  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: grid_styles.vacItem,
+                    children: vg.name
+                  });
+                })
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.vacBackButWrapper,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                  src: vacReturn_namespaceObject,
+                  className: grid_styles.vacBackBut,
+                  onClick: function onClick() {
+                    var newShowVac = grid_objectSpread({}, showVac);
+                    delete newShowVac[i.id];
+                    setShowVac(newShowVac);
+                  }
+                })
+              })]
+            })
+          });
+        }
+        var isRegionProblem = i.isProblemRegion && !i.botRegionSetting;
+        return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: grid_styles.item,
+          style: {
+            borderLeft: "3px solid ".concat(state)
+          },
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: grid_styles.header,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: grid_styles.image,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                src: imgSrc,
+                onClick: function onClick() {
+                  if (i.steamId) window.open("https://steamcommunity.com/profiles/".concat(i.steamId), '_blank');
+                }
+              }), isRegionProblem && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.problem,
+                onClick: function onClick() {
+                  setSelectedBot(i);
+                  toggleEditBotRegionSetModal(true);
+                },
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(HtmlTooltip, {
+                  title: /*#__PURE__*/(0,jsx_runtime.jsx)(react.Fragment, {
+                    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                        style: {
+                          fontSize: '16px',
+                          lineHeight: '20px'
+                        },
+                        children: ["\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u044B\u0439 \u0440\u0435\u0433\u0438\u043E\u043D:", ' ', /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                          style: {
+                            color: '#B93ED8'
+                          },
+                          children: "\u041A\u0438\u0442\u0430\u0439"
+                        }), ' ', "!"]
+                      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                        style: {
+                          fontSize: '14px',
+                          lineHeight: '20px',
+                          marginTop: '5px'
+                        },
+                        children: "\u0411\u041E\u0422 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D \u043E\u0442 \u0440\u0430\u0431\u043E\u0442\u044B, \u043F\u043E\u0441\u043A\u043E\u043B\u044C\u043A\u0443 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0435\u043D \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u044B\u0439 \u0440\u0435\u0433\u0438\u043E\u043D \u0438\u043B\u0438 \u0432\u0430\u043B\u044E\u0442\u0430 \u043F\u0440\u0438 \u0441\u0431\u043E\u0440\u0435 \u0441\u0443\u043C\u043C\u044B \u043F\u043E\u043A\u0443\u043F\u043E\u043A. \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u0442\u0435 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 \u0434\u043B\u044F \u0432\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u0434\u0430\u043D\u043D\u044B\u043C \u0431\u043E\u0442\u043E\u0432"
+                      })]
+                    })
+                  }),
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                    src: warning2_namespaceObject
+                  })
+                })
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: grid_styles.info,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.login,
+                onClick: function onClick() {
+                  setSelectedBot(i);
+                  toggleBotDetailsModal(true);
+                },
+                children: i.userName
+              }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: grid_styles.data,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: grid_styles.region,
+                  children: [i.region, " "]
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: grid_styles.flag,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                    src: getFlagByRegionCode(i.region),
+                    height: 13
+                  })
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: grid_styles.proxy,
+                  onClick: function onClick() {
+                    setSelectedBot(i);
+                    toggleBotDetailsModal(true);
+                  },
+                  children: i.proxyStr
+                })]
+              })]
+            })]
+          }), vacGames && vacGames.length > 0 ? /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: grid_styles.vacWrapper,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: grid_styles.vac,
+              onClick: function onClick() {
+                var newShowVac = grid_objectSpread({}, showVac);
+                newShowVac = Object.assign(newShowVac, grid_defineProperty({}, i.id, true));
+                setShowVac(newShowVac);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: grid_styles.text,
+                children: [vacGames.length, " VAC"]
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: grid_styles.lineWrapper,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.line
+              })
+            })]
+          }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: grid_styles.vacWrapper,
+            style: {},
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: grid_styles.lineWrapper,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.line,
+                style: {
+                  width: '240px',
+                  marginLeft: '62px',
+                  marginTop: '18px',
+                  marginBottom: '12px'
+                }
+              })
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: grid_styles.prices,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: grid_styles.left,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                className: grid_styles.text,
+                children: [i.balance, " ", (_currencyDict$i$steam = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam === void 0 ? void 0 : _currencyDict$i$steam.steamSymbol]
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: grid_styles.right,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.leftPrice,
+                children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [i.totalPurchaseSumUSD.toFixed(2), " $"]
+                })
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.rightPrice,
+                children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  style: {},
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                    style: {
+                      color: '#C39F1C'
+                    },
+                    children: [i.sendedGiftsSum.toFixed(2), ' ', (_currencyDict$i$steam2 = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam2 === void 0 ? void 0 : _currencyDict$i$steam2.steamSymbol]
+                  }), ' ', "/ ", i.maxSendedGiftsSum.toFixed(2), ' ', (_currencyDict$i$steam3 = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam3 === void 0 ? void 0 : _currencyDict$i$steam3.steamSymbol]
+                })
+              })]
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: grid_styles.buttonWrapper,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: grid_styles.isOnBut,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
+                value: i.isON,
+                onChange: function onChange(val) {
+                  return apiBotSetIsOn(i.id, val);
+                },
+                style: {
+                  transform: 'scale(0.96)'
+                }
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: grid_styles.buttons,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.editBtn,
+                onClick: function onClick() {
+                  if (isRegionProblem) return;
+                  setSelectedBot(i);
+                  toggleEditBotModal(true);
+                },
+                children: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: grid_styles.delBtn,
+                onClick: function onClick() {
+                  setSelectedBot(i);
+                  setRemModalIsOpen(true);
+                },
+                children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
+              })]
+            })]
+          })]
+        });
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: grid_styles.addItem,
         onClick: function onClick() {
-          var newShowVac = grid_objectSpread({}, showVac);
-          delete newShowVac[i.id];
-          setShowVac(newShowVac);
-        }
-      }))));
-    }
-    var isRegionProblem = i.isProblemRegion && !i.botRegionSetting;
-    return /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.item,
-      style: {
-        borderLeft: "3px solid ".concat(state)
-      }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.header
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.image
-    }, /*#__PURE__*/react.createElement("img", {
-      src: imgSrc,
-      onClick: function onClick() {
-        if (i.steamId) window.open("https://steamcommunity.com/profiles/".concat(i.steamId), '_blank');
-      }
-    }), isRegionProblem && /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.problem,
-      onClick: function onClick() {
-        setSelectedBot(i);
-        toggleEditBotRegionSetModal(true);
-      }
-    }, /*#__PURE__*/react.createElement(HtmlTooltip, {
-      title: /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("div", {
-        style: {
-          fontSize: '16px',
-          lineHeight: '20px'
-        }
-      }, "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u044B\u0439 \u0440\u0435\u0433\u0438\u043E\u043D:", ' ', /*#__PURE__*/react.createElement("span", {
-        style: {
-          color: '#B93ED8'
-        }
-      }, "\u041A\u0438\u0442\u0430\u0439"), ' ', "!"), /*#__PURE__*/react.createElement("div", {
-        style: {
-          fontSize: '14px',
-          lineHeight: '20px',
-          marginTop: '5px'
-        }
-      }, "\u0411\u041E\u0422 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D \u043E\u0442 \u0440\u0430\u0431\u043E\u0442\u044B, \u043F\u043E\u0441\u043A\u043E\u043B\u044C\u043A\u0443 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0435\u043D \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u044B\u0439 \u0440\u0435\u0433\u0438\u043E\u043D \u0438\u043B\u0438 \u0432\u0430\u043B\u044E\u0442\u0430 \u043F\u0440\u0438 \u0441\u0431\u043E\u0440\u0435 \u0441\u0443\u043C\u043C\u044B \u043F\u043E\u043A\u0443\u043F\u043E\u043A. \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u0442\u0435 \u0430\u043A\u043A\u0430\u0443\u043D\u0442 \u0434\u043B\u044F \u0432\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u0434\u0430\u043D\u043D\u044B\u043C \u0431\u043E\u0442\u043E\u0432")))
-    }, /*#__PURE__*/react.createElement("img", {
-      src: warning2_namespaceObject
-    })))), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.info
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.login,
-      onClick: function onClick() {
-        setSelectedBot(i);
-        toggleBotDetailsModal(true);
-      }
-    }, i.userName), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.data
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.region
-    }, i.region, " "), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.flag
-    }, /*#__PURE__*/react.createElement("img", {
-      src: getFlagByRegionCode(i.region),
-      height: 13
-    })), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.proxy,
-      onClick: function onClick() {
-        setSelectedBot(i);
-        toggleBotDetailsModal(true);
-      }
-    }, i.proxyStr)))), vacGames && vacGames.length > 0 ? /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.vacWrapper
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.vac,
-      onClick: function onClick() {
-        var newShowVac = grid_objectSpread({}, showVac);
-        newShowVac = Object.assign(newShowVac, grid_defineProperty({}, i.id, true));
-        setShowVac(newShowVac);
-      }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.text
-    }, vacGames.length, " VAC")), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.lineWrapper
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.line
-    }))) : /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.vacWrapper,
-      style: {}
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.lineWrapper
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.line,
-      style: {
-        width: '240px',
-        marginLeft: '62px',
-        marginTop: '18px',
-        marginBottom: '12px'
-      }
-    }))), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.prices
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.left
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.text
-    }, i.balance, " ", (_currencyDict$i$steam = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam === void 0 ? void 0 : _currencyDict$i$steam.steamSymbol)), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.right
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.leftPrice
-    }, /*#__PURE__*/react.createElement("div", null, i.totalPurchaseSumUSD.toFixed(2), " $")), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.rightPrice
-    }, /*#__PURE__*/react.createElement("div", {
-      style: {}
-    }, /*#__PURE__*/react.createElement("span", {
-      style: {
-        color: '#C39F1C'
-      }
-    }, i.sendedGiftsSum.toFixed(2), ' ', (_currencyDict$i$steam2 = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam2 === void 0 ? void 0 : _currencyDict$i$steam2.steamSymbol), ' ', "/ ", i.maxSendedGiftsSum.toFixed(2), ' ', (_currencyDict$i$steam3 = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam3 === void 0 ? void 0 : _currencyDict$i$steam3.steamSymbol)))), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.buttonWrapper
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.isOnBut
-    }, /*#__PURE__*/react.createElement(shared_switch, {
-      value: i.isON,
-      onChange: function onChange(val) {
-        return apiBotSetIsOn(i.id, val);
+          setSelectedBot({});
+          toggleEditBotModal(true);
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: addbot_namespaceObject
+        })
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalRegionSettingsEdit, {
+      isOpen: botRegionSetEditModalIsOpen,
+      value: {},
+      data: selectedBot,
+      response: saveBotRegionSetResponse,
+      onSave: function onSave(val) {
+        var req = grid_objectSpread(grid_objectSpread({}, val), {}, {
+          botId: selectedBot.id
+        });
+        console.log(req);
+        apiSaveBotRegionSettings(req);
       },
-      style: {
-        transform: 'scale(0.96)'
+      onCancel: function onCancel() {
+        toggleEditBotRegionSetModal(false);
       }
-    })), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.buttons
-    }, /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.editBtn,
-      onClick: function onClick() {
-        if (isRegionProblem) return;
-        setSelectedBot(i);
-        toggleEditBotModal(true);
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(bots_modalBotDetails, {
+      isOpen: botDetailsModalIsOpen,
+      data: selectedBot,
+      onCancel: function onCancel() {
+        toggleBotDetailsModal(false);
       }
-    }, "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"), /*#__PURE__*/react.createElement("div", {
-      className: grid_styles.delBtn,
-      onClick: function onClick() {
-        setSelectedBot(i);
-        setRemModalIsOpen(true);
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+      title: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435",
+      isOpen: remModalIsOpen,
+      content: "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u043E\u0442\u0430 ".concat(selectedBot.userName, " ?"),
+      onConfirm: {
+        action: function action() {
+          apiDeleteBot(selectedBot.id);
+          setRemModalIsOpen(false);
+        }
+      },
+      onCancel: {
+        action: function action() {
+          setRemModalIsOpen(false);
+        }
       }
-    }, "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"))));
-  }), /*#__PURE__*/react.createElement("div", {
-    className: grid_styles.addItem,
-    onClick: function onClick() {
-      setSelectedBot({});
-      toggleEditBotModal(true);
-    }
-  }, /*#__PURE__*/react.createElement("img", {
-    src: addbot_namespaceObject
-  }))), /*#__PURE__*/react.createElement(modalRegionSettingsEdit, {
-    isOpen: botRegionSetEditModalIsOpen,
-    value: {},
-    data: selectedBot,
-    response: saveBotRegionSetResponse,
-    onSave: function onSave(val) {
-      var req = grid_objectSpread(grid_objectSpread({}, val), {}, {
-        botId: selectedBot.id
-      });
-      console.log(req);
-      apiSaveBotRegionSettings(req);
-    },
-    onCancel: function onCancel() {
-      toggleEditBotRegionSetModal(false);
-    }
-  }), /*#__PURE__*/react.createElement(bots_modalBotDetails, {
-    isOpen: botDetailsModalIsOpen,
-    data: selectedBot,
-    onCancel: function onCancel() {
-      toggleBotDetailsModal(false);
-    }
-  }), /*#__PURE__*/react.createElement(ConfirmModal, {
-    title: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435",
-    isOpen: remModalIsOpen,
-    content: "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0431\u043E\u0442\u0430 ".concat(selectedBot.userName, " ?"),
-    onConfirm: {
-      action: function action() {
-        apiDeleteBot(selectedBot.id);
-        setRemModalIsOpen(false);
-      }
-    },
-    onCancel: {
-      action: function action() {
-        setRemModalIsOpen(false);
-      }
-    }
-  }));
+    })]
+  });
 };
 var HtmlTooltip = styles_styled(function (_ref) {
   var className = _ref.className,
     props = _objectWithoutProperties(_ref, grid_excluded);
-  return /*#__PURE__*/react.createElement(Tooltip_Tooltip, grid_extends({}, props, {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(Tooltip_Tooltip, grid_objectSpread(grid_objectSpread({}, props), {}, {
     classes: {
       popper: className
     }
@@ -53202,15 +53872,18 @@ var HtmlTooltip = styles_styled(function (_ref) {
 
 
 
+
 var bots = function bots() {
-  return /*#__PURE__*/react.createElement("div", {
-    className: bots_styles.wrapper
-  }, /*#__PURE__*/react.createElement(admin_pageHeader, {
-    title: "\u0411\u043E\u0442\u044B",
-    subTitle: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0441\u043F\u0438\u0441\u043A\u0430 \u0431\u043E\u0442\u043E\u0432"
-  }), /*#__PURE__*/react.createElement("div", {
-    className: bots_styles.content
-  }, /*#__PURE__*/react.createElement(bots_grid, null)));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: bots_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
+      title: "\u0411\u043E\u0442\u044B",
+      subTitle: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0441\u043F\u0438\u0441\u043A\u0430 \u0431\u043E\u0442\u043E\u0432"
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: bots_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(bots_grid, {})
+    })]
+  });
 };
 /* harmony default export */ const admin_bots = (bots);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/Table/TableContext.js
@@ -53810,6 +54483,7 @@ function list_toPrimitive(t, r) { if ("object" != proxies_list_typeof(t) || !t) 
 
 
 
+
 var StyledTableCell = styles_styled(TableCell_TableCell)(function (_ref) {
   var theme = _ref.theme;
   return list_defineProperty(list_defineProperty(list_defineProperty(list_defineProperty({}, "&.".concat(TableCell_tableCellClasses.head), {
@@ -53835,86 +54509,107 @@ var proxies = function proxies() {
   var _state$use = state.use(),
     proxies = _state$use.proxies,
     loadProxiesModalIsOpen = _state$use.loadProxiesModalIsOpen;
-  return /*#__PURE__*/react.createElement("div", {
-    className: proxies_list_styles.wrapper
-  }, /*#__PURE__*/react.createElement(TableContainer_TableContainer, {
-    className: proxies_list_styles.listHeadContainer
-  }, /*#__PURE__*/react.createElement(Table_Table, {
-    stickyHeader: true,
-    "aria-label": "sticky table",
-    className: proxies_list_styles.list
-  }, /*#__PURE__*/react.createElement(TableHead_TableHead, {
-    className: proxies_list_styles.listHeader
-  }, /*#__PURE__*/react.createElement(TableRow_TableRow, null, /*#__PURE__*/react.createElement(StyledTableCell, {
-    align: "center",
-    className: proxies_list_styles.listHeaderItem
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      marginLeft: '100px'
-    }
-  }, /*#__PURE__*/react.createElement("div", null, "\u041F\u0440\u043E\u043A\u0441\u0438 (", proxies.length, ")"), /*#__PURE__*/react.createElement("img", {
-    src: additem_namespaceObject,
-    style: {
-      marginLeft: '10px',
-      cursor: 'pointer'
-    },
-    onClick: /*#__PURE__*/proxies_list_asyncToGenerator( /*#__PURE__*/proxies_list_regeneratorRuntime().mark(function _callee() {
-      return proxies_list_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            toggleLoadProxiesModal(!loadProxiesModalIsOpen);
-          case 1:
-          case "end":
-            return _context.stop();
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: proxies_list_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(TableContainer_TableContainer, {
+      className: proxies_list_styles.listHeadContainer,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(Table_Table, {
+        stickyHeader: true,
+        "aria-label": "sticky table",
+        className: proxies_list_styles.list,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(TableHead_TableHead, {
+          className: proxies_list_styles.listHeader,
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)(TableRow_TableRow, {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(StyledTableCell, {
+              align: "center",
+              className: proxies_list_styles.listHeaderItem,
+              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                style: {
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginLeft: '100px'
+                },
+                children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: ["\u041F\u0440\u043E\u043A\u0441\u0438 (", proxies.length, ")"]
+                }), /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                  src: additem_namespaceObject,
+                  style: {
+                    marginLeft: '10px',
+                    cursor: 'pointer'
+                  },
+                  onClick: /*#__PURE__*/proxies_list_asyncToGenerator( /*#__PURE__*/proxies_list_regeneratorRuntime().mark(function _callee() {
+                    return proxies_list_regeneratorRuntime().wrap(function _callee$(_context) {
+                      while (1) switch (_context.prev = _context.next) {
+                        case 0:
+                          toggleLoadProxiesModal(!loadProxiesModalIsOpen);
+                        case 1:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }, _callee);
+                  }))
+                })]
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(StyledTableCell, {
+              align: "center",
+              className: proxies_list_styles.listHeaderItem,
+              children: "\u041E\u043F\u0446\u0438\u0438"
+            })]
+          })
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(TableContainer_TableContainer, {
+      className: proxies_list_styles.listContainer,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(Table_Table, {
+        className: proxies_list_styles.list,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(TableBody_TableBody, {
+          className: proxies_list_styles.listItem,
+          children: proxies.map(function (i) {
+            var name = "".concat(i.host, ":").concat(i.port, ":").concat(i.userName, ":").concat(i.password);
+            return /*#__PURE__*/(0,jsx_runtime.jsxs)(StyledTableRow, {
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(TableCell_TableCell, {
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: proxies_list_styles.name,
+                  children: name
+                })
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)(TableCell_TableCell, {
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: proxies_list_styles.buttons,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: proxies_list_styles.btnWrapper,
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                      icon: trash_namespaceObject,
+                      onClick: function onClick() {
+                        apiDeleteProxy(i.id);
+                      }
+                    })
+                  })
+                })
+              })]
+            }, i.id);
+          })
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_modalSaveText, {
+      title: 'Добавить прокси',
+      placeholder: 'Введите сюда список общих прокси на для использования под парсинг распродаж, подключение к API digiseller и т.д. Общие прокси в работе с ботами использоваться не будут. Прокси нужно вводить списком через Enter',
+      isOpen: loadProxiesModalIsOpen,
+      onSave: {
+        label: 'Импортировать',
+        action: function action(val) {
+          apiLoadNewProxy({
+            proxies: val
+          });
         }
-      }, _callee);
-    }))
-  }))), /*#__PURE__*/react.createElement(StyledTableCell, {
-    align: "center",
-    className: proxies_list_styles.listHeaderItem
-  }, "\u041E\u043F\u0446\u0438\u0438"))))), /*#__PURE__*/react.createElement(TableContainer_TableContainer, {
-    className: proxies_list_styles.listContainer
-  }, /*#__PURE__*/react.createElement(Table_Table, {
-    className: proxies_list_styles.list
-  }, /*#__PURE__*/react.createElement(TableBody_TableBody, {
-    className: proxies_list_styles.listItem
-  }, proxies.map(function (i) {
-    var name = "".concat(i.host, ":").concat(i.port, ":").concat(i.userName, ":").concat(i.password);
-    return /*#__PURE__*/react.createElement(StyledTableRow, {
-      key: i.id
-    }, /*#__PURE__*/react.createElement(TableCell_TableCell, null, /*#__PURE__*/react.createElement("div", {
-      className: proxies_list_styles.name
-    }, name)), /*#__PURE__*/react.createElement(TableCell_TableCell, null, /*#__PURE__*/react.createElement("div", {
-      className: proxies_list_styles.buttons
-    }, /*#__PURE__*/react.createElement("div", {
-      className: proxies_list_styles.btnWrapper
-    }, /*#__PURE__*/react.createElement(shared_iconButton, {
-      icon: trash_namespaceObject,
-      onClick: function onClick() {
-        apiDeleteProxy(i.id);
+      },
+      onCancel: {
+        label: 'Отмена',
+        action: function action() {
+          toggleLoadProxiesModal(false);
+        }
       }
-    })))));
-  })))), /*#__PURE__*/react.createElement(shared_modalSaveText, {
-    title: 'Добавить прокси',
-    placeholder: 'Введите сюда список общих прокси на для использования под парсинг распродаж, подключение к API digiseller и т.д. Общие прокси в работе с ботами использоваться не будут. Прокси нужно вводить списком через Enter',
-    isOpen: loadProxiesModalIsOpen,
-    onSave: {
-      label: 'Импортировать',
-      action: function action(val) {
-        apiLoadNewProxy({
-          proxies: val
-        });
-      }
-    },
-    onCancel: {
-      label: 'Отмена',
-      action: function action() {
-        toggleLoadProxiesModal(false);
-      }
-    }
-  }));
+    })]
+  });
 };
 /* harmony default export */ const proxies_list = (proxies);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/proxies/styles.scss
@@ -53925,15 +54620,18 @@ var proxies = function proxies() {
 
 
 
+
 var proxies_products = function products() {
-  return /*#__PURE__*/react.createElement("div", {
-    className: proxies_styles.wrapper
-  }, /*#__PURE__*/react.createElement(admin_pageHeader, {
-    title: "\u041F\u0440\u043E\u043A\u0441\u0438",
-    subTitle: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043E\u0431\u0449\u0435\u0433\u043E \u0441\u043F\u0438\u0441\u043A\u0430 \u043F\u0440\u043E\u043A\u0441\u0438"
-  }), /*#__PURE__*/react.createElement("div", {
-    className: proxies_styles.content
-  }, /*#__PURE__*/react.createElement(proxies_list, null)));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: proxies_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
+      title: "\u041F\u0440\u043E\u043A\u0441\u0438",
+      subTitle: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043E\u0431\u0449\u0435\u0433\u043E \u0441\u043F\u0438\u0441\u043A\u0430 \u043F\u0440\u043E\u043A\u0441\u0438"
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: proxies_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(proxies_list, {})
+    })]
+  });
 };
 /* harmony default export */ const admin_proxies = (proxies_products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/gamepad.svg
@@ -53993,7 +54691,7 @@ var MenuItem = function MenuItem(_ref) {
       return i && i.includes(pathname);
     }).length > 0;
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     ref: menuRef,
     className: leftMenu_styles.menuItem + ' ' + (
     //(isOpen || s.activeMenuLink === name ? css.isOpen : '')
@@ -54001,43 +54699,55 @@ var MenuItem = function MenuItem(_ref) {
     onClick: function onClick() {
       _onClick();
       //if (!subMenuExist) setActiveMenuLink(name);
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      display: 'flex'
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: leftMenu_styles.icon
-  }, /*#__PURE__*/react.createElement("img", {
-    src: icon
-  })), /*#__PURE__*/react.createElement("div", null, name)), subMenuExist && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", null, isOpen && /*#__PURE__*/react.createElement("img", {
-    className: leftMenu_styles.arrowIcon,
-    src: arrowLeft_namespaceObject
-  }), !isOpen && /*#__PURE__*/react.createElement("img", {
-    className: leftMenu_styles.arrowIcon,
-    src: arrowRight_namespaceObject
-  })), isOpen && /*#__PURE__*/react.createElement("div", {
-    className: leftMenu_styles.subMenu,
-    style: subMenuStyle,
-    ref: subMenuRef
-  }, subMenu.map(function (i) {
-    return /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.subMenuItem,
-      onClick: function onClick() {
-        //setActiveMenuLink(name);
-        if (i.action) {
-          i.action();
-        }
-        if (i.url) navigate(i.url);
-      }
-    }, i.name);
-  }))));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      style: {
+        display: 'flex'
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: leftMenu_styles.icon,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: icon
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: name
+      })]
+    }), subMenuExist && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        children: [isOpen && /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          className: leftMenu_styles.arrowIcon,
+          src: arrowLeft_namespaceObject
+        }), !isOpen && /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          className: leftMenu_styles.arrowIcon,
+          src: arrowRight_namespaceObject
+        })]
+      }), isOpen && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: leftMenu_styles.subMenu,
+        style: subMenuStyle,
+        ref: subMenuRef,
+        children: subMenu.map(function (i) {
+          return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: leftMenu_styles.subMenuItem,
+            onClick: function onClick() {
+              //setActiveMenuLink(name);
+              if (i.action) {
+                i.action();
+              }
+              if (i.url) navigate(i.url);
+            },
+            children: i.name
+          });
+        })
+      })]
+    })]
+  });
 };
 /* harmony default export */ const menuItem = (MenuItem);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/botStats/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const botStats_styles = ({"wrapper":"styles__wrapper--gq8OH","botStats":"styles__botStats--g9t2W","statItem":"styles__statItem--L3mbt","dot":"styles__dot--jSRKD","name":"styles__name--xp_o3","count":"styles__count--IVnSx"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/botStats/index.js
+
 
 
 
@@ -54071,30 +54781,38 @@ var BotStats = function BotStats(_ref) {
   });
   var states = [];
   for (var prop in val) states.push(val[prop]);
-  return /*#__PURE__*/react.createElement("div", {
-    className: botStats_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: botStats_styles.botStats
-  }, states.map(function (s) {
-    return /*#__PURE__*/react.createElement("div", {
-      className: botStats_styles.statItem
-    }, /*#__PURE__*/react.createElement("div", {
-      className: botStats_styles.dot,
-      style: {
-        backgroundColor: "".concat(s.color)
-      }
-    }), /*#__PURE__*/react.createElement("div", {
-      className: botStats_styles.name
-    }, /*#__PURE__*/react.createElement("div", null, s.name), /*#__PURE__*/react.createElement("div", {
-      className: botStats_styles.count
-    }, s.count)));
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: botStats_styles.wrapper,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: botStats_styles.botStats,
+      children: states.map(function (s) {
+        return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: botStats_styles.statItem,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: botStats_styles.dot,
+            style: {
+              backgroundColor: "".concat(s.color)
+            }
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: botStats_styles.name,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              children: s.name
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: botStats_styles.count,
+              children: s.count
+            })]
+          })]
+        });
+      })
+    })
+  });
 };
 /* harmony default export */ const botStats = (BotStats);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const shared_textbox_styles = ({"wrapper":"styles__wrapper--H8Xnp"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/index.js
+
 
 
 var shared_textbox_TextBox = function TextBox(_ref) {
@@ -54109,15 +54827,16 @@ var shared_textbox_TextBox = function TextBox(_ref) {
   var wrapperStyle = {
     width: width || '226px'
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: shared_textbox_styles.wrapper,
     onChange: onChangeText,
-    style: wrapperStyle
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue,
-    placeholder: placeholder
-  }));
+    style: wrapperStyle,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+      type: 'text',
+      defaultValue: defaultValue,
+      placeholder: placeholder
+    })
+  });
 };
 /* harmony default export */ const shared_textbox = (shared_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalDigisellerEdit/styles.scss
@@ -54136,6 +54855,7 @@ function modalDigisellerEdit_unsupportedIterableToArray(o, minLen) { if (!o) ret
 function modalDigisellerEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalDigisellerEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalDigisellerEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -54162,53 +54882,60 @@ var ModalDigisellerEdit = function ModalDigisellerEdit(_ref) {
       setVal(modalDigisellerEdit_objectSpread(modalDigisellerEdit_objectSpread({}, val), {}, modalDigisellerEdit_defineProperty({}, prop, propVal)));
     };
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Сменить API ключ',
     width: 705,
-    height: 250
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalDigisellerEdit_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalDigisellerEdit_styles.boxes
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      marginRight: '17px'
-    }
-  }, /*#__PURE__*/react.createElement(shared_textbox, {
-    onChange: handleChange('digisellerApiKey'),
-    defaultValue: val.digisellerApiKey,
-    width: 303,
-    placeholder: 'введите новый API ключ digiseller...'
-  })), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(shared_textbox, {
-    onChange: handleChange('digisellerId'),
-    defaultValue: val.digisellerId,
-    width: 158,
-    placeholder: 'введите sellerID...'
-  })))), /*#__PURE__*/react.createElement("div", {
-    className: modalDigisellerEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Готово',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '36px',
-      width: '221px'
-    },
-    onClick: function onClick() {
-      onSave(val);
-      setVal('');
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-      setVal(initialVal);
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+    height: 250,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalDigisellerEdit_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalDigisellerEdit_styles.boxes,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: {
+            marginRight: '17px'
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textbox, {
+            onChange: handleChange('digisellerApiKey'),
+            defaultValue: val.digisellerApiKey,
+            width: 303,
+            placeholder: 'введите новый API ключ digiseller...'
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textbox, {
+            onChange: handleChange('digisellerId'),
+            defaultValue: val.digisellerId,
+            width: 158,
+            placeholder: 'введите sellerID...'
+          })
+        })]
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalDigisellerEdit_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Готово',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '36px',
+          width: '221px'
+        },
+        onClick: function onClick() {
+          onSave(val);
+          setVal('');
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+          setVal(initialVal);
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalDigisellerEdit = (ModalDigisellerEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalChangePassword/styles.scss
@@ -54227,6 +54954,7 @@ function modalChangePassword_unsupportedIterableToArray(o, minLen) { if (!o) ret
 function modalChangePassword_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalChangePassword_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalChangePassword_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -54252,51 +54980,58 @@ var ModalChangePassword = function ModalChangePassword(_ref) {
       setVal(modalChangePassword_objectSpread(modalChangePassword_objectSpread({}, val), {}, modalChangePassword_defineProperty({}, prop, propVal)));
     };
   };
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Сменить пароль',
     width: 705,
-    height: 250
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalChangePassword_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalChangePassword_styles.boxes
-  }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(shared_textbox, {
-    onChange: handleChange('password')
-    //defaultValue={val.password}
-    ,
-    width: 344,
-    placeholder: 'введите новый пароль для входа в ЛК...'
-  })))), /*#__PURE__*/react.createElement("div", {
-    className: modalChangePassword_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Готово',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '36px',
-      width: '221px'
-    },
-    onClick: function onClick() {
-      onSave(val);
-      setVal('');
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-      setVal(initialVal);
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+    height: 250,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalChangePassword_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalChangePassword_styles.boxes,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textbox, {
+            onChange: handleChange('password')
+            //defaultValue={val.password}
+            ,
+            width: 344,
+            placeholder: 'введите новый пароль для входа в ЛК...'
+          })
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalChangePassword_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Готово',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '36px',
+          width: '221px'
+        },
+        onClick: function onClick() {
+          onSave(val);
+          setVal('');
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+          setVal(initialVal);
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalChangePassword = (ModalChangePassword);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalExchangeRates/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalExchangeRates_textbox_styles = ({"wrapper":"styles__wrapper--xEmel","inputControl":"styles__inputControl--Ao84_","inputArea":"styles__inputArea--pWo17","cymbol":"styles__cymbol--tnMao","hint":"styles__hint--HxKNM"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalExchangeRates/textbox/index.js
+
 
 
 var modalExchangeRates_textbox_TextBox = function TextBox(_ref) {
@@ -54308,19 +55043,23 @@ var modalExchangeRates_textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalExchangeRates_textbox_styles.wrapper,
-    onChange: onChangeText
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_textbox_styles.hint
-  }, hint));
+    onChange: onChangeText,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalExchangeRates_textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalExchangeRates_textbox_styles.inputArea,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        })
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalExchangeRates_textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const modalExchangeRates_textbox = (modalExchangeRates_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalExchangeRates/styles.scss
@@ -54344,22 +55083,27 @@ function modalExchangeRates_arrayWithHoles(arr) { if (Array.isArray(arr)) return
 
 
 
+
 var modalExchangeRates_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     cymbol = _ref.cymbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalExchangeRates_textbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    cymbol: cymbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalExchangeRates_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalExchangeRates_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates_textbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        cymbol: cymbol
+      })
+    })]
+  });
 };
 var ModalExchangeRates = function ModalExchangeRates(_ref2) {
   var isOpen = _ref2.isOpen,
@@ -54391,58 +55135,65 @@ var ModalExchangeRates = function ModalExchangeRates(_ref2) {
   (0,react.useEffect)(function () {
     setVal(value);
   }, [value]);
-  var title = /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.custTitle
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.t1
-  }, "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043A\u0443\u0440\u0441\u044B \u0432\u0430\u043B\u044E\u0442 Steam"), /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.t2
-  }, "\u0423\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0432\u0430\u043B\u044E\u0442\u0443 \u043A \u0414\u043E\u043B\u043B\u0430\u0440\u0443"));
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  var title = /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalExchangeRates_styles.custTitle,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalExchangeRates_styles.t1,
+      children: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043A\u0443\u0440\u0441\u044B \u0432\u0430\u043B\u044E\u0442 Steam"
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalExchangeRates_styles.t2,
+      children: "\u0423\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0432\u0430\u043B\u044E\u0442\u0443 \u043A \u0414\u043E\u043B\u043B\u0430\u0440\u0443"
+    })]
+  });
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: title,
     width: 554,
-    height: 667
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.content
-  }, val && val.currencies && val.currencies.map(function (c) {
-    return /*#__PURE__*/react.createElement(modalExchangeRates_FromItemText, {
-      name: "".concat(c.name, " (").concat(c.code, ")"),
-      onChange: function onChange(v) {
-        handleChange(v, c.code);
-      },
-      value: c.value.toFixed(3)
-    });
-  })), /*#__PURE__*/react.createElement("div", {
-    className: modalExchangeRates_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Подтвердить',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '24px',
-      width: '271px'
-    },
-    onClick: function onClick() {
-      onSave(val);
-      //setVal([]);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-      //setVal([]);
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  })));
+    height: 667,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalExchangeRates_styles.content,
+      children: val && val.currencies && val.currencies.map(function (c) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates_FromItemText, {
+          name: "".concat(c.name, " (").concat(c.code, ")"),
+          onChange: function onChange(v) {
+            handleChange(v, c.code);
+          },
+          value: c.value.toFixed(3)
+        });
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalExchangeRates_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Подтвердить',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '24px',
+          width: '271px'
+        },
+        onClick: function onClick() {
+          onSave(val);
+          //setVal([]);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+          //setVal([]);
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        }
+      })]
+    })]
+  });
 };
 /* harmony default export */ const modalExchangeRates = (ModalExchangeRates);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalEdit/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalEdit_textbox_styles = ({"wrapper":"styles__wrapper--sh6u0","inputControl":"styles__inputControl--G2Cc2","inputArea":"styles__inputArea--vwTFx","cymbol":"styles__cymbol--IvCWK","hint":"styles__hint--y3cPL"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalEdit/textbox/index.js
+
 
 
 var modalEdit_textbox_TextBox = function TextBox(_ref) {
@@ -54454,21 +55205,26 @@ var modalEdit_textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalEdit_textbox_styles.wrapper,
-    onChange: onChangeText
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), cymbol && /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textbox_styles.cymbol
-  }, cymbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textbox_styles.hint
-  }, hint));
+    onChange: onChangeText,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalEdit_textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalEdit_textbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalEdit_textbox_styles.cymbol,
+          children: cymbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalEdit_textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const modalEdit_textbox = (modalEdit_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalEdit/styles.scss
@@ -54493,22 +55249,27 @@ function bots_modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr
 
 
 
+
 var modalEdit_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     cymbol = _ref.cymbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalEdit_textbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    cymbol: cymbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: bots_modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: bots_modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_textbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        cymbol: cymbol
+      })
+    })]
+  });
 };
 var modalEdit_ModalEdit = function ModalEdit(_ref2) {
   var isOpen = _ref2.isOpen,
@@ -54544,116 +55305,136 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
   };
   var fileRef = react.useRef();
   var modalHeight = item.id ? 732 : 599;
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: item.id ? 'Редактировать бота' : 'Добавить бота',
     width: 554,
-    height: modalHeight
-  }, !response.loading && response.errors.length === 0 && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.fields
-  }, /*#__PURE__*/react.createElement(modalEdit_FromItemText, {
-    name: 'Логин:',
-    onChange: handleChange('userName'),
-    value: item.userName
-  }), /*#__PURE__*/react.createElement(modalEdit_FromItemText, {
-    name: 'Пароль:',
-    onChange: handleChange('password'),
-    value: item.password
-  }), /*#__PURE__*/react.createElement(modalEdit_FromItemText, {
-    name: 'Прокси:',
-    hint: 'Прокси вводить форматом: ip:port:login:pass',
-    onChange: handleChange('proxy'),
-    value: item.proxy
-  }), item.id && /*#__PURE__*/react.createElement(modalEdit_FromItemText, {
-    name: 'Доп. значение лимита:',
-    hint: 'Данным параметром Вы можете корректировать максимальный лимит отправки игр. Параметр является необязательным',
-    onChange: handleChange('gameSendLimitAddParam'),
-    value: item.gameSendLimitAddParam,
-    cymbol: '$'
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.footer
-  }, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.maFileBtnwrapper
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Изменить .MaFile',
-    style: {
-      backgroundColor: '#A348CE',
-      width: '478px'
-    },
-    onClick: function onClick() {
-      fileRef.current.click();
-    }
-  }), /*#__PURE__*/react.createElement("input", {
-    ref: fileRef,
-    type: 'file',
-    hidden: true,
-    multiple: false,
-    onChange: function onChange(e) {
-      handleChange('maFile')(e.target.files[0]);
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: item.id ? 'Сохранить' : 'Добавить',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '24px',
-      width: '271px'
-    },
-    onClick: function onClick() {
-      onSave(item);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: function onClick() {
-      if (onCancel) onCancel();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px',
-      width: '183px'
-    }
-  })))), !response.loading && response.errors.length > 0 && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.errors
-  }, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.title
-  }, /*#__PURE__*/react.createElement("div", null, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438!")), /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.list
-  }, response.errors.map(function (e) {
-    return /*#__PURE__*/react.createElement("div", {
-      className: bots_modalEdit_styles.item
-    }, "- ", e);
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.footer
-  }, /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Закрыть',
-    onClick: function onClick() {
-      if (resetResponse) resetResponse();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px',
-      width: '226px'
-    }
-  })))), response.loading && /*#__PURE__*/react.createElement("div", {
-    className: bots_modalEdit_styles.loading
-  }, /*#__PURE__*/react.createElement(CircularProgress_CircularProgress, {
-    color: "inherit",
-    sx: {
-      height: '99px !important',
-      width: '99px !important'
-    }
-  })));
+    height: modalHeight,
+    children: [!response.loading && response.errors.length === 0 && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: bots_modalEdit_styles.content,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: bots_modalEdit_styles.fields,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemText, {
+            name: 'Логин:',
+            onChange: handleChange('userName'),
+            value: item.userName
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemText, {
+            name: 'Пароль:',
+            onChange: handleChange('password'),
+            value: item.password
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemText, {
+            name: 'Прокси:',
+            hint: 'Прокси вводить форматом: ip:port:login:pass',
+            onChange: handleChange('proxy'),
+            value: item.proxy
+          }), item.id && /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemText, {
+            name: 'Доп. значение лимита:',
+            hint: 'Данным параметром Вы можете корректировать максимальный лимит отправки игр. Параметр является необязательным',
+            onChange: handleChange('gameSendLimitAddParam'),
+            value: item.gameSendLimitAddParam,
+            cymbol: '$'
+          })]
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: bots_modalEdit_styles.footer,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: bots_modalEdit_styles.maFileBtnwrapper,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Изменить .MaFile',
+            style: {
+              backgroundColor: '#A348CE',
+              width: '478px'
+            },
+            onClick: function onClick() {
+              fileRef.current.click();
+            }
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            ref: fileRef,
+            type: 'file',
+            hidden: true,
+            multiple: false,
+            onChange: function onChange(e) {
+              handleChange('maFile')(e.target.files[0]);
+            }
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: bots_modalEdit_styles.actions,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: item.id ? 'Сохранить' : 'Добавить',
+            style: {
+              backgroundColor: '#478C35',
+              marginRight: '24px',
+              width: '271px'
+            },
+            onClick: function onClick() {
+              onSave(item);
+            }
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Отмена',
+            onClick: function onClick() {
+              if (onCancel) onCancel();
+            },
+            style: {
+              backgroundColor: '#9A7AA9',
+              marginLeft: '0px',
+              width: '183px'
+            }
+          })]
+        })]
+      })]
+    }), !response.loading && response.errors.length > 0 && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: bots_modalEdit_styles.errors,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: bots_modalEdit_styles.title,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438!"
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: bots_modalEdit_styles.list,
+          children: response.errors.map(function (e) {
+            return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: bots_modalEdit_styles.item,
+              children: ["- ", e]
+            });
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: bots_modalEdit_styles.footer,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: bots_modalEdit_styles.actions,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Закрыть',
+            onClick: function onClick() {
+              if (resetResponse) resetResponse();
+            },
+            style: {
+              backgroundColor: '#9A7AA9',
+              marginLeft: '0px',
+              width: '226px'
+            }
+          })
+        })
+      })]
+    }), response.loading && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: bots_modalEdit_styles.loading,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
+        color: "inherit",
+        sx: {
+          height: '99px !important',
+          width: '99px !important'
+        }
+      })
+    })]
+  });
 };
 /* harmony default export */ const bots_modalEdit = (modalEdit_ModalEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalShowInfoList/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalShowInfoList_styles = ({"content":"styles__content--Td17x","boxes":"styles__boxes--tsCoz","textarea":"styles__textarea--g5wFX","actions":"styles__actions--t5zPM"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalShowInfoList/index.js
+
 
 
 
@@ -54669,41 +55450,48 @@ var modalShowInfoList = function modalShowInfoList(_ref) {
     height = _ref.height;
   var _state$use = state.use(),
     newUniqueCodes = _state$use.newUniqueCodes;
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: title,
     width: width || 705,
-    height: height || 527
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalShowInfoList_styles.content
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalShowInfoList_styles.boxes
-  }, /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("textarea", {
-    readOnly: true,
-    rows: "18",
-    "class": modalShowInfoList_styles.textarea,
-    defaultValue: newUniqueCodes.map(function (e) {
-      return getUniqueCodeHref(e);
-    }).join("\n")
-  })))), /*#__PURE__*/react.createElement("div", {
-    className: modalShowInfoList_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: onOk.label,
-    style: {
-      backgroundColor: "#478C35",
-      marginRight: "36px",
-      width: "284px"
-    },
-    onClick: function onClick() {
-      if (onOk.action) onOk.action();
-    }
-  })));
+    height: height || 527,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalShowInfoList_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalShowInfoList_styles.boxes,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("textarea", {
+            readOnly: true,
+            rows: "18",
+            "class": modalShowInfoList_styles.textarea,
+            defaultValue: newUniqueCodes.map(function (e) {
+              return getUniqueCodeHref(e);
+            }).join("\n")
+          })
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalShowInfoList_styles.actions,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: onOk.label,
+        style: {
+          backgroundColor: "#478C35",
+          marginRight: "36px",
+          width: "284px"
+        },
+        onClick: function onClick() {
+          if (onOk.action) onOk.action();
+        }
+      })
+    })]
+  });
 };
 /* harmony default export */ const orders_modalShowInfoList = (modalShowInfoList);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const orders_modalEdit_textbox_styles = ({"wrapper":"styles__wrapper--XcvmK","inputControl":"styles__inputControl--O7Ak0","inputArea":"styles__inputArea--i4Ex4","symbol":"styles__symbol--pI4By","hint":"styles__hint--O8pum"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/textbox/index.js
+
 
 
 var orders_modalEdit_textbox_TextBox = function TextBox(_ref) {
@@ -54716,24 +55504,29 @@ var orders_modalEdit_textbox_TextBox = function TextBox(_ref) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: orders_modalEdit_textbox_styles.wrapper,
     onChange: onChangeText,
     style: {
       width: width
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_textbox_styles.inputControl
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_textbox_styles.inputArea
-  }, /*#__PURE__*/react.createElement("input", {
-    type: 'text',
-    defaultValue: defaultValue
-  }), symbol && /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_textbox_styles.symbol
-  }, symbol))), hint && /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_textbox_styles.hint
-  }, hint));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orders_modalEdit_textbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orders_modalEdit_textbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: 'text',
+          defaultValue: defaultValue
+        }), symbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orders_modalEdit_textbox_styles.symbol,
+          children: symbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orders_modalEdit_textbox_styles.hint,
+      children: hint
+    })]
+  });
 };
 /* harmony default export */ const orders_modalEdit_textbox = (orders_modalEdit_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/textSwitch/styles.scss
@@ -54748,6 +55541,7 @@ function modalEdit_textSwitch_iterableToArrayLimit(r, l) { var t = null == r ? n
 function modalEdit_textSwitch_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
+
 var textSwitch_TextSwitch = function TextSwitch(_ref) {
   var onChange = _ref.onChange,
     options = _ref.options,
@@ -54759,19 +55553,26 @@ var textSwitch_TextSwitch = function TextSwitch(_ref) {
   react.useEffect(function () {
     setChecked(defaultValue);
   }, [defaultValue]);
-  return /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textSwitch_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textSwitch_styles.track,
-    onClick: function onClick() {
-      if (onChange) onChange(!checked);
-      setChecked(!checked);
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textSwitch_styles.options
-  }, /*#__PURE__*/react.createElement("div", null, options[0]), /*#__PURE__*/react.createElement("div", null, options[1])), /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_textSwitch_styles.thumb + ' ' + (checked ? modalEdit_textSwitch_styles.checked : '')
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: modalEdit_textSwitch_styles.wrapper,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalEdit_textSwitch_styles.track,
+      onClick: function onClick() {
+        if (onChange) onChange(!checked);
+        setChecked(!checked);
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalEdit_textSwitch_styles.options,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: options[0]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: options[1]
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalEdit_textSwitch_styles.thumb + ' ' + (checked ? modalEdit_textSwitch_styles.checked : '')
+      })]
+    })
+  });
 };
 /* harmony default export */ const modalEdit_textSwitch = (textSwitch_TextSwitch);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/select/styles.scss
@@ -54780,13 +55581,13 @@ var textSwitch_TextSwitch = function TextSwitch(_ref) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/select/index.js
 function modalEdit_select_typeof(o) { "@babel/helpers - typeof"; return modalEdit_select_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalEdit_select_typeof(o); }
 var modalEdit_select_templateObject;
-function modalEdit_select_extends() { modalEdit_select_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return modalEdit_select_extends.apply(this, arguments); }
 function modalEdit_select_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function modalEdit_select_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? modalEdit_select_ownKeys(Object(t), !0).forEach(function (r) { modalEdit_select_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : modalEdit_select_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function modalEdit_select_defineProperty(obj, key, value) { key = modalEdit_select_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function modalEdit_select_toPropertyKey(t) { var i = modalEdit_select_toPrimitive(t, "string"); return "symbol" == modalEdit_select_typeof(i) ? i : i + ""; }
 function modalEdit_select_toPrimitive(t, r) { if ("object" != modalEdit_select_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != modalEdit_select_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function modalEdit_select_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 
 
 
@@ -54847,27 +55648,30 @@ function modalEdit_select_MultipleSelectPlaceholder(_ref4) {
       listbox: modalEdit_select_CreateStyledListbox(width, height),
       popper: modalEdit_select_StyledPopper
     }, props.slots);
-    return /*#__PURE__*/react.createElement(Select_Select, modalEdit_select_extends({}, props, {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(Select_Select, modalEdit_select_objectSpread(modalEdit_select_objectSpread({}, props), {}, {
       ref: ref,
       slots: slots
     }));
   });
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalEdit_select_styles.wrapper,
     style: {
       width: width
-    }
-  }, /*#__PURE__*/react.createElement(CustomSelect, {
-    defaultValue: defaultValue,
-    onChange: handleChange
-  }, (options || []).map(function (i) {
-    return /*#__PURE__*/react.createElement(modalEdit_select_StyledOption, {
-      key: i.name,
-      value: i.name
-    }, i.name);
-  })), hint && /*#__PURE__*/react.createElement("div", {
-    className: modalEdit_select_styles.hint
-  }, hint));
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect, {
+      defaultValue: defaultValue,
+      onChange: handleChange,
+      children: (options || []).map(function (i) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_select_StyledOption, {
+          value: i.name,
+          children: i.name
+        }, i.name);
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalEdit_select_styles.hint,
+      children: hint
+    })]
+  });
 }
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/styles.scss
 // extracted by mini-css-extract-plugin
@@ -54896,22 +55700,27 @@ function orders_modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return a
 
 
 
+
 var orders_modalEdit_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
     symbol = _ref.symbol;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(orders_modalEdit_textbox, {
-    hint: hint,
-    onChange: onChange,
-    defaultValue: value,
-    symbol: symbol
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orders_modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orders_modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit_textbox, {
+        hint: hint,
+        onChange: onChange,
+        defaultValue: value,
+        symbol: symbol
+      })
+    })]
+  });
 };
 var modalEdit_FromItemSelect = function FromItemSelect(_ref2) {
   var name = _ref2.name,
@@ -54919,31 +55728,39 @@ var modalEdit_FromItemSelect = function FromItemSelect(_ref2) {
     value = _ref2.value,
     options = _ref2.options,
     hint = _ref2.hint;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalEdit_select_MultipleSelectPlaceholder, {
-    options: options,
-    defaultValue: value,
-    onChange: onChange,
-    hint: hint
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orders_modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orders_modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_select_MultipleSelectPlaceholder, {
+        options: options,
+        defaultValue: value,
+        onChange: onChange,
+        hint: hint
+      })
+    })]
+  });
 };
 var modalEdit_FromItemTextSwitch = function FromItemTextSwitch(_ref3) {
   var name = _ref3.name,
     onChange = _ref3.onChange,
     value = _ref3.value,
     options = _ref3.options;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.formItem
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.name
-  }, name), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement(modalEdit_textSwitch, {
-    defaultValue: value,
-    onChange: onChange,
-    options: options
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orders_modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orders_modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_textSwitch, {
+        defaultValue: value,
+        onChange: onChange,
+        options: options
+      })
+    })]
+  });
 };
 var orders_modalEdit_ModalEdit = function ModalEdit(_ref4) {
   var isOpen = _ref4.isOpen,
@@ -55006,108 +55823,122 @@ var orders_modalEdit_ModalEdit = function ModalEdit(_ref4) {
   var regionVal = (regions.find(function (c) {
     return c.id === item.steamCountryCodeId;
   }) || {}).name;
-  return /*#__PURE__*/react.createElement(ModalBase, {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Добавить новый заказ',
     width: 554,
     height: 819,
-    isLoading: response.loading
-  }, !response.loading && response.errors.length === 0 && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.content
-  }, /*#__PURE__*/react.createElement(modalEdit_FromItemTextSwitch, {
-    name: 'Тип товара:',
-    onChange: handleChange('isDlc'),
-    value: item.isDlc,
-    options: ['Игра', 'DLC']
-  }), /*#__PURE__*/react.createElement(orders_modalEdit_FromItemText, {
-    name: 'AppID:',
-    onChange: handleChange('appId'),
-    value: item.appId
-  }), /*#__PURE__*/react.createElement(orders_modalEdit_FromItemText, {
-    name: 'Издание (SubID):',
-    onChange: handleChange('subId'),
-    value: item.subId
-  }), /*#__PURE__*/react.createElement(orders_modalEdit_FromItemText, {
-    name: 'Время на получение игры:',
-    symbol: 'дней',
-    hint: 'Необязательный параметр',
-    onChange: handleChange('daysExpiration'),
-    value: item.daysExpiration
-  }), /*#__PURE__*/react.createElement(orders_modalEdit_FromItemText, {
-    name: 'Отключение заказа при повышении цены',
-    symbol: '%',
-    hint: 'Максимально допустимое превышение в изменении ценности игры. В случае, если игра станет дороже введенного % - заказ будет отключен автоматически',
-    onChange: handleChange('maxSellPercent'),
-    value: item.maxSellPercent
-  }), /*#__PURE__*/react.createElement(modalEdit_FromItemSelect, {
-    name: 'Регион получения:',
-    options: regions,
-    onChange: handleChange('steamCountryCodeId'),
-    value: regionVal
-  }), /*#__PURE__*/react.createElement(modalEdit_FromItemSelect, {
-    name: 'Ценовая основа:',
-    options: currencies,
-    onChange: handleChange('steamCurrencyId'),
-    value: currencyVal,
-    hint: 'Основа будет браться для отправки игры в выбранном регионе'
-  }), /*#__PURE__*/react.createElement(orders_modalEdit_FromItemText, {
-    name: 'Количество копий:',
-    onChange: handleChange('copyCount'),
-    value: item.copyCount,
-    symbol: 'шт'
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Добавить',
-    style: {
-      backgroundColor: '#478C35',
-      marginRight: '24px',
-      width: '271px'
-    },
-    onClick: function onClick() {
-      onSave(item);
-    }
-  }), /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Отмена',
-    onClick: /*#__PURE__*/orders_modalEdit_asyncToGenerator( /*#__PURE__*/orders_modalEdit_regeneratorRuntime().mark(function _callee() {
-      return orders_modalEdit_regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            if (onCancel) onCancel();
-            setItem(initial);
-          case 2:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    })),
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px'
-    }
-  }))), !response.loading && response.errors.length > 0 && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.errors
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.title
-  }, /*#__PURE__*/react.createElement("div", null, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438!")), /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.list
-  }, response.errors.map(function (e) {
-    return /*#__PURE__*/react.createElement("div", {
-      className: orders_modalEdit_styles.item
-    }, "- ", e);
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: orders_modalEdit_styles.actions
-  }, /*#__PURE__*/react.createElement(shared_button, {
-    text: 'Закрыть',
-    onClick: function onClick() {
-      if (resetResponse) resetResponse();
-    },
-    style: {
-      backgroundColor: '#9A7AA9',
-      marginLeft: '0px',
-      width: '226px'
-    }
-  }))));
+    isLoading: response.loading,
+    children: [!response.loading && response.errors.length === 0 && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orders_modalEdit_styles.content,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemTextSwitch, {
+          name: 'Тип товара:',
+          onChange: handleChange('isDlc'),
+          value: item.isDlc,
+          options: ['Игра', 'DLC']
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit_FromItemText, {
+          name: 'AppID:',
+          onChange: handleChange('appId'),
+          value: item.appId
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit_FromItemText, {
+          name: 'Издание (SubID):',
+          onChange: handleChange('subId'),
+          value: item.subId
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit_FromItemText, {
+          name: 'Время на получение игры:',
+          symbol: 'дней',
+          hint: 'Необязательный параметр',
+          onChange: handleChange('daysExpiration'),
+          value: item.daysExpiration
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit_FromItemText, {
+          name: 'Отключение заказа при повышении цены',
+          symbol: '%',
+          hint: 'Максимально допустимое превышение в изменении ценности игры. В случае, если игра станет дороже введенного % - заказ будет отключен автоматически',
+          onChange: handleChange('maxSellPercent'),
+          value: item.maxSellPercent
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemSelect, {
+          name: 'Регион получения:',
+          options: regions,
+          onChange: handleChange('steamCountryCodeId'),
+          value: regionVal
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemSelect, {
+          name: 'Ценовая основа:',
+          options: currencies,
+          onChange: handleChange('steamCurrencyId'),
+          value: currencyVal,
+          hint: 'Основа будет браться для отправки игры в выбранном регионе'
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit_FromItemText, {
+          name: 'Количество копий:',
+          onChange: handleChange('copyCount'),
+          value: item.copyCount,
+          symbol: 'шт'
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orders_modalEdit_styles.actions,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: 'Добавить',
+          style: {
+            backgroundColor: '#478C35',
+            marginRight: '24px',
+            width: '271px'
+          },
+          onClick: function onClick() {
+            onSave(item);
+          }
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: 'Отмена',
+          onClick: /*#__PURE__*/orders_modalEdit_asyncToGenerator( /*#__PURE__*/orders_modalEdit_regeneratorRuntime().mark(function _callee() {
+            return orders_modalEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+              while (1) switch (_context.prev = _context.next) {
+                case 0:
+                  if (onCancel) onCancel();
+                  setItem(initial);
+                case 2:
+                case "end":
+                  return _context.stop();
+              }
+            }, _callee);
+          })),
+          style: {
+            backgroundColor: '#9A7AA9',
+            marginLeft: '0px'
+          }
+        })]
+      })]
+    }), !response.loading && response.errors.length > 0 && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orders_modalEdit_styles.errors,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orders_modalEdit_styles.title,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0438!"
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orders_modalEdit_styles.list,
+          children: response.errors.map(function (e) {
+            return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orders_modalEdit_styles.item,
+              children: ["- ", e]
+            });
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: orders_modalEdit_styles.actions,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: 'Закрыть',
+          onClick: function onClick() {
+            if (resetResponse) resetResponse();
+          },
+          style: {
+            backgroundColor: '#9A7AA9',
+            marginLeft: '0px',
+            width: '226px'
+          }
+        })
+      })]
+    })]
+  });
 };
 /* harmony default export */ const orders_modalEdit = (orders_modalEdit_ModalEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/paggination/styles.scss
@@ -55134,6 +55965,7 @@ function paggination_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var paggination = function paggination(_ref) {
   var _ref$val = _ref.val,
     val = _ref$val === void 0 ? 1 : _ref$val,
@@ -55153,56 +55985,67 @@ var paggination = function paggination(_ref) {
   (0,react.useEffect)(function () {
     setManualNumber(val);
   }, [val]);
-  return /*#__PURE__*/react.createElement("div", {
-    className: paggination_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: paggination_styles.input
-  }, /*#__PURE__*/react.createElement("input", {
-    defaultValue: manulNumber,
-    value: manulNumber,
-    type: "number",
-    step: 1,
-    onChange: function onChange(e) {
-      setManualNumber(e.target.value);
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    className: paggination_styles.goBtn,
-    onClick: function onClick() {
-      onChangePage(Number(manulNumber));
-    }
-  }, "GO")), /*#__PURE__*/react.createElement("div", {
-    className: paggination_styles.pages
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      marginRight: '13px'
-    }
-  }, /*#__PURE__*/react.createElement("img", {
-    src: pagDoubleArrowLeft_namespaceObject,
-    onClick: function onClick() {
-      onChangePage(1);
-    }
-  })), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("img", {
-    src: pagArrowLeft_namespaceObject,
-    onClick: function onClick() {
-      onChangePage(Number(val) - 1);
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: paggination_styles.text
-  }, "".concat(val, " \u0438\u0437 ").concat(max)), /*#__PURE__*/react.createElement("div", {
-    style: {
-      marginRight: '13px'
-    }
-  }, /*#__PURE__*/react.createElement("img", {
-    src: pagArrowRight_namespaceObject,
-    onClick: function onClick() {
-      onChangePage(Number(val) + 1);
-    }
-  })), /*#__PURE__*/react.createElement("div", null, /*#__PURE__*/react.createElement("img", {
-    src: pagDoubleArrowRight_namespaceObject,
-    onClick: function onClick() {
-      onChangePage(max);
-    }
-  }))));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: paggination_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: paggination_styles.input,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+        defaultValue: manulNumber,
+        value: manulNumber,
+        type: "number",
+        step: 1,
+        onChange: function onChange(e) {
+          setManualNumber(e.target.value);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: paggination_styles.goBtn,
+        onClick: function onClick() {
+          onChangePage(Number(manulNumber));
+        },
+        children: "GO"
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: paggination_styles.pages,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        style: {
+          marginRight: '13px'
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: pagDoubleArrowLeft_namespaceObject,
+          onClick: function onClick() {
+            onChangePage(1);
+          }
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: pagArrowLeft_namespaceObject,
+          onClick: function onClick() {
+            onChangePage(Number(val) - 1);
+          }
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: paggination_styles.text,
+        children: "".concat(val, " \u0438\u0437 ").concat(max)
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        style: {
+          marginRight: '13px'
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: pagArrowRight_namespaceObject,
+          onClick: function onClick() {
+            onChangePage(Number(val) + 1);
+          }
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: pagDoubleArrowRight_namespaceObject,
+          onClick: function onClick() {
+            onChangePage(max);
+          }
+        })
+      })]
+    })]
+  });
 };
 /* harmony default export */ const shared_paggination = (paggination);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/G.svg
@@ -55212,7 +56055,11 @@ function leftMenu_typeof(o) { "@babel/helpers - typeof"; return leftMenu_typeof 
 function leftMenu_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ leftMenu_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == leftMenu_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(leftMenu_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function leftMenu_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function leftMenu_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { leftMenu_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { leftMenu_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function leftMenu_extends() { leftMenu_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return leftMenu_extends.apply(this, arguments); }
+function leftMenu_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function leftMenu_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? leftMenu_ownKeys(Object(t), !0).forEach(function (r) { leftMenu_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : leftMenu_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function leftMenu_defineProperty(obj, key, value) { key = leftMenu_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function leftMenu_toPropertyKey(t) { var i = leftMenu_toPrimitive(t, "string"); return "symbol" == leftMenu_typeof(i) ? i : i + ""; }
+function leftMenu_toPrimitive(t, r) { if ("object" != leftMenu_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != leftMenu_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function leftMenu_toConsumableArray(arr) { return leftMenu_arrayWithoutHoles(arr) || leftMenu_iterableToArray(arr) || leftMenu_unsupportedIterableToArray(arr) || leftMenu_nonIterableSpread(); }
 function leftMenu_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function leftMenu_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -55223,6 +56070,7 @@ function leftMenu_unsupportedIterableToArray(o, minLen) { if (!o) return; if (ty
 function leftMenu_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function leftMenu_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function leftMenu_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -55269,255 +56117,279 @@ var leftMenu = function leftMenu() {
     _useState4 = leftMenu_slicedToArray(_useState3, 2),
     confirmMassActiveChangeIsOpen = _useState4[0],
     setConfirmMassActiveChangeIsOpen = _useState4[1];
-  return /*#__PURE__*/react.createElement("div", {
-    className: leftMenu_styles.wrapper
-  }, /*#__PURE__*/react.createElement(section, {
-    className: leftMenu_styles.titleSection,
-    height: 65,
-    width: 254
-  }, /*#__PURE__*/react.createElement("div", {
-    className: leftMenu_styles.title
-  }, /*#__PURE__*/react.createElement("img", {
-    src: G_namespaceObject
-  }), /*#__PURE__*/react.createElement("div", null, "Pay Panel"))), /*#__PURE__*/react.createElement(section, {
-    className: leftMenu_styles.menuSection,
-    height: 266,
-    width: 254
-  }, /*#__PURE__*/react.createElement("div", {
-    className: leftMenu_styles.menuList
-  }, menuData.map(function (i) {
-    return /*#__PURE__*/react.createElement(menuItem, leftMenu_extends({}, i, {
-      isOpen: i.isOpen,
-      onClick: function onClick() {
-        if (!i.subMenu || !i.subMenu.length) return;
-        var newMenuData = leftMenu_toConsumableArray(menuData);
-        newMenuData.forEach(function (mi) {
-          if (mi.name === i.name) {
-            mi.isOpen = !mi.isOpen;
-          } else {
-            mi.isOpen = false;
-          }
-        });
-        setMenuDate(newMenuData);
-      },
-      onClickOutside: function onClickOutside() {
-        var newMenuData = leftMenu_toConsumableArray(menuData);
-        newMenuData.forEach(function (mi) {
-          mi.isOpen = false;
-        });
-        setMenuDate(newMenuData);
-      }
-    }));
-  }))), /*#__PURE__*/react.createElement(Routes, null, /*#__PURE__*/react.createElement(Route, {
-    path: "products",
-    element: !selectedItems || selectedItems.length === 0 ? /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement(section, {
-      className: leftMenu_styles.massButton,
-      height: 49,
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: leftMenu_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+      className: leftMenu_styles.titleSection,
+      height: 65,
       width: 254,
-      onClick: function onClick() {
-        toggleBulkEditPercentModal(true);
-      }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.title
-    }, "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u0441\u043C\u0435\u043D\u0430 \u0446\u0435\u043D")), /*#__PURE__*/react.createElement(section, {
-      className: leftMenu_styles.massButton,
-      height: 49,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: leftMenu_styles.title,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: G_namespaceObject
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: "Pay Panel"
+        })]
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+      className: leftMenu_styles.menuSection,
+      height: 266,
       width: 254,
-      onClick: function onClick() {
-        setConfirmMassActiveChangeIsOpen(true);
-      }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.title
-    }, "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0432\u043A\u043B/\u0432\u044B\u043A\u043B \u0442\u043E\u0432\u0430\u0440\u043E\u0432")), /*#__PURE__*/react.createElement(section, {
-      className: leftMenu_styles.massButton,
-      height: 49,
-      width: 254,
-      onClick: function onClick() {
-        toggleFilterProductsModal(true);
-      }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.title
-    }, "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"))) : null
-  }), /*#__PURE__*/react.createElement(Route, {
-    path: "proxy",
-    element: /*#__PURE__*/react.createElement(section, {
-      className: leftMenu_styles.massButton,
-      height: 49,
-      width: 254,
-      onClick: function onClick() {
-        apiDeleteProxyAll();
-      }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.title
-    }, "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u043A\u0441\u0438"))
-  }), /*#__PURE__*/react.createElement(Route, {
-    path: "bots",
-    element: /*#__PURE__*/react.createElement(botStats, {
-      data: bots
-    })
-  }), /*#__PURE__*/react.createElement(Route, {
-    path: "orders",
-    element: /*#__PURE__*/react.createElement("div", {
-      style: {
-        marginTop: '19px'
-      }
-    }, /*#__PURE__*/react.createElement(shared_paggination, {
-      val: gameSessionsFilter.page,
-      max: gameSessionsPages > 0 ? gameSessionsPages : 1,
-      onChange: ( /*#__PURE__*/function () {
-        var _ref = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee(page) {
-          return leftMenu_regeneratorRuntime().wrap(function _callee$(_context) {
-            while (1) switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return updateGameSessionsFilter({
-                  page: page
-                });
-              case 2:
-              case "end":
-                return _context.stop();
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: leftMenu_styles.menuList,
+        children: menuData.map(function (i) {
+          return /*#__PURE__*/(0,jsx_runtime.jsx)(menuItem, leftMenu_objectSpread(leftMenu_objectSpread({}, i), {}, {
+            isOpen: i.isOpen,
+            onClick: function onClick() {
+              if (!i.subMenu || !i.subMenu.length) return;
+              var newMenuData = leftMenu_toConsumableArray(menuData);
+              newMenuData.forEach(function (mi) {
+                if (mi.name === i.name) {
+                  mi.isOpen = !mi.isOpen;
+                } else {
+                  mi.isOpen = false;
+                }
+              });
+              setMenuDate(newMenuData);
+            },
+            onClickOutside: function onClickOutside() {
+              var newMenuData = leftMenu_toConsumableArray(menuData);
+              newMenuData.forEach(function (mi) {
+                mi.isOpen = false;
+              });
+              setMenuDate(newMenuData);
             }
-          }, _callee);
+          }));
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)(Routes, {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+        path: "products",
+        element: !selectedItems || selectedItems.length === 0 ? /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.massButton,
+            height: 49,
+            width: 254,
+            onClick: function onClick() {
+              toggleBulkEditPercentModal(true);
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: leftMenu_styles.title,
+              children: "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u0441\u043C\u0435\u043D\u0430 \u0446\u0435\u043D"
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.massButton,
+            height: 49,
+            width: 254,
+            onClick: function onClick() {
+              setConfirmMassActiveChangeIsOpen(true);
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: leftMenu_styles.title,
+              children: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0432\u043A\u043B/\u0432\u044B\u043A\u043B \u0442\u043E\u0432\u0430\u0440\u043E\u0432"
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.massButton,
+            height: 49,
+            width: 254,
+            onClick: function onClick() {
+              toggleFilterProductsModal(true);
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: leftMenu_styles.title,
+              children: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
+            })
+          })]
+        }) : null
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+        path: "proxy",
+        element: /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+          className: leftMenu_styles.massButton,
+          height: 49,
+          width: 254,
+          onClick: function onClick() {
+            apiDeleteProxyAll();
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: leftMenu_styles.title,
+            children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u043A\u0441\u0438"
+          })
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+        path: "bots",
+        element: /*#__PURE__*/(0,jsx_runtime.jsx)(botStats, {
+          data: bots
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+        path: "orders",
+        element: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          style: {
+            marginTop: '19px'
+          },
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_paggination, {
+            val: gameSessionsFilter.page,
+            max: gameSessionsPages > 0 ? gameSessionsPages : 1,
+            onChange: ( /*#__PURE__*/function () {
+              var _ref = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee(page) {
+                return leftMenu_regeneratorRuntime().wrap(function _callee$(_context) {
+                  while (1) switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.next = 2;
+                      return updateGameSessionsFilter({
+                        page: page
+                      });
+                    case 2:
+                    case "end":
+                      return _context.stop();
+                  }
+                }, _callee);
+              }));
+              return function (_x) {
+                return _ref.apply(this, arguments);
+              };
+            }())
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.filterButton,
+            height: 49,
+            width: 254,
+            onClick: function onClick() {
+              toggleFilterOrdersModal(true);
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: leftMenu_styles.title,
+              children: "\u0424\u0438\u043B\u044C\u0442\u0440\u044B"
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.filterButton,
+            height: 49,
+            width: 254,
+            onClick: function onClick() {
+              toggleEditOrderModal(true);
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: leftMenu_styles.title,
+              children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0435\u0441\u0441\u0438\u044E \u0437\u0430\u043A\u0430\u0437\u0430"
+            })
+          })]
+        })
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit, {
+      isOpen: editOrderModalIsOpen
+      //value={{}}
+      ,
+      response: editOrderResponse,
+      resetResponse: function resetResponse() {
+        setStateProp('editOrderResponse', {
+          loading: false,
+          errors: []
+        });
+      },
+      onCancel: function onCancel() {
+        toggleEditOrderModal(false);
+      },
+      onSave: function onSave(val) {
+        apiAddGameSession(val);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalShowInfoList, {
+      isOpen: orderCreationInfoIsOpen,
+      title: "Список заказов",
+      onOk: {
+        label: 'OK',
+        action: function action() {
+          toggleOrderCreationInfoModal(false);
+        }
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(bots_modalEdit, {
+      isOpen: editBotModalIsOpen,
+      value: selectedBot,
+      response: editBotResponse,
+      resetResponse: function resetResponse() {
+        setStateProp('editBotResponse', {
+          loading: false,
+          errors: []
+        });
+      },
+      onCancel: function onCancel() {
+        toggleEditBotModal(false);
+        setSelectedBot({});
+      },
+      onSave: function onSave(val) {
+        apiEditBot(val);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalDigisellerEdit, {
+      isOpen: digisellerEditModalIsOpen,
+      value: {
+        digisellerApiKey: user.digisellerApiKey,
+        digisellerId: user.digisellerId
+      },
+      onSave: function onSave(val) {
+        apiChangeDigisellerData(val);
+        toggleDigisellerEditModal(false);
+      },
+      onCancel: function onCancel() {
+        toggleDigisellerEditModal(false);
+      }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalChangePassword, {
+      isOpen: changePasswordModalIsOpen,
+      onSave: ( /*#__PURE__*/function () {
+        var _ref2 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee2(val) {
+          return leftMenu_regeneratorRuntime().wrap(function _callee2$(_context2) {
+            while (1) switch (_context2.prev = _context2.next) {
+              case 0:
+                apiChangeUserPassword(val);
+              case 1:
+              case "end":
+                return _context2.stop();
+            }
+          }, _callee2);
         }));
-        return function (_x) {
-          return _ref.apply(this, arguments);
+        return function (_x2) {
+          return _ref2.apply(this, arguments);
         };
-      }())
-    }), /*#__PURE__*/react.createElement(section, {
-      className: leftMenu_styles.filterButton,
-      height: 49,
-      width: 254,
-      onClick: function onClick() {
-        toggleFilterOrdersModal(true);
+      }()),
+      onCancel: function onCancel() {
+        toggleChangePasswordModal(false);
       }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.title
-    }, "\u0424\u0438\u043B\u044C\u0442\u0440\u044B")), /*#__PURE__*/react.createElement(section, {
-      className: leftMenu_styles.filterButton,
-      height: 49,
-      width: 254,
-      onClick: function onClick() {
-        toggleEditOrderModal(true);
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates, {
+      isOpen: exchangeRatesModalIsOpen,
+      value: exchageRates,
+      onSave: ( /*#__PURE__*/function () {
+        var _ref3 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee3(val) {
+          return leftMenu_regeneratorRuntime().wrap(function _callee3$(_context3) {
+            while (1) switch (_context3.prev = _context3.next) {
+              case 0:
+                //console.log('newVal', val);
+                apiUpdateExchangeDataManual(val);
+              case 1:
+              case "end":
+                return _context3.stop();
+            }
+          }, _callee3);
+        }));
+        return function (_x3) {
+          return _ref3.apply(this, arguments);
+        };
+      }()),
+      onCancel: function onCancel() {
+        toggleExchangeRatesModal(false);
       }
-    }, /*#__PURE__*/react.createElement("div", {
-      className: leftMenu_styles.title
-    }, "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0435\u0441\u0441\u0438\u044E \u0437\u0430\u043A\u0430\u0437\u0430")))
-  })), /*#__PURE__*/react.createElement(orders_modalEdit, {
-    isOpen: editOrderModalIsOpen
-    //value={{}}
-    ,
-    response: editOrderResponse,
-    resetResponse: function resetResponse() {
-      setStateProp('editOrderResponse', {
-        loading: false,
-        errors: []
-      });
-    },
-    onCancel: function onCancel() {
-      toggleEditOrderModal(false);
-    },
-    onSave: function onSave(val) {
-      apiAddGameSession(val);
-    }
-  }), /*#__PURE__*/react.createElement(orders_modalShowInfoList, {
-    isOpen: orderCreationInfoIsOpen,
-    title: "Список заказов",
-    onOk: {
-      label: 'OK',
-      action: function action() {
-        toggleOrderCreationInfoModal(false);
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+      isOpen: confirmMassActiveChangeIsOpen,
+      title: 'Массовое вкл/выкл товаров',
+      content: 'Вы точно хотите включить/выключить все товары?',
+      onConfirm: {
+        text: 'Подтвердить',
+        action: function action() {
+          apiSetItemActiveStatus();
+        }
+      },
+      onCancel: {
+        action: function action() {
+          setConfirmMassActiveChangeIsOpen(false);
+        }
       }
-    }
-  }), /*#__PURE__*/react.createElement(bots_modalEdit, {
-    isOpen: editBotModalIsOpen,
-    value: selectedBot,
-    response: editBotResponse,
-    resetResponse: function resetResponse() {
-      setStateProp('editBotResponse', {
-        loading: false,
-        errors: []
-      });
-    },
-    onCancel: function onCancel() {
-      toggleEditBotModal(false);
-      setSelectedBot({});
-    },
-    onSave: function onSave(val) {
-      apiEditBot(val);
-    }
-  }), /*#__PURE__*/react.createElement(modalDigisellerEdit, {
-    isOpen: digisellerEditModalIsOpen,
-    value: {
-      digisellerApiKey: user.digisellerApiKey,
-      digisellerId: user.digisellerId
-    },
-    onSave: function onSave(val) {
-      apiChangeDigisellerData(val);
-      toggleDigisellerEditModal(false);
-    },
-    onCancel: function onCancel() {
-      toggleDigisellerEditModal(false);
-    }
-  }), /*#__PURE__*/react.createElement(modalChangePassword, {
-    isOpen: changePasswordModalIsOpen,
-    onSave: ( /*#__PURE__*/function () {
-      var _ref2 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee2(val) {
-        return leftMenu_regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
-            case 0:
-              apiChangeUserPassword(val);
-            case 1:
-            case "end":
-              return _context2.stop();
-          }
-        }, _callee2);
-      }));
-      return function (_x2) {
-        return _ref2.apply(this, arguments);
-      };
-    }()),
-    onCancel: function onCancel() {
-      toggleChangePasswordModal(false);
-    }
-  }), /*#__PURE__*/react.createElement(modalExchangeRates, {
-    isOpen: exchangeRatesModalIsOpen,
-    value: exchageRates,
-    onSave: ( /*#__PURE__*/function () {
-      var _ref3 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee3(val) {
-        return leftMenu_regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
-            case 0:
-              //console.log('newVal', val);
-              apiUpdateExchangeDataManual(val);
-            case 1:
-            case "end":
-              return _context3.stop();
-          }
-        }, _callee3);
-      }));
-      return function (_x3) {
-        return _ref3.apply(this, arguments);
-      };
-    }()),
-    onCancel: function onCancel() {
-      toggleExchangeRatesModal(false);
-    }
-  }), /*#__PURE__*/react.createElement(ConfirmModal, {
-    isOpen: confirmMassActiveChangeIsOpen,
-    title: 'Массовое вкл/выкл товаров',
-    content: 'Вы точно хотите включить/выключить все товары?',
-    onConfirm: {
-      text: 'Подтвердить',
-      action: function action() {
-        apiSetItemActiveStatus();
-      }
-    },
-    onCancel: {
-      action: function action() {
-        setConfirmMassActiveChangeIsOpen(false);
-      }
-    }
-  }));
+    })]
+  });
 };
 /* harmony default export */ const admin_leftMenu = (leftMenu);
 var menuArrData = [{
@@ -57034,18 +57906,21 @@ function app_asyncToGenerator(fn) { return function () { var self = this, args =
 
 
 
+
 var Layout = function Layout() {
-  return /*#__PURE__*/react.createElement("div", {
-    className: admin_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: admin_styles.bg
-  }), /*#__PURE__*/react.createElement("div", {
-    className: admin_styles.wrapperBackground
-  }, /*#__PURE__*/react.createElement(admin_leftMenu, null), /*#__PURE__*/react.createElement(Outlet, null)));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: admin_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: admin_styles.bg
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: admin_styles.wrapperBackground,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_leftMenu, {}), /*#__PURE__*/(0,jsx_runtime.jsx)(Outlet, {})]
+    })]
+  });
 };
-var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/react.createElement(Route, {
+var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/(0,jsx_runtime.jsxs)(Route, {
   path: "/admin",
-  element: /*#__PURE__*/react.createElement(Layout, null),
+  element: /*#__PURE__*/(0,jsx_runtime.jsx)(Layout, {}),
   loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee() {
     return app_regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
@@ -57059,78 +57934,79 @@ var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/react.cr
           return _context.stop();
       }
     }, _callee);
-  }))
-}, /*#__PURE__*/react.createElement(Route, {
-  path: "products",
-  loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee2() {
-    return app_regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return apiGetCurrencies();
-        case 2:
-          Promise.all([apiFetchItems(), apiGetSteamRegions()]);
-          return _context2.abrupt("return", true);
-        case 4:
-        case "end":
-          return _context2.stop();
-      }
-    }, _callee2);
   })),
-  element: /*#__PURE__*/react.createElement(admin_products, null)
-}), /*#__PURE__*/react.createElement(Route, {
-  path: "bots",
-  loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee3() {
-    return app_regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
-        case 0:
-          initBotsPage();
-          return _context3.abrupt("return", true);
-        case 2:
-        case "end":
-          return _context3.stop();
-      }
-    }, _callee3);
-  })),
-  element: /*#__PURE__*/react.createElement(admin_bots, null)
-}), /*#__PURE__*/react.createElement(Route, {
-  path: "orders",
-  loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee4() {
-    return app_regeneratorRuntime().wrap(function _callee4$(_context4) {
-      while (1) switch (_context4.prev = _context4.next) {
-        case 0:
-          _context4.next = 2;
-          return apiFetchGameSessStatuses();
-        case 2:
-          Promise.all([apiGetCurrencies(), apiFetchGameSessionsWithCurrentFilter(), apiGetSteamRegions()]);
-          return _context4.abrupt("return", true);
-        case 4:
-        case "end":
-          return _context4.stop();
-      }
-    }, _callee4);
-  })),
-  element: /*#__PURE__*/react.createElement(admin_orders, null)
-}), /*#__PURE__*/react.createElement(Route, {
-  path: "proxy",
-  loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee5() {
-    return app_regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          _context5.next = 2;
-          return apiFetchProxies();
-        case 2:
-          return _context5.abrupt("return", true);
-        case 3:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5);
-  })),
-  element: /*#__PURE__*/react.createElement(admin_proxies, null)
-}))));
+  children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+    path: "products",
+    loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee2() {
+      return app_regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return apiGetCurrencies();
+          case 2:
+            Promise.all([apiFetchItems(), apiGetSteamRegions()]);
+            return _context2.abrupt("return", true);
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2);
+    })),
+    element: /*#__PURE__*/(0,jsx_runtime.jsx)(admin_products, {})
+  }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+    path: "bots",
+    loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee3() {
+      return app_regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            initBotsPage();
+            return _context3.abrupt("return", true);
+          case 2:
+          case "end":
+            return _context3.stop();
+        }
+      }, _callee3);
+    })),
+    element: /*#__PURE__*/(0,jsx_runtime.jsx)(admin_bots, {})
+  }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+    path: "orders",
+    loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee4() {
+      return app_regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.next = 2;
+            return apiFetchGameSessStatuses();
+          case 2:
+            Promise.all([apiGetCurrencies(), apiFetchGameSessionsWithCurrentFilter(), apiGetSteamRegions()]);
+            return _context4.abrupt("return", true);
+          case 4:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4);
+    })),
+    element: /*#__PURE__*/(0,jsx_runtime.jsx)(admin_orders, {})
+  }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+    path: "proxy",
+    loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee5() {
+      return app_regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.next = 2;
+            return apiFetchProxies();
+          case 2:
+            return _context5.abrupt("return", true);
+          case 3:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5);
+    })),
+    element: /*#__PURE__*/(0,jsx_runtime.jsx)(admin_proxies, {})
+  })]
+})));
 var App = function App() {
-  return /*#__PURE__*/react.createElement(dist_RouterProvider, {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(dist_RouterProvider, {
     router: router
   });
 };
@@ -57140,7 +58016,8 @@ var App = function App() {
 
 //import { BrowserRouter } from 'react-router-dom';
 
-react_dom.render( /*#__PURE__*/react.createElement(app, null), document.getElementById('root'));
+
+react_dom.render( /*#__PURE__*/(0,jsx_runtime.jsx)(app, {}), document.getElementById('root'));
 })();
 
 /******/ })()

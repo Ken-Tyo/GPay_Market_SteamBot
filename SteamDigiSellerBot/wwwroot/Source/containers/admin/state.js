@@ -22,7 +22,11 @@ export const state = entity({
     size: 50,
   },
   productsFilter:{
-    appId: '',
+      appId: '',
+      productName:"",
+      steamCurrencyId: null,
+      steamCountryCodeId: null,
+      digiSellerId: ""
   },
   gameSessionsStatuses: {},
   bots: [],
@@ -195,9 +199,7 @@ export const setActiveMenuLink = (name) => {
 export const apiFetchItems = async (filter) => {
   let requestData = {method:'POST'};
   if(filter != null){
-    requestData.body = mapToFormData({
-      appId: filter.appId
-    });
+    requestData.body = mapToFormData(filter);
   }
   let res = await fetch('/items/list', requestData);
   setItems(await res.json());

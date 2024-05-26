@@ -25400,7 +25400,6 @@ if (true) {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-var __webpack_unused_export__;
 /**
  * @license React
  * react-jsx-runtime.production.min.js
@@ -25411,7 +25410,7 @@ var __webpack_unused_export__;
  * LICENSE file in the root directory of this source tree.
  */
 var f=__webpack_require__(6540),k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:!0,ref:!0,__self:!0,__source:!0};
-function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a)void 0===d[b]&&(d[b]=a[b]);return{$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}__webpack_unused_export__=l;exports.jsx=q;exports.jsxs=q;
+function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a)void 0===d[b]&&(d[b]=a[b]);return{$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}exports.Fragment=l;exports.jsx=q;exports.jsxs=q;
 
 
 /***/ }),
@@ -27446,7 +27445,16 @@ var plural = function plural() {
 var selectOrdinal = function selectOrdinal() {
   return '';
 };
+// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
+var jsx_runtime = __webpack_require__(4848);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/home/lastOrders/index.js
+function lastOrders_typeof(o) { "@babel/helpers - typeof"; return lastOrders_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, lastOrders_typeof(o); }
+function lastOrders_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function lastOrders_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? lastOrders_ownKeys(Object(t), !0).forEach(function (r) { lastOrders_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : lastOrders_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function lastOrders_defineProperty(obj, key, value) { key = lastOrders_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function lastOrders_toPropertyKey(t) { var i = lastOrders_toPrimitive(t, "string"); return "symbol" == lastOrders_typeof(i) ? i : i + ""; }
+function lastOrders_toPrimitive(t, r) { if ("object" != lastOrders_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != lastOrders_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -27454,21 +27462,25 @@ var selectOrdinal = function selectOrdinal() {
 var lastOrders = function lastOrders() {
   var _state$use = state.use(),
     lastOrders = _state$use.lastOrders;
-  return /*#__PURE__*/react.createElement("div", {
-    className: styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: styles.itemsWrap
-  }, /*#__PURE__*/react.createElement("div", {
-    "aria-hidden": "true",
-    className: styles.items + ' ' + styles.marquee
-  }, lastOrders.map(function (i) {
-    return /*#__PURE__*/react.createElement(Item, i);
-  })), /*#__PURE__*/react.createElement("div", {
-    "aria-hidden": "true",
-    className: styles.items + ' ' + styles.marquee
-  }, lastOrders.map(function (i) {
-    return /*#__PURE__*/react.createElement(Item, i);
-  }))));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: styles.wrapper,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: styles.itemsWrap,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        "aria-hidden": "true",
+        className: styles.items + ' ' + styles.marquee,
+        children: lastOrders.map(function (i) {
+          return /*#__PURE__*/(0,jsx_runtime.jsx)(Item, lastOrders_objectSpread({}, i));
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        "aria-hidden": "true",
+        className: styles.items + ' ' + styles.marquee,
+        children: lastOrders.map(function (i) {
+          return /*#__PURE__*/(0,jsx_runtime.jsx)(Item, lastOrders_objectSpread({}, i));
+        })
+      })]
+    })
+  });
 };
 var Item = function Item(_ref) {
   var userName = _ref.userName,
@@ -27477,13 +27489,20 @@ var Item = function Item(_ref) {
   var _useTranslation = useTranslation_useTranslation('lastOrders'),
     t = _useTranslation.t,
     i18n = _useTranslation.i18n;
-  return /*#__PURE__*/react.createElement("div", {
-    className: styles.item
-  }, /*#__PURE__*/react.createElement("span", null, /*#__PURE__*/react.createElement("span", null, userName, " ", t('bought'), ' '), /*#__PURE__*/react.createElement("span", {
-    className: styles.gameName
-  }, " ", gameName, " "), t('for'), " ", /*#__PURE__*/react.createElement("span", {
-    className: styles.price
-  }, " ", price.toFixed(0), " \u20BD")));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: styles.item,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+        children: [userName, " ", t('bought'), ' ']
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+        className: styles.gameName,
+        children: [" ", gameName, " "]
+      }), t('for'), " ", /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+        className: styles.price,
+        children: [" ", price.toFixed(0), " \u20BD"]
+      })]
+    })
+  });
 };
 /* harmony default export */ const home_lastOrders = (lastOrders);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/home/orderState/styles.scss
@@ -40285,8 +40304,6 @@ function useForkRef(...refs) {
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useForkRef.js
 
 /* harmony default export */ const utils_useForkRef = (useForkRef);
-// EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
-var jsx_runtime = __webpack_require__(4848);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/Grow/Grow.js
 
 
@@ -45070,21 +45087,23 @@ const CircularProgress = /*#__PURE__*/react.forwardRef(function CircularProgress
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/circularLoader/index.js
 
 
+
 var CircularLoader = function CircularLoader(_ref) {
   var height = _ref.height,
     width = _ref.width,
     color = _ref.color;
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     style: {
       color: color || 'black'
-    }
-  }, /*#__PURE__*/react.createElement(CircularProgress_CircularProgress, {
-    color: 'inherit',
-    sx: {
-      height: "".concat(height || '99', "px !important"),
-      width: "".concat(width || '99', "px !important")
-    }
-  }));
+    },
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
+      color: 'inherit',
+      sx: {
+        height: "".concat(height || '99', "px !important"),
+        width: "".concat(width || '99', "px !important")
+      }
+    })
+  });
 };
 /* harmony default export */ const circularLoader = (CircularLoader);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/home/button/styles.scss
@@ -45099,27 +45118,30 @@ function button_toPropertyKey(t) { var i = button_toPrimitive(t, "string"); retu
 function button_toPrimitive(t, r) { if ("object" != button_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != button_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
+
 var Button = function Button(_ref) {
   var text = _ref.text,
     _onClick = _ref.onClick,
     style = _ref.style,
     className = _ref.className;
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     style: button_objectSpread({}, style || {}),
     className: button_styles.wrapper + ' ' + button_styles.pointer + ' ' + (className || ''),
     onClick: function onClick() {
       if (_onClick) _onClick();
-    }
-  }, text);
+    },
+    children: text
+  });
 };
 /* harmony default export */ const home_button = (Button);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/home/orderState/index.js
 function orderState_typeof(o) { "@babel/helpers - typeof"; return orderState_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, orderState_typeof(o); }
 var orderState_excluded = ["className"];
+function orderState_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function orderState_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? orderState_ownKeys(Object(t), !0).forEach(function (r) { orderState_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : orderState_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function orderState_defineProperty(obj, key, value) { key = orderState_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function orderState_toPropertyKey(t) { var i = orderState_toPrimitive(t, "string"); return "symbol" == orderState_typeof(i) ? i : i + ""; }
 function orderState_toPrimitive(t, r) { if ("object" != orderState_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != orderState_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function orderState_extends() { orderState_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return orderState_extends.apply(this, arguments); }
 function orderState_objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = orderState_objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function orderState_objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function orderState_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ orderState_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == orderState_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(orderState_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -45131,6 +45153,7 @@ function orderState_unsupportedIterableToArray(o, minLen) { if (!o) return; if (
 function orderState_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function orderState_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function orderState_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -45203,479 +45226,601 @@ var OrderState = function OrderState() {
     searchParams = _useSearchParams2[0],
     setSearchParams = _useSearchParams2[1];
   var uniquecode = searchParams.get('uniquecode') || '';
-  return /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.wrapper
-  }, showEnterUniqueCode &&
-  /*#__PURE__*/
-  // <Area title={'Введите уникальный код заказа'} width={823}>
-  react.createElement(Area, {
-    title: tCheckCode('title')
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.enterUniqueCode
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.form
-  }, /*#__PURE__*/react.createElement(InputWithButton, {
-    defaultValue: uniquecode,
-    butName: tCheckCode('inputAcceptBut'),
-    placeholder: tCheckCode('inputPlaceholder'),
-    onClick: ( /*#__PURE__*/function () {
-      var _ref = orderState_asyncToGenerator( /*#__PURE__*/orderState_regeneratorRuntime().mark(function _callee(val) {
-        var _recaptchaRef$current, _recaptchaRef$current2;
-        var recaptchaValue;
-        return orderState_regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orderState_styles.wrapper,
+    children: [showEnterUniqueCode &&
+    /*#__PURE__*/
+    // <Area title={'Введите уникальный код заказа'} width={823}>
+    (0,jsx_runtime.jsx)(Area, {
+      title: tCheckCode('title'),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.enterUniqueCode,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.form,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(InputWithButton, {
+              defaultValue: uniquecode,
+              butName: tCheckCode('inputAcceptBut'),
+              placeholder: tCheckCode('inputPlaceholder'),
+              onClick: ( /*#__PURE__*/function () {
+                var _ref = orderState_asyncToGenerator( /*#__PURE__*/orderState_regeneratorRuntime().mark(function _callee(val) {
+                  var _recaptchaRef$current, _recaptchaRef$current2;
+                  var recaptchaValue;
+                  return orderState_regeneratorRuntime().wrap(function _callee$(_context) {
+                    while (1) switch (_context.prev = _context.next) {
+                      case 0:
+                        recaptchaValue = recaptchaRef === null || recaptchaRef === void 0 || (_recaptchaRef$current = recaptchaRef.current) === null || _recaptchaRef$current === void 0 ? void 0 : _recaptchaRef$current.getValue();
+                        recaptchaRef === null || recaptchaRef === void 0 || (_recaptchaRef$current2 = recaptchaRef.current) === null || _recaptchaRef$current2 === void 0 || _recaptchaRef$current2.reset();
+                        checkCode(val !== null && val !== void 0 ? val : '', '', recaptchaValue !== null && recaptchaValue !== void 0 ? recaptchaValue : '');
+                      case 3:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }, _callee);
+                }));
+                return function (_x) {
+                  return _ref.apply(this, arguments);
+                };
+              }())
+            }), showCaptcha && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.captha,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(esm, {
+                ref: recaptchaRef,
+                sitekey: "6Lel764kAAAAAIhSZK3QvwBRgLeYrMKds7FdgCa9",
+                hl: i18n.language
+              })
+            })]
+          }), checkCodeErr && checkCodeErr > 1 && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            style: {
+              marginTop: '20px'
+            },
+            className: orderState_styles.errorText,
+            children: tCheckCode("errors.".concat(checkCodeErr))
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showEnterProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        },
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          children: [tOrderState('title'), " #", gameSession.id]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.enterProfileUrlOrderName,
+          children: gameSession.itemName
+        })]
+      }),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.enterProfileUrl,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.hints,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              children: tOrderState('steamUrlInfo1')
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              children: tOrderState('steamUrlInfo2')
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(InputWithButton, {
+            butName: tOrderState('inputAcceptBut'),
+            placeholder: tOrderState('inputPlaceholder'),
+            onClick: function onClick(val) {
+              if (val) apiSetSteamContact(gameSession.uniqueCode, val);
+            }
+          }), isIncorrectProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            style: {
+              marginTop: '20px'
+            },
+            className: orderState_styles.errorText,
+            children: tOrderState('linkIncorrectErr')
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
+            isDlc: isDlc
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
+            endTime: discountEndDate
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showConfirmProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        },
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          children: [tOrderState('title'), " #", gameSession.id]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.showConfirmProfileUrlName,
+          children: gameSession.itemName
+        })]
+      }),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.confirmProfileUrl,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.accImg,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+              src: gameSession.steamProfileAvatarUrl
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.hints,
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.hint,
+              children: [tOrderState('yourSteamName'), ":", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                style: {
+                  color: '#8615BC'
+                },
+                children: [gameSession.steamProfileName, "."]
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), gameSession.steamProfileUrl]
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.accButtons,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tOrderState('thisMyAccBut'),
+              style: {
+                backgroundColor: '#571676'
+              },
+              onClick: function onClick() {
+                apiConfirmSending(gameSession.uniqueCode);
+              }
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tOrderState('changeAccountBut'),
+              style: {
+                backgroundColor: '#FFFFFF',
+                color: '#8615BC',
+                border: '1px solid #571676'
+              },
+              onClick: function onClick() {
+                apiResetSteamAcc();
+              }
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
+            isDlc: isDlc
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
+            endTime: discountEndDate
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showIvitationSended && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: tOrderState('requestSent'),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.ivitationSended,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.accImg,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+              src: gameSession.steamProfileAvatarUrl
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.hints,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.hint,
+              children: [tOrderState('yourSteamName'), ":", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                style: {
+                  color: '#8615BC'
+                },
+                children: [gameSession.steamProfileName, "."]
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), gameSession.steamProfileUrl]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              dangerouslySetInnerHTML: {
+                __html: tOrderState('requestSentInfo', {
+                  botName: "<a href=\"".concat(gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
+                })
+              }
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.accButtons,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tOrderState('changeAccountBut'),
+              style: {
+                backgroundColor: '#FFFFFF',
+                color: '#8615BC',
+                border: '1px solid #571676'
+              },
+              onClick: function onClick() {
+                apiResetSteamAcc();
+              }
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              style: {
+                display: 'flex',
+                alignItems: 'center'
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+                digisellerId: gameSession.digisellerId
+              })
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
+            isDlc: isDlc
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
+            endTime: discountEndDate
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showInvitationRefused && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tInvitationRefused('error')),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.ivitationRefused,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.hints,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              children: tInvitationRefused('youRefused')
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              dangerouslySetInnerHTML: {
+                __html: tInvitationRefused('info', {
+                  botName: "<a href=\"".concat(gameSession.botInvitationUrl || gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
+                })
+              }
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.accButtons,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.line1,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tOrderState('changeAccountBut'),
+                className: orderState_styles.but,
+                style: {
+                  marginRight: '25px'
+                },
+                onClick: function onClick() {
+                  apiResetSteamAcc();
+                }
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tInvitationRefused('iSentInvitation'),
+                className: orderState_styles.but,
+                onClick: function onClick() {
+                  apiCheckFriend(gameSession.uniqueCode);
+                }
+              })]
+            }), gameSession.isAnotherBotExists && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.line1,
+              style: {
+                marginTop: '32px'
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tInvitationRefused('tryWithBot'),
+                className: orderState_styles.but,
+                style: {
+                  width: '377px'
+                },
+                onClick: function onClick() {}
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.contactSellerWrapper,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+                digisellerId: gameSession.digisellerId
+              })
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
+            isDlc: isDlc
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
+            endTime: discountEndDate
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showGameAlreadyExists && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tGameExists('error')),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.gameAlreadyExists,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.hints,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              dangerouslySetInnerHTML: {
+                __html: tGameExists('info', {
+                  link: "<a href=\"https://store.steampowered.com/account/licenses/\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >\n                                      ".concat(tGameExists('hereClick'), "\n                                     </a>")
+                })
+              }
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.accButtons,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.line1,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tOrderState('changeAccountBut'),
+                className: orderState_styles.but,
+                onClick: function onClick() {
+                  apiResetSteamAcc();
+                }
+              }), gameSession.canResendGame && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tGameExists('repeatSendGame'),
+                className: orderState_styles.but,
+                style: {
+                  marginLeft: '25px'
+                },
+                onClick: function onClick() {
+                  apiCheckFriend(gameSession.uniqueCode);
+                }
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.contactSellerWrapper,
+              style: {
+                marginTop: '20px'
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+                digisellerId: gameSession.digisellerId
+              })
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
+            isDlc: isDlc
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
+            endTime: discountEndDate
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showGameSended && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        style: {
+          color: '#18C82A'
+        },
+        children: tGameSended('title')
+      }),
+      onClose: /*#__PURE__*/orderState_asyncToGenerator( /*#__PURE__*/orderState_regeneratorRuntime().mark(function _callee2() {
+        return orderState_regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              recaptchaValue = recaptchaRef === null || recaptchaRef === void 0 || (_recaptchaRef$current = recaptchaRef.current) === null || _recaptchaRef$current === void 0 ? void 0 : _recaptchaRef$current.getValue();
-              recaptchaRef === null || recaptchaRef === void 0 || (_recaptchaRef$current2 = recaptchaRef.current) === null || _recaptchaRef$current2 === void 0 || _recaptchaRef$current2.reset();
-              checkCode(val !== null && val !== void 0 ? val : '', '', recaptchaValue !== null && recaptchaValue !== void 0 ? recaptchaValue : '');
-            case 3:
+              navigate('/');
+              window.location = window.location.pathname;
+            case 2:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
-        }, _callee);
-      }));
-      return function (_x) {
-        return _ref.apply(this, arguments);
-      };
-    }())
-  }), showCaptcha && /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.captha
-  }, /*#__PURE__*/react.createElement(esm, {
-    ref: recaptchaRef,
-    sitekey: "6Lel764kAAAAAIhSZK3QvwBRgLeYrMKds7FdgCa9",
-    hl: i18n.language
-  }))), checkCodeErr && checkCodeErr > 1 && /*#__PURE__*/react.createElement("div", {
-    style: {
-      marginTop: '20px'
-    },
-    className: orderState_styles.errorText
-  }, tCheckCode("errors.".concat(checkCodeErr)))), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showEnterProfileUrl && /*#__PURE__*/react.createElement(Area, {
-    title: /*#__PURE__*/react.createElement("div", {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }
-    }, /*#__PURE__*/react.createElement("div", null, tOrderState('title'), " #", gameSession.id), /*#__PURE__*/react.createElement("div", {
-      className: orderState_styles.enterProfileUrlOrderName
-    }, gameSession.itemName))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.enterProfileUrl
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tOrderState('steamUrlInfo1')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tOrderState('steamUrlInfo2'))), /*#__PURE__*/react.createElement(InputWithButton, {
-    butName: tOrderState('inputAcceptBut'),
-    placeholder: tOrderState('inputPlaceholder'),
-    onClick: function onClick(val) {
-      if (val) apiSetSteamContact(gameSession.uniqueCode, val);
-    }
-  }), isIncorrectProfileUrl && /*#__PURE__*/react.createElement("div", {
-    style: {
-      marginTop: '20px'
-    },
-    className: orderState_styles.errorText
-  }, tOrderState('linkIncorrectErr')), /*#__PURE__*/react.createElement(Dlc, {
-    isDlc: isDlc
-  }), /*#__PURE__*/react.createElement(Timer, {
-    endTime: discountEndDate
-  })), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showConfirmProfileUrl && /*#__PURE__*/react.createElement(Area, {
-    title: /*#__PURE__*/react.createElement("div", {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }
-    }, /*#__PURE__*/react.createElement("div", null, tOrderState('title'), " #", gameSession.id), /*#__PURE__*/react.createElement("div", {
-      className: orderState_styles.showConfirmProfileUrlName
-    }, gameSession.itemName))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.confirmProfileUrl
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accImg
-  }, /*#__PURE__*/react.createElement("img", {
-    src: gameSession.steamProfileAvatarUrl
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tOrderState('yourSteamName'), ":", ' ', /*#__PURE__*/react.createElement("span", {
-    style: {
-      color: '#8615BC'
-    }
-  }, gameSession.steamProfileName, "."), /*#__PURE__*/react.createElement("br", null), gameSession.steamProfileUrl)), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('thisMyAccBut'),
-    style: {
-      backgroundColor: '#571676'
-    },
-    onClick: function onClick() {
-      apiConfirmSending(gameSession.uniqueCode);
-    }
-  }), /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    style: {
-      backgroundColor: '#FFFFFF',
-      color: '#8615BC',
-      border: '1px solid #571676'
-    },
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  })), /*#__PURE__*/react.createElement(Dlc, {
-    isDlc: isDlc
-  }), /*#__PURE__*/react.createElement(Timer, {
-    endTime: discountEndDate
-  })), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showIvitationSended && /*#__PURE__*/react.createElement(Area, {
-    title: tOrderState('requestSent')
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.ivitationSended
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accImg
-  }, /*#__PURE__*/react.createElement("img", {
-    src: gameSession.steamProfileAvatarUrl
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tOrderState('yourSteamName'), ":", ' ', /*#__PURE__*/react.createElement("span", {
-    style: {
-      color: '#8615BC'
-    }
-  }, gameSession.steamProfileName, "."), /*#__PURE__*/react.createElement("br", null), gameSession.steamProfileUrl), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint,
-    dangerouslySetInnerHTML: {
-      __html: tOrderState('requestSentInfo', {
-        botName: "<a href=\"".concat(gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
+        }, _callee2);
+      })),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.gameSended,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.hints,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              children: tGameSended('info')
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.accButtons,
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.line1,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tGameSended('homeBut'),
+                className: orderState_styles.but,
+                style: {
+                  marginRight: '25px'
+                },
+                onClick: function onClick() {
+                  navigate('/');
+                  window.location = window.location.pathname;
+                }
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tGameSended('feedbackBut'),
+                className: orderState_styles.leaveFeedback,
+                onClick: function onClick() {
+                  var url = "https://digiseller.market/info/buy.asp?id_i=".concat(gameSession.digisellerId, "&lang=ru-RU");
+                  window.open(url, '_blank');
+                }
+              })]
+            })
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
       })
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    style: {
-      backgroundColor: '#FFFFFF',
-      color: '#8615BC',
-      border: '1px solid #571676'
-    },
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))), /*#__PURE__*/react.createElement(Dlc, {
-    isDlc: isDlc
-  }), /*#__PURE__*/react.createElement(Timer, {
-    endTime: discountEndDate
-  })), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showInvitationRefused && /*#__PURE__*/react.createElement(Area, {
-    title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tInvitationRefused('error'))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.ivitationRefused
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tInvitationRefused('youRefused')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint,
-    dangerouslySetInnerHTML: {
-      __html: tInvitationRefused('info', {
-        botName: "<a href=\"".concat(gameSession.botInvitationUrl || gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
+    }), showSendInProgress && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tGameSendInProgress('title')),
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: orderState_styles.sendInProgress,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.hints,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.hint,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: orderState_styles.loader,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+                  color: '#571676',
+                  height: 137,
+                  width: 137
+                })
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: orderState_styles.loaderMob,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+                  color: '#571676',
+                  height: 76,
+                  width: 76
+                })
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.hint,
+              children: [tGameSendInProgress('info1'), " ", /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), tGameSendInProgress('info2')]
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.accButtons,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+              digisellerId: gameSession.digisellerId
+            })
+          })]
+        })
       })
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    className: orderState_styles.but,
-    style: {
-      marginRight: '25px'
-    },
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  }), /*#__PURE__*/react.createElement(home_button, {
-    text: tInvitationRefused('iSentInvitation'),
-    className: orderState_styles.but,
-    onClick: function onClick() {
-      apiCheckFriend(gameSession.uniqueCode);
-    }
-  })), gameSession.isAnotherBotExists && /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1,
-    style: {
-      marginTop: '32px'
-    }
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tInvitationRefused('tryWithBot'),
-    className: orderState_styles.but,
-    style: {
-      width: '377px'
-    },
-    onClick: function onClick() {}
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.contactSellerWrapper
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))), /*#__PURE__*/react.createElement(Dlc, {
-    isDlc: isDlc
-  }), /*#__PURE__*/react.createElement(Timer, {
-    endTime: discountEndDate
-  })), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showGameAlreadyExists && /*#__PURE__*/react.createElement(Area, {
-    title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tGameExists('error'))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.gameAlreadyExists
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint,
-    dangerouslySetInnerHTML: {
-      __html: tGameExists('info', {
-        link: "<a href=\"https://store.steampowered.com/account/licenses/\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >\n                                      ".concat(tGameExists('hereClick'), "\n                                     </a>")
+    }), showInQueue && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        children: [tCommon('order'), " #", gameSession.id, " - ", tGameInQueue('queue'), ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+          style: {
+            color: '#8615BC'
+          },
+          children: ["\u2116 ", gameSession.queuePosition]
+        })]
+      }),
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: orderState_styles.gameInQueue,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.hints,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.hint,
+              children: [tGameInQueue('info1'), " ", gameSession.queuePosition, ".", ' ', tGameInQueue('info2'), " ", gameSession.queueWaitingMinutes, " min."]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              children: tGameInQueue('info3')
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.accButtons,
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.line1,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tOrderState('changeAccountBut'),
+                className: orderState_styles.but,
+                onClick: function onClick() {
+                  apiResetSteamAcc();
+                }
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: orderState_styles.contactSellerWrapper,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+                  digisellerId: gameSession.digisellerId
+                })
+              })]
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
+            isDlc: isDlc
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
+            endTime: discountEndDate
+          })]
+        })
       })
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    className: orderState_styles.but,
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  }), gameSession.canResendGame && /*#__PURE__*/react.createElement(home_button, {
-    text: tGameExists('repeatSendGame'),
-    className: orderState_styles.but,
-    style: {
-      marginLeft: '25px'
-    },
-    onClick: function onClick() {
-      apiCheckFriend(gameSession.uniqueCode);
-    }
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.contactSellerWrapper,
-    style: {
-      marginTop: '20px'
-    }
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))), /*#__PURE__*/react.createElement(Dlc, {
-    isDlc: isDlc
-  }), /*#__PURE__*/react.createElement(Timer, {
-    endTime: discountEndDate
-  })), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showGameSended && /*#__PURE__*/react.createElement(Area, {
-    title: /*#__PURE__*/react.createElement("div", {
-      style: {
-        color: '#18C82A'
-      }
-    }, tGameSended('title')),
-    onClose: /*#__PURE__*/orderState_asyncToGenerator( /*#__PURE__*/orderState_regeneratorRuntime().mark(function _callee2() {
-      return orderState_regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
-          case 0:
-            navigate('/');
-            window.location = window.location.pathname;
-          case 2:
-          case "end":
-            return _context2.stop();
-        }
-      }, _callee2);
-    }))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.gameSended
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tGameSended('info'))), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tGameSended('homeBut'),
-    className: orderState_styles.but,
-    style: {
-      marginRight: '25px'
-    },
-    onClick: function onClick() {
-      navigate('/');
-      window.location = window.location.pathname;
-    }
-  }), /*#__PURE__*/react.createElement(home_button, {
-    text: tGameSended('feedbackBut'),
-    className: orderState_styles.leaveFeedback,
-    onClick: function onClick() {
-      var url = "https://digiseller.market/info/buy.asp?id_i=".concat(gameSession.digisellerId, "&lang=ru-RU");
-      window.open(url, '_blank');
-    }
-  })))), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showSendInProgress && /*#__PURE__*/react.createElement(Area, {
-    title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tGameSendInProgress('title'))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.sendInProgress
-  }, /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.loader
-  }, /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676',
-    height: 137,
-    width: 137
-  })), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.loaderMob
-  }, /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676',
-    height: 76,
-    width: 76
-  }))), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tGameSendInProgress('info1'), " ", /*#__PURE__*/react.createElement("br", null), tGameSendInProgress('info2'))), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))))), showInQueue && /*#__PURE__*/react.createElement(Area, {
-    title: /*#__PURE__*/react.createElement("div", null, tCommon('order'), " #", gameSession.id, " - ", tGameInQueue('queue'), ' ', /*#__PURE__*/react.createElement("span", {
-      style: {
-        color: '#8615BC'
-      }
-    }, "\u2116 ", gameSession.queuePosition))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.gameInQueue
-  }, /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tGameInQueue('info1'), " ", gameSession.queuePosition, ".", ' ', tGameInQueue('info2'), " ", gameSession.queueWaitingMinutes, " min."), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tGameInQueue('info3'))), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    className: orderState_styles.but,
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.contactSellerWrapper
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  })))), /*#__PURE__*/react.createElement(Dlc, {
-    isDlc: isDlc
-  }), /*#__PURE__*/react.createElement(Timer, {
-    endTime: discountEndDate
-  })))), showError && /*#__PURE__*/react.createElement(Area, {
-    title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tInvitationRefused('error'))
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.error
-  }, !checkCodeLoading && /*#__PURE__*/react.createElement(react.Fragment, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hints
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.hint
-  }, tError('info'))), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    className: orderState_styles.but,
-    style: {
-      marginRight: '25px'
-    },
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))))), checkCodeLoading && /*#__PURE__*/react.createElement(circularLoader, {
-    color: '#571676'
-  }))), showActivationTimeExpires && /*#__PURE__*/react.createElement(Area, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.activationExpErapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.title
-  }, tActTimeExpires('error')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.text
-  }, tActTimeExpires('message')), /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))), showRegionError && /*#__PURE__*/react.createElement(Area, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.regionError
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.title
-  }, tRegionError('error')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.text
-  }, tRegionError('info')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.accButtons
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.line1
-  }, /*#__PURE__*/react.createElement(home_button, {
-    text: tOrderState('changeAccountBut'),
-    className: orderState_styles.but,
-    style: {
-      marginRight: '25px'
-    },
-    onClick: function onClick() {
-      apiResetSteamAcc();
-    }
-  }), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.contactBut
-  }, /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  })))))), showOrderClosed && /*#__PURE__*/react.createElement(Area, null, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.activationExpErapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.title
-  }, tOrderClosed('closed')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.text
-  }, tOrderClosed('message')), /*#__PURE__*/react.createElement(ContactTheSeller, {
-    digisellerId: gameSession.digisellerId
-  }))));
+    }), showError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tInvitationRefused('error')),
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.error,
+        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.hints,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.hint,
+              children: tError('info')
+            })
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.accButtons,
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+              className: orderState_styles.line1,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+                text: tOrderState('changeAccountBut'),
+                className: orderState_styles.but,
+                style: {
+                  marginRight: '25px'
+                },
+                onClick: function onClick() {
+                  apiResetSteamAcc();
+                }
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                style: {
+                  display: 'flex',
+                  alignItems: 'center'
+                },
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+                  digisellerId: gameSession.digisellerId
+                })
+              })]
+            })
+          })]
+        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+          color: '#571676'
+        })]
+      })
+    }), showActivationTimeExpires && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.activationExpErapper,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.title,
+          children: tActTimeExpires('error')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          children: tActTimeExpires('message')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+          digisellerId: gameSession.digisellerId
+        })]
+      })
+    }), showRegionError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.regionError,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.title,
+          children: tRegionError('error')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          children: tRegionError('info')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.accButtons,
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.line1,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tOrderState('changeAccountBut'),
+              className: orderState_styles.but,
+              style: {
+                marginRight: '25px'
+              },
+              onClick: function onClick() {
+                apiResetSteamAcc();
+              }
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: orderState_styles.contactBut,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+                digisellerId: gameSession.digisellerId
+              })
+            })]
+          })
+        })]
+      })
+    }), showOrderClosed && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.activationExpErapper,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.title,
+          children: tOrderClosed('closed')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          children: tOrderClosed('message')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+          digisellerId: gameSession.digisellerId
+        })]
+      })
+    })]
+  });
 };
 var ContactTheSeller = function ContactTheSeller(_ref3) {
   var digisellerId = _ref3.digisellerId;
   var _useTranslation13 = useTranslation_useTranslation('activationTimeExpires'),
     tActTimeExpires = _useTranslation13.t;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.contactWrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.contact,
-    onClick: function onClick() {
-      var url = "https://digiseller.market/info/buy.asp?id_i=".concat(digisellerId, "&lang=ru-RU");
-      window.open(url, '_blank');
-    }
-  }, tActTimeExpires('contactTheSeller')), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.dash
-  }));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orderState_styles.contactWrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orderState_styles.contact,
+      onClick: function onClick() {
+        var url = "https://digiseller.market/info/buy.asp?id_i=".concat(digisellerId, "&lang=ru-RU");
+        window.open(url, '_blank');
+      },
+      children: tActTimeExpires('contactTheSeller')
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orderState_styles.dash
+    })]
+  });
 };
 var Area = function Area(_ref4) {
   var height = _ref4.height,
@@ -45683,37 +45828,43 @@ var Area = function Area(_ref4) {
     title = _ref4.title,
     children = _ref4.children,
     onClose = _ref4.onClose;
-  return /*#__PURE__*/react.createElement("div", {
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     style: {
       height: height,
       width: width
     },
-    className: orderState_styles.area
-  }, title && /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.title
-  }, title), children, onClose && /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.closeBtn
-  }, /*#__PURE__*/react.createElement("img", {
-    src: close_namespaceObject,
-    onClick: function onClick() {
-      if (onClose) onClose();
-    }
-  })));
+    className: orderState_styles.area,
+    children: [title && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orderState_styles.title,
+      children: title
+    }), children, onClose && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orderState_styles.closeBtn,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+        src: close_namespaceObject,
+        onClick: function onClick() {
+          if (onClose) onClose();
+        }
+      })
+    })]
+  });
 };
 var Dlc = function Dlc(_ref5) {
   var isDlc = _ref5.isDlc;
   var _useTranslation14 = useTranslation_useTranslation('dlc'),
     tDlc = _useTranslation14.t;
   if (!isDlc) return null;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.dlcWrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.info
-  }, /*#__PURE__*/react.createElement("span", {
-    style: {
-      color: '#8615BC'
-    }
-  }, "DLC | "), tDlc('info')));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: orderState_styles.dlcWrapper,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: orderState_styles.info,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+        style: {
+          color: '#8615BC'
+        },
+        children: "DLC | "
+      }), tDlc('info')]
+    })
+  });
 };
 var Timer = function Timer(_ref6) {
   var endTime = _ref6.endTime;
@@ -45743,22 +45894,28 @@ var Timer = function Timer(_ref6) {
     };
   });
   if (!timer) return null;
-  return /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.timer
-  }, /*#__PURE__*/react.createElement("div", null, tTimer('title'), ": ", timer), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.info
-  }, /*#__PURE__*/react.createElement(HtmlTooltip, {
-    title: /*#__PURE__*/react.createElement("div", {
-      style: {
-        padding: '18px 0 18px 0',
-        fontSize: '10px',
-        lineHeight: '130%',
-        textAlign: 'center'
-      }
-    }, tTimer('expInfoTooltip'))
-  }, /*#__PURE__*/react.createElement("img", {
-    src: info_namespaceObject
-  }))));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orderState_styles.timer,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      children: [tTimer('title'), ": ", timer]
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orderState_styles.info,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(HtmlTooltip, {
+        title: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: {
+            padding: '18px 0 18px 0',
+            fontSize: '10px',
+            lineHeight: '130%',
+            textAlign: 'center'
+          },
+          children: tTimer('expInfoTooltip')
+        }),
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+          src: info_namespaceObject
+        })
+      })
+    })]
+  });
 };
 var InputWithButton = function InputWithButton(_ref7) {
   var butName = _ref7.butName,
@@ -45772,27 +45929,29 @@ var InputWithButton = function InputWithButton(_ref7) {
   (0,react.useEffect)(function () {
     setText(defaultValue);
   }, [defaultValue]);
-  return /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.input
-  }, /*#__PURE__*/react.createElement("input", {
-    //defaultValue={defaultValue}
-    value: text,
-    onChange: function onChange(e) {
-      //setManualNumber(e.target.value);
-      setText(e.target.value);
-    },
-    placeholder: placeholder
-  }), /*#__PURE__*/react.createElement("div", {
-    className: orderState_styles.inBtn,
-    onClick: function onClick() {
-      if (_onClick) _onClick(text);
-    }
-  }, butName));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: orderState_styles.input,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+      //defaultValue={defaultValue}
+      value: text,
+      onChange: function onChange(e) {
+        //setManualNumber(e.target.value);
+        setText(e.target.value);
+      },
+      placeholder: placeholder
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: orderState_styles.inBtn,
+      onClick: function onClick() {
+        if (_onClick) _onClick(text);
+      },
+      children: butName
+    })]
+  });
 };
 var HtmlTooltip = styles_styled(function (_ref8) {
   var className = _ref8.className,
     props = orderState_objectWithoutProperties(_ref8, orderState_excluded);
-  return /*#__PURE__*/react.createElement(Tooltip_Tooltip, orderState_extends({}, props, {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(Tooltip_Tooltip, orderState_objectSpread(orderState_objectSpread({}, props), {}, {
     classes: {
       popper: className
     }
@@ -48427,6 +48586,7 @@ function textSwitch_iterableToArrayLimit(r, l) { var t = null == r ? null : "und
 function textSwitch_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
+
 var TextSwitch = function TextSwitch(_ref) {
   var onChange = _ref.onChange,
     options = _ref.options,
@@ -48438,19 +48598,26 @@ var TextSwitch = function TextSwitch(_ref) {
   react.useEffect(function () {
     setChecked(defaultValue);
   }, [defaultValue]);
-  return /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.track,
-    onClick: function onClick() {
-      if (onChange) onChange(!checked);
-      setChecked(!checked);
-    }
-  }, /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.options + ' ' + (checked ? textSwitch_styles.checked : '')
-  }, /*#__PURE__*/react.createElement("div", null, options[0]), /*#__PURE__*/react.createElement("div", null, options[1])), /*#__PURE__*/react.createElement("div", {
-    className: textSwitch_styles.thumb + ' ' + (checked ? textSwitch_styles.checked : '')
-  })));
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: textSwitch_styles.wrapper,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: textSwitch_styles.track,
+      onClick: function onClick() {
+        if (onChange) onChange(!checked);
+        setChecked(!checked);
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: textSwitch_styles.options + ' ' + (checked ? textSwitch_styles.checked : ''),
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: options[0]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: options[1]
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: textSwitch_styles.thumb + ' ' + (checked ? textSwitch_styles.checked : '')
+      })]
+    })
+  });
 };
 /* harmony default export */ const textSwitch = (TextSwitch);
 // EXTERNAL MODULE: ./node_modules/cookie/index.js
@@ -48722,6 +48889,7 @@ function app_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var Layout = function Layout() {
   var _useTranslation = useTranslation_useTranslation(),
     t = _useTranslation.t,
@@ -48742,33 +48910,38 @@ var Layout = function Layout() {
     if (i18n.language !== cookies.ln) i18n.changeLanguage(cookies.ln);
   }
   var currLang = i18n.language;
-  return /*#__PURE__*/react.createElement("div", {
-    className: home_styles.wrapper
-  }, /*#__PURE__*/react.createElement("div", {
-    className: home_styles.bg
-  }), /*#__PURE__*/react.createElement("div", {
-    className: home_styles.wrapperBackground
-  }, /*#__PURE__*/react.createElement("div", {
-    style: {
-      flex: '1 1 auto'
-    }
-  }, /*#__PURE__*/react.createElement(home_lastOrders, null)), /*#__PURE__*/react.createElement("div", {
-    style: {
-      flex: '1 1 auto'
-    }
-  }, /*#__PURE__*/react.createElement(orderState, null)), /*#__PURE__*/react.createElement("div", {
-    className: home_styles.footer
-  }, /*#__PURE__*/react.createElement(textSwitch, {
-    defaultValue: currLang === 'en',
-    options: ['Ru', 'Eng'],
-    onChange: function onChange(val) {
-      var len = val ? 'en' : 'ru';
-      i18n.changeLanguage(len);
-      setCookie('ln', i18n.language);
-    }
-  }))));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: home_styles.wrapper,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: home_styles.bg
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: home_styles.wrapperBackground,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        style: {
+          flex: '1 1 auto'
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(home_lastOrders, {})
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        style: {
+          flex: '1 1 auto'
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(orderState, {})
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: home_styles.footer,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(textSwitch, {
+          defaultValue: currLang === 'en',
+          options: ['Ru', 'Eng'],
+          onChange: function onChange(val) {
+            var len = val ? 'en' : 'ru';
+            i18n.changeLanguage(len);
+            setCookie('ln', i18n.language);
+          }
+        })
+      })]
+    })]
+  });
 };
-var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/react.createElement(Route, {
+var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
   path: "/",
   loader: /*#__PURE__*/app_asyncToGenerator( /*#__PURE__*/app_regeneratorRuntime().mark(function _callee() {
     return app_regeneratorRuntime().wrap(function _callee$(_context) {
@@ -48784,10 +48957,10 @@ var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/react.cr
       }
     }, _callee);
   })),
-  element: /*#__PURE__*/react.createElement(Layout, null)
+  element: /*#__PURE__*/(0,jsx_runtime.jsx)(Layout, {})
 })));
 var App = function App() {
-  return /*#__PURE__*/react.createElement(dist_RouterProvider, {
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(dist_RouterProvider, {
     router: router
   });
 };
@@ -48834,7 +49007,10 @@ var CookiesProvider = /** @class */ (function (_super) {
 //import { BrowserRouter } from 'react-router-dom';
 
 
-react_dom.render( /*#__PURE__*/react.createElement(es6_CookiesProvider, null, /*#__PURE__*/react.createElement(app, null)), document.getElementById('root'));
+
+react_dom.render( /*#__PURE__*/(0,jsx_runtime.jsx)(es6_CookiesProvider, {
+  children: /*#__PURE__*/(0,jsx_runtime.jsx)(app, {})
+}), document.getElementById('root'));
 })();
 
 /******/ })()

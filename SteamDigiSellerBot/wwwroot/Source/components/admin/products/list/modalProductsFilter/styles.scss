@@ -1,5 +1,5 @@
 @import '/wwwroot/Source/containers/admin/library';
-
+@import '../../../../shared/formItem/styles.scss';
 .content {
     color: $white-3;
     font-size: 16px;
@@ -14,17 +14,8 @@
     }
 
     .formItem {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 31px;
-
         .name {
-            padding-top: 18px;
             padding-right: 40px;
-        }
-
-        .doubleControl {
-            display: flex;
         }
     }
 }
