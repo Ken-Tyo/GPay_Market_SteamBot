@@ -45165,7 +45165,7 @@ var pageHeader = function pageHeader(_ref) {
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalProductsFilter_styles = ({"formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","content":"styles__content--HSI89","actions":"styles__actions--iuJTu"});
+/* harmony default export */ const modalProductsFilter_styles = ({"css-1km1ehz":"styles__css-1km1ehz--YrFPE","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","content":"styles__content--HSI89","actions":"styles__actions--iuJTu","currName":"styles__currName--ZGhq_","paddingZero":"styles__paddingZero--iWQwK","MuiOption-root":"styles__MuiOption-root--ROouk","css-1v42tcw":"styles__css-1v42tcw--ULLrJ"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
@@ -45299,6 +45299,15 @@ var select_StyledOption = esm_styled(Option_Option)(function (_ref3) {
   return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
 });
 var select_StyledPopper = esm_styled(Popper_Popper)(select_templateObject || (select_templateObject = select_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
+var defaultOption = function defaultOption(i) {
+  /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
+    value: i.name,
+    style: {
+      color: i.color || '#B3B3B3'
+    },
+    children: i.name
+  }, i.name);
+};
 function select_MultipleSelectPlaceholder(_ref4) {
   var props = _ref4.props,
     _ref4$customRenderChi = _ref4.customRenderChild,
@@ -45333,11 +45342,7 @@ function select_MultipleSelectPlaceholder(_ref4) {
       slots: slots
     }));
   });
-  var renderItem = customRenderChild == null ? function (i) {
-    return i.name;
-  } : function (i) {
-    return customRenderChild(i);
-  };
+  var renderItem = customRenderChild == null ? defaultOption : customRenderChild;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_select_styles.wrapper,
     style: {
@@ -45348,13 +45353,7 @@ function select_MultipleSelectPlaceholder(_ref4) {
       onChange: handleChange,
       multiple: multiple,
       children: (options || []).map(function (i) {
-        return /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
-          value: i.name,
-          style: {
-            color: i.color || '#B3B3B3'
-          },
-          children: renderItem(i)
-        }, i.name);
+        return renderItem(i);
       })
     })), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: shared_select_styles.hint,
@@ -46546,15 +46545,252 @@ const OutlinedInput = /*#__PURE__*/react.forwardRef(function OutlinedInput(inPro
  false ? 0 : void 0;
 OutlinedInput.muiName = 'Input';
 /* harmony default export */ const OutlinedInput_OutlinedInput = (OutlinedInput);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/List/ListContext.js
+;// CONCATENATED MODULE: ./node_modules/@mui/utils/isMuiElement/isMuiElement.js
 
+function isMuiElement(element, muiNames) {
+  var _muiName, _element$type;
+  return /*#__PURE__*/react.isValidElement(element) && muiNames.indexOf( // For server components `muiName` is avaialble in element.type._payload.value.muiName
+  // relevant info - https://github.com/facebook/react/blob/2807d781a08db8e9873687fccc25c0f12b4fb3d4/packages/react/src/ReactLazy.js#L45
+  // eslint-disable-next-line no-underscore-dangle
+  (_muiName = element.type.muiName) != null ? _muiName : (_element$type = element.type) == null || (_element$type = _element$type._payload) == null || (_element$type = _element$type.value) == null ? void 0 : _element$type.muiName) !== -1;
+}
+;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/isMuiElement.js
+
+/* harmony default export */ const utils_isMuiElement = (isMuiElement);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/formControlClasses.js
+
+
+function getFormControlUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiFormControl', slot);
+}
+const formControlClasses = generateUtilityClasses('MuiFormControl', ['root', 'marginNone', 'marginNormal', 'marginDense', 'fullWidth', 'disabled']);
+/* harmony default export */ const FormControl_formControlClasses = ((/* unused pure expression or super */ null && (formControlClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/FormControl.js
+
+
+const FormControl_excluded = ["children", "className", "color", "component", "disabled", "error", "focused", "fullWidth", "hiddenLabel", "margin", "required", "size", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+
+const FormControl_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    margin,
+    fullWidth
+  } = ownerState;
+  const slots = {
+    root: ['root', margin !== 'none' && `margin${utils_capitalize(margin)}`, fullWidth && 'fullWidth']
+  };
+  return composeClasses(slots, getFormControlUtilityClasses, classes);
+};
+const FormControlRoot = styles_styled('div', {
+  name: 'MuiFormControl',
+  slot: 'Root',
+  overridesResolver: ({
+    ownerState
+  }, styles) => {
+    return extends_extends({}, styles.root, styles[`margin${utils_capitalize(ownerState.margin)}`], ownerState.fullWidth && styles.fullWidth);
+  }
+})(({
+  ownerState
+}) => extends_extends({
+  display: 'inline-flex',
+  flexDirection: 'column',
+  position: 'relative',
+  // Reset fieldset default style.
+  minWidth: 0,
+  padding: 0,
+  margin: 0,
+  border: 0,
+  verticalAlign: 'top'
+}, ownerState.margin === 'normal' && {
+  marginTop: 16,
+  marginBottom: 8
+}, ownerState.margin === 'dense' && {
+  marginTop: 8,
+  marginBottom: 4
+}, ownerState.fullWidth && {
+  width: '100%'
+}));
 
 /**
- * @ignore - internal component.
+ * Provides context such as filled/focused/error/required for form inputs.
+ * Relying on the context provides high flexibility and ensures that the state always stays
+ * consistent across the children of the `FormControl`.
+ * This context is used by the following components:
+ *
+ *  - FormLabel
+ *  - FormHelperText
+ *  - Input
+ *  - InputLabel
+ *
+ * You can find one composition example below and more going to [the demos](/material-ui/react-text-field/#components).
+ *
+ * ```jsx
+ * <FormControl>
+ *   <InputLabel htmlFor="my-input">Email address</InputLabel>
+ *   <Input id="my-input" aria-describedby="my-helper-text" />
+ *   <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
+ * </FormControl>
+ * ```
+ *
+ * ⚠️ Only one `InputBase` can be used within a FormControl because it creates visual inconsistencies.
+ * For instance, only one input can be focused at the same time, the state shouldn't be shared.
  */
-const ListContext_ListContext = /*#__PURE__*/react.createContext({});
-if (false) {}
-/* harmony default export */ const List_ListContext = (ListContext_ListContext);
+const FormControl = /*#__PURE__*/react.forwardRef(function FormControl(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiFormControl'
+  });
+  const {
+      children,
+      className,
+      color = 'primary',
+      component = 'div',
+      disabled = false,
+      error = false,
+      focused: visuallyFocused,
+      fullWidth = false,
+      hiddenLabel = false,
+      margin = 'none',
+      required = false,
+      size = 'medium',
+      variant = 'outlined'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, FormControl_excluded);
+  const ownerState = extends_extends({}, props, {
+    color,
+    component,
+    disabled,
+    error,
+    fullWidth,
+    hiddenLabel,
+    margin,
+    required,
+    size,
+    variant
+  });
+  const classes = FormControl_useUtilityClasses(ownerState);
+  const [adornedStart, setAdornedStart] = react.useState(() => {
+    // We need to iterate through the children and find the Input in order
+    // to fully support server-side rendering.
+    let initialAdornedStart = false;
+    if (children) {
+      react.Children.forEach(children, child => {
+        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
+          return;
+        }
+        const input = utils_isMuiElement(child, ['Select']) ? child.props.input : child;
+        if (input && isAdornedStart(input.props)) {
+          initialAdornedStart = true;
+        }
+      });
+    }
+    return initialAdornedStart;
+  });
+  const [filled, setFilled] = react.useState(() => {
+    // We need to iterate through the children and find the Input in order
+    // to fully support server-side rendering.
+    let initialFilled = false;
+    if (children) {
+      react.Children.forEach(children, child => {
+        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
+          return;
+        }
+        if (isFilled(child.props, true) || isFilled(child.props.inputProps, true)) {
+          initialFilled = true;
+        }
+      });
+    }
+    return initialFilled;
+  });
+  const [focusedState, setFocused] = react.useState(false);
+  if (disabled && focusedState) {
+    setFocused(false);
+  }
+  const focused = visuallyFocused !== undefined && !disabled ? visuallyFocused : focusedState;
+  let registerEffect;
+  if (false) {}
+  const childContext = react.useMemo(() => {
+    return {
+      adornedStart,
+      setAdornedStart,
+      color,
+      disabled,
+      error,
+      filled,
+      focused,
+      fullWidth,
+      hiddenLabel,
+      size,
+      onBlur: () => {
+        setFocused(false);
+      },
+      onEmpty: () => {
+        setFilled(false);
+      },
+      onFilled: () => {
+        setFilled(true);
+      },
+      onFocus: () => {
+        setFocused(true);
+      },
+      registerEffect,
+      required,
+      variant
+    };
+  }, [adornedStart, color, disabled, error, filled, focused, fullWidth, hiddenLabel, registerEffect, required, size, variant]);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControlContext.Provider, {
+    value: childContext,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControlRoot, extends_extends({
+      as: component,
+      ownerState: ownerState,
+      className: clsx_m(classes.root, className),
+      ref: ref
+    }, other, {
+      children: children
+    }))
+  });
+});
+ false ? 0 : void 0;
+/* harmony default export */ const FormControl_FormControl = (FormControl);
+;// CONCATENATED MODULE: ./node_modules/@mui/utils/useControlled/useControlled.js
+'use client';
+
+/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+
+function useControlled({
+  controlled,
+  default: defaultProp,
+  name,
+  state = 'value'
+}) {
+  // isControlled is ignored in the hook dependency lists as it should never change.
+  const {
+    current: isControlled
+  } = react.useRef(controlled !== undefined);
+  const [valueState, setValue] = react.useState(defaultProp);
+  const value = isControlled ? controlled : valueState;
+  if (false) {}
+  const setValueIfUncontrolled = react.useCallback(newValue => {
+    if (!isControlled) {
+      setValue(newValue);
+    }
+  }, []);
+  return [value, setValueIfUncontrolled];
+}
+;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useControlled.js
+
+/* harmony default export */ const utils_useControlled = (useControlled);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useEventCallback.js
 
 /* harmony default export */ const utils_useEventCallback = (useEventCallback_useEventCallback);
@@ -47544,582 +47780,6 @@ const ButtonBase = /*#__PURE__*/react.forwardRef(function ButtonBase(inProps, re
 });
  false ? 0 : void 0;
 /* harmony default export */ const ButtonBase_ButtonBase = (ButtonBase);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/Divider/dividerClasses.js
-
-
-function getDividerUtilityClass(slot) {
-  return generateUtilityClass('MuiDivider', slot);
-}
-const dividerClasses = generateUtilityClasses('MuiDivider', ['root', 'absolute', 'fullWidth', 'inset', 'middle', 'flexItem', 'light', 'vertical', 'withChildren', 'withChildrenVertical', 'textAlignRight', 'textAlignLeft', 'wrapper', 'wrapperVertical']);
-/* harmony default export */ const Divider_dividerClasses = (dividerClasses);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/ListItemIcon/listItemIconClasses.js
-
-
-function getListItemIconUtilityClass(slot) {
-  return generateUtilityClass('MuiListItemIcon', slot);
-}
-const listItemIconClasses = generateUtilityClasses('MuiListItemIcon', ['root', 'alignItemsFlexStart']);
-/* harmony default export */ const ListItemIcon_listItemIconClasses = (listItemIconClasses);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/ListItemText/listItemTextClasses.js
-
-
-function getListItemTextUtilityClass(slot) {
-  return generateUtilityClass_generateUtilityClass('MuiListItemText', slot);
-}
-const listItemTextClasses = generateUtilityClasses('MuiListItemText', ['root', 'multiline', 'dense', 'inset', 'primary', 'secondary']);
-/* harmony default export */ const ListItemText_listItemTextClasses = (listItemTextClasses);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/MenuItem/menuItemClasses.js
-
-
-function getMenuItemUtilityClass(slot) {
-  return generateUtilityClass_generateUtilityClass('MuiMenuItem', slot);
-}
-const menuItemClasses = generateUtilityClasses('MuiMenuItem', ['root', 'focusVisible', 'dense', 'disabled', 'divider', 'gutters', 'selected']);
-/* harmony default export */ const MenuItem_menuItemClasses = (menuItemClasses);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/MenuItem/MenuItem.js
-
-
-const MenuItem_excluded = ["autoFocus", "component", "dense", "divider", "disableGutters", "focusVisibleClassName", "role", "tabIndex", "className"];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const overridesResolver = (props, styles) => {
-  const {
-    ownerState
-  } = props;
-  return [styles.root, ownerState.dense && styles.dense, ownerState.divider && styles.divider, !ownerState.disableGutters && styles.gutters];
-};
-const MenuItem_useUtilityClasses = ownerState => {
-  const {
-    disabled,
-    dense,
-    divider,
-    disableGutters,
-    selected,
-    classes
-  } = ownerState;
-  const slots = {
-    root: ['root', dense && 'dense', disabled && 'disabled', !disableGutters && 'gutters', divider && 'divider', selected && 'selected']
-  };
-  const composedClasses = composeClasses(slots, getMenuItemUtilityClass, classes);
-  return extends_extends({}, classes, composedClasses);
-};
-const MenuItemRoot = styles_styled(ButtonBase_ButtonBase, {
-  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
-  name: 'MuiMenuItem',
-  slot: 'Root',
-  overridesResolver
-})(({
-  theme,
-  ownerState
-}) => extends_extends({}, theme.typography.body1, {
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  position: 'relative',
-  textDecoration: 'none',
-  minHeight: 48,
-  paddingTop: 6,
-  paddingBottom: 6,
-  boxSizing: 'border-box',
-  whiteSpace: 'nowrap'
-}, !ownerState.disableGutters && {
-  paddingLeft: 16,
-  paddingRight: 16
-}, ownerState.divider && {
-  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  backgroundClip: 'padding-box'
-}, {
-  '&:hover': {
-    textDecoration: 'none',
-    backgroundColor: (theme.vars || theme).palette.action.hover,
-    // Reset on touch devices, it doesn't add specificity
-    '@media (hover: none)': {
-      backgroundColor: 'transparent'
-    }
-  },
-  [`&.${MenuItem_menuItemClasses.selected}`]: {
-    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    [`&.${MenuItem_menuItemClasses.focusVisible}`]: {
-      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
-    }
-  },
-  [`&.${MenuItem_menuItemClasses.selected}:hover`]: {
-    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity),
-    // Reset on touch devices, it doesn't add specificity
-    '@media (hover: none)': {
-      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
-    }
-  },
-  [`&.${MenuItem_menuItemClasses.focusVisible}`]: {
-    backgroundColor: (theme.vars || theme).palette.action.focus
-  },
-  [`&.${MenuItem_menuItemClasses.disabled}`]: {
-    opacity: (theme.vars || theme).palette.action.disabledOpacity
-  },
-  [`& + .${Divider_dividerClasses.root}`]: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  },
-  [`& + .${Divider_dividerClasses.inset}`]: {
-    marginLeft: 52
-  },
-  [`& .${ListItemText_listItemTextClasses.root}`]: {
-    marginTop: 0,
-    marginBottom: 0
-  },
-  [`& .${ListItemText_listItemTextClasses.inset}`]: {
-    paddingLeft: 36
-  },
-  [`& .${ListItemIcon_listItemIconClasses.root}`]: {
-    minWidth: 36
-  }
-}, !ownerState.dense && {
-  [theme.breakpoints.up('sm')]: {
-    minHeight: 'auto'
-  }
-}, ownerState.dense && extends_extends({
-  minHeight: 32,
-  // https://m2.material.io/components/menus#specs > Dense
-  paddingTop: 4,
-  paddingBottom: 4
-}, theme.typography.body2, {
-  [`& .${ListItemIcon_listItemIconClasses.root} svg`]: {
-    fontSize: '1.25rem'
-  }
-})));
-const MenuItem = /*#__PURE__*/react.forwardRef(function MenuItem(inProps, ref) {
-  const props = useThemeProps_useThemeProps({
-    props: inProps,
-    name: 'MuiMenuItem'
-  });
-  const {
-      autoFocus = false,
-      component = 'li',
-      dense = false,
-      divider = false,
-      disableGutters = false,
-      focusVisibleClassName,
-      role = 'menuitem',
-      tabIndex: tabIndexProp,
-      className
-    } = props,
-    other = _objectWithoutPropertiesLoose(props, MenuItem_excluded);
-  const context = react.useContext(List_ListContext);
-  const childContext = react.useMemo(() => ({
-    dense: dense || context.dense || false,
-    disableGutters
-  }), [context.dense, dense, disableGutters]);
-  const menuItemRef = react.useRef(null);
-  utils_useEnhancedEffect(() => {
-    if (autoFocus) {
-      if (menuItemRef.current) {
-        menuItemRef.current.focus();
-      } else if (false) {}
-    }
-  }, [autoFocus]);
-  const ownerState = extends_extends({}, props, {
-    dense: childContext.dense,
-    divider,
-    disableGutters
-  });
-  const classes = MenuItem_useUtilityClasses(props);
-  const handleRef = utils_useForkRef(menuItemRef, ref);
-  let tabIndex;
-  if (!props.disabled) {
-    tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
-  }
-  return /*#__PURE__*/(0,jsx_runtime.jsx)(List_ListContext.Provider, {
-    value: childContext,
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(MenuItemRoot, extends_extends({
-      ref: handleRef,
-      role: role,
-      tabIndex: tabIndex,
-      component: component,
-      focusVisibleClassName: clsx_m(classes.focusVisible, focusVisibleClassName),
-      className: clsx_m(classes.root, className)
-    }, other, {
-      ownerState: ownerState,
-      classes: classes
-    }))
-  });
-});
- false ? 0 : void 0;
-/* harmony default export */ const MenuItem_MenuItem = (MenuItem);
-;// CONCATENATED MODULE: ./node_modules/@mui/utils/isMuiElement/isMuiElement.js
-
-function isMuiElement(element, muiNames) {
-  var _muiName, _element$type;
-  return /*#__PURE__*/react.isValidElement(element) && muiNames.indexOf( // For server components `muiName` is avaialble in element.type._payload.value.muiName
-  // relevant info - https://github.com/facebook/react/blob/2807d781a08db8e9873687fccc25c0f12b4fb3d4/packages/react/src/ReactLazy.js#L45
-  // eslint-disable-next-line no-underscore-dangle
-  (_muiName = element.type.muiName) != null ? _muiName : (_element$type = element.type) == null || (_element$type = _element$type._payload) == null || (_element$type = _element$type.value) == null ? void 0 : _element$type.muiName) !== -1;
-}
-;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/isMuiElement.js
-
-/* harmony default export */ const utils_isMuiElement = (isMuiElement);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/formControlClasses.js
-
-
-function getFormControlUtilityClasses(slot) {
-  return generateUtilityClass_generateUtilityClass('MuiFormControl', slot);
-}
-const formControlClasses = generateUtilityClasses('MuiFormControl', ['root', 'marginNone', 'marginNormal', 'marginDense', 'fullWidth', 'disabled']);
-/* harmony default export */ const FormControl_formControlClasses = ((/* unused pure expression or super */ null && (formControlClasses)));
-;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/FormControl.js
-
-
-const FormControl_excluded = ["children", "className", "color", "component", "disabled", "error", "focused", "fullWidth", "hiddenLabel", "margin", "required", "size", "variant"];
-
-
-
-
-
-
-
-
-
-
-
-
-const FormControl_useUtilityClasses = ownerState => {
-  const {
-    classes,
-    margin,
-    fullWidth
-  } = ownerState;
-  const slots = {
-    root: ['root', margin !== 'none' && `margin${utils_capitalize(margin)}`, fullWidth && 'fullWidth']
-  };
-  return composeClasses(slots, getFormControlUtilityClasses, classes);
-};
-const FormControlRoot = styles_styled('div', {
-  name: 'MuiFormControl',
-  slot: 'Root',
-  overridesResolver: ({
-    ownerState
-  }, styles) => {
-    return extends_extends({}, styles.root, styles[`margin${utils_capitalize(ownerState.margin)}`], ownerState.fullWidth && styles.fullWidth);
-  }
-})(({
-  ownerState
-}) => extends_extends({
-  display: 'inline-flex',
-  flexDirection: 'column',
-  position: 'relative',
-  // Reset fieldset default style.
-  minWidth: 0,
-  padding: 0,
-  margin: 0,
-  border: 0,
-  verticalAlign: 'top'
-}, ownerState.margin === 'normal' && {
-  marginTop: 16,
-  marginBottom: 8
-}, ownerState.margin === 'dense' && {
-  marginTop: 8,
-  marginBottom: 4
-}, ownerState.fullWidth && {
-  width: '100%'
-}));
-
-/**
- * Provides context such as filled/focused/error/required for form inputs.
- * Relying on the context provides high flexibility and ensures that the state always stays
- * consistent across the children of the `FormControl`.
- * This context is used by the following components:
- *
- *  - FormLabel
- *  - FormHelperText
- *  - Input
- *  - InputLabel
- *
- * You can find one composition example below and more going to [the demos](/material-ui/react-text-field/#components).
- *
- * ```jsx
- * <FormControl>
- *   <InputLabel htmlFor="my-input">Email address</InputLabel>
- *   <Input id="my-input" aria-describedby="my-helper-text" />
- *   <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
- * </FormControl>
- * ```
- *
- * ⚠️ Only one `InputBase` can be used within a FormControl because it creates visual inconsistencies.
- * For instance, only one input can be focused at the same time, the state shouldn't be shared.
- */
-const FormControl = /*#__PURE__*/react.forwardRef(function FormControl(inProps, ref) {
-  const props = useThemeProps_useThemeProps({
-    props: inProps,
-    name: 'MuiFormControl'
-  });
-  const {
-      children,
-      className,
-      color = 'primary',
-      component = 'div',
-      disabled = false,
-      error = false,
-      focused: visuallyFocused,
-      fullWidth = false,
-      hiddenLabel = false,
-      margin = 'none',
-      required = false,
-      size = 'medium',
-      variant = 'outlined'
-    } = props,
-    other = _objectWithoutPropertiesLoose(props, FormControl_excluded);
-  const ownerState = extends_extends({}, props, {
-    color,
-    component,
-    disabled,
-    error,
-    fullWidth,
-    hiddenLabel,
-    margin,
-    required,
-    size,
-    variant
-  });
-  const classes = FormControl_useUtilityClasses(ownerState);
-  const [adornedStart, setAdornedStart] = react.useState(() => {
-    // We need to iterate through the children and find the Input in order
-    // to fully support server-side rendering.
-    let initialAdornedStart = false;
-    if (children) {
-      react.Children.forEach(children, child => {
-        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
-          return;
-        }
-        const input = utils_isMuiElement(child, ['Select']) ? child.props.input : child;
-        if (input && isAdornedStart(input.props)) {
-          initialAdornedStart = true;
-        }
-      });
-    }
-    return initialAdornedStart;
-  });
-  const [filled, setFilled] = react.useState(() => {
-    // We need to iterate through the children and find the Input in order
-    // to fully support server-side rendering.
-    let initialFilled = false;
-    if (children) {
-      react.Children.forEach(children, child => {
-        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
-          return;
-        }
-        if (isFilled(child.props, true) || isFilled(child.props.inputProps, true)) {
-          initialFilled = true;
-        }
-      });
-    }
-    return initialFilled;
-  });
-  const [focusedState, setFocused] = react.useState(false);
-  if (disabled && focusedState) {
-    setFocused(false);
-  }
-  const focused = visuallyFocused !== undefined && !disabled ? visuallyFocused : focusedState;
-  let registerEffect;
-  if (false) {}
-  const childContext = react.useMemo(() => {
-    return {
-      adornedStart,
-      setAdornedStart,
-      color,
-      disabled,
-      error,
-      filled,
-      focused,
-      fullWidth,
-      hiddenLabel,
-      size,
-      onBlur: () => {
-        setFocused(false);
-      },
-      onEmpty: () => {
-        setFilled(false);
-      },
-      onFilled: () => {
-        setFilled(true);
-      },
-      onFocus: () => {
-        setFocused(true);
-      },
-      registerEffect,
-      required,
-      variant
-    };
-  }, [adornedStart, color, disabled, error, filled, focused, fullWidth, hiddenLabel, registerEffect, required, size, variant]);
-  return /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControlContext.Provider, {
-    value: childContext,
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControlRoot, extends_extends({
-      as: component,
-      ownerState: ownerState,
-      className: clsx_m(classes.root, className),
-      ref: ref
-    }, other, {
-      children: children
-    }))
-  });
-});
- false ? 0 : void 0;
-/* harmony default export */ const FormControl_FormControl = (FormControl);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/ListItemText/ListItemText.js
-
-
-const ListItemText_excluded = ["children", "className", "disableTypography", "inset", "primary", "primaryTypographyProps", "secondary", "secondaryTypographyProps"];
-
-
-
-
-
-
-
-
-
-
-
-const ListItemText_useUtilityClasses = ownerState => {
-  const {
-    classes,
-    inset,
-    primary,
-    secondary,
-    dense
-  } = ownerState;
-  const slots = {
-    root: ['root', inset && 'inset', dense && 'dense', primary && secondary && 'multiline'],
-    primary: ['primary'],
-    secondary: ['secondary']
-  };
-  return composeClasses(slots, getListItemTextUtilityClass, classes);
-};
-const ListItemTextRoot = styles_styled('div', {
-  name: 'MuiListItemText',
-  slot: 'Root',
-  overridesResolver: (props, styles) => {
-    const {
-      ownerState
-    } = props;
-    return [{
-      [`& .${ListItemText_listItemTextClasses.primary}`]: styles.primary
-    }, {
-      [`& .${ListItemText_listItemTextClasses.secondary}`]: styles.secondary
-    }, styles.root, ownerState.inset && styles.inset, ownerState.primary && ownerState.secondary && styles.multiline, ownerState.dense && styles.dense];
-  }
-})(({
-  ownerState
-}) => extends_extends({
-  flex: '1 1 auto',
-  minWidth: 0,
-  marginTop: 4,
-  marginBottom: 4
-}, ownerState.primary && ownerState.secondary && {
-  marginTop: 6,
-  marginBottom: 6
-}, ownerState.inset && {
-  paddingLeft: 56
-}));
-const ListItemText = /*#__PURE__*/react.forwardRef(function ListItemText(inProps, ref) {
-  const props = useThemeProps_useThemeProps({
-    props: inProps,
-    name: 'MuiListItemText'
-  });
-  const {
-      children,
-      className,
-      disableTypography = false,
-      inset = false,
-      primary: primaryProp,
-      primaryTypographyProps,
-      secondary: secondaryProp,
-      secondaryTypographyProps
-    } = props,
-    other = _objectWithoutPropertiesLoose(props, ListItemText_excluded);
-  const {
-    dense
-  } = react.useContext(List_ListContext);
-  let primary = primaryProp != null ? primaryProp : children;
-  let secondary = secondaryProp;
-  const ownerState = extends_extends({}, props, {
-    disableTypography,
-    inset,
-    primary: !!primary,
-    secondary: !!secondary,
-    dense
-  });
-  const classes = ListItemText_useUtilityClasses(ownerState);
-  if (primary != null && primary.type !== Typography_Typography && !disableTypography) {
-    primary = /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, extends_extends({
-      variant: dense ? 'body2' : 'body1',
-      className: classes.primary,
-      component: primaryTypographyProps != null && primaryTypographyProps.variant ? undefined : 'span',
-      display: "block"
-    }, primaryTypographyProps, {
-      children: primary
-    }));
-  }
-  if (secondary != null && secondary.type !== Typography_Typography && !disableTypography) {
-    secondary = /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, extends_extends({
-      variant: "body2",
-      className: classes.secondary,
-      color: "text.secondary",
-      display: "block"
-    }, secondaryTypographyProps, {
-      children: secondary
-    }));
-  }
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ListItemTextRoot, extends_extends({
-    className: clsx_m(classes.root, className),
-    ownerState: ownerState,
-    ref: ref
-  }, other, {
-    children: [primary, secondary]
-  }));
-});
- false ? 0 : void 0;
-/* harmony default export */ const ListItemText_ListItemText = (ListItemText);
-;// CONCATENATED MODULE: ./node_modules/@mui/utils/useControlled/useControlled.js
-'use client';
-
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
-
-function useControlled({
-  controlled,
-  default: defaultProp,
-  name,
-  state = 'value'
-}) {
-  // isControlled is ignored in the hook dependency lists as it should never change.
-  const {
-    current: isControlled
-  } = react.useRef(controlled !== undefined);
-  const [valueState, setValue] = react.useState(defaultProp);
-  const value = isControlled ? controlled : valueState;
-  if (false) {}
-  const setValueIfUncontrolled = react.useCallback(newValue => {
-    if (!isControlled) {
-      setValue(newValue);
-    }
-  }, []);
-  return [value, setValueIfUncontrolled];
-}
-;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useControlled.js
-
-/* harmony default export */ const utils_useControlled = (useControlled);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/internal/switchBaseClasses.js
 
 
@@ -48588,6 +48248,41 @@ const Checkbox = /*#__PURE__*/react.forwardRef(function Checkbox(inProps, ref) {
 });
  false ? 0 : void 0;
 /* harmony default export */ const Checkbox_Checkbox = (Checkbox);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/styledOption.js
+var styledOption_templateObject;
+function styledOption_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+
+
+var styledOption_blue = {
+  100: '#DAECFF',
+  200: '#99CCF3',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  900: '#003A75'
+};
+var styledOption_grey = {
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f'
+};
+var styledOption_StyledOption = esm_styled(Option_Option)(function (_ref) {
+  var theme = _ref.theme;
+  return "\n    font-family: 'Igra Sans';\n    list-style: none;\n    padding: 8px;\n    border-radius: 8px;\n    cursor: pointer;\n    color: #B3B3B3;\n    font-size: 14px;\n    line-height: 14px;\n  \n    &:last-of-type {\n      border-bottom: none;\n    }\n  \n    &.".concat(Option_optionClasses.selected, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.highlighted, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.disabled, " {\n      color: ").concat(theme.palette.mode === 'dark' ? styledOption_grey[700] : styledOption_grey[400], ";\n    }\n  \n    &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n      background-color: none;\n      color: #FFFFFF;\n    }\n    ");
+});
+var styledOption_StyledPopper = esm_styled(Popper_Popper)(styledOption_templateObject || (styledOption_templateObject = styledOption_taggedTemplateLiteral(["\n    z-index: 1400;\n  "])));
+/* harmony default export */ const styledOption = (styledOption_StyledOption);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/index.js
 function modalProductsFilter_typeof(o) { "@babel/helpers - typeof"; return modalProductsFilter_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalProductsFilter_typeof(o); }
 function modalProductsFilter_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalProductsFilter_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalProductsFilter_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalProductsFilter_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -48621,16 +48316,18 @@ function modalProductsFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) retur
 
 
 
-var ITEM_HEIGHT = 48;
-var ITEM_PADDING_TOP = 8;
-var MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
+
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//   PaperProps: {
+//     style: {
+//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+//       width: 250,
+//     },
+//   },
+// };
+
 var ModalFilter = function ModalFilter(_ref) {
   var isOpen = _ref.isOpen,
     value = _ref.value,
@@ -48731,7 +48428,12 @@ var ModalFilter = function ModalFilter(_ref) {
                 width: 300
               },
               children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
-                multiple: false,
+                sx: {
+                  '& .MuiOption-root ': {
+                    padding: 0
+                  }
+                },
+                multiple: true,
                 value: item.steamCurrencyId,
                 onChange: handleChange('steamCurrencyId'),
                 input: /*#__PURE__*/(0,jsx_runtime.jsx)(OutlinedInput_OutlinedInput, {
@@ -48741,19 +48443,47 @@ var ModalFilter = function ModalFilter(_ref) {
                   return selected.map(function (e) {
                     return e.name;
                   }).join(", ");
-                },
-                MenuProps: MenuProps,
+                }
+                // MenuProps={MenuProps}
+                ,
                 options: currencies,
                 customRenderChild: function customRenderChild(curr) {
-                  return /*#__PURE__*/(0,jsx_runtime.jsxs)(MenuItem_MenuItem, {
-                    value: curr,
+                  return /*#__PURE__*/(0,jsx_runtime.jsxs)(styledOption, {
+                    style: {
+                      display: "flex",
+                      flexDirection: "row"
+                    },
+                    value: curr.name,
                     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Checkbox_Checkbox, {
+                      style: {
+                        display: "block",
+                        maxHeight: "14px"
+                      },
+                      disablePadding: true,
+                      size: "small",
+                      className: modalProductsFilter_styles.paddingZero,
+                      sx: {
+                        '& .MuiSvgIcon-root': {
+                          padding: 0,
+                          fontSize: "1em"
+                        }
+                      },
                       checked: item.steamCurrencyId.indexOf(curr.id) > -1
-                    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
-                      primary: curr.name
+                    }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                      style: {
+                        display: "block",
+                        maxHeight: "14px"
+                      },
+                      children: curr.name
                     })]
                   }, curr.id);
                 }
+                // <MenuItem disablePadding className={css.paddingZero} key={curr.id} value={curr}>
+                //   <Checkbox disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0 } }}  checked={item.steamCurrencyId.indexOf(curr.id) > -1} />
+                //   <StyledOption key={curr.id} value={curr.name}>
+                //       {curr.name}
+                //   </StyledOption>
+                // </MenuItem>}
               })
             })
           })
@@ -57845,7 +57575,7 @@ const arrowRight_namespaceObject = __webpack_require__.p + "f2076a772b23a44d6772
 
 //import { state, setActiveMenuLink } from '../../../containers/admin/state';
 
-var menuItem_MenuItem = function MenuItem(_ref) {
+var MenuItem = function MenuItem(_ref) {
   var name = _ref.name,
     icon = _ref.icon,
     subMenu = _ref.subMenu,
@@ -57930,7 +57660,7 @@ var menuItem_MenuItem = function MenuItem(_ref) {
     })]
   });
 };
-/* harmony default export */ const menuItem = (menuItem_MenuItem);
+/* harmony default export */ const menuItem = (MenuItem);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/botStats/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const botStats_styles = ({"wrapper":"styles__wrapper--gq8OH","botStats":"styles__botStats--g9t2W","statItem":"styles__statItem--L3mbt","dot":"styles__dot--jSRKD","name":"styles__name--xp_o3","count":"styles__count--IVnSx"});

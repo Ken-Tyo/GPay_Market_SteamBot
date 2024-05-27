@@ -1,3 +1,7 @@
+
+.css-1km1ehz {
+    padding: 0 0 0 0;
+}
 @import '/wwwroot/Source/containers/admin/library';
 @import '../../../../shared/formItem/styles.scss';
 .content {
@@ -27,4 +31,20 @@
     align-items: center;
     flex: 0 1 123px;
     margin-bottom: 40px;
+}
+
+.currName {
+    padding-left: 0.2em;
+}
+
+.paddingZero {
+    padding: 0 !important;
+}
+
+.MuiOption-root{
+    padding: 0 !important;
+}
+
+.MuiOption-root.css-1v42tcw{
+    padding: 0 !important;
 }

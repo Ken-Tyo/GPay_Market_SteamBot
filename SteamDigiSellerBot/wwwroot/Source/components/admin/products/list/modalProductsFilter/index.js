@@ -15,18 +15,19 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import MUISelect from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import StyledOption from '../../../../shared/select/styledOption'; 
 
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//   PaperProps: {
+//     style: {
+//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+//       width: 250,
+//     },
+//   },
+// };
 
 const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     const initial = {
@@ -132,17 +133,27 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                       <div>
                         <FormControl className={css.formItem} sx={{ m: 1, width: 300 }}>
                           <Select
-                            multiple={false}
+                            sx={{ '& .MuiOption-root ': { padding: 0 } }} 
+                            multiple={true}
                             value={item.steamCurrencyId}
                             onChange={handleChange('steamCurrencyId')}
                             input={<OutlinedInput label="Tag" />}
                             renderValue={(selected) => selected.map(e => e.name).join(", ")}
-                            MenuProps={MenuProps}
+                            // MenuProps={MenuProps}
                             options={currencies}
-                            customRenderChild = {(curr) => <MenuItem key={curr.id} value={curr}>
-                                                      <Checkbox checked={item.steamCurrencyId.indexOf(curr.id) > -1} />
-                                                      <ListItemText  primary={curr.name} />
-                                                    </MenuItem>}
+                            customRenderChild = {(curr) => 
+                                              <StyledOption style={{display: "flex", flexDirection: "row"}} key={curr.id} value={curr.name}>
+                                                    <Checkbox style={{display: "block", maxHeight:"14px"}} disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0, fontSize:"1em" } }}  checked={item.steamCurrencyId.indexOf(curr.id) > -1}>
+                                                      
+                                                    </Checkbox>
+                                                    <span style={{display: "block", maxHeight:"14px"}}>{curr.name}</span>
+                                                </StyledOption>}
+                                                    // <MenuItem disablePadding className={css.paddingZero} key={curr.id} value={curr}>
+                                                    //   <Checkbox disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0 } }}  checked={item.steamCurrencyId.indexOf(curr.id) > -1} />
+                                                    //   <StyledOption key={curr.id} value={curr.name}>
+                                                    //       {curr.name}
+                                                    //   </StyledOption>
+                                                    // </MenuItem>}
                           />
                         </FormControl>
                     </div>

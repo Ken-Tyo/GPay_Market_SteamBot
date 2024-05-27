@@ -159,6 +159,16 @@ const StyledPopper = styled(PopperUnstyled)`
   z-index: 1400;
 `;
 
+const defaultOption = (i) =>{
+        <StyledOption
+            key={i.name}
+            value={i.name}
+            style={{ color: i.color || '#B3B3B3' }}
+          > 
+          {i.name}
+          </StyledOption>
+}
+
 export default function MultipleSelectPlaceholder({
   props,
   customRenderChild = null,
@@ -187,19 +197,13 @@ export default function MultipleSelectPlaceholder({
 
     return <SelectUnstyled {...props} ref={ref} slots={slots} />;
   });
-  const renderItem = customRenderChild == null?(i) => i.name:(i) => customRenderChild(i);
+  const renderItem = customRenderChild == null?defaultOption:customRenderChild;
   return (
     <div className={css.wrapper} style={{ width: width }}>
       <CustomSelect {...props} defaultValue={defaultValue} onChange={handleChange} multiple={multiple}>
         
         {(options || []).map((i) => (
-          <StyledOption
-            key={i.name}
-            value={i.name}
-            style={{ color: i.color || '#B3B3B3' }}
-          > 
-          {renderItem(i)}
-          </StyledOption>
+          renderItem(i)
         ))}
 
       </CustomSelect>
