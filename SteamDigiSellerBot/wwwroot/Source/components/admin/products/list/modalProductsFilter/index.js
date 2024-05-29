@@ -74,7 +74,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           if(val != null){
             //var newVal = val.targer.value;
             //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
-            debugger;
+            //debugger;
             val = val.target.value;
         }
         else{
