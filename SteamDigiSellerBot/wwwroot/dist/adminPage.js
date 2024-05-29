@@ -25197,6 +25197,42 @@ if (true) {
 
 /***/ }),
 
+/***/ 2799:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+var __webpack_unused_export__;
+/**
+ * @license React
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var b=Symbol.for("react.element"),c=Symbol.for("react.portal"),d=Symbol.for("react.fragment"),e=Symbol.for("react.strict_mode"),f=Symbol.for("react.profiler"),g=Symbol.for("react.provider"),h=Symbol.for("react.context"),k=Symbol.for("react.server_context"),l=Symbol.for("react.forward_ref"),m=Symbol.for("react.suspense"),n=Symbol.for("react.suspense_list"),p=Symbol.for("react.memo"),q=Symbol.for("react.lazy"),t=Symbol.for("react.offscreen"),u;u=Symbol.for("react.module.reference");
+function v(a){if("object"===typeof a&&null!==a){var r=a.$$typeof;switch(r){case b:switch(a=a.type,a){case d:case f:case e:case m:case n:return a;default:switch(a=a&&a.$$typeof,a){case k:case h:case l:case q:case p:case g:return a;default:return r}}case c:return r}}}__webpack_unused_export__=h;__webpack_unused_export__=g;__webpack_unused_export__=b;__webpack_unused_export__=l;__webpack_unused_export__=d;__webpack_unused_export__=q;__webpack_unused_export__=p;__webpack_unused_export__=c;__webpack_unused_export__=f;__webpack_unused_export__=e;__webpack_unused_export__=m;
+__webpack_unused_export__=n;__webpack_unused_export__=function(){return!1};__webpack_unused_export__=function(){return!1};__webpack_unused_export__=function(a){return v(a)===h};__webpack_unused_export__=function(a){return v(a)===g};__webpack_unused_export__=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===b};__webpack_unused_export__=function(a){return v(a)===l};__webpack_unused_export__=function(a){return v(a)===d};__webpack_unused_export__=function(a){return v(a)===q};__webpack_unused_export__=function(a){return v(a)===p};
+__webpack_unused_export__=function(a){return v(a)===c};__webpack_unused_export__=function(a){return v(a)===f};__webpack_unused_export__=function(a){return v(a)===e};__webpack_unused_export__=function(a){return v(a)===m};__webpack_unused_export__=function(a){return v(a)===n};
+__webpack_unused_export__=function(a){return"string"===typeof a||"function"===typeof a||a===d||a===f||a===e||a===m||a===n||a===t||"object"===typeof a&&null!==a&&(a.$$typeof===q||a.$$typeof===p||a.$$typeof===g||a.$$typeof===h||a.$$typeof===l||a.$$typeof===u||void 0!==a.getModuleId)?!0:!1};__webpack_unused_export__=v;
+
+
+/***/ }),
+
+/***/ 4363:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (true) {
+  /* unused reexport */ __webpack_require__(2799);
+} else {}
+
+
+/***/ }),
+
 /***/ 1020:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -30304,7 +30340,7 @@ tags.forEach(function (tagName) {
 
 /* eslint-disable no-underscore-dangle */
 
-function styled(tag, options) {
+function styled_engine_styled(tag, options) {
   const stylesFactory = newStyled(tag, options);
   if (false) {}
   return stylesFactory;
@@ -31693,7 +31729,7 @@ function isStringTag(tag) {
 }
 
 // Update /system/styled/#api in case if this changes
-function createStyled_shouldForwardProp(prop) {
+function shouldForwardProp(prop) {
   return prop !== 'ownerState' && prop !== 'theme' && prop !== 'sx' && prop !== 'as';
 }
 const systemDefaultTheme = createTheme_createTheme();
@@ -31765,8 +31801,8 @@ function createStyled_createStyled(input = {}) {
   const {
     themeId,
     defaultTheme = systemDefaultTheme,
-    rootShouldForwardProp = createStyled_shouldForwardProp,
-    slotShouldForwardProp = createStyled_shouldForwardProp
+    rootShouldForwardProp = shouldForwardProp,
+    slotShouldForwardProp = shouldForwardProp
   } = input;
   const systemSx = props => {
     return styleFunctionSx_styleFunctionSx(extends_extends({}, props, {
@@ -31799,7 +31835,7 @@ function createStyled_createStyled(input = {}) {
     const skipSx = inputSkipSx || false;
     let label;
     if (false) {}
-    let shouldForwardPropOption = createStyled_shouldForwardProp;
+    let shouldForwardPropOption = shouldForwardProp;
 
     // TODO v6: remove `Root` in the next major release
     // For more details: https://github.com/mui/material-ui/pull/37908
@@ -31812,7 +31848,7 @@ function createStyled_createStyled(input = {}) {
       // for string (html) tag, preserve the behavior in emotion & styled-components.
       shouldForwardPropOption = undefined;
     }
-    const defaultStyledResolver = styled(tag, extends_extends({
+    const defaultStyledResolver = styled_engine_styled(tag, extends_extends({
       shouldForwardProp: shouldForwardPropOption,
       label
     }, options));
@@ -32897,8 +32933,8 @@ const defaultTheme = styles_createTheme();
 
 
 
-const rootShouldForwardProp = prop => createStyled_shouldForwardProp(prop) && prop !== 'classes';
-const slotShouldForwardProp = (/* unused pure expression or super */ null && (shouldForwardProp));
+const rootShouldForwardProp = prop => shouldForwardProp(prop) && prop !== 'classes';
+const slotShouldForwardProp = shouldForwardProp;
 const styled_styled = createStyled_createStyled({
   themeId: styles_identifier,
   defaultTheme: styles_defaultTheme,
@@ -45430,6 +45466,186 @@ var textbox2_TextBox = function TextBox(_ref) {
   });
 };
 /* harmony default export */ const textbox2 = (textbox2_TextBox);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/styledOption.js
+var styledOption_templateObject;
+function styledOption_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+
+
+var styledOption_blue = {
+  100: '#DAECFF',
+  200: '#99CCF3',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  900: '#003A75'
+};
+var styledOption_grey = {
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f'
+};
+var styledOption_StyledOption = esm_styled(Option_Option)(function (_ref) {
+  var theme = _ref.theme;
+  return "\n    font-family: 'Igra Sans';\n    list-style: none;\n    padding: 8px;\n    border-radius: 8px;\n    cursor: pointer;\n    color: #B3B3B3;\n    font-size: 14px;\n    line-height: 14px;\n  \n    &:last-of-type {\n      border-bottom: none;\n    }\n  \n    &.".concat(Option_optionClasses.selected, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.highlighted, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.disabled, " {\n      color: ").concat(theme.palette.mode === 'dark' ? styledOption_grey[700] : styledOption_grey[400], ";\n    }\n  \n    &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n      background-color: none;\n      color: #FFFFFF;\n    }\n    ");
+});
+var styledOption_StyledPopper = esm_styled(Popper_Popper)(styledOption_templateObject || (styledOption_templateObject = styledOption_taggedTemplateLiteral(["\n    z-index: 1400;\n  "])));
+/* harmony default export */ const styledOption = ((/* unused pure expression or super */ null && (styledOption_StyledOption)));
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/multiselect/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const multiselect_styles = ({"wrapper":"styles__wrapper--j01it","hint":"styles__hint--ko188"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/multiselect/index.js
+function multiselect_typeof(o) { "@babel/helpers - typeof"; return multiselect_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, multiselect_typeof(o); }
+var multiselect_templateObject;
+function multiselect_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function multiselect_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? multiselect_ownKeys(Object(t), !0).forEach(function (r) { multiselect_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : multiselect_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function multiselect_defineProperty(obj, key, value) { key = multiselect_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function multiselect_toPropertyKey(t) { var i = multiselect_toPrimitive(t, "string"); return "symbol" == multiselect_typeof(i) ? i : i + ""; }
+function multiselect_toPrimitive(t, r) { if ("object" != multiselect_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != multiselect_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function multiselect_slicedToArray(arr, i) { return multiselect_arrayWithHoles(arr) || multiselect_iterableToArrayLimit(arr, i) || multiselect_unsupportedIterableToArray(arr, i) || multiselect_nonIterableRest(); }
+function multiselect_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function multiselect_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return multiselect_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return multiselect_arrayLikeToArray(o, minLen); }
+function multiselect_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function multiselect_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function multiselect_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function multiselect_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+
+
+
+
+
+var multiselect_blue = {
+  100: '#DAECFF',
+  200: '#99CCF3',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  900: '#003A75'
+};
+var multiselect_grey = {
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f'
+};
+var multiselect_CreateStyledButton = function CreateStyledButton(width, color) {
+  return styled('button')(function (_ref) {
+    var theme = _ref.theme;
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ").concat(color || '#FFFFFF', ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(selectUnstyledClasses.focusVisible, " {\n    border-color: ").concat(multiselect_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === 'dark' ? multiselect_blue[500] : multiselect_blue[200], ";\n  }\n\n  &.").concat(selectUnstyledClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n      color: #FFFFFF;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n    color: #FFFFFF;\n  }\n  ");
+  });
+};
+var multiselect_CreateStyledListbox = function CreateStyledListbox(width, height) {
+  return styled('ul')(function (_ref2) {
+    var theme = _ref2.theme;
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === 'dark' ? multiselect_grey[300] : multiselect_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
+  });
+};
+var multiselect_StyledOption = esm_styled(Option_Option)(function (_ref3) {
+  var theme = _ref3.theme;
+  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? multiselect_grey[700] : multiselect_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
+});
+var multiselect_StyledPopper = esm_styled(Popper_Popper)(multiselect_templateObject || (multiselect_templateObject = multiselect_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
+var multiselect_defaultOption = function defaultOption(i) {
+  /*#__PURE__*/_jsx(multiselect_StyledOption, {
+    value: i,
+    style: {
+      color: i.color || '#B3B3B3'
+    },
+    children: i.name
+  }, i.name);
+};
+function multiselect_MultipleSelectPlaceholder(_ref4) {
+  var props = _ref4.props,
+    options = _ref4.options,
+    _ref4$multiple = _ref4.multiple,
+    multiple = _ref4$multiple === void 0 ? false : _ref4$multiple,
+    defaultValue = _ref4.defaultValue,
+    onChange = _ref4.onChange,
+    hint = _ref4.hint,
+    width = _ref4.width,
+    height = _ref4.height,
+    value = _ref4.value;
+  var _useState = useState('#FFFFFF'),
+    _useState2 = multiselect_slicedToArray(_useState, 2),
+    rootColor = _useState2[0],
+    setRootColor = _useState2[1];
+  var CustomSelect = /*#__PURE__*/React.forwardRef(function CustomSelect(props, ref) {
+    var slots = multiselect_objectSpread({
+      root: multiselect_CreateStyledButton(width, rootColor),
+      listbox: multiselect_CreateStyledListbox(width, height),
+      popper: multiselect_StyledPopper
+    }, props.slots);
+    return /*#__PURE__*/_jsx(SelectUnstyled, multiselect_objectSpread(multiselect_objectSpread({}, props), {}, {
+      ref: ref,
+      slots: slots
+    }));
+  });
+  return /*#__PURE__*/_jsxs("div", {
+    className: css.wrapper,
+    style: {
+      width: width
+    },
+    children: [/*#__PURE__*/_jsx(CustomSelect, multiselect_objectSpread(multiselect_objectSpread({}, props), {}, {
+      defaultValue: defaultValue,
+      onChange: onChange,
+      multiple: multiple,
+      children: (options || []).map(function (curr) {
+        return /*#__PURE__*/_jsxs(multiselect_StyledOption, {
+          style: {
+            display: "flex",
+            flexDirection: "row"
+          },
+          value: curr,
+          children: [/*#__PURE__*/_jsx(Checkbox, {
+            style: {
+              display: "block",
+              maxHeight: "14px"
+            },
+            disablePadding: true,
+            size: "small",
+            className: css.paddingZero,
+            sx: {
+              '& .MuiSvgIcon-root': {
+                padding: 0,
+                fontSize: "1em"
+              }
+            },
+            checked: value.indexOf(curr) > -1
+          }), /*#__PURE__*/_jsx("span", {
+            style: {
+              display: "block",
+              maxHeight: "14px"
+            },
+            children: curr.name
+          })]
+        }, curr.id);
+      })
+    })), hint && /*#__PURE__*/_jsx("div", {
+      className: css.hint,
+      children: hint
+    })]
+  });
+}
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/OutlinedInput/NotchedOutline.js
 
 
@@ -46545,30 +46761,18 @@ const OutlinedInput = /*#__PURE__*/react.forwardRef(function OutlinedInput(inPro
  false ? 0 : void 0;
 OutlinedInput.muiName = 'Input';
 /* harmony default export */ const OutlinedInput_OutlinedInput = (OutlinedInput);
-;// CONCATENATED MODULE: ./node_modules/@mui/utils/isMuiElement/isMuiElement.js
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormLabel/formLabelClasses.js
 
-function isMuiElement(element, muiNames) {
-  var _muiName, _element$type;
-  return /*#__PURE__*/react.isValidElement(element) && muiNames.indexOf( // For server components `muiName` is avaialble in element.type._payload.value.muiName
-  // relevant info - https://github.com/facebook/react/blob/2807d781a08db8e9873687fccc25c0f12b4fb3d4/packages/react/src/ReactLazy.js#L45
-  // eslint-disable-next-line no-underscore-dangle
-  (_muiName = element.type.muiName) != null ? _muiName : (_element$type = element.type) == null || (_element$type = _element$type._payload) == null || (_element$type = _element$type.value) == null ? void 0 : _element$type.muiName) !== -1;
+
+function getFormLabelUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiFormLabel', slot);
 }
-;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/isMuiElement.js
-
-/* harmony default export */ const utils_isMuiElement = (isMuiElement);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/formControlClasses.js
-
-
-function getFormControlUtilityClasses(slot) {
-  return generateUtilityClass_generateUtilityClass('MuiFormControl', slot);
-}
-const formControlClasses = generateUtilityClasses('MuiFormControl', ['root', 'marginNone', 'marginNormal', 'marginDense', 'fullWidth', 'disabled']);
-/* harmony default export */ const FormControl_formControlClasses = ((/* unused pure expression or super */ null && (formControlClasses)));
-;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/FormControl.js
+const formLabelClasses = generateUtilityClasses('MuiFormLabel', ['root', 'colorSecondary', 'focused', 'disabled', 'error', 'filled', 'required', 'asterisk']);
+/* harmony default export */ const FormLabel_formLabelClasses = (formLabelClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormLabel/FormLabel.js
 
 
-const FormControl_excluded = ["children", "className", "color", "component", "disabled", "error", "focused", "fullWidth", "hiddenLabel", "margin", "required", "size", "variant"];
+const FormLabel_excluded = ["children", "className", "color", "component", "disabled", "error", "filled", "focused", "required"];
 
 
 
@@ -46580,217 +46784,267 @@ const FormControl_excluded = ["children", "className", "color", "component", "di
 
 
 
-
-const FormControl_useUtilityClasses = ownerState => {
+const FormLabel_useUtilityClasses = ownerState => {
   const {
     classes,
-    margin,
-    fullWidth
+    color,
+    focused,
+    disabled,
+    error,
+    filled,
+    required
   } = ownerState;
   const slots = {
-    root: ['root', margin !== 'none' && `margin${utils_capitalize(margin)}`, fullWidth && 'fullWidth']
+    root: ['root', `color${utils_capitalize(color)}`, disabled && 'disabled', error && 'error', filled && 'filled', focused && 'focused', required && 'required'],
+    asterisk: ['asterisk', error && 'error']
   };
-  return composeClasses(slots, getFormControlUtilityClasses, classes);
+  return composeClasses(slots, getFormLabelUtilityClasses, classes);
 };
-const FormControlRoot = styles_styled('div', {
-  name: 'MuiFormControl',
+const FormLabelRoot = styles_styled('label', {
+  name: 'MuiFormLabel',
   slot: 'Root',
   overridesResolver: ({
     ownerState
   }, styles) => {
-    return extends_extends({}, styles.root, styles[`margin${utils_capitalize(ownerState.margin)}`], ownerState.fullWidth && styles.fullWidth);
+    return extends_extends({}, styles.root, ownerState.color === 'secondary' && styles.colorSecondary, ownerState.filled && styles.filled);
   }
 })(({
+  theme,
   ownerState
 }) => extends_extends({
-  display: 'inline-flex',
-  flexDirection: 'column',
-  position: 'relative',
-  // Reset fieldset default style.
-  minWidth: 0,
+  color: (theme.vars || theme).palette.text.secondary
+}, theme.typography.body1, {
+  lineHeight: '1.4375em',
   padding: 0,
-  margin: 0,
-  border: 0,
-  verticalAlign: 'top'
-}, ownerState.margin === 'normal' && {
-  marginTop: 16,
-  marginBottom: 8
-}, ownerState.margin === 'dense' && {
-  marginTop: 8,
-  marginBottom: 4
-}, ownerState.fullWidth && {
-  width: '100%'
+  position: 'relative',
+  [`&.${FormLabel_formLabelClasses.focused}`]: {
+    color: (theme.vars || theme).palette[ownerState.color].main
+  },
+  [`&.${FormLabel_formLabelClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.text.disabled
+  },
+  [`&.${FormLabel_formLabelClasses.error}`]: {
+    color: (theme.vars || theme).palette.error.main
+  }
 }));
-
-/**
- * Provides context such as filled/focused/error/required for form inputs.
- * Relying on the context provides high flexibility and ensures that the state always stays
- * consistent across the children of the `FormControl`.
- * This context is used by the following components:
- *
- *  - FormLabel
- *  - FormHelperText
- *  - Input
- *  - InputLabel
- *
- * You can find one composition example below and more going to [the demos](/material-ui/react-text-field/#components).
- *
- * ```jsx
- * <FormControl>
- *   <InputLabel htmlFor="my-input">Email address</InputLabel>
- *   <Input id="my-input" aria-describedby="my-helper-text" />
- *   <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
- * </FormControl>
- * ```
- *
- * ⚠️ Only one `InputBase` can be used within a FormControl because it creates visual inconsistencies.
- * For instance, only one input can be focused at the same time, the state shouldn't be shared.
- */
-const FormControl = /*#__PURE__*/react.forwardRef(function FormControl(inProps, ref) {
+const AsteriskComponent = styles_styled('span', {
+  name: 'MuiFormLabel',
+  slot: 'Asterisk',
+  overridesResolver: (props, styles) => styles.asterisk
+})(({
+  theme
+}) => ({
+  [`&.${FormLabel_formLabelClasses.error}`]: {
+    color: (theme.vars || theme).palette.error.main
+  }
+}));
+const FormLabel = /*#__PURE__*/react.forwardRef(function FormLabel(inProps, ref) {
   const props = useThemeProps_useThemeProps({
     props: inProps,
-    name: 'MuiFormControl'
+    name: 'MuiFormLabel'
   });
   const {
       children,
       className,
-      color = 'primary',
-      component = 'div',
-      disabled = false,
-      error = false,
-      focused: visuallyFocused,
-      fullWidth = false,
-      hiddenLabel = false,
-      margin = 'none',
-      required = false,
-      size = 'medium',
-      variant = 'outlined'
+      component = 'label'
     } = props,
-    other = _objectWithoutPropertiesLoose(props, FormControl_excluded);
+    other = _objectWithoutPropertiesLoose(props, FormLabel_excluded);
+  const muiFormControl = useFormControl();
+  const fcs = formControlState({
+    props,
+    muiFormControl,
+    states: ['color', 'required', 'focused', 'disabled', 'error', 'filled']
+  });
   const ownerState = extends_extends({}, props, {
-    color,
+    color: fcs.color || 'primary',
     component,
-    disabled,
-    error,
-    fullWidth,
-    hiddenLabel,
-    margin,
-    required,
-    size,
-    variant
+    disabled: fcs.disabled,
+    error: fcs.error,
+    filled: fcs.filled,
+    focused: fcs.focused,
+    required: fcs.required
   });
-  const classes = FormControl_useUtilityClasses(ownerState);
-  const [adornedStart, setAdornedStart] = react.useState(() => {
-    // We need to iterate through the children and find the Input in order
-    // to fully support server-side rendering.
-    let initialAdornedStart = false;
-    if (children) {
-      react.Children.forEach(children, child => {
-        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
-          return;
-        }
-        const input = utils_isMuiElement(child, ['Select']) ? child.props.input : child;
-        if (input && isAdornedStart(input.props)) {
-          initialAdornedStart = true;
-        }
-      });
-    }
-    return initialAdornedStart;
-  });
-  const [filled, setFilled] = react.useState(() => {
-    // We need to iterate through the children and find the Input in order
-    // to fully support server-side rendering.
-    let initialFilled = false;
-    if (children) {
-      react.Children.forEach(children, child => {
-        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
-          return;
-        }
-        if (isFilled(child.props, true) || isFilled(child.props.inputProps, true)) {
-          initialFilled = true;
-        }
-      });
-    }
-    return initialFilled;
-  });
-  const [focusedState, setFocused] = react.useState(false);
-  if (disabled && focusedState) {
-    setFocused(false);
-  }
-  const focused = visuallyFocused !== undefined && !disabled ? visuallyFocused : focusedState;
-  let registerEffect;
-  if (false) {}
-  const childContext = react.useMemo(() => {
-    return {
-      adornedStart,
-      setAdornedStart,
-      color,
-      disabled,
-      error,
-      filled,
-      focused,
-      fullWidth,
-      hiddenLabel,
-      size,
-      onBlur: () => {
-        setFocused(false);
-      },
-      onEmpty: () => {
-        setFilled(false);
-      },
-      onFilled: () => {
-        setFilled(true);
-      },
-      onFocus: () => {
-        setFocused(true);
-      },
-      registerEffect,
-      required,
-      variant
-    };
-  }, [adornedStart, color, disabled, error, filled, focused, fullWidth, hiddenLabel, registerEffect, required, size, variant]);
-  return /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControlContext.Provider, {
-    value: childContext,
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControlRoot, extends_extends({
-      as: component,
+  const classes = FormLabel_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(FormLabelRoot, extends_extends({
+    as: component,
+    ownerState: ownerState,
+    className: clsx_m(classes.root, className),
+    ref: ref
+  }, other, {
+    children: [children, fcs.required && /*#__PURE__*/(0,jsx_runtime.jsxs)(AsteriskComponent, {
       ownerState: ownerState,
-      className: clsx_m(classes.root, className),
-      ref: ref
-    }, other, {
-      children: children
-    }))
-  });
+      "aria-hidden": true,
+      className: classes.asterisk,
+      children: ["\u2009", '*']
+    })]
+  }));
 });
  false ? 0 : void 0;
-/* harmony default export */ const FormControl_FormControl = (FormControl);
-;// CONCATENATED MODULE: ./node_modules/@mui/utils/useControlled/useControlled.js
-'use client';
+/* harmony default export */ const FormLabel_FormLabel = (FormLabel);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/InputLabel/inputLabelClasses.js
 
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-function useControlled({
-  controlled,
-  default: defaultProp,
-  name,
-  state = 'value'
-}) {
-  // isControlled is ignored in the hook dependency lists as it should never change.
-  const {
-    current: isControlled
-  } = react.useRef(controlled !== undefined);
-  const [valueState, setValue] = react.useState(defaultProp);
-  const value = isControlled ? controlled : valueState;
-  if (false) {}
-  const setValueIfUncontrolled = react.useCallback(newValue => {
-    if (!isControlled) {
-      setValue(newValue);
-    }
-  }, []);
-  return [value, setValueIfUncontrolled];
+function getInputLabelUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiInputLabel', slot);
 }
-;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useControlled.js
+const inputLabelClasses = generateUtilityClasses('MuiInputLabel', ['root', 'focused', 'disabled', 'error', 'required', 'asterisk', 'formControl', 'sizeSmall', 'shrink', 'animated', 'standard', 'filled', 'outlined']);
+/* harmony default export */ const InputLabel_inputLabelClasses = ((/* unused pure expression or super */ null && (inputLabelClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/InputLabel/InputLabel.js
 
-/* harmony default export */ const utils_useControlled = (useControlled);
+
+const InputLabel_excluded = ["disableAnimation", "margin", "shrink", "variant", "className"];
+
+
+
+
+
+
+
+
+
+
+
+const InputLabel_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    formControl,
+    size,
+    shrink,
+    disableAnimation,
+    variant,
+    required
+  } = ownerState;
+  const slots = {
+    root: ['root', formControl && 'formControl', !disableAnimation && 'animated', shrink && 'shrink', size === 'small' && 'sizeSmall', variant],
+    asterisk: [required && 'asterisk']
+  };
+  const composedClasses = composeClasses(slots, getInputLabelUtilityClasses, classes);
+  return extends_extends({}, classes, composedClasses);
+};
+const InputLabelRoot = styles_styled(FormLabel_FormLabel, {
+  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
+  name: 'MuiInputLabel',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${FormLabel_formLabelClasses.asterisk}`]: styles.asterisk
+    }, styles.root, ownerState.formControl && styles.formControl, ownerState.size === 'small' && styles.sizeSmall, ownerState.shrink && styles.shrink, !ownerState.disableAnimation && styles.animated, styles[ownerState.variant]];
+  }
+})(({
+  theme,
+  ownerState
+}) => extends_extends({
+  display: 'block',
+  transformOrigin: 'top left',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '100%'
+}, ownerState.formControl && {
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  // slight alteration to spec spacing to match visual spec result
+  transform: 'translate(0, 20px) scale(1)'
+}, ownerState.size === 'small' && {
+  // Compensation for the `Input.inputSizeSmall` style.
+  transform: 'translate(0, 17px) scale(1)'
+}, ownerState.shrink && {
+  transform: 'translate(0, -1.5px) scale(0.75)',
+  transformOrigin: 'top left',
+  maxWidth: '133%'
+}, !ownerState.disableAnimation && {
+  transition: theme.transitions.create(['color', 'transform', 'max-width'], {
+    duration: theme.transitions.duration.shorter,
+    easing: theme.transitions.easing.easeOut
+  })
+}, ownerState.variant === 'filled' && extends_extends({
+  // Chrome's autofill feature gives the input field a yellow background.
+  // Since the input field is behind the label in the HTML tree,
+  // the input field is drawn last and hides the label with an opaque background color.
+  // zIndex: 1 will raise the label above opaque background-colors of input.
+  zIndex: 1,
+  pointerEvents: 'none',
+  transform: 'translate(12px, 16px) scale(1)',
+  maxWidth: 'calc(100% - 24px)'
+}, ownerState.size === 'small' && {
+  transform: 'translate(12px, 13px) scale(1)'
+}, ownerState.shrink && extends_extends({
+  userSelect: 'none',
+  pointerEvents: 'auto',
+  transform: 'translate(12px, 7px) scale(0.75)',
+  maxWidth: 'calc(133% - 24px)'
+}, ownerState.size === 'small' && {
+  transform: 'translate(12px, 4px) scale(0.75)'
+})), ownerState.variant === 'outlined' && extends_extends({
+  // see comment above on filled.zIndex
+  zIndex: 1,
+  pointerEvents: 'none',
+  transform: 'translate(14px, 16px) scale(1)',
+  maxWidth: 'calc(100% - 24px)'
+}, ownerState.size === 'small' && {
+  transform: 'translate(14px, 9px) scale(1)'
+}, ownerState.shrink && {
+  userSelect: 'none',
+  pointerEvents: 'auto',
+  // Theoretically, we should have (8+5)*2/0.75 = 34px
+  // but it feels a better when it bleeds a bit on the left, so 32px.
+  maxWidth: 'calc(133% - 32px)',
+  transform: 'translate(14px, -9px) scale(0.75)'
+})));
+const InputLabel = /*#__PURE__*/react.forwardRef(function InputLabel(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    name: 'MuiInputLabel',
+    props: inProps
+  });
+  const {
+      disableAnimation = false,
+      shrink: shrinkProp,
+      className
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, InputLabel_excluded);
+  const muiFormControl = useFormControl();
+  let shrink = shrinkProp;
+  if (typeof shrink === 'undefined' && muiFormControl) {
+    shrink = muiFormControl.filled || muiFormControl.focused || muiFormControl.adornedStart;
+  }
+  const fcs = formControlState({
+    props,
+    muiFormControl,
+    states: ['size', 'variant', 'required']
+  });
+  const ownerState = extends_extends({}, props, {
+    disableAnimation,
+    formControl: muiFormControl,
+    shrink,
+    size: fcs.size,
+    variant: fcs.variant,
+    required: fcs.required
+  });
+  const classes = InputLabel_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(InputLabelRoot, extends_extends({
+    "data-shrink": shrink,
+    ownerState: ownerState,
+    ref: ref,
+    className: clsx_m(classes.root, className)
+  }, other, {
+    classes: classes
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const InputLabel_InputLabel = (InputLabel);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/List/ListContext.js
+
+
+/**
+ * @ignore - internal component.
+ */
+const ListContext_ListContext = /*#__PURE__*/react.createContext({});
+if (false) {}
+/* harmony default export */ const List_ListContext = (ListContext_ListContext);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useEventCallback.js
 
 /* harmony default export */ const utils_useEventCallback = (useEventCallback_useEventCallback);
@@ -47780,6 +48034,2460 @@ const ButtonBase = /*#__PURE__*/react.forwardRef(function ButtonBase(inProps, re
 });
  false ? 0 : void 0;
 /* harmony default export */ const ButtonBase_ButtonBase = (ButtonBase);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Divider/dividerClasses.js
+
+
+function getDividerUtilityClass(slot) {
+  return generateUtilityClass('MuiDivider', slot);
+}
+const dividerClasses = generateUtilityClasses('MuiDivider', ['root', 'absolute', 'fullWidth', 'inset', 'middle', 'flexItem', 'light', 'vertical', 'withChildren', 'withChildrenVertical', 'textAlignRight', 'textAlignLeft', 'wrapper', 'wrapperVertical']);
+/* harmony default export */ const Divider_dividerClasses = (dividerClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/ListItemIcon/listItemIconClasses.js
+
+
+function getListItemIconUtilityClass(slot) {
+  return generateUtilityClass('MuiListItemIcon', slot);
+}
+const listItemIconClasses = generateUtilityClasses('MuiListItemIcon', ['root', 'alignItemsFlexStart']);
+/* harmony default export */ const ListItemIcon_listItemIconClasses = (listItemIconClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/ListItemText/listItemTextClasses.js
+
+
+function getListItemTextUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiListItemText', slot);
+}
+const listItemTextClasses = generateUtilityClasses('MuiListItemText', ['root', 'multiline', 'dense', 'inset', 'primary', 'secondary']);
+/* harmony default export */ const ListItemText_listItemTextClasses = (listItemTextClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/MenuItem/menuItemClasses.js
+
+
+function getMenuItemUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiMenuItem', slot);
+}
+const menuItemClasses = generateUtilityClasses('MuiMenuItem', ['root', 'focusVisible', 'dense', 'disabled', 'divider', 'gutters', 'selected']);
+/* harmony default export */ const MenuItem_menuItemClasses = (menuItemClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/MenuItem/MenuItem.js
+
+
+const MenuItem_excluded = ["autoFocus", "component", "dense", "divider", "disableGutters", "focusVisibleClassName", "role", "tabIndex", "className"];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const overridesResolver = (props, styles) => {
+  const {
+    ownerState
+  } = props;
+  return [styles.root, ownerState.dense && styles.dense, ownerState.divider && styles.divider, !ownerState.disableGutters && styles.gutters];
+};
+const MenuItem_useUtilityClasses = ownerState => {
+  const {
+    disabled,
+    dense,
+    divider,
+    disableGutters,
+    selected,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ['root', dense && 'dense', disabled && 'disabled', !disableGutters && 'gutters', divider && 'divider', selected && 'selected']
+  };
+  const composedClasses = composeClasses(slots, getMenuItemUtilityClass, classes);
+  return extends_extends({}, classes, composedClasses);
+};
+const MenuItemRoot = styles_styled(ButtonBase_ButtonBase, {
+  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
+  name: 'MuiMenuItem',
+  slot: 'Root',
+  overridesResolver
+})(({
+  theme,
+  ownerState
+}) => extends_extends({}, theme.typography.body1, {
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  position: 'relative',
+  textDecoration: 'none',
+  minHeight: 48,
+  paddingTop: 6,
+  paddingBottom: 6,
+  boxSizing: 'border-box',
+  whiteSpace: 'nowrap'
+}, !ownerState.disableGutters && {
+  paddingLeft: 16,
+  paddingRight: 16
+}, ownerState.divider && {
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  backgroundClip: 'padding-box'
+}, {
+  '&:hover': {
+    textDecoration: 'none',
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+    // Reset on touch devices, it doesn't add specificity
+    '@media (hover: none)': {
+      backgroundColor: 'transparent'
+    }
+  },
+  [`&.${MenuItem_menuItemClasses.selected}`]: {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    [`&.${MenuItem_menuItemClasses.focusVisible}`]: {
+      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+    }
+  },
+  [`&.${MenuItem_menuItemClasses.selected}:hover`]: {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity),
+    // Reset on touch devices, it doesn't add specificity
+    '@media (hover: none)': {
+      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
+    }
+  },
+  [`&.${MenuItem_menuItemClasses.focusVisible}`]: {
+    backgroundColor: (theme.vars || theme).palette.action.focus
+  },
+  [`&.${MenuItem_menuItemClasses.disabled}`]: {
+    opacity: (theme.vars || theme).palette.action.disabledOpacity
+  },
+  [`& + .${Divider_dividerClasses.root}`]: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  [`& + .${Divider_dividerClasses.inset}`]: {
+    marginLeft: 52
+  },
+  [`& .${ListItemText_listItemTextClasses.root}`]: {
+    marginTop: 0,
+    marginBottom: 0
+  },
+  [`& .${ListItemText_listItemTextClasses.inset}`]: {
+    paddingLeft: 36
+  },
+  [`& .${ListItemIcon_listItemIconClasses.root}`]: {
+    minWidth: 36
+  }
+}, !ownerState.dense && {
+  [theme.breakpoints.up('sm')]: {
+    minHeight: 'auto'
+  }
+}, ownerState.dense && extends_extends({
+  minHeight: 32,
+  // https://m2.material.io/components/menus#specs > Dense
+  paddingTop: 4,
+  paddingBottom: 4
+}, theme.typography.body2, {
+  [`& .${ListItemIcon_listItemIconClasses.root} svg`]: {
+    fontSize: '1.25rem'
+  }
+})));
+const MenuItem = /*#__PURE__*/react.forwardRef(function MenuItem(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiMenuItem'
+  });
+  const {
+      autoFocus = false,
+      component = 'li',
+      dense = false,
+      divider = false,
+      disableGutters = false,
+      focusVisibleClassName,
+      role = 'menuitem',
+      tabIndex: tabIndexProp,
+      className
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, MenuItem_excluded);
+  const context = react.useContext(List_ListContext);
+  const childContext = react.useMemo(() => ({
+    dense: dense || context.dense || false,
+    disableGutters
+  }), [context.dense, dense, disableGutters]);
+  const menuItemRef = react.useRef(null);
+  utils_useEnhancedEffect(() => {
+    if (autoFocus) {
+      if (menuItemRef.current) {
+        menuItemRef.current.focus();
+      } else if (false) {}
+    }
+  }, [autoFocus]);
+  const ownerState = extends_extends({}, props, {
+    dense: childContext.dense,
+    divider,
+    disableGutters
+  });
+  const classes = MenuItem_useUtilityClasses(props);
+  const handleRef = utils_useForkRef(menuItemRef, ref);
+  let tabIndex;
+  if (!props.disabled) {
+    tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1;
+  }
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(List_ListContext.Provider, {
+    value: childContext,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)(MenuItemRoot, extends_extends({
+      ref: handleRef,
+      role: role,
+      tabIndex: tabIndex,
+      component: component,
+      focusVisibleClassName: clsx_m(classes.focusVisible, focusVisibleClassName),
+      className: clsx_m(classes.root, className)
+    }, other, {
+      ownerState: ownerState,
+      classes: classes
+    }))
+  });
+});
+ false ? 0 : void 0;
+/* harmony default export */ const MenuItem_MenuItem = (MenuItem);
+;// CONCATENATED MODULE: ./node_modules/@mui/utils/isMuiElement/isMuiElement.js
+
+function isMuiElement(element, muiNames) {
+  var _muiName, _element$type;
+  return /*#__PURE__*/react.isValidElement(element) && muiNames.indexOf( // For server components `muiName` is avaialble in element.type._payload.value.muiName
+  // relevant info - https://github.com/facebook/react/blob/2807d781a08db8e9873687fccc25c0f12b4fb3d4/packages/react/src/ReactLazy.js#L45
+  // eslint-disable-next-line no-underscore-dangle
+  (_muiName = element.type.muiName) != null ? _muiName : (_element$type = element.type) == null || (_element$type = _element$type._payload) == null || (_element$type = _element$type.value) == null ? void 0 : _element$type.muiName) !== -1;
+}
+;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/isMuiElement.js
+
+/* harmony default export */ const utils_isMuiElement = (isMuiElement);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/formControlClasses.js
+
+
+function getFormControlUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiFormControl', slot);
+}
+const formControlClasses = generateUtilityClasses('MuiFormControl', ['root', 'marginNone', 'marginNormal', 'marginDense', 'fullWidth', 'disabled']);
+/* harmony default export */ const FormControl_formControlClasses = ((/* unused pure expression or super */ null && (formControlClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormControl/FormControl.js
+
+
+const FormControl_excluded = ["children", "className", "color", "component", "disabled", "error", "focused", "fullWidth", "hiddenLabel", "margin", "required", "size", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+
+const FormControl_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    margin,
+    fullWidth
+  } = ownerState;
+  const slots = {
+    root: ['root', margin !== 'none' && `margin${utils_capitalize(margin)}`, fullWidth && 'fullWidth']
+  };
+  return composeClasses(slots, getFormControlUtilityClasses, classes);
+};
+const FormControlRoot = styles_styled('div', {
+  name: 'MuiFormControl',
+  slot: 'Root',
+  overridesResolver: ({
+    ownerState
+  }, styles) => {
+    return extends_extends({}, styles.root, styles[`margin${utils_capitalize(ownerState.margin)}`], ownerState.fullWidth && styles.fullWidth);
+  }
+})(({
+  ownerState
+}) => extends_extends({
+  display: 'inline-flex',
+  flexDirection: 'column',
+  position: 'relative',
+  // Reset fieldset default style.
+  minWidth: 0,
+  padding: 0,
+  margin: 0,
+  border: 0,
+  verticalAlign: 'top'
+}, ownerState.margin === 'normal' && {
+  marginTop: 16,
+  marginBottom: 8
+}, ownerState.margin === 'dense' && {
+  marginTop: 8,
+  marginBottom: 4
+}, ownerState.fullWidth && {
+  width: '100%'
+}));
+
+/**
+ * Provides context such as filled/focused/error/required for form inputs.
+ * Relying on the context provides high flexibility and ensures that the state always stays
+ * consistent across the children of the `FormControl`.
+ * This context is used by the following components:
+ *
+ *  - FormLabel
+ *  - FormHelperText
+ *  - Input
+ *  - InputLabel
+ *
+ * You can find one composition example below and more going to [the demos](/material-ui/react-text-field/#components).
+ *
+ * ```jsx
+ * <FormControl>
+ *   <InputLabel htmlFor="my-input">Email address</InputLabel>
+ *   <Input id="my-input" aria-describedby="my-helper-text" />
+ *   <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
+ * </FormControl>
+ * ```
+ *
+ * ⚠️ Only one `InputBase` can be used within a FormControl because it creates visual inconsistencies.
+ * For instance, only one input can be focused at the same time, the state shouldn't be shared.
+ */
+const FormControl = /*#__PURE__*/react.forwardRef(function FormControl(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiFormControl'
+  });
+  const {
+      children,
+      className,
+      color = 'primary',
+      component = 'div',
+      disabled = false,
+      error = false,
+      focused: visuallyFocused,
+      fullWidth = false,
+      hiddenLabel = false,
+      margin = 'none',
+      required = false,
+      size = 'medium',
+      variant = 'outlined'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, FormControl_excluded);
+  const ownerState = extends_extends({}, props, {
+    color,
+    component,
+    disabled,
+    error,
+    fullWidth,
+    hiddenLabel,
+    margin,
+    required,
+    size,
+    variant
+  });
+  const classes = FormControl_useUtilityClasses(ownerState);
+  const [adornedStart, setAdornedStart] = react.useState(() => {
+    // We need to iterate through the children and find the Input in order
+    // to fully support server-side rendering.
+    let initialAdornedStart = false;
+    if (children) {
+      react.Children.forEach(children, child => {
+        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
+          return;
+        }
+        const input = utils_isMuiElement(child, ['Select']) ? child.props.input : child;
+        if (input && isAdornedStart(input.props)) {
+          initialAdornedStart = true;
+        }
+      });
+    }
+    return initialAdornedStart;
+  });
+  const [filled, setFilled] = react.useState(() => {
+    // We need to iterate through the children and find the Input in order
+    // to fully support server-side rendering.
+    let initialFilled = false;
+    if (children) {
+      react.Children.forEach(children, child => {
+        if (!utils_isMuiElement(child, ['Input', 'Select'])) {
+          return;
+        }
+        if (isFilled(child.props, true) || isFilled(child.props.inputProps, true)) {
+          initialFilled = true;
+        }
+      });
+    }
+    return initialFilled;
+  });
+  const [focusedState, setFocused] = react.useState(false);
+  if (disabled && focusedState) {
+    setFocused(false);
+  }
+  const focused = visuallyFocused !== undefined && !disabled ? visuallyFocused : focusedState;
+  let registerEffect;
+  if (false) {}
+  const childContext = react.useMemo(() => {
+    return {
+      adornedStart,
+      setAdornedStart,
+      color,
+      disabled,
+      error,
+      filled,
+      focused,
+      fullWidth,
+      hiddenLabel,
+      size,
+      onBlur: () => {
+        setFocused(false);
+      },
+      onEmpty: () => {
+        setFilled(false);
+      },
+      onFilled: () => {
+        setFilled(true);
+      },
+      onFocus: () => {
+        setFocused(true);
+      },
+      registerEffect,
+      required,
+      variant
+    };
+  }, [adornedStart, color, disabled, error, filled, focused, fullWidth, hiddenLabel, registerEffect, required, size, variant]);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControlContext.Provider, {
+    value: childContext,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControlRoot, extends_extends({
+      as: component,
+      ownerState: ownerState,
+      className: clsx_m(classes.root, className),
+      ref: ref
+    }, other, {
+      children: children
+    }))
+  });
+});
+ false ? 0 : void 0;
+/* harmony default export */ const FormControl_FormControl = (FormControl);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/ListItemText/ListItemText.js
+
+
+const ListItemText_excluded = ["children", "className", "disableTypography", "inset", "primary", "primaryTypographyProps", "secondary", "secondaryTypographyProps"];
+
+
+
+
+
+
+
+
+
+
+
+const ListItemText_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    inset,
+    primary,
+    secondary,
+    dense
+  } = ownerState;
+  const slots = {
+    root: ['root', inset && 'inset', dense && 'dense', primary && secondary && 'multiline'],
+    primary: ['primary'],
+    secondary: ['secondary']
+  };
+  return composeClasses(slots, getListItemTextUtilityClass, classes);
+};
+const ListItemTextRoot = styles_styled('div', {
+  name: 'MuiListItemText',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${ListItemText_listItemTextClasses.primary}`]: styles.primary
+    }, {
+      [`& .${ListItemText_listItemTextClasses.secondary}`]: styles.secondary
+    }, styles.root, ownerState.inset && styles.inset, ownerState.primary && ownerState.secondary && styles.multiline, ownerState.dense && styles.dense];
+  }
+})(({
+  ownerState
+}) => extends_extends({
+  flex: '1 1 auto',
+  minWidth: 0,
+  marginTop: 4,
+  marginBottom: 4
+}, ownerState.primary && ownerState.secondary && {
+  marginTop: 6,
+  marginBottom: 6
+}, ownerState.inset && {
+  paddingLeft: 56
+}));
+const ListItemText = /*#__PURE__*/react.forwardRef(function ListItemText(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiListItemText'
+  });
+  const {
+      children,
+      className,
+      disableTypography = false,
+      inset = false,
+      primary: primaryProp,
+      primaryTypographyProps,
+      secondary: secondaryProp,
+      secondaryTypographyProps
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, ListItemText_excluded);
+  const {
+    dense
+  } = react.useContext(List_ListContext);
+  let primary = primaryProp != null ? primaryProp : children;
+  let secondary = secondaryProp;
+  const ownerState = extends_extends({}, props, {
+    disableTypography,
+    inset,
+    primary: !!primary,
+    secondary: !!secondary,
+    dense
+  });
+  const classes = ListItemText_useUtilityClasses(ownerState);
+  if (primary != null && primary.type !== Typography_Typography && !disableTypography) {
+    primary = /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, extends_extends({
+      variant: dense ? 'body2' : 'body1',
+      className: classes.primary,
+      component: primaryTypographyProps != null && primaryTypographyProps.variant ? undefined : 'span',
+      display: "block"
+    }, primaryTypographyProps, {
+      children: primary
+    }));
+  }
+  if (secondary != null && secondary.type !== Typography_Typography && !disableTypography) {
+    secondary = /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, extends_extends({
+      variant: "body2",
+      className: classes.secondary,
+      color: "text.secondary",
+      display: "block"
+    }, secondaryTypographyProps, {
+      children: secondary
+    }));
+  }
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ListItemTextRoot, extends_extends({
+    className: clsx_m(classes.root, className),
+    ownerState: ownerState,
+    ref: ref
+  }, other, {
+    children: [primary, secondary]
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const ListItemText_ListItemText = (ListItemText);
+// EXTERNAL MODULE: ./node_modules/react-is/index.js
+var react_is = __webpack_require__(4363);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/List/listClasses.js
+
+
+function getListUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiList', slot);
+}
+const listClasses = generateUtilityClasses('MuiList', ['root', 'padding', 'dense', 'subheader']);
+/* harmony default export */ const List_listClasses = ((/* unused pure expression or super */ null && (listClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/List/List.js
+
+
+const List_excluded = ["children", "className", "component", "dense", "disablePadding", "subheader"];
+
+
+
+
+
+
+
+
+
+
+const List_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    disablePadding,
+    dense,
+    subheader
+  } = ownerState;
+  const slots = {
+    root: ['root', !disablePadding && 'padding', dense && 'dense', subheader && 'subheader']
+  };
+  return composeClasses(slots, getListUtilityClass, classes);
+};
+const ListRoot = styles_styled('ul', {
+  name: 'MuiList',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, !ownerState.disablePadding && styles.padding, ownerState.dense && styles.dense, ownerState.subheader && styles.subheader];
+  }
+})(({
+  ownerState
+}) => extends_extends({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  position: 'relative'
+}, !ownerState.disablePadding && {
+  paddingTop: 8,
+  paddingBottom: 8
+}, ownerState.subheader && {
+  paddingTop: 0
+}));
+const List = /*#__PURE__*/react.forwardRef(function List(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiList'
+  });
+  const {
+      children,
+      className,
+      component = 'ul',
+      dense = false,
+      disablePadding = false,
+      subheader
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, List_excluded);
+  const context = react.useMemo(() => ({
+    dense
+  }), [dense]);
+  const ownerState = extends_extends({}, props, {
+    component,
+    dense,
+    disablePadding
+  });
+  const classes = List_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(List_ListContext.Provider, {
+    value: context,
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)(ListRoot, extends_extends({
+      as: component,
+      className: clsx_m(classes.root, className),
+      ref: ref,
+      ownerState: ownerState
+    }, other, {
+      children: [subheader, children]
+    }))
+  });
+});
+ false ? 0 : void 0;
+/* harmony default export */ const List_List = (List);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/getScrollbarSize.js
+
+/* harmony default export */ const utils_getScrollbarSize = (getScrollbarSize);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/MenuList/MenuList.js
+
+
+const MenuList_excluded = ["actions", "autoFocus", "autoFocusItem", "children", "className", "disabledItemsFocusable", "disableListWrap", "onKeyDown", "variant"];
+
+
+
+
+
+
+
+
+
+function nextItem(list, item, disableListWrap) {
+  if (list === item) {
+    return list.firstChild;
+  }
+  if (item && item.nextElementSibling) {
+    return item.nextElementSibling;
+  }
+  return disableListWrap ? null : list.firstChild;
+}
+function previousItem(list, item, disableListWrap) {
+  if (list === item) {
+    return disableListWrap ? list.firstChild : list.lastChild;
+  }
+  if (item && item.previousElementSibling) {
+    return item.previousElementSibling;
+  }
+  return disableListWrap ? null : list.lastChild;
+}
+function MenuList_textCriteriaMatches(nextFocus, textCriteria) {
+  if (textCriteria === undefined) {
+    return true;
+  }
+  let text = nextFocus.innerText;
+  if (text === undefined) {
+    // jsdom doesn't support innerText
+    text = nextFocus.textContent;
+  }
+  text = text.trim().toLowerCase();
+  if (text.length === 0) {
+    return false;
+  }
+  if (textCriteria.repeating) {
+    return text[0] === textCriteria.keys[0];
+  }
+  return text.indexOf(textCriteria.keys.join('')) === 0;
+}
+function moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, traversalFunction, textCriteria) {
+  let wrappedOnce = false;
+  let nextFocus = traversalFunction(list, currentFocus, currentFocus ? disableListWrap : false);
+  while (nextFocus) {
+    // Prevent infinite loop.
+    if (nextFocus === list.firstChild) {
+      if (wrappedOnce) {
+        return false;
+      }
+      wrappedOnce = true;
+    }
+
+    // Same logic as useAutocomplete.js
+    const nextFocusDisabled = disabledItemsFocusable ? false : nextFocus.disabled || nextFocus.getAttribute('aria-disabled') === 'true';
+    if (!nextFocus.hasAttribute('tabindex') || !MenuList_textCriteriaMatches(nextFocus, textCriteria) || nextFocusDisabled) {
+      // Move to the next element.
+      nextFocus = traversalFunction(list, nextFocus, disableListWrap);
+    } else {
+      nextFocus.focus();
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * A permanently displayed menu following https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/.
+ * It's exposed to help customization of the [`Menu`](/material-ui/api/menu/) component if you
+ * use it separately you need to move focus into the component manually. Once
+ * the focus is placed inside the component it is fully keyboard accessible.
+ */
+const MenuList = /*#__PURE__*/react.forwardRef(function MenuList(props, ref) {
+  const {
+      // private
+      // eslint-disable-next-line react/prop-types
+      actions,
+      autoFocus = false,
+      autoFocusItem = false,
+      children,
+      className,
+      disabledItemsFocusable = false,
+      disableListWrap = false,
+      onKeyDown,
+      variant = 'selectedMenu'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, MenuList_excluded);
+  const listRef = react.useRef(null);
+  const textCriteriaRef = react.useRef({
+    keys: [],
+    repeating: true,
+    previousKeyMatched: true,
+    lastTime: null
+  });
+  utils_useEnhancedEffect(() => {
+    if (autoFocus) {
+      listRef.current.focus();
+    }
+  }, [autoFocus]);
+  react.useImperativeHandle(actions, () => ({
+    adjustStyleForScrollbar: (containerElement, theme) => {
+      // Let's ignore that piece of logic if users are already overriding the width
+      // of the menu.
+      const noExplicitWidth = !listRef.current.style.width;
+      if (containerElement.clientHeight < listRef.current.clientHeight && noExplicitWidth) {
+        const scrollbarSize = `${utils_getScrollbarSize(utils_ownerDocument(containerElement))}px`;
+        listRef.current.style[theme.direction === 'rtl' ? 'paddingLeft' : 'paddingRight'] = scrollbarSize;
+        listRef.current.style.width = `calc(100% + ${scrollbarSize})`;
+      }
+      return listRef.current;
+    }
+  }), []);
+  const handleKeyDown = event => {
+    const list = listRef.current;
+    const key = event.key;
+    /**
+     * @type {Element} - will always be defined since we are in a keydown handler
+     * attached to an element. A keydown event is either dispatched to the activeElement
+     * or document.body or document.documentElement. Only the first case will
+     * trigger this specific handler.
+     */
+    const currentFocus = utils_ownerDocument(list).activeElement;
+    if (key === 'ArrowDown') {
+      // Prevent scroll of the page
+      event.preventDefault();
+      moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, nextItem);
+    } else if (key === 'ArrowUp') {
+      event.preventDefault();
+      moveFocus(list, currentFocus, disableListWrap, disabledItemsFocusable, previousItem);
+    } else if (key === 'Home') {
+      event.preventDefault();
+      moveFocus(list, null, disableListWrap, disabledItemsFocusable, nextItem);
+    } else if (key === 'End') {
+      event.preventDefault();
+      moveFocus(list, null, disableListWrap, disabledItemsFocusable, previousItem);
+    } else if (key.length === 1) {
+      const criteria = textCriteriaRef.current;
+      const lowerKey = key.toLowerCase();
+      const currTime = performance.now();
+      if (criteria.keys.length > 0) {
+        // Reset
+        if (currTime - criteria.lastTime > 500) {
+          criteria.keys = [];
+          criteria.repeating = true;
+          criteria.previousKeyMatched = true;
+        } else if (criteria.repeating && lowerKey !== criteria.keys[0]) {
+          criteria.repeating = false;
+        }
+      }
+      criteria.lastTime = currTime;
+      criteria.keys.push(lowerKey);
+      const keepFocusOnCurrent = currentFocus && !criteria.repeating && MenuList_textCriteriaMatches(currentFocus, criteria);
+      if (criteria.previousKeyMatched && (keepFocusOnCurrent || moveFocus(list, currentFocus, false, disabledItemsFocusable, nextItem, criteria))) {
+        event.preventDefault();
+      } else {
+        criteria.previousKeyMatched = false;
+      }
+    }
+    if (onKeyDown) {
+      onKeyDown(event);
+    }
+  };
+  const handleRef = utils_useForkRef(listRef, ref);
+
+  /**
+   * the index of the item should receive focus
+   * in a `variant="selectedMenu"` it's the first `selected` item
+   * otherwise it's the very first item.
+   */
+  let activeItemIndex = -1;
+  // since we inject focus related props into children we have to do a lookahead
+  // to check if there is a `selected` item. We're looking for the last `selected`
+  // item and use the first valid item as a fallback
+  react.Children.forEach(children, (child, index) => {
+    if (! /*#__PURE__*/react.isValidElement(child)) {
+      return;
+    }
+    if (false) {}
+    if (!child.props.disabled) {
+      if (variant === 'selectedMenu' && child.props.selected) {
+        activeItemIndex = index;
+      } else if (activeItemIndex === -1) {
+        activeItemIndex = index;
+      }
+    }
+    if (activeItemIndex === index && (child.props.disabled || child.props.muiSkipListHighlight || child.type.muiSkipListHighlight)) {
+      activeItemIndex += 1;
+      if (activeItemIndex >= children.length) {
+        // there are no focusable items within the list.
+        activeItemIndex = -1;
+      }
+    }
+  });
+  const items = react.Children.map(children, (child, index) => {
+    if (index === activeItemIndex) {
+      const newChildProps = {};
+      if (autoFocusItem) {
+        newChildProps.autoFocus = true;
+      }
+      if (child.props.tabIndex === undefined && variant === 'selectedMenu') {
+        newChildProps.tabIndex = 0;
+      }
+      return /*#__PURE__*/react.cloneElement(child, newChildProps);
+    }
+    return child;
+  });
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(List_List, extends_extends({
+    role: "menu",
+    ref: handleRef,
+    className: className,
+    onKeyDown: handleKeyDown,
+    tabIndex: autoFocus ? 0 : -1
+  }, other, {
+    children: items
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const MenuList_MenuList = (MenuList);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Menu/menuClasses.js
+
+
+function getMenuUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiMenu', slot);
+}
+const menuClasses = generateUtilityClasses('MuiMenu', ['root', 'paper', 'list']);
+/* harmony default export */ const Menu_menuClasses = ((/* unused pure expression or super */ null && (menuClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Menu/Menu.js
+
+
+const Menu_excluded = ["onEntering"],
+  Menu_excluded2 = ["autoFocus", "children", "disableAutoFocusItem", "MenuListProps", "onClose", "open", "PaperProps", "PopoverClasses", "transitionDuration", "TransitionProps", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const RTL_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'right'
+};
+const LTR_ORIGIN = {
+  vertical: 'top',
+  horizontal: 'left'
+};
+const Menu_useUtilityClasses = ownerState => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ['root'],
+    paper: ['paper'],
+    list: ['list']
+  };
+  return composeClasses(slots, getMenuUtilityClass, classes);
+};
+const MenuRoot = styles_styled(Popover_Popover, {
+  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
+  name: 'MuiMenu',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root
+})({});
+const MenuPaper = styles_styled(Paper_Paper, {
+  name: 'MuiMenu',
+  slot: 'Paper',
+  overridesResolver: (props, styles) => styles.paper
+})({
+  // specZ: The maximum height of a simple menu should be one or more rows less than the view
+  // height. This ensures a tappable area outside of the simple menu with which to dismiss
+  // the menu.
+  maxHeight: 'calc(100% - 96px)',
+  // Add iOS momentum scrolling for iOS < 13.0
+  WebkitOverflowScrolling: 'touch'
+});
+const MenuMenuList = styles_styled(MenuList_MenuList, {
+  name: 'MuiMenu',
+  slot: 'List',
+  overridesResolver: (props, styles) => styles.list
+})({
+  // We disable the focus ring for mouse, touch and keyboard users.
+  outline: 0
+});
+const Menu = /*#__PURE__*/react.forwardRef(function Menu(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiMenu'
+  });
+  const {
+      autoFocus = true,
+      children,
+      disableAutoFocusItem = false,
+      MenuListProps = {},
+      onClose,
+      open,
+      PaperProps = {},
+      PopoverClasses,
+      transitionDuration = 'auto',
+      TransitionProps: {
+        onEntering
+      } = {},
+      variant = 'selectedMenu'
+    } = props,
+    TransitionProps = _objectWithoutPropertiesLoose(props.TransitionProps, Menu_excluded),
+    other = _objectWithoutPropertiesLoose(props, Menu_excluded2);
+  const theme = styles_useTheme_useTheme();
+  const isRtl = theme.direction === 'rtl';
+  const ownerState = extends_extends({}, props, {
+    autoFocus,
+    disableAutoFocusItem,
+    MenuListProps,
+    onEntering,
+    PaperProps,
+    transitionDuration,
+    TransitionProps,
+    variant
+  });
+  const classes = Menu_useUtilityClasses(ownerState);
+  const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
+  const menuListActionsRef = react.useRef(null);
+  const handleEntering = (element, isAppearing) => {
+    if (menuListActionsRef.current) {
+      menuListActionsRef.current.adjustStyleForScrollbar(element, theme);
+    }
+    if (onEntering) {
+      onEntering(element, isAppearing);
+    }
+  };
+  const handleListKeyDown = event => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      if (onClose) {
+        onClose(event, 'tabKeyDown');
+      }
+    }
+  };
+
+  /**
+   * the index of the item should receive focus
+   * in a `variant="selectedMenu"` it's the first `selected` item
+   * otherwise it's the very first item.
+   */
+  let activeItemIndex = -1;
+  // since we inject focus related props into children we have to do a lookahead
+  // to check if there is a `selected` item. We're looking for the last `selected`
+  // item and use the first valid item as a fallback
+  react.Children.map(children, (child, index) => {
+    if (! /*#__PURE__*/react.isValidElement(child)) {
+      return;
+    }
+    if (false) {}
+    if (!child.props.disabled) {
+      if (variant === 'selectedMenu' && child.props.selected) {
+        activeItemIndex = index;
+      } else if (activeItemIndex === -1) {
+        activeItemIndex = index;
+      }
+    }
+  });
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(MenuRoot, extends_extends({
+    onClose: onClose,
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: isRtl ? 'right' : 'left'
+    },
+    transformOrigin: isRtl ? RTL_ORIGIN : LTR_ORIGIN,
+    PaperProps: extends_extends({
+      as: MenuPaper
+    }, PaperProps, {
+      classes: extends_extends({}, PaperProps.classes, {
+        root: classes.paper
+      })
+    }),
+    className: classes.root,
+    open: open,
+    ref: ref,
+    transitionDuration: transitionDuration,
+    TransitionProps: extends_extends({
+      onEntering: handleEntering
+    }, TransitionProps),
+    ownerState: ownerState
+  }, other, {
+    classes: PopoverClasses,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)(MenuMenuList, extends_extends({
+      onKeyDown: handleListKeyDown,
+      actions: menuListActionsRef,
+      autoFocus: autoFocus && (activeItemIndex === -1 || disableAutoFocusItem),
+      autoFocusItem: autoFocusItem,
+      variant: variant
+    }, MenuListProps, {
+      className: clsx_m(classes.list, MenuListProps.className),
+      children: children
+    }))
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const Menu_Menu = (Menu);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/NativeSelect/nativeSelectClasses.js
+
+
+function getNativeSelectUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiNativeSelect', slot);
+}
+const nativeSelectClasses = generateUtilityClasses('MuiNativeSelect', ['root', 'select', 'multiple', 'filled', 'outlined', 'standard', 'disabled', 'icon', 'iconOpen', 'iconFilled', 'iconOutlined', 'iconStandard', 'nativeInput', 'error']);
+/* harmony default export */ const NativeSelect_nativeSelectClasses = (nativeSelectClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/NativeSelect/NativeSelectInput.js
+
+
+const NativeSelectInput_excluded = ["className", "disabled", "error", "IconComponent", "inputRef", "variant"];
+
+
+
+
+
+
+
+
+
+
+const NativeSelectInput_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    variant,
+    disabled,
+    multiple,
+    open,
+    error
+  } = ownerState;
+  const slots = {
+    select: ['select', variant, disabled && 'disabled', multiple && 'multiple', error && 'error'],
+    icon: ['icon', `icon${utils_capitalize(variant)}`, open && 'iconOpen', disabled && 'disabled']
+  };
+  return composeClasses(slots, getNativeSelectUtilityClasses, classes);
+};
+const nativeSelectSelectStyles = ({
+  ownerState,
+  theme
+}) => extends_extends({
+  MozAppearance: 'none',
+  // Reset
+  WebkitAppearance: 'none',
+  // Reset
+  // When interacting quickly, the text can end up selected.
+  // Native select can't be selected either.
+  userSelect: 'none',
+  borderRadius: 0,
+  // Reset
+  cursor: 'pointer',
+  '&:focus': extends_extends({}, theme.vars ? {
+    backgroundColor: `rgba(${theme.vars.palette.common.onBackgroundChannel} / 0.05)`
+  } : {
+    backgroundColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'
+  }, {
+    borderRadius: 0 // Reset Chrome style
+  }),
+
+  // Remove IE11 arrow
+  '&::-ms-expand': {
+    display: 'none'
+  },
+  [`&.${NativeSelect_nativeSelectClasses.disabled}`]: {
+    cursor: 'default'
+  },
+  '&[multiple]': {
+    height: 'auto'
+  },
+  '&:not([multiple]) option, &:not([multiple]) optgroup': {
+    backgroundColor: (theme.vars || theme).palette.background.paper
+  },
+  // Bump specificity to allow extending custom inputs
+  '&&&': {
+    paddingRight: 24,
+    minWidth: 16 // So it doesn't collapse.
+  }
+}, ownerState.variant === 'filled' && {
+  '&&&': {
+    paddingRight: 32
+  }
+}, ownerState.variant === 'outlined' && {
+  borderRadius: (theme.vars || theme).shape.borderRadius,
+  '&:focus': {
+    borderRadius: (theme.vars || theme).shape.borderRadius // Reset the reset for Chrome style
+  },
+
+  '&&&': {
+    paddingRight: 32
+  }
+});
+const NativeSelectSelect = styles_styled('select', {
+  name: 'MuiNativeSelect',
+  slot: 'Select',
+  shouldForwardProp: rootShouldForwardProp,
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.select, styles[ownerState.variant], ownerState.error && styles.error, {
+      [`&.${NativeSelect_nativeSelectClasses.multiple}`]: styles.multiple
+    }];
+  }
+})(nativeSelectSelectStyles);
+const nativeSelectIconStyles = ({
+  ownerState,
+  theme
+}) => extends_extends({
+  // We use a position absolute over a flexbox in order to forward the pointer events
+  // to the input and to support wrapping tags..
+  position: 'absolute',
+  right: 0,
+  top: 'calc(50% - .5em)',
+  // Center vertically, height is 1em
+  pointerEvents: 'none',
+  // Don't block pointer events on the select under the icon.
+  color: (theme.vars || theme).palette.action.active,
+  [`&.${NativeSelect_nativeSelectClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.action.disabled
+  }
+}, ownerState.open && {
+  transform: 'rotate(180deg)'
+}, ownerState.variant === 'filled' && {
+  right: 7
+}, ownerState.variant === 'outlined' && {
+  right: 7
+});
+const NativeSelectIcon = styles_styled('svg', {
+  name: 'MuiNativeSelect',
+  slot: 'Icon',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.icon, ownerState.variant && styles[`icon${utils_capitalize(ownerState.variant)}`], ownerState.open && styles.iconOpen];
+  }
+})(nativeSelectIconStyles);
+
+/**
+ * @ignore - internal component.
+ */
+const NativeSelectInput = /*#__PURE__*/react.forwardRef(function NativeSelectInput(props, ref) {
+  const {
+      className,
+      disabled,
+      error,
+      IconComponent,
+      inputRef,
+      variant = 'standard'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, NativeSelectInput_excluded);
+  const ownerState = extends_extends({}, props, {
+    disabled,
+    variant,
+    error
+  });
+  const classes = NativeSelectInput_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(react.Fragment, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(NativeSelectSelect, extends_extends({
+      ownerState: ownerState,
+      className: clsx_m(classes.select, className),
+      disabled: disabled,
+      ref: inputRef || ref
+    }, other)), props.multiple ? null : /*#__PURE__*/(0,jsx_runtime.jsx)(NativeSelectIcon, {
+      as: IconComponent,
+      ownerState: ownerState,
+      className: classes.icon
+    })]
+  });
+});
+ false ? 0 : void 0;
+/* harmony default export */ const NativeSelect_NativeSelectInput = (NativeSelectInput);
+;// CONCATENATED MODULE: ./node_modules/@mui/utils/useControlled/useControlled.js
+'use client';
+
+/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+
+function useControlled({
+  controlled,
+  default: defaultProp,
+  name,
+  state = 'value'
+}) {
+  // isControlled is ignored in the hook dependency lists as it should never change.
+  const {
+    current: isControlled
+  } = react.useRef(controlled !== undefined);
+  const [valueState, setValue] = react.useState(defaultProp);
+  const value = isControlled ? controlled : valueState;
+  if (false) {}
+  const setValueIfUncontrolled = react.useCallback(newValue => {
+    if (!isControlled) {
+      setValue(newValue);
+    }
+  }, []);
+  return [value, setValueIfUncontrolled];
+}
+;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useControlled.js
+
+/* harmony default export */ const utils_useControlled = (useControlled);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Select/selectClasses.js
+
+
+function getSelectUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiSelect', slot);
+}
+const selectClasses_selectClasses = generateUtilityClasses('MuiSelect', ['select', 'multiple', 'filled', 'outlined', 'standard', 'disabled', 'focused', 'icon', 'iconOpen', 'iconFilled', 'iconOutlined', 'iconStandard', 'nativeInput', 'error']);
+/* harmony default export */ const material_Select_selectClasses = (selectClasses_selectClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Select/SelectInput.js
+
+
+
+var SelectInput_span;
+const SelectInput_excluded = ["aria-describedby", "aria-label", "autoFocus", "autoWidth", "children", "className", "defaultOpen", "defaultValue", "disabled", "displayEmpty", "error", "IconComponent", "inputRef", "labelId", "MenuProps", "multiple", "name", "onBlur", "onChange", "onClose", "onFocus", "onOpen", "open", "readOnly", "renderValue", "SelectDisplayProps", "tabIndex", "type", "value", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const SelectSelect = styles_styled('div', {
+  name: 'MuiSelect',
+  slot: 'Select',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [
+    // Win specificity over the input base
+    {
+      [`&.${material_Select_selectClasses.select}`]: styles.select
+    }, {
+      [`&.${material_Select_selectClasses.select}`]: styles[ownerState.variant]
+    }, {
+      [`&.${material_Select_selectClasses.error}`]: styles.error
+    }, {
+      [`&.${material_Select_selectClasses.multiple}`]: styles.multiple
+    }];
+  }
+})(nativeSelectSelectStyles, {
+  // Win specificity over the input base
+  [`&.${material_Select_selectClasses.select}`]: {
+    height: 'auto',
+    // Resets for multiple select with chips
+    minHeight: '1.4375em',
+    // Required for select\text-field height consistency
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden'
+  }
+});
+const SelectIcon = styles_styled('svg', {
+  name: 'MuiSelect',
+  slot: 'Icon',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.icon, ownerState.variant && styles[`icon${utils_capitalize(ownerState.variant)}`], ownerState.open && styles.iconOpen];
+  }
+})(nativeSelectIconStyles);
+const SelectNativeInput = styles_styled('input', {
+  shouldForwardProp: prop => slotShouldForwardProp(prop) && prop !== 'classes',
+  name: 'MuiSelect',
+  slot: 'NativeInput',
+  overridesResolver: (props, styles) => styles.nativeInput
+})({
+  bottom: 0,
+  left: 0,
+  position: 'absolute',
+  opacity: 0,
+  pointerEvents: 'none',
+  width: '100%',
+  boxSizing: 'border-box'
+});
+function areEqualValues(a, b) {
+  if (typeof b === 'object' && b !== null) {
+    return a === b;
+  }
+
+  // The value could be a number, the DOM will stringify it anyway.
+  return String(a) === String(b);
+}
+function SelectInput_isEmpty(display) {
+  return display == null || typeof display === 'string' && !display.trim();
+}
+const SelectInput_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    variant,
+    disabled,
+    multiple,
+    open,
+    error
+  } = ownerState;
+  const slots = {
+    select: ['select', variant, disabled && 'disabled', multiple && 'multiple', error && 'error'],
+    icon: ['icon', `icon${utils_capitalize(variant)}`, open && 'iconOpen', disabled && 'disabled'],
+    nativeInput: ['nativeInput']
+  };
+  return composeClasses(slots, getSelectUtilityClasses, classes);
+};
+
+/**
+ * @ignore - internal component.
+ */
+const SelectInput = /*#__PURE__*/react.forwardRef(function SelectInput(props, ref) {
+  const {
+      'aria-describedby': ariaDescribedby,
+      'aria-label': ariaLabel,
+      autoFocus,
+      autoWidth,
+      children,
+      className,
+      defaultOpen,
+      defaultValue,
+      disabled,
+      displayEmpty,
+      error = false,
+      IconComponent,
+      inputRef: inputRefProp,
+      labelId,
+      MenuProps = {},
+      multiple,
+      name,
+      onBlur,
+      onChange,
+      onClose,
+      onFocus,
+      onOpen,
+      open: openProp,
+      readOnly,
+      renderValue,
+      SelectDisplayProps = {},
+      tabIndex: tabIndexProp,
+      value: valueProp,
+      variant = 'standard'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, SelectInput_excluded);
+  const [value, setValueState] = utils_useControlled({
+    controlled: valueProp,
+    default: defaultValue,
+    name: 'Select'
+  });
+  const [openState, setOpenState] = utils_useControlled({
+    controlled: openProp,
+    default: defaultOpen,
+    name: 'Select'
+  });
+  const inputRef = react.useRef(null);
+  const displayRef = react.useRef(null);
+  const [displayNode, setDisplayNode] = react.useState(null);
+  const {
+    current: isOpenControlled
+  } = react.useRef(openProp != null);
+  const [menuMinWidthState, setMenuMinWidthState] = react.useState();
+  const handleRef = utils_useForkRef(ref, inputRefProp);
+  const handleDisplayRef = react.useCallback(node => {
+    displayRef.current = node;
+    if (node) {
+      setDisplayNode(node);
+    }
+  }, []);
+  const anchorElement = displayNode == null ? void 0 : displayNode.parentNode;
+  react.useImperativeHandle(handleRef, () => ({
+    focus: () => {
+      displayRef.current.focus();
+    },
+    node: inputRef.current,
+    value
+  }), [value]);
+
+  // Resize menu on `defaultOpen` automatic toggle.
+  react.useEffect(() => {
+    if (defaultOpen && openState && displayNode && !isOpenControlled) {
+      setMenuMinWidthState(autoWidth ? null : anchorElement.clientWidth);
+      displayRef.current.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayNode, autoWidth]);
+  // `isOpenControlled` is ignored because the component should never switch between controlled and uncontrolled modes.
+  // `defaultOpen` and `openState` are ignored to avoid unnecessary callbacks.
+  react.useEffect(() => {
+    if (autoFocus) {
+      displayRef.current.focus();
+    }
+  }, [autoFocus]);
+  react.useEffect(() => {
+    if (!labelId) {
+      return undefined;
+    }
+    const label = utils_ownerDocument(displayRef.current).getElementById(labelId);
+    if (label) {
+      const handler = () => {
+        if (getSelection().isCollapsed) {
+          displayRef.current.focus();
+        }
+      };
+      label.addEventListener('click', handler);
+      return () => {
+        label.removeEventListener('click', handler);
+      };
+    }
+    return undefined;
+  }, [labelId]);
+  const update = (open, event) => {
+    if (open) {
+      if (onOpen) {
+        onOpen(event);
+      }
+    } else if (onClose) {
+      onClose(event);
+    }
+    if (!isOpenControlled) {
+      setMenuMinWidthState(autoWidth ? null : anchorElement.clientWidth);
+      setOpenState(open);
+    }
+  };
+  const handleMouseDown = event => {
+    // Ignore everything but left-click
+    if (event.button !== 0) {
+      return;
+    }
+    // Hijack the default focus behavior.
+    event.preventDefault();
+    displayRef.current.focus();
+    update(true, event);
+  };
+  const handleClose = event => {
+    update(false, event);
+  };
+  const childrenArray = react.Children.toArray(children);
+
+  // Support autofill.
+  const handleChange = event => {
+    const index = childrenArray.map(child => child.props.value).indexOf(event.target.value);
+    if (index === -1) {
+      return;
+    }
+    const child = childrenArray[index];
+    setValueState(child.props.value);
+    if (onChange) {
+      onChange(event, child);
+    }
+  };
+  const handleItemClick = child => event => {
+    let newValue;
+
+    // We use the tabindex attribute to signal the available options.
+    if (!event.currentTarget.hasAttribute('tabindex')) {
+      return;
+    }
+    if (multiple) {
+      newValue = Array.isArray(value) ? value.slice() : [];
+      const itemIndex = value.indexOf(child.props.value);
+      if (itemIndex === -1) {
+        newValue.push(child.props.value);
+      } else {
+        newValue.splice(itemIndex, 1);
+      }
+    } else {
+      newValue = child.props.value;
+    }
+    if (child.props.onClick) {
+      child.props.onClick(event);
+    }
+    if (value !== newValue) {
+      setValueState(newValue);
+      if (onChange) {
+        // Redefine target to allow name and value to be read.
+        // This allows seamless integration with the most popular form libraries.
+        // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
+        // Clone the event to not override `target` of the original event.
+        const nativeEvent = event.nativeEvent || event;
+        const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
+        Object.defineProperty(clonedEvent, 'target', {
+          writable: true,
+          value: {
+            value: newValue,
+            name
+          }
+        });
+        onChange(clonedEvent, child);
+      }
+    }
+    if (!multiple) {
+      update(false, event);
+    }
+  };
+  const handleKeyDown = event => {
+    if (!readOnly) {
+      const validKeys = [' ', 'ArrowUp', 'ArrowDown',
+      // The native select doesn't respond to enter on macOS, but it's recommended by
+      // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
+      'Enter'];
+      if (validKeys.indexOf(event.key) !== -1) {
+        event.preventDefault();
+        update(true, event);
+      }
+    }
+  };
+  const open = displayNode !== null && openState;
+  const handleBlur = event => {
+    // if open event.stopImmediatePropagation
+    if (!open && onBlur) {
+      // Preact support, target is read only property on a native event.
+      Object.defineProperty(event, 'target', {
+        writable: true,
+        value: {
+          value,
+          name
+        }
+      });
+      onBlur(event);
+    }
+  };
+  delete other['aria-invalid'];
+  let display;
+  let displaySingle;
+  const displayMultiple = [];
+  let computeDisplay = false;
+  let foundMatch = false;
+
+  // No need to display any value if the field is empty.
+  if (isFilled({
+    value
+  }) || displayEmpty) {
+    if (renderValue) {
+      display = renderValue(value);
+    } else {
+      computeDisplay = true;
+    }
+  }
+  const items = childrenArray.map(child => {
+    if (! /*#__PURE__*/react.isValidElement(child)) {
+      return null;
+    }
+    if (false) {}
+    let selected;
+    if (multiple) {
+      if (!Array.isArray(value)) {
+        throw new Error( false ? 0 : formatMuiErrorMessage(2));
+      }
+      selected = value.some(v => areEqualValues(v, child.props.value));
+      if (selected && computeDisplay) {
+        displayMultiple.push(child.props.children);
+      }
+    } else {
+      selected = areEqualValues(value, child.props.value);
+      if (selected && computeDisplay) {
+        displaySingle = child.props.children;
+      }
+    }
+    if (selected) {
+      foundMatch = true;
+    }
+    return /*#__PURE__*/react.cloneElement(child, {
+      'aria-selected': selected ? 'true' : 'false',
+      onClick: handleItemClick(child),
+      onKeyUp: event => {
+        if (event.key === ' ') {
+          // otherwise our MenuItems dispatches a click event
+          // it's not behavior of the native <option> and causes
+          // the select to close immediately since we open on space keydown
+          event.preventDefault();
+        }
+        if (child.props.onKeyUp) {
+          child.props.onKeyUp(event);
+        }
+      },
+      role: 'option',
+      selected,
+      value: undefined,
+      // The value is most likely not a valid HTML attribute.
+      'data-value': child.props.value // Instead, we provide it as a data attribute.
+    });
+  });
+
+  if (false) {}
+  if (computeDisplay) {
+    if (multiple) {
+      if (displayMultiple.length === 0) {
+        display = null;
+      } else {
+        display = displayMultiple.reduce((output, child, index) => {
+          output.push(child);
+          if (index < displayMultiple.length - 1) {
+            output.push(', ');
+          }
+          return output;
+        }, []);
+      }
+    } else {
+      display = displaySingle;
+    }
+  }
+
+  // Avoid performing a layout computation in the render method.
+  let menuMinWidth = menuMinWidthState;
+  if (!autoWidth && isOpenControlled && displayNode) {
+    menuMinWidth = anchorElement.clientWidth;
+  }
+  let tabIndex;
+  if (typeof tabIndexProp !== 'undefined') {
+    tabIndex = tabIndexProp;
+  } else {
+    tabIndex = disabled ? null : 0;
+  }
+  const buttonId = SelectDisplayProps.id || (name ? `mui-component-select-${name}` : undefined);
+  const ownerState = extends_extends({}, props, {
+    variant,
+    value,
+    open,
+    error
+  });
+  const classes = SelectInput_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(react.Fragment, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(SelectSelect, extends_extends({
+      ref: handleDisplayRef,
+      tabIndex: tabIndex,
+      role: "button",
+      "aria-disabled": disabled ? 'true' : undefined,
+      "aria-expanded": open ? 'true' : 'false',
+      "aria-haspopup": "listbox",
+      "aria-label": ariaLabel,
+      "aria-labelledby": [labelId, buttonId].filter(Boolean).join(' ') || undefined,
+      "aria-describedby": ariaDescribedby,
+      onKeyDown: handleKeyDown,
+      onMouseDown: disabled || readOnly ? null : handleMouseDown,
+      onBlur: handleBlur,
+      onFocus: onFocus
+    }, SelectDisplayProps, {
+      ownerState: ownerState,
+      className: clsx_m(SelectDisplayProps.className, classes.select, className)
+      // The id is required for proper a11y
+      ,
+      id: buttonId,
+      children: SelectInput_isEmpty(display) ? // notranslate needed while Google Translate will not fix zero-width space issue
+      SelectInput_span || (SelectInput_span = /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+        className: "notranslate",
+        children: "\u200B"
+      })) : display
+    })), /*#__PURE__*/(0,jsx_runtime.jsx)(SelectNativeInput, extends_extends({
+      "aria-invalid": error,
+      value: Array.isArray(value) ? value.join(',') : value,
+      name: name,
+      ref: inputRef,
+      "aria-hidden": true,
+      onChange: handleChange,
+      tabIndex: -1,
+      disabled: disabled,
+      className: classes.nativeInput,
+      autoFocus: autoFocus,
+      ownerState: ownerState
+    }, other)), /*#__PURE__*/(0,jsx_runtime.jsx)(SelectIcon, {
+      as: IconComponent,
+      className: classes.icon,
+      ownerState: ownerState
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(Menu_Menu, extends_extends({
+      id: `menu-${name || ''}`,
+      anchorEl: anchorElement,
+      open: open,
+      onClose: handleClose,
+      anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'center'
+      },
+      transformOrigin: {
+        vertical: 'top',
+        horizontal: 'center'
+      }
+    }, MenuProps, {
+      MenuListProps: extends_extends({
+        'aria-labelledby': labelId,
+        role: 'listbox',
+        disableListWrap: true
+      }, MenuProps.MenuListProps),
+      PaperProps: extends_extends({}, MenuProps.PaperProps, {
+        style: extends_extends({
+          minWidth: menuMinWidth
+        }, MenuProps.PaperProps != null ? MenuProps.PaperProps.style : null)
+      }),
+      children: items
+    }))]
+  });
+});
+ false ? 0 : void 0;
+/* harmony default export */ const Select_SelectInput = (SelectInput);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/SvgIcon/svgIconClasses.js
+
+
+function getSvgIconUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiSvgIcon', slot);
+}
+const svgIconClasses = generateUtilityClasses('MuiSvgIcon', ['root', 'colorPrimary', 'colorSecondary', 'colorAction', 'colorError', 'colorDisabled', 'fontSizeInherit', 'fontSizeSmall', 'fontSizeMedium', 'fontSizeLarge']);
+/* harmony default export */ const SvgIcon_svgIconClasses = ((/* unused pure expression or super */ null && (svgIconClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/SvgIcon/SvgIcon.js
+
+
+const SvgIcon_excluded = ["children", "className", "color", "component", "fontSize", "htmlColor", "inheritViewBox", "titleAccess", "viewBox"];
+
+
+
+
+
+
+
+
+
+
+const SvgIcon_useUtilityClasses = ownerState => {
+  const {
+    color,
+    fontSize,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ['root', color !== 'inherit' && `color${utils_capitalize(color)}`, `fontSize${utils_capitalize(fontSize)}`]
+  };
+  return composeClasses(slots, getSvgIconUtilityClass, classes);
+};
+const SvgIconRoot = styles_styled('svg', {
+  name: 'MuiSvgIcon',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.color !== 'inherit' && styles[`color${utils_capitalize(ownerState.color)}`], styles[`fontSize${utils_capitalize(ownerState.fontSize)}`]];
+  }
+})(({
+  theme,
+  ownerState
+}) => {
+  var _theme$transitions, _theme$transitions$cr, _theme$transitions2, _theme$transitions2$d, _theme$typography, _theme$typography$pxT, _theme$typography2, _theme$typography2$px, _theme$typography3, _theme$typography3$px, _palette$ownerState$c, _palette, _palette$ownerState$c2, _palette2, _palette2$action, _palette3, _palette3$action;
+  return {
+    userSelect: 'none',
+    width: '1em',
+    height: '1em',
+    display: 'inline-block',
+    fill: 'currentColor',
+    flexShrink: 0,
+    transition: (_theme$transitions = theme.transitions) == null ? void 0 : (_theme$transitions$cr = _theme$transitions.create) == null ? void 0 : _theme$transitions$cr.call(_theme$transitions, 'fill', {
+      duration: (_theme$transitions2 = theme.transitions) == null ? void 0 : (_theme$transitions2$d = _theme$transitions2.duration) == null ? void 0 : _theme$transitions2$d.shorter
+    }),
+    fontSize: {
+      inherit: 'inherit',
+      small: ((_theme$typography = theme.typography) == null ? void 0 : (_theme$typography$pxT = _theme$typography.pxToRem) == null ? void 0 : _theme$typography$pxT.call(_theme$typography, 20)) || '1.25rem',
+      medium: ((_theme$typography2 = theme.typography) == null ? void 0 : (_theme$typography2$px = _theme$typography2.pxToRem) == null ? void 0 : _theme$typography2$px.call(_theme$typography2, 24)) || '1.5rem',
+      large: ((_theme$typography3 = theme.typography) == null ? void 0 : (_theme$typography3$px = _theme$typography3.pxToRem) == null ? void 0 : _theme$typography3$px.call(_theme$typography3, 35)) || '2.1875rem'
+    }[ownerState.fontSize],
+    // TODO v5 deprecate, v6 remove for sx
+    color: (_palette$ownerState$c = (_palette = (theme.vars || theme).palette) == null ? void 0 : (_palette$ownerState$c2 = _palette[ownerState.color]) == null ? void 0 : _palette$ownerState$c2.main) != null ? _palette$ownerState$c : {
+      action: (_palette2 = (theme.vars || theme).palette) == null ? void 0 : (_palette2$action = _palette2.action) == null ? void 0 : _palette2$action.active,
+      disabled: (_palette3 = (theme.vars || theme).palette) == null ? void 0 : (_palette3$action = _palette3.action) == null ? void 0 : _palette3$action.disabled,
+      inherit: undefined
+    }[ownerState.color]
+  };
+});
+const SvgIcon = /*#__PURE__*/react.forwardRef(function SvgIcon(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiSvgIcon'
+  });
+  const {
+      children,
+      className,
+      color = 'inherit',
+      component = 'svg',
+      fontSize = 'medium',
+      htmlColor,
+      inheritViewBox = false,
+      titleAccess,
+      viewBox = '0 0 24 24'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, SvgIcon_excluded);
+  const ownerState = extends_extends({}, props, {
+    color,
+    component,
+    fontSize,
+    instanceFontSize: inProps.fontSize,
+    inheritViewBox,
+    viewBox
+  });
+  const more = {};
+  if (!inheritViewBox) {
+    more.viewBox = viewBox;
+  }
+  const classes = SvgIcon_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(SvgIconRoot, extends_extends({
+    as: component,
+    className: clsx_m(classes.root, className),
+    focusable: "false",
+    color: htmlColor,
+    "aria-hidden": titleAccess ? undefined : true,
+    role: titleAccess ? 'img' : undefined,
+    ref: ref
+  }, more, other, {
+    ownerState: ownerState,
+    children: [children, titleAccess ? /*#__PURE__*/(0,jsx_runtime.jsx)("title", {
+      children: titleAccess
+    }) : null]
+  }));
+});
+ false ? 0 : void 0;
+SvgIcon.muiName = 'SvgIcon';
+/* harmony default export */ const SvgIcon_SvgIcon = (SvgIcon);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/createSvgIcon.js
+
+
+
+
+/**
+ * Private module reserved for @mui packages.
+ */
+
+function createSvgIcon(path, displayName) {
+  function Component(props, ref) {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(SvgIcon_SvgIcon, extends_extends({
+      "data-testid": `${displayName}Icon`,
+      ref: ref
+    }, props, {
+      children: path
+    }));
+  }
+  if (false) {}
+  Component.muiName = SvgIcon_SvgIcon.muiName;
+  return /*#__PURE__*/react.memo( /*#__PURE__*/react.forwardRef(Component));
+}
+;// CONCATENATED MODULE: ./node_modules/@mui/material/internal/svg-icons/ArrowDropDown.js
+
+
+
+/**
+ * @ignore - internal component.
+ */
+
+/* harmony default export */ const ArrowDropDown = (createSvgIcon( /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+  d: "M7 10l5 5 5-5z"
+}), 'ArrowDropDown'));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Input/inputClasses.js
+
+
+
+
+function getInputUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiInput', slot);
+}
+const inputClasses = extends_extends({}, InputBase_inputBaseClasses, generateUtilityClasses('MuiInput', ['root', 'underline', 'input']));
+/* harmony default export */ const Input_inputClasses = (inputClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Input/Input.js
+
+
+const Input_excluded = ["disableUnderline", "components", "componentsProps", "fullWidth", "inputComponent", "multiline", "slotProps", "slots", "type"];
+
+
+
+
+
+
+
+
+
+
+const Input_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    disableUnderline
+  } = ownerState;
+  const slots = {
+    root: ['root', !disableUnderline && 'underline'],
+    input: ['input']
+  };
+  const composedClasses = composeClasses(slots, getInputUtilityClass, classes);
+  return extends_extends({}, classes, composedClasses);
+};
+const InputRoot = styles_styled(InputBaseRoot, {
+  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
+  name: 'MuiInput',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [...rootOverridesResolver(props, styles), !ownerState.disableUnderline && styles.underline];
+  }
+})(({
+  theme,
+  ownerState
+}) => {
+  const light = theme.palette.mode === 'light';
+  let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
+  if (theme.vars) {
+    bottomLineColor = `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`;
+  }
+  return extends_extends({
+    position: 'relative'
+  }, ownerState.formControl && {
+    'label + &': {
+      marginTop: 16
+    }
+  }, !ownerState.disableUnderline && {
+    '&:after': {
+      borderBottom: `2px solid ${(theme.vars || theme).palette[ownerState.color].main}`,
+      left: 0,
+      bottom: 0,
+      // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+      content: '""',
+      position: 'absolute',
+      right: 0,
+      transform: 'scaleX(0)',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shorter,
+        easing: theme.transitions.easing.easeOut
+      }),
+      pointerEvents: 'none' // Transparent to the hover style.
+    },
+
+    [`&.${Input_inputClasses.focused}:after`]: {
+      // translateX(0) is a workaround for Safari transform scale bug
+      // See https://github.com/mui/material-ui/issues/31766
+      transform: 'scaleX(1) translateX(0)'
+    },
+    [`&.${Input_inputClasses.error}`]: {
+      '&:before, &:after': {
+        borderBottomColor: (theme.vars || theme).palette.error.main
+      }
+    },
+    '&:before': {
+      borderBottom: `1px solid ${bottomLineColor}`,
+      left: 0,
+      bottom: 0,
+      // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+      content: '"\\00a0"',
+      position: 'absolute',
+      right: 0,
+      transition: theme.transitions.create('border-bottom-color', {
+        duration: theme.transitions.duration.shorter
+      }),
+      pointerEvents: 'none' // Transparent to the hover style.
+    },
+
+    [`&:hover:not(.${Input_inputClasses.disabled}, .${Input_inputClasses.error}):before`]: {
+      borderBottom: `2px solid ${(theme.vars || theme).palette.text.primary}`,
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        borderBottom: `1px solid ${bottomLineColor}`
+      }
+    },
+    [`&.${Input_inputClasses.disabled}:before`]: {
+      borderBottomStyle: 'dotted'
+    }
+  });
+});
+const InputInput = styles_styled(InputBaseComponent, {
+  name: 'MuiInput',
+  slot: 'Input',
+  overridesResolver: inputOverridesResolver
+})({});
+const Input = /*#__PURE__*/react.forwardRef(function Input(inProps, ref) {
+  var _ref, _slots$root, _ref2, _slots$input;
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiInput'
+  });
+  const {
+      disableUnderline,
+      components = {},
+      componentsProps: componentsPropsProp,
+      fullWidth = false,
+      inputComponent = 'input',
+      multiline = false,
+      slotProps,
+      slots = {},
+      type = 'text'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, Input_excluded);
+  const classes = Input_useUtilityClasses(props);
+  const ownerState = {
+    disableUnderline
+  };
+  const inputComponentsProps = {
+    root: {
+      ownerState
+    }
+  };
+  const componentsProps = (slotProps != null ? slotProps : componentsPropsProp) ? deepmerge_deepmerge(slotProps != null ? slotProps : componentsPropsProp, inputComponentsProps) : inputComponentsProps;
+  const RootSlot = (_ref = (_slots$root = slots.root) != null ? _slots$root : components.Root) != null ? _ref : InputRoot;
+  const InputSlot = (_ref2 = (_slots$input = slots.input) != null ? _slots$input : components.Input) != null ? _ref2 : InputInput;
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(InputBase_InputBase, extends_extends({
+    slots: {
+      root: RootSlot,
+      input: InputSlot
+    },
+    slotProps: componentsProps,
+    fullWidth: fullWidth,
+    inputComponent: inputComponent,
+    multiline: multiline,
+    ref: ref,
+    type: type
+  }, other, {
+    classes: classes
+  }));
+});
+ false ? 0 : void 0;
+Input.muiName = 'Input';
+/* harmony default export */ const Input_Input = (Input);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FilledInput/filledInputClasses.js
+
+
+
+
+function getFilledInputUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiFilledInput', slot);
+}
+const filledInputClasses = extends_extends({}, InputBase_inputBaseClasses, generateUtilityClasses('MuiFilledInput', ['root', 'underline', 'input']));
+/* harmony default export */ const FilledInput_filledInputClasses = (filledInputClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FilledInput/FilledInput.js
+
+
+const FilledInput_excluded = ["disableUnderline", "components", "componentsProps", "fullWidth", "hiddenLabel", "inputComponent", "multiline", "slotProps", "slots", "type"];
+
+
+
+
+
+
+
+
+
+
+const FilledInput_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    disableUnderline
+  } = ownerState;
+  const slots = {
+    root: ['root', !disableUnderline && 'underline'],
+    input: ['input']
+  };
+  const composedClasses = composeClasses(slots, getFilledInputUtilityClass, classes);
+  return extends_extends({}, classes, composedClasses);
+};
+const FilledInputRoot = styles_styled(InputBaseRoot, {
+  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
+  name: 'MuiFilledInput',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [...rootOverridesResolver(props, styles), !ownerState.disableUnderline && styles.underline];
+  }
+})(({
+  theme,
+  ownerState
+}) => {
+  var _palette;
+  const light = theme.palette.mode === 'light';
+  const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
+  const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
+  const hoverBackground = light ? 'rgba(0, 0, 0, 0.09)' : 'rgba(255, 255, 255, 0.13)';
+  const disabledBackground = light ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
+  return extends_extends({
+    position: 'relative',
+    backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor,
+    borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
+    borderTopRightRadius: (theme.vars || theme).shape.borderRadius,
+    transition: theme.transitions.create('background-color', {
+      duration: theme.transitions.duration.shorter,
+      easing: theme.transitions.easing.easeOut
+    }),
+    '&:hover': {
+      backgroundColor: theme.vars ? theme.vars.palette.FilledInput.hoverBg : hoverBackground,
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor
+      }
+    },
+    [`&.${FilledInput_filledInputClasses.focused}`]: {
+      backgroundColor: theme.vars ? theme.vars.palette.FilledInput.bg : backgroundColor
+    },
+    [`&.${FilledInput_filledInputClasses.disabled}`]: {
+      backgroundColor: theme.vars ? theme.vars.palette.FilledInput.disabledBg : disabledBackground
+    }
+  }, !ownerState.disableUnderline && {
+    '&:after': {
+      borderBottom: `2px solid ${(_palette = (theme.vars || theme).palette[ownerState.color || 'primary']) == null ? void 0 : _palette.main}`,
+      left: 0,
+      bottom: 0,
+      // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+      content: '""',
+      position: 'absolute',
+      right: 0,
+      transform: 'scaleX(0)',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shorter,
+        easing: theme.transitions.easing.easeOut
+      }),
+      pointerEvents: 'none' // Transparent to the hover style.
+    },
+
+    [`&.${FilledInput_filledInputClasses.focused}:after`]: {
+      // translateX(0) is a workaround for Safari transform scale bug
+      // See https://github.com/mui/material-ui/issues/31766
+      transform: 'scaleX(1) translateX(0)'
+    },
+    [`&.${FilledInput_filledInputClasses.error}`]: {
+      '&:before, &:after': {
+        borderBottomColor: (theme.vars || theme).palette.error.main
+      }
+    },
+    '&:before': {
+      borderBottom: `1px solid ${theme.vars ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})` : bottomLineColor}`,
+      left: 0,
+      bottom: 0,
+      // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+      content: '"\\00a0"',
+      position: 'absolute',
+      right: 0,
+      transition: theme.transitions.create('border-bottom-color', {
+        duration: theme.transitions.duration.shorter
+      }),
+      pointerEvents: 'none' // Transparent to the hover style.
+    },
+
+    [`&:hover:not(.${FilledInput_filledInputClasses.disabled}, .${FilledInput_filledInputClasses.error}):before`]: {
+      borderBottom: `1px solid ${(theme.vars || theme).palette.text.primary}`
+    },
+    [`&.${FilledInput_filledInputClasses.disabled}:before`]: {
+      borderBottomStyle: 'dotted'
+    }
+  }, ownerState.startAdornment && {
+    paddingLeft: 12
+  }, ownerState.endAdornment && {
+    paddingRight: 12
+  }, ownerState.multiline && extends_extends({
+    padding: '25px 12px 8px'
+  }, ownerState.size === 'small' && {
+    paddingTop: 21,
+    paddingBottom: 4
+  }, ownerState.hiddenLabel && {
+    paddingTop: 16,
+    paddingBottom: 17
+  }));
+});
+const FilledInputInput = styles_styled(InputBaseComponent, {
+  name: 'MuiFilledInput',
+  slot: 'Input',
+  overridesResolver: inputOverridesResolver
+})(({
+  theme,
+  ownerState
+}) => extends_extends({
+  paddingTop: 25,
+  paddingRight: 12,
+  paddingBottom: 8,
+  paddingLeft: 12
+}, !theme.vars && {
+  '&:-webkit-autofill': {
+    WebkitBoxShadow: theme.palette.mode === 'light' ? null : '0 0 0 100px #266798 inset',
+    WebkitTextFillColor: theme.palette.mode === 'light' ? null : '#fff',
+    caretColor: theme.palette.mode === 'light' ? null : '#fff',
+    borderTopLeftRadius: 'inherit',
+    borderTopRightRadius: 'inherit'
+  }
+}, theme.vars && {
+  '&:-webkit-autofill': {
+    borderTopLeftRadius: 'inherit',
+    borderTopRightRadius: 'inherit'
+  },
+  [theme.getColorSchemeSelector('dark')]: {
+    '&:-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #266798 inset',
+      WebkitTextFillColor: '#fff',
+      caretColor: '#fff'
+    }
+  }
+}, ownerState.size === 'small' && {
+  paddingTop: 21,
+  paddingBottom: 4
+}, ownerState.hiddenLabel && {
+  paddingTop: 16,
+  paddingBottom: 17
+}, ownerState.multiline && {
+  paddingTop: 0,
+  paddingBottom: 0,
+  paddingLeft: 0,
+  paddingRight: 0
+}, ownerState.startAdornment && {
+  paddingLeft: 0
+}, ownerState.endAdornment && {
+  paddingRight: 0
+}, ownerState.hiddenLabel && ownerState.size === 'small' && {
+  paddingTop: 8,
+  paddingBottom: 9
+}));
+const FilledInput = /*#__PURE__*/react.forwardRef(function FilledInput(inProps, ref) {
+  var _ref, _slots$root, _ref2, _slots$input;
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiFilledInput'
+  });
+  const {
+      components = {},
+      componentsProps: componentsPropsProp,
+      fullWidth = false,
+      // declare here to prevent spreading to DOM
+      inputComponent = 'input',
+      multiline = false,
+      slotProps,
+      slots = {},
+      type = 'text'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, FilledInput_excluded);
+  const ownerState = extends_extends({}, props, {
+    fullWidth,
+    inputComponent,
+    multiline,
+    type
+  });
+  const classes = FilledInput_useUtilityClasses(props);
+  const filledInputComponentsProps = {
+    root: {
+      ownerState
+    },
+    input: {
+      ownerState
+    }
+  };
+  const componentsProps = (slotProps != null ? slotProps : componentsPropsProp) ? deepmerge_deepmerge(slotProps != null ? slotProps : componentsPropsProp, filledInputComponentsProps) : filledInputComponentsProps;
+  const RootSlot = (_ref = (_slots$root = slots.root) != null ? _slots$root : components.Root) != null ? _ref : FilledInputRoot;
+  const InputSlot = (_ref2 = (_slots$input = slots.input) != null ? _slots$input : components.Input) != null ? _ref2 : FilledInputInput;
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(InputBase_InputBase, extends_extends({
+    slots: {
+      root: RootSlot,
+      input: InputSlot
+    },
+    componentsProps: componentsProps,
+    fullWidth: fullWidth,
+    inputComponent: inputComponent,
+    multiline: multiline,
+    ref: ref,
+    type: type
+  }, other, {
+    classes: classes
+  }));
+});
+ false ? 0 : void 0;
+FilledInput.muiName = 'Input';
+/* harmony default export */ const FilledInput_FilledInput = (FilledInput);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Select/Select.js
+
+
+const Select_Select_excluded = ["autoWidth", "children", "classes", "className", "defaultOpen", "displayEmpty", "IconComponent", "id", "input", "inputProps", "label", "labelId", "MenuProps", "multiple", "native", "onClose", "onOpen", "open", "renderValue", "SelectDisplayProps", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const Select_Select_useUtilityClasses = ownerState => {
+  const {
+    classes
+  } = ownerState;
+  return classes;
+};
+const styledRootConfig = {
+  name: 'MuiSelect',
+  overridesResolver: (props, styles) => styles.root,
+  shouldForwardProp: prop => rootShouldForwardProp(prop) && prop !== 'variant',
+  slot: 'Root'
+};
+const StyledInput = styles_styled(Input_Input, styledRootConfig)('');
+const StyledOutlinedInput = styles_styled(OutlinedInput_OutlinedInput, styledRootConfig)('');
+const StyledFilledInput = styles_styled(FilledInput_FilledInput, styledRootConfig)('');
+const Select_Select_Select = /*#__PURE__*/react.forwardRef(function Select(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    name: 'MuiSelect',
+    props: inProps
+  });
+  const {
+      autoWidth = false,
+      children,
+      classes: classesProp = {},
+      className,
+      defaultOpen = false,
+      displayEmpty = false,
+      IconComponent = ArrowDropDown,
+      id,
+      input,
+      inputProps,
+      label,
+      labelId,
+      MenuProps,
+      multiple = false,
+      native = false,
+      onClose,
+      onOpen,
+      open,
+      renderValue,
+      SelectDisplayProps,
+      variant: variantProp = 'outlined'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, Select_Select_excluded);
+  const inputComponent = native ? NativeSelect_NativeSelectInput : Select_SelectInput;
+  const muiFormControl = useFormControl();
+  const fcs = formControlState({
+    props,
+    muiFormControl,
+    states: ['variant', 'error']
+  });
+  const variant = fcs.variant || variantProp;
+  const ownerState = extends_extends({}, props, {
+    variant,
+    classes: classesProp
+  });
+  const classes = Select_Select_useUtilityClasses(ownerState);
+  const InputComponent = input || {
+    standard: /*#__PURE__*/(0,jsx_runtime.jsx)(StyledInput, {
+      ownerState: ownerState
+    }),
+    outlined: /*#__PURE__*/(0,jsx_runtime.jsx)(StyledOutlinedInput, {
+      label: label,
+      ownerState: ownerState
+    }),
+    filled: /*#__PURE__*/(0,jsx_runtime.jsx)(StyledFilledInput, {
+      ownerState: ownerState
+    })
+  }[variant];
+  const inputComponentRef = utils_useForkRef(ref, InputComponent.ref);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(react.Fragment, {
+    children: /*#__PURE__*/react.cloneElement(InputComponent, extends_extends({
+      // Most of the logic is implemented in `SelectInput`.
+      // The `Select` component is a simple API wrapper to expose something better to play with.
+      inputComponent,
+      inputProps: extends_extends({
+        children,
+        error: fcs.error,
+        IconComponent,
+        variant,
+        type: undefined,
+        // We render a select. We can ignore the type provided by the `Input`.
+        multiple
+      }, native ? {
+        id
+      } : {
+        autoWidth,
+        defaultOpen,
+        displayEmpty,
+        labelId,
+        MenuProps,
+        onClose,
+        onOpen,
+        open,
+        renderValue,
+        SelectDisplayProps: extends_extends({
+          id
+        }, SelectDisplayProps)
+      }, inputProps, {
+        classes: inputProps ? deepmerge_deepmerge(classes, inputProps.classes) : classes
+      }, input ? input.props.inputProps : {})
+    }, multiple && native && variant === 'outlined' ? {
+      notched: true
+    } : {}, {
+      ref: inputComponentRef,
+      className: clsx_m(InputComponent.props.className, className)
+    }, !input && {
+      variant
+    }, other))
+  });
+});
+ false ? 0 : void 0;
+Select_Select_Select.muiName = 'Select';
+/* harmony default export */ const material_Select_Select = (Select_Select_Select);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/internal/switchBaseClasses.js
 
 
@@ -47956,147 +50664,6 @@ const SwitchBase = /*#__PURE__*/react.forwardRef(function SwitchBase(props, ref)
 // so that the API documentation is updated.
  false ? 0 : void 0;
 /* harmony default export */ const internal_SwitchBase = (SwitchBase);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/SvgIcon/svgIconClasses.js
-
-
-function getSvgIconUtilityClass(slot) {
-  return generateUtilityClass_generateUtilityClass('MuiSvgIcon', slot);
-}
-const svgIconClasses = generateUtilityClasses('MuiSvgIcon', ['root', 'colorPrimary', 'colorSecondary', 'colorAction', 'colorError', 'colorDisabled', 'fontSizeInherit', 'fontSizeSmall', 'fontSizeMedium', 'fontSizeLarge']);
-/* harmony default export */ const SvgIcon_svgIconClasses = ((/* unused pure expression or super */ null && (svgIconClasses)));
-;// CONCATENATED MODULE: ./node_modules/@mui/material/SvgIcon/SvgIcon.js
-
-
-const SvgIcon_excluded = ["children", "className", "color", "component", "fontSize", "htmlColor", "inheritViewBox", "titleAccess", "viewBox"];
-
-
-
-
-
-
-
-
-
-
-const SvgIcon_useUtilityClasses = ownerState => {
-  const {
-    color,
-    fontSize,
-    classes
-  } = ownerState;
-  const slots = {
-    root: ['root', color !== 'inherit' && `color${utils_capitalize(color)}`, `fontSize${utils_capitalize(fontSize)}`]
-  };
-  return composeClasses(slots, getSvgIconUtilityClass, classes);
-};
-const SvgIconRoot = styles_styled('svg', {
-  name: 'MuiSvgIcon',
-  slot: 'Root',
-  overridesResolver: (props, styles) => {
-    const {
-      ownerState
-    } = props;
-    return [styles.root, ownerState.color !== 'inherit' && styles[`color${utils_capitalize(ownerState.color)}`], styles[`fontSize${utils_capitalize(ownerState.fontSize)}`]];
-  }
-})(({
-  theme,
-  ownerState
-}) => {
-  var _theme$transitions, _theme$transitions$cr, _theme$transitions2, _theme$transitions2$d, _theme$typography, _theme$typography$pxT, _theme$typography2, _theme$typography2$px, _theme$typography3, _theme$typography3$px, _palette$ownerState$c, _palette, _palette$ownerState$c2, _palette2, _palette2$action, _palette3, _palette3$action;
-  return {
-    userSelect: 'none',
-    width: '1em',
-    height: '1em',
-    display: 'inline-block',
-    fill: 'currentColor',
-    flexShrink: 0,
-    transition: (_theme$transitions = theme.transitions) == null ? void 0 : (_theme$transitions$cr = _theme$transitions.create) == null ? void 0 : _theme$transitions$cr.call(_theme$transitions, 'fill', {
-      duration: (_theme$transitions2 = theme.transitions) == null ? void 0 : (_theme$transitions2$d = _theme$transitions2.duration) == null ? void 0 : _theme$transitions2$d.shorter
-    }),
-    fontSize: {
-      inherit: 'inherit',
-      small: ((_theme$typography = theme.typography) == null ? void 0 : (_theme$typography$pxT = _theme$typography.pxToRem) == null ? void 0 : _theme$typography$pxT.call(_theme$typography, 20)) || '1.25rem',
-      medium: ((_theme$typography2 = theme.typography) == null ? void 0 : (_theme$typography2$px = _theme$typography2.pxToRem) == null ? void 0 : _theme$typography2$px.call(_theme$typography2, 24)) || '1.5rem',
-      large: ((_theme$typography3 = theme.typography) == null ? void 0 : (_theme$typography3$px = _theme$typography3.pxToRem) == null ? void 0 : _theme$typography3$px.call(_theme$typography3, 35)) || '2.1875rem'
-    }[ownerState.fontSize],
-    // TODO v5 deprecate, v6 remove for sx
-    color: (_palette$ownerState$c = (_palette = (theme.vars || theme).palette) == null ? void 0 : (_palette$ownerState$c2 = _palette[ownerState.color]) == null ? void 0 : _palette$ownerState$c2.main) != null ? _palette$ownerState$c : {
-      action: (_palette2 = (theme.vars || theme).palette) == null ? void 0 : (_palette2$action = _palette2.action) == null ? void 0 : _palette2$action.active,
-      disabled: (_palette3 = (theme.vars || theme).palette) == null ? void 0 : (_palette3$action = _palette3.action) == null ? void 0 : _palette3$action.disabled,
-      inherit: undefined
-    }[ownerState.color]
-  };
-});
-const SvgIcon = /*#__PURE__*/react.forwardRef(function SvgIcon(inProps, ref) {
-  const props = useThemeProps_useThemeProps({
-    props: inProps,
-    name: 'MuiSvgIcon'
-  });
-  const {
-      children,
-      className,
-      color = 'inherit',
-      component = 'svg',
-      fontSize = 'medium',
-      htmlColor,
-      inheritViewBox = false,
-      titleAccess,
-      viewBox = '0 0 24 24'
-    } = props,
-    other = _objectWithoutPropertiesLoose(props, SvgIcon_excluded);
-  const ownerState = extends_extends({}, props, {
-    color,
-    component,
-    fontSize,
-    instanceFontSize: inProps.fontSize,
-    inheritViewBox,
-    viewBox
-  });
-  const more = {};
-  if (!inheritViewBox) {
-    more.viewBox = viewBox;
-  }
-  const classes = SvgIcon_useUtilityClasses(ownerState);
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)(SvgIconRoot, extends_extends({
-    as: component,
-    className: clsx_m(classes.root, className),
-    focusable: "false",
-    color: htmlColor,
-    "aria-hidden": titleAccess ? undefined : true,
-    role: titleAccess ? 'img' : undefined,
-    ref: ref
-  }, more, other, {
-    ownerState: ownerState,
-    children: [children, titleAccess ? /*#__PURE__*/(0,jsx_runtime.jsx)("title", {
-      children: titleAccess
-    }) : null]
-  }));
-});
- false ? 0 : void 0;
-SvgIcon.muiName = 'SvgIcon';
-/* harmony default export */ const SvgIcon_SvgIcon = (SvgIcon);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/createSvgIcon.js
-
-
-
-
-/**
- * Private module reserved for @mui packages.
- */
-
-function createSvgIcon(path, displayName) {
-  function Component(props, ref) {
-    return /*#__PURE__*/(0,jsx_runtime.jsx)(SvgIcon_SvgIcon, extends_extends({
-      "data-testid": `${displayName}Icon`,
-      ref: ref
-    }, props, {
-      children: path
-    }));
-  }
-  if (false) {}
-  Component.muiName = SvgIcon_SvgIcon.muiName;
-  return /*#__PURE__*/react.memo( /*#__PURE__*/react.forwardRef(Component));
-}
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/internal/svg-icons/CheckBoxOutlineBlank.js
 
 
@@ -48203,7 +50770,7 @@ const CheckboxRoot = styles_styled(internal_SwitchBase, {
 const defaultCheckedIcon = /*#__PURE__*/(0,jsx_runtime.jsx)(CheckBox, {});
 const defaultIcon = /*#__PURE__*/(0,jsx_runtime.jsx)(CheckBoxOutlineBlank, {});
 const defaultIndeterminateIcon = /*#__PURE__*/(0,jsx_runtime.jsx)(IndeterminateCheckBox, {});
-const Checkbox = /*#__PURE__*/react.forwardRef(function Checkbox(inProps, ref) {
+const Checkbox_Checkbox = /*#__PURE__*/react.forwardRef(function Checkbox(inProps, ref) {
   var _icon$props$fontSize, _indeterminateIcon$pr;
   const props = useThemeProps_useThemeProps({
     props: inProps,
@@ -48247,42 +50814,74 @@ const Checkbox = /*#__PURE__*/react.forwardRef(function Checkbox(inProps, ref) {
   }));
 });
  false ? 0 : void 0;
-/* harmony default export */ const Checkbox_Checkbox = (Checkbox);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/styledOption.js
-var styledOption_templateObject;
-function styledOption_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+/* harmony default export */ const material_Checkbox_Checkbox = (Checkbox_Checkbox);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/checkmarksSelect/index.js
 
 
 
 
 
 
-var styledOption_blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75'
+
+
+
+var ITEM_HEIGHT = 48;
+var ITEM_PADDING_TOP = 8;
+var MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
 };
-var styledOption_grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f'
+var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref) {
+  var options = _ref.options,
+    onChange = _ref.onChange,
+    value = _ref.value;
+  //const [personName, setPersonName] = React.useState([]);
+
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)(FormControl_FormControl, {
+      sx: {
+        m: 1,
+        width: 300
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(InputLabel_InputLabel, {
+        id: "demo-multiple-checkbox-label",
+        children: "Tag"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(material_Select_Select, {
+        labelId: "demo-multiple-checkbox-label",
+        id: "demo-multiple-checkbox",
+        multiple: true,
+        value: value,
+        onChange: onChange,
+        input: /*#__PURE__*/(0,jsx_runtime.jsx)(OutlinedInput_OutlinedInput, {
+          label: "Tag"
+        }),
+        renderValue: function renderValue(selected) {
+          return selected.map(function (e) {
+            return e.name;
+          }).join(", ");
+        },
+        MenuProps: MenuProps,
+        children: options.map(function (obj) {
+          return /*#__PURE__*/(0,jsx_runtime.jsxs)(MenuItem_MenuItem, {
+            value: obj,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
+              checked: value.some(function (e) {
+                return e.id == obj.id;
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
+              primary: obj.name
+            })]
+          }, obj.id);
+        })
+      })]
+    })
+  });
 };
-var styledOption_StyledOption = esm_styled(Option_Option)(function (_ref) {
-  var theme = _ref.theme;
-  return "\n    font-family: 'Igra Sans';\n    list-style: none;\n    padding: 8px;\n    border-radius: 8px;\n    cursor: pointer;\n    color: #B3B3B3;\n    font-size: 14px;\n    line-height: 14px;\n  \n    &:last-of-type {\n      border-bottom: none;\n    }\n  \n    &.".concat(Option_optionClasses.selected, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.highlighted, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n      background-color: none;\n      color: #FFFFFF;\n    }\n  \n    &.").concat(Option_optionClasses.disabled, " {\n      color: ").concat(theme.palette.mode === 'dark' ? styledOption_grey[700] : styledOption_grey[400], ";\n    }\n  \n    &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n      background-color: none;\n      color: #FFFFFF;\n    }\n    ");
-});
-var styledOption_StyledPopper = esm_styled(Popper_Popper)(styledOption_templateObject || (styledOption_templateObject = styledOption_taggedTemplateLiteral(["\n    z-index: 1400;\n  "])));
-/* harmony default export */ const styledOption = (styledOption_StyledOption);
+/* harmony default export */ const checkmarksSelect = (MultipleSelectCheckmarks);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/index.js
 function modalProductsFilter_typeof(o) { "@babel/helpers - typeof"; return modalProductsFilter_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalProductsFilter_typeof(o); }
 function modalProductsFilter_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalProductsFilter_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalProductsFilter_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalProductsFilter_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -48299,6 +50898,7 @@ function modalProductsFilter_unsupportedIterableToArray(o, minLen) { if (!o) ret
 function modalProductsFilter_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalProductsFilter_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalProductsFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -48368,11 +50968,12 @@ var ModalFilter = function ModalFilter(_ref) {
     };
   });
   var handleChange = function handleChange(prop) {
-    return function (val) {
+    return function (val, newVal) {
       if (prop === 'steamCurrencyId') {
         if (val != null) {
           //var newVal = val.targer.value;
           //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
+          debugger;
           val = val.target.value;
         } else {
           return;
@@ -48421,70 +51022,10 @@ var ModalFilter = function ModalFilter(_ref) {
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: modalProductsFilter_styles.wrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControl, {
-              className: modalProductsFilter_styles.formItem,
-              sx: {
-                m: 1,
-                width: 300
-              },
-              children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
-                sx: {
-                  '& .MuiOption-root ': {
-                    padding: 0
-                  }
-                },
-                multiple: true,
-                value: item.steamCurrencyId,
-                onChange: handleChange('steamCurrencyId'),
-                input: /*#__PURE__*/(0,jsx_runtime.jsx)(OutlinedInput_OutlinedInput, {
-                  label: "Tag"
-                }),
-                renderValue: function renderValue(selected) {
-                  return selected.map(function (e) {
-                    return e.name;
-                  }).join(", ");
-                }
-                // MenuProps={MenuProps}
-                ,
-                options: currencies,
-                customRenderChild: function customRenderChild(curr) {
-                  return /*#__PURE__*/(0,jsx_runtime.jsxs)(styledOption, {
-                    style: {
-                      display: "flex",
-                      flexDirection: "row"
-                    },
-                    value: curr.name,
-                    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Checkbox_Checkbox, {
-                      style: {
-                        display: "block",
-                        maxHeight: "14px"
-                      },
-                      disablePadding: true,
-                      size: "small",
-                      className: modalProductsFilter_styles.paddingZero,
-                      sx: {
-                        '& .MuiSvgIcon-root': {
-                          padding: 0,
-                          fontSize: "1em"
-                        }
-                      },
-                      checked: item.steamCurrencyId.indexOf(curr.id) > -1
-                    }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
-                      style: {
-                        display: "block",
-                        maxHeight: "14px"
-                      },
-                      children: curr.name
-                    })]
-                  }, curr.id);
-                }
-                // <MenuItem disablePadding className={css.paddingZero} key={curr.id} value={curr}>
-                //   <Checkbox disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0 } }}  checked={item.steamCurrencyId.indexOf(curr.id) > -1} />
-                //   <StyledOption key={curr.id} value={curr.name}>
-                //       {curr.name}
-                //   </StyledOption>
-                // </MenuItem>}
-              })
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkmarksSelect, {
+              options: currencies,
+              value: item.steamCurrencyId,
+              onChange: handleChange('steamCurrencyId')
             })
           })
         })]
@@ -57575,7 +60116,7 @@ const arrowRight_namespaceObject = __webpack_require__.p + "f2076a772b23a44d6772
 
 //import { state, setActiveMenuLink } from '../../../containers/admin/state';
 
-var MenuItem = function MenuItem(_ref) {
+var menuItem_MenuItem = function MenuItem(_ref) {
   var name = _ref.name,
     icon = _ref.icon,
     subMenu = _ref.subMenu,
@@ -57660,7 +60201,7 @@ var MenuItem = function MenuItem(_ref) {
     })]
   });
 };
-/* harmony default export */ const menuItem = (MenuItem);
+/* harmony default export */ const menuItem = (menuItem_MenuItem);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/botStats/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const botStats_styles = ({"wrapper":"styles__wrapper--gq8OH","botStats":"styles__botStats--g9t2W","statItem":"styles__statItem--L3mbt","dot":"styles__dot--jSRKD","name":"styles__name--xp_o3","count":"styles__count--IVnSx"});

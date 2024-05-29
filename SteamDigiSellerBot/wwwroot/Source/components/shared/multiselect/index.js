@@ -8,7 +8,8 @@ import OptionUnstyled, {
 import PopperUnstyled from '@mui/base/Popper';
 import { styled } from '@mui/system';
 import css from './styles.scss';
-
+import MUISelect from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
 const blue = {
   100: '#DAECFF',
   200: '#99CCF3',
@@ -162,7 +163,7 @@ const StyledPopper = styled(PopperUnstyled)`
 const defaultOption = (i) =>{
         <StyledOption
             key={i.name}
-            value={i.name}
+            value={i}
             style={{ color: i.color || '#B3B3B3' }}
           > 
           {i.name}
@@ -171,7 +172,6 @@ const defaultOption = (i) =>{
 
 export default function MultipleSelectPlaceholder({
   props,
-  customRenderChild = null,
   options,
   multiple = false,
   defaultValue,
@@ -179,14 +179,10 @@ export default function MultipleSelectPlaceholder({
   hint,
   width,
   height,
+  value
 }) {
   const [rootColor, setRootColor] = useState('#FFFFFF');
-  const handleChange = (event, newValue) => {
-    if (onChange) onChange(newValue);
-    let currOpt = options?.find((o) => o.name === newValue);
-    if (currOpt) setRootColor(currOpt.color);
-  };
-  
+
   const CustomSelect = React.forwardRef(function CustomSelect(props, ref) {
     const slots = {
       root: CreateStyledButton(width, rootColor),
@@ -197,13 +193,19 @@ export default function MultipleSelectPlaceholder({
 
     return <SelectUnstyled {...props} ref={ref} slots={slots} />;
   });
-  const renderItem = customRenderChild == null?defaultOption:customRenderChild;
   return (
     <div className={css.wrapper} style={{ width: width }}>
-      <CustomSelect {...props} defaultValue={defaultValue} onChange={handleChange} multiple={multiple}>
+      <CustomSelect {...props} defaultValue={defaultValue} onChange={onChange} multiple={multiple}>
       
-        {(options || []).map((i) => (
-          renderItem(i)
+        {(options || []).map((curr) => (
+          <StyledOption style={{display: "flex", flexDirection: "row"}} key={curr.id} value={curr}>
+          <Checkbox style={{display: "block", maxHeight:"14px"}} disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0, fontSize:"1em" } }}  
+          checked={
+            value.indexOf(curr) > -1}>
+            
+          </Checkbox>
+          <span style={{display: "block", maxHeight:"14px"}}>{curr.name}</span>
+      </StyledOption>
         ))}
 
       </CustomSelect>

@@ -16,8 +16,8 @@ import ListItemText from '@mui/material/ListItemText';
 import MUISelect from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import StyledOption from '../../../../shared/select/styledOption'; 
-
-
+import MultiSelect from '../../../../shared/multiselect/index'
+import MultipleSelectCheckmarks from '../../../../shared/formItem/select/checkmarksSelect';
 // const ITEM_HEIGHT = 48;
 // const ITEM_PADDING_TOP = 8;
 // const MenuProps = {
@@ -69,11 +69,12 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         };
       });
     
-      const handleChange = (prop) => (val) => {
+      const handleChange = (prop) => (val, newVal) => {
         if (prop === 'steamCurrencyId') {
           if(val != null){
             //var newVal = val.targer.value;
             //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
+            debugger;
             val = val.target.value;
         }
         else{
@@ -131,8 +132,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
 
                     <div className={css.wrapper}>
                       <div>
-                        <FormControl className={css.formItem} sx={{ m: 1, width: 300 }}>
-                          <Select
+                        {/* <FormControl className={css.formItem} sx={{ m: 1, width: 300 }}>
+                          <MultiSelect
                             sx={{ '& .MuiOption-root ': { padding: 0 } }} 
                             multiple={true}
                             value={item.steamCurrencyId}
@@ -141,21 +142,11 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                             renderValue={(selected) => selected.map(e => e.name).join(", ")}
                             // MenuProps={MenuProps}
                             options={currencies}
-                            customRenderChild = {(curr) => 
-                                              <StyledOption style={{display: "flex", flexDirection: "row"}} key={curr.id} value={curr.name}>
-                                                    <Checkbox style={{display: "block", maxHeight:"14px"}} disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0, fontSize:"1em" } }}  checked={item.steamCurrencyId.indexOf(curr.id) > -1}>
-                                                      
-                                                    </Checkbox>
-                                                    <span style={{display: "block", maxHeight:"14px"}}>{curr.name}</span>
-                                                </StyledOption>}
-                                                    // <MenuItem disablePadding className={css.paddingZero} key={curr.id} value={curr}>
-                                                    //   <Checkbox disablePadding size="small" className={css.paddingZero} sx={{ '& .MuiSvgIcon-root': { padding: 0 } }}  checked={item.steamCurrencyId.indexOf(curr.id) > -1} />
-                                                    //   <StyledOption key={curr.id} value={curr.name}>
-                                                    //       {curr.name}
-                                                    //   </StyledOption>
-                                                    // </MenuItem>}
+
                           />
-                        </FormControl>
+                        </FormControl> */}
+
+                        <MultipleSelectCheckmarks options={currencies} value={item.steamCurrencyId} onChange={handleChange('steamCurrencyId')}/>
                     </div>
                   </div>
                   </div>

@@ -18,31 +18,11 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
 
-const MultipleSelectCheckmarks = () => {
-  const [personName, setPersonName] = React.useState([]);
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+const MultipleSelectCheckmarks = ({options, onChange, value}) => {
+  //const [personName, setPersonName] = React.useState([]);
+
 
   return (
     <div>
@@ -52,16 +32,16 @@ const MultipleSelectCheckmarks = () => {
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={personName}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
           input={<OutlinedInput label="Tag" />}
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) => selected.map(e => e.name).join(", ")}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
+          {options.map((obj) => (
+            <MenuItem key={obj.id} value={obj}>
+              <Checkbox checked={value.some(e => e.id == obj.id)} />
+              <ListItemText primary={obj.name} />
             </MenuItem>
           ))}
         </Select>
