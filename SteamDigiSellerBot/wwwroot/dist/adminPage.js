@@ -45201,7 +45201,7 @@ var pageHeader = function pageHeader(_ref) {
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalProductsFilter_styles = ({"css-1km1ehz":"styles__css-1km1ehz--YrFPE","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","content":"styles__content--HSI89","actions":"styles__actions--iuJTu","currName":"styles__currName--ZGhq_","paddingZero":"styles__paddingZero--iWQwK","MuiOption-root":"styles__MuiOption-root--ROouk","css-1v42tcw":"styles__css-1v42tcw--ULLrJ"});
+/* harmony default export */ const modalProductsFilter_styles = ({"css-1km1ehz":"styles__css-1km1ehz--YrFPE","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","MuiPaper-root":"styles__MuiPaper-root--pmmJh","content":"styles__content--HSI89","actions":"styles__actions--iuJTu","currName":"styles__currName--ZGhq_","paddingZero":"styles__paddingZero--iWQwK","MuiOption-root":"styles__MuiOption-root--ROouk","css-1v42tcw":"styles__css-1v42tcw--ULLrJ"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
@@ -45246,7 +45246,7 @@ var SymbolTextBox = function SymbolTextBox(_ref) {
 /* harmony default export */ const SymbolTextbox = (SymbolTextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const formItem_styles = ({"formItem":"styles__formItem--xdAfh","name":"styles__name--yx_Cq","doubleControl":"styles__doubleControl--U0Lj5","wrapper":"styles__wrapper--6H6Ar","inputControl":"styles__inputControl--EQ3c1","inputArea":"styles__inputArea--IAL8q","symbol":"styles__symbol--avEND","hint":"styles__hint--D35Jd"});
+/* harmony default export */ const formItem_styles = ({"formItem":"styles__formItem--xdAfh","name":"styles__name--yx_Cq","doubleControl":"styles__doubleControl--U0Lj5","wrapper":"styles__wrapper--6H6Ar","inputControl":"styles__inputControl--EQ3c1","inputArea":"styles__inputArea--IAL8q","symbol":"styles__symbol--avEND","hint":"styles__hint--D35Jd","MuiPaper-root":"styles__MuiPaper-root--Ajcjp"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/text/index.js
 
 
@@ -50540,9 +50540,16 @@ const Checkbox_Checkbox = /*#__PURE__*/react.forwardRef(function Checkbox(inProp
 });
  false ? 0 : void 0;
 /* harmony default export */ const material_Checkbox_Checkbox = (Checkbox_Checkbox);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/checkmarksSelect/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const checkmarksSelect_styles = ({"formItem":"styles__formItem--d5kSC","name":"styles__name--MaGvz","doubleControl":"styles__doubleControl--zHwoS","wrapper":"styles__wrapper--sIvKV","inputControl":"styles__inputControl--Qvisc","inputArea":"styles__inputArea--mbzIq","symbol":"styles__symbol--pH82C","hint":"styles__hint--oSHra","MuiList-root":"styles__MuiList-root--rz5gk"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/checkmarksSelect/index.js
 var checkmarksSelect_templateObject;
+function checkmarksSelect_typeof(o) { "@babel/helpers - typeof"; return checkmarksSelect_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, checkmarksSelect_typeof(o); }
 function checkmarksSelect_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function checkmarksSelect_defineProperty(obj, key, value) { key = checkmarksSelect_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function checkmarksSelect_toPropertyKey(t) { var i = checkmarksSelect_toPrimitive(t, "string"); return "symbol" == checkmarksSelect_typeof(i) ? i : i + ""; }
+function checkmarksSelect_toPrimitive(t, r) { if ("object" != checkmarksSelect_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != checkmarksSelect_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -50552,16 +50559,8 @@ function checkmarksSelect_taggedTemplateLiteral(strings, raw) { if (!raw) { raw 
 
 
 
-var ITEM_HEIGHT = 48;
-var ITEM_PADDING_TOP = 8;
-var MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
+//import IconComponent from 
+
 
 
 
@@ -50594,14 +50593,49 @@ var checkmarksSelect_CreateStyledButton = function CreateStyledButton(width, col
     return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  //padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ").concat(color || '#FFFFFF', ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(checkmarksSelect_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === 'dark' ? checkmarksSelect_blue[500] : checkmarksSelect_blue[200], ";\n  }\n\n//   &.").concat(Select_selectClasses.expanded, " {\n//     &::after {\n//       content: '\u25B4';//url(../../../../../icons/pen.svg);\n//       // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n//       // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n//       // </svg>\");\n//       // width: 16px;\n//       // height: 16px;\n//       color: #FFFFFF;\n//     }\n//   }\n\n//   &::after {\n//     content: '\u25BE';\n//     float: right;\n//     color: #FFFFFF;\n//   }\n  ");
   });
 };
+var ara = function ara(width, height) {
+  return "\nfont-family: 'Igra Sans';\nfont-size: 14px;\nline-height: 14px;\nbox-sizing: border-box;\npadding: 6px 6px 6px 6px;\nmargin-top: 10px;\nmargin-left: 0px;\n//position: relative;\n//z-index: -100;\nwidth: ".concat(width || 226, "px;\nheight: ").concat(height || 155, "px;\nborder-radius: 15px;\n//border-radius: 0px 0px 15px 15px;\noverflow: auto;\noutline: 0px;\nbackground: #472159;\nborder: none;\ncolor: ").concat(checkmarksSelect_grey[900], ";\nbox-shadow: none;\n\n&::-webkit-scrollbar {\n  width: 14px\n}\n\n&::-webkit-scrollbar-thumb {\n    border: 6px solid transparent;\n    background-clip: padding-box;\n    border-radius: 9999px;\n    background-color: #83409b\n}\n");
+};
 var checkmarksSelect_CreateStyledListbox = function CreateStyledListbox(width, height) {
   return esm_styled('ul')(function (_ref2) {
     var theme = _ref2.theme;
     return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === 'dark' ? checkmarksSelect_grey[300] : checkmarksSelect_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
   });
 };
-var checkmarksSelect_StyledOption = esm_styled(Option_Option)(function (_ref3) {
-  var theme = _ref3.theme;
+var bara = function bara(width, height) {
+  return checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty({
+    fontFamily: 'Igra Sans',
+    fontSize: '14px',
+    lineHeight: '14px',
+    boxSizing: 'border-box',
+    padding: '6px 6px 6px 6px',
+    marginTop: '10px',
+    marginLeft: '0px',
+    //position: ' relative',
+    //z-index: ' -100',
+    width: "226px",
+    height: "155px",
+    borderRadius: '15px',
+    //border-radius: ' 0px 0px 15px 15px',
+    overflow: 'auto',
+    outline: '0px',
+    background: '#472159',
+    border: 'none',
+    color: "".concat(checkmarksSelect_grey[900]),
+    boxShadow: 'none',
+    '&::-webkit-scrollbar': {
+      width: '14px'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      border: "6px solid transparent",
+      backgroundClip: "padding-box",
+      borderRadius: "9999px",
+      backgroundColor: "#83409b"
+    }
+  }, "fontFamily", 'Igra Sans'), "cursor", "pointer"), "color", "#B3B3B3"), "fontSize", '14px'), "lineHeight", '14px');
+};
+var checkmarksSelect_StyledOption = esm_styled(Option_Option)(function (_ref4) {
+  var theme = _ref4.theme;
   return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? checkmarksSelect_grey[700] : checkmarksSelect_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
 });
 var checkmarksSelect_StyledPopper = esm_styled(Popper_Popper)(checkmarksSelect_templateObject || (checkmarksSelect_templateObject = checkmarksSelect_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
@@ -50610,10 +50644,25 @@ var slots = {
   listbox: checkmarksSelect_CreateStyledListbox(undefined, undefined),
   popper: checkmarksSelect_StyledPopper
 };
-var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref4) {
-  var options = _ref4.options,
-    onChange = _ref4.onChange,
-    value = _ref4.value;
+var ITEM_HEIGHT = 48;
+var ITEM_PADDING_TOP = 8;
+var MenuProps = {
+  MenuListProps: {
+    sx: {
+      padding: "6px 0px"
+    }
+  },
+  PaperProps: {
+    sx: bara(undefined, undefined),
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+};
+var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
+  var options = _ref5.options,
+    onChange = _ref5.onChange,
+    value = _ref5.value;
   //const [personName, setPersonName] = React.useState([]);
 
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -50624,6 +50673,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref4) {
         margin: "0px"
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(material_Select_Select, {
+        variant: "standard",
         sx: {
           '& .MuiSelect-select.MuiInputBase-input ': {
             minHeight: "1em"
@@ -50642,14 +50692,28 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref4) {
         MenuProps: MenuProps,
         slots: slots,
         slotsProps: slots,
+        inputProps: {
+          IconComponent: function IconComponent() {
+            return null;
+          }
+        },
         children: options.map(function (obj) {
           return /*#__PURE__*/(0,jsx_runtime.jsxs)(MenuItem_MenuItem, {
+            sx: {
+              padding: "3px 0"
+            },
             value: obj,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
+              sx: {
+                padding: "0px"
+              },
               checked: value.some(function (e) {
                 return e.id == obj.id;
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
+              style: {
+                color: obj.color || '#B3B3B3'
+              },
               primary: obj.name
             })]
           }, obj.id);

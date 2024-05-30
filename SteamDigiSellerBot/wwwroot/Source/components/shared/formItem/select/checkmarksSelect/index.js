@@ -6,17 +6,10 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import css from '../../styles.scss';
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+import css from './styles.scss'
+//import IconComponent from 
+
+
 
 
 import SelectUnstyled, {
@@ -98,6 +91,39 @@ const CreateStyledButton = (width, color) =>
 //   }
   `
   );
+const ara = (width, height) => `
+font-family: 'Igra Sans';
+font-size: 14px;
+line-height: 14px;
+box-sizing: border-box;
+padding: 6px 6px 6px 6px;
+margin-top: 10px;
+margin-left: 0px;
+//position: relative;
+//z-index: -100;
+width: ${width || 226}px;
+height: ${height || 155}px;
+border-radius: 15px;
+//border-radius: 0px 0px 15px 15px;
+overflow: auto;
+outline: 0px;
+background: #472159;
+border: none;
+color: ${grey[900]};
+box-shadow: none;
+
+&::-webkit-scrollbar {
+  width: 14px
+}
+
+&::-webkit-scrollbar-thumb {
+    border: 6px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+    background-color: #83409b
+}
+`
+;
 
 const CreateStyledListbox = (width, height) =>
   styled('ul')(
@@ -134,6 +160,43 @@ const CreateStyledListbox = (width, height) =>
   }
   `
   );
+
+  const bara = (width,height) => {
+    return {
+    fontFamily: 'Igra Sans',
+    fontSize: '14px',
+    lineHeight: '14px',
+    boxSizing: 'border-box',
+    padding: '6px 6px 6px 6px',
+    marginTop: '10px',
+    marginLeft: '0px',
+    //position: ' relative',
+    //z-index: ' -100',
+    width: `226px`,
+    height: `155px`,
+    borderRadius: '15px',
+    //border-radius: ' 0px 0px 15px 15px',
+    overflow: 'auto',
+    outline: '0px',
+    background: '#472159',
+    border: 'none',
+    color: `${grey[900]}`,
+    boxShadow: 'none',  
+    '&::-webkit-scrollbar': {
+      width: '14px',
+    },
+    '&::-webkit-scrollbar-thumb':{
+      border: "6px solid transparent",
+      backgroundClip: "padding-box",
+      borderRadius: "9999px",
+      backgroundColor: "#83409b"
+    },
+    fontFamily: 'Igra Sans',
+    cursor: "pointer",
+    color: "#B3B3B3",
+    fontSize: '14px',
+    lineHeight: '14px',
+  }};
 
 const StyledOption = styled(OptionUnstyled)(
   ({ theme }) => `
@@ -184,15 +247,30 @@ const slots = {
         listbox: CreateStyledListbox(undefined, undefined),
         popper: StyledPopper,
 }
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  MenuListProps: {sx: {padding:"6px 0px"}},
+  PaperProps: {
+    sx: bara(undefined, undefined),
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
 const MultipleSelectCheckmarks = ({options, onChange, value}) => {
   //const [personName, setPersonName] = React.useState([]);
 
 
   return (
+
+    
     <div>
       <FormControl sx={{ m: 1, width: 300, margin: "0px" }}>
         <Select
-          sx={{ '& .MuiSelect-select.MuiInputBase-input ': { minHeight: "1em" } }} 
+          variant='standard'
+          sx={{ '& .MuiSelect-select.MuiInputBase-input ': { minHeight: "1em" }}} 
           multiple
           value={value}
           onChange={onChange}
@@ -200,11 +278,12 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
           MenuProps={MenuProps}
           slots = {slots}
           slotsProps = {slots}
+          inputProps={{ IconComponent: () => null }}
         >
           {options.map((obj) => (
-            <MenuItem  key={obj.id} value={obj}>
-              <Checkbox checked={value.some(e => e.id == obj.id)} />
-              <ListItemText primary={obj.name} />
+            <MenuItem sx={{padding:"3px 0"}} key={obj.id} value={obj}>
+              <Checkbox sx={{padding:"0px"}} checked={value.some(e => e.id == obj.id)} />
+              <ListItemText style={{ color: obj.color || '#B3B3B3' }} primary={obj.name} />
             </MenuItem>
           ))}
         </Select>

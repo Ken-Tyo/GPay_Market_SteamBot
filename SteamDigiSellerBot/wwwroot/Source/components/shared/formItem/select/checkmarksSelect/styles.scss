@@ -85,11 +85,11 @@
     }
 }
 
-.MuiPaper-root::-webkit-scrollbar {
+.MuiList-root::-webkit-scrollbar {
     width: 14px
   }
-
-  .MuiPaper-root::-webkit-scrollbar-thumb {
+  
+  .MuiList-root::-webkit-scrollbar-thumb {
       border: 6px solid transparent;
       background-clip: padding-box;
       border-radius: 9999px;
