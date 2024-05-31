@@ -50677,8 +50677,10 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         variant: "standard",
         sx: {
           '& .MuiSelect-select.MuiInputBase-input ': {
-            paddingLeft: "15px",
             minHeight: "1em"
+          },
+          '& .MuiSelect-select.MuiInputBase-input span': {
+            marginLeft: "15px"
           }
         },
         multiple: true,
@@ -50707,7 +50709,10 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         children: options.map(function (obj) {
           return /*#__PURE__*/(0,jsx_runtime.jsxs)(MenuItem_MenuItem, {
             sx: {
-              padding: "3px 0"
+              padding: "3px 0",
+              '&.Mui-selected span ': {
+                color: "rgb(255, 255, 255)"
+              }
             },
             value: obj,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
@@ -50717,7 +50722,9 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
               style: {
                 color: obj.color || '#B3B3B3'
               },
-              primary: obj.name
+              primary: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                children: obj.name
+              })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
               icon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}),
               checkedIcon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {

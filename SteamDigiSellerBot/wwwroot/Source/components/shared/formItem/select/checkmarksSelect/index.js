@@ -268,7 +268,8 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
       <FormControl sx={{ m: 1, width: 300, margin: "0px" }}>
         <Select
           variant='standard'
-          sx={{ '& .MuiSelect-select.MuiInputBase-input ': { paddingLeft:"15px",minHeight: "1em" }}} 
+          sx={{'& .MuiSelect-select.MuiInputBase-input ': { minHeight: "1em" }, 
+                '& .MuiSelect-select.MuiInputBase-input span': { marginLeft:"15px"}}} 
           multiple
           value={value}
           onChange={onChange}
@@ -279,8 +280,8 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
           inputProps={{ IconComponent: () => null , sx:{'&:focus':{backgroundColor:'transparent'}}}}
         >
           {options.map((obj) => (
-            <MenuItem sx={{padding:"3px 0"}} key={obj.id} value={obj}>
-              <ListItemText sx={{paddingLeft:"15px"}} style={{ color: obj.color || '#B3B3B3' }} primary={obj.name} />
+            <MenuItem sx={{padding:"3px 0", '&.Mui-selected span ':{color:"rgb(255, 255, 255)"}}} key={obj.id} value={obj}>
+              <ListItemText sx={{paddingLeft:"15px"}} style={{ color: obj.color || '#B3B3B3' }} primary={<div>{obj.name}</div>} />
               <Checkbox 
                 icon={<div></div>} 
                 checkedIcon={<div style={{width:"12px", height:"12px"}} className={checkBoxCss.checked}></div>}  
