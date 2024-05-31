@@ -33,7 +33,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     const initial = {
       appId: '',
       productName:"",
-      steamCurrencyId: [5],
+      steamCurrencyId: [{id:5, name:"RUB"}],
       steamCountryCodeId: [28],
       digiSellerIds: "",
       ThirdPartyPriceValue: null,
@@ -41,7 +41,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     };
     const [item, setItem] = useState(initial);
     const { digiPriceSetType } = state.use();
-  
+
     useEffect(() => {
       if (value) {
         let stateVal = {
@@ -54,13 +54,14 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         setItem(stateVal);
       }
     }, [value]);
-
+    
     const currencies = state.use().currencies.map((c) => {
         return {
           id: c.steamId,
           name: c.code,
         };
       });
+    const memoCurrencies = React.useMemo(() => currencies, []);
     
       const regions = state.use().steamRegions.map((c) => {
         return {
@@ -102,7 +103,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       const ThirdPartyPriceTypeVal = item.ThirdPartyPriceType
           ? digiPriceSetType[1].name
           : digiPriceSetType[0].name;
-
+      console.log(item.steamCurrencyId);
     return (
         <ModalBase
           isOpen={isOpen}
@@ -146,7 +147,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                           />
                         </FormControl> */}
 
-                        <MultipleSelectCheckmarks options={currencies} value={item.steamCurrencyId} onChange={handleChange('steamCurrencyId')}/>
+                        <MultipleSelectCheckmarks options={memoCurrencies} value={item.steamCurrencyId} onChange={handleChange('steamCurrencyId')}/>
                     </div>
                   </div>
                   </div>

@@ -50777,7 +50777,10 @@ var ModalFilter = function ModalFilter(_ref) {
   var initial = {
     appId: '',
     productName: "",
-    steamCurrencyId: [5],
+    steamCurrencyId: [{
+      id: 5,
+      name: "RUB"
+    }],
     steamCountryCodeId: [28],
     digiSellerIds: "",
     ThirdPartyPriceValue: null,
@@ -50802,6 +50805,9 @@ var ModalFilter = function ModalFilter(_ref) {
       name: c.code
     };
   });
+  var memoCurrencies = react.useMemo(function () {
+    return currencies;
+  }, []);
   var regions = state.use().steamRegions.map(function (c) {
     return {
       id: c.id,
@@ -50835,6 +50841,7 @@ var ModalFilter = function ModalFilter(_ref) {
     return c.id === item.steamCountryCodeId;
   }) || {}).name;
   var ThirdPartyPriceTypeVal = item.ThirdPartyPriceType ? digiPriceSetType[1].name : digiPriceSetType[0].name;
+  console.log(item.steamCurrencyId);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Фильтры отображения',
@@ -50864,7 +50871,7 @@ var ModalFilter = function ModalFilter(_ref) {
           className: modalProductsFilter_styles.wrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkmarksSelect, {
-              options: currencies,
+              options: memoCurrencies,
               value: item.steamCurrencyId,
               onChange: handleChange('steamCurrencyId')
             })
