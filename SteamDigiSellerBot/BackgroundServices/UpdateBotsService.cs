@@ -58,6 +58,9 @@ namespace SteamDigiSellerBot.Services
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                var id = Guid.NewGuid();
+                _logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Start");
+
                 startCount++;
                 GC.Collect();
                 _logger.LogInformation("Bot updates started");
@@ -181,10 +184,11 @@ namespace SteamDigiSellerBot.Services
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(default(EventId), ex, $"Error while update bot: {bot.Id} {bot.UserName}");
+                        _logger.LogError(default(EventId), ex, $"Error while update bot: {bot.Id} {bot.UserName} , Marker:{id}");
                     }
                 }
 
+                _logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromHours(1));
             }
         }
@@ -207,6 +211,9 @@ namespace SteamDigiSellerBot.Services
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                var id = Guid.NewGuid();
+                _logger.LogError($"{nameof(UpdateBotsService)} UpdateBotState Marker:{id} Start");
+
                 GC.Collect();
                 await using var db = _botRepository.GetContext();
                 List<Bot> bots = await _botRepository.ListAsync(db,
@@ -224,9 +231,11 @@ namespace SteamDigiSellerBot.Services
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(default(EventId), ex, $"Error while update bot: {bot.Id} {bot.UserName}");
+                        _logger.LogError(default(EventId), ex, $"Error while update bot: {bot.Id} {bot.UserName} , Marker:{id}");
                     }
                 }
+
+                _logger.LogError($"{nameof(UpdateBotsService)} UpdateBotState Marker:{id} Finish");
 
                 await Task.Delay(TimeSpan.FromMinutes(1));
             }

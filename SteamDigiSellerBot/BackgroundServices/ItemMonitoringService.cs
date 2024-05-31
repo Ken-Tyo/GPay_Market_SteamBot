@@ -39,6 +39,9 @@ namespace SteamDigiSellerBot.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                var id = Guid.NewGuid();
+                _logger.LogError($"{nameof(ItemMonitoringService)} ExecuteAsync Marker:{id} Start");
+
                 GC.Collect();
                 try
                 {
@@ -58,11 +61,11 @@ namespace SteamDigiSellerBot.Services
                         {
                             prices = await scope.ServiceProvider
                                 .GetRequiredService<IDigiSellerNetworkService>().GetPriceList(user.DigisellerID);
-                            _logger.LogInformation($"ItemMonitoringService: Получена информация по {prices.Count} товарам из Digiseller");
+                            _logger.LogInformation($"ItemMonitoringService: Получена информация по {prices.Count} товарам из Digiseller Marker:{id}");
                         }
                         catch
                         {
-                            _logger.LogError($"ItemMonitoringService: Ошибка при получении товаров из Digiseller");
+                            _logger.LogError($"{nameof(ItemMonitoringService)} : Ошибка при получении товаров из Digiseller Marker:{id}");
                         }
 
                         await itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, user.Id, prices: prices, manualUpdate: false);
@@ -70,9 +73,10 @@ namespace SteamDigiSellerBot.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(default(EventId), ex, "Monitoring Error");
+                    _logger.LogError(default(EventId), ex, $"Monitoring Error Marker:{id}");
                 }
-
+                
+                _logger.LogError($"{nameof(ItemMonitoringService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromMinutes(6));
             }
         }
@@ -101,6 +105,8 @@ namespace SteamDigiSellerBot.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                var id = Guid.NewGuid();
+                _logger.LogError($"{nameof(DiscountMonitoringService)} ExecuteAsync Marker:{id} Start");
                 GC.Collect();
                 try
                 {
@@ -123,9 +129,10 @@ namespace SteamDigiSellerBot.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(default(EventId), ex, "DiscountMonitoringService Error");
+                    _logger.LogError(default(EventId), ex, $"{nameof(DiscountMonitoringService)} Error Marker:{id}");
                 }
 
+                _logger.LogError($"{nameof(DiscountMonitoringService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromMinutes(3), stoppingToken);
             }
         }
