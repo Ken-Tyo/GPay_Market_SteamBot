@@ -9,9 +9,6 @@ import Checkbox from '@mui/material/Checkbox';
 import css from './styles.scss'
 //import IconComponent from 
 
-
-
-
 import SelectUnstyled, {
   selectClasses as selectUnstyledClasses,
 } from '@mui/base/Select';
@@ -22,6 +19,7 @@ import PopperUnstyled from '@mui/base/Popper';
 import { styled } from '@mui/system';
 
 import MUISelect from '@mui/material/Select';
+import checkBoxCss from '../../../checkBox/styles.scss'
 
 const blue = {
   100: '#DAECFF',
@@ -270,7 +268,7 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
       <FormControl sx={{ m: 1, width: 300, margin: "0px" }}>
         <Select
           variant='standard'
-          sx={{ '& .MuiSelect-select.MuiInputBase-input ': { minHeight: "1em" }}} 
+          sx={{ '& .MuiSelect-select.MuiInputBase-input ': { paddingLeft:"15px",minHeight: "1em" }}} 
           multiple
           value={value}
           onChange={onChange}
@@ -278,12 +276,17 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
           MenuProps={MenuProps}
           slots = {slots}
           slotsProps = {slots}
-          inputProps={{ IconComponent: () => null }}
+          inputProps={{ IconComponent: () => null , sx:{'&:focus':{backgroundColor:'transparent'}}}}
         >
           {options.map((obj) => (
             <MenuItem sx={{padding:"3px 0"}} key={obj.id} value={obj}>
-              <Checkbox sx={{padding:"0px"}} checked={value.some(e => e.id == obj.id)} />
-              <ListItemText style={{ color: obj.color || '#B3B3B3' }} primary={obj.name} />
+              <ListItemText sx={{paddingLeft:"15px"}} style={{ color: obj.color || '#B3B3B3' }} primary={obj.name} />
+              <Checkbox 
+                icon={<div></div>} 
+                checkedIcon={<div style={{width:"12px", height:"12px"}} className={checkBoxCss.checked}></div>}  
+                className={checkBoxCss.wrapper} 
+                sx={{padding:"0px", width:"20px", height:"20px"}} 
+                checked={value.some(e => e.id == obj.id)}/>
             </MenuItem>
           ))}
         </Select>

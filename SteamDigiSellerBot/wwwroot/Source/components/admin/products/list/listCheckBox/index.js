@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import css from './styles.scss';
+import css from '../../../../shared/checkBox/styles.scss'
 
 const listCheckBox = ({ value, onClick }) => {
   const [checked, setChecked] = useState(false);

@@ -1,17 +1,18 @@
-@import '../../../../../containers/admin/library';
+@import '../../../containers/admin/library';
 
 .wrapper {
     height: 30px;
     width: 30px;
-    background-color: $purple-2;
+    background-color: $purple-2 !important;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 0px !important;
 
     .checked {
         height: 21px;
         width: 21px;
-        background-color: #BD8CD5;
+        background-color: #BD8CD5 !important; 
     }
 }

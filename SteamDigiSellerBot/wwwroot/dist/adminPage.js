@@ -25857,9 +25857,9 @@ var react_dom_namespaceObject = /*#__PURE__*/__webpack_require__.t(react_dom, 2)
 // EXTERNAL MODULE: ./node_modules/moment/moment.js
 var moment = __webpack_require__(5093);
 var moment_default = /*#__PURE__*/__webpack_require__.n(moment);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/listCheckBox/styles.scss
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/checkBox/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const styles = ({"wrapper":"styles__wrapper--MfZIw","checked":"styles__checked--ZUWx4"});
+/* harmony default export */ const styles = ({"wrapper":"styles__wrapper--Jh4q5","checked":"styles__checked--xegAj"});
 // EXTERNAL MODULE: ./node_modules/react/jsx-runtime.js
 var jsx_runtime = __webpack_require__(4848);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/listCheckBox/index.js
@@ -50567,6 +50567,7 @@ function checkmarksSelect_toPrimitive(t, r) { if ("object" != checkmarksSelect_t
 
 
 
+
 var checkmarksSelect_blue = {
   100: '#DAECFF',
   200: '#99CCF3',
@@ -50676,6 +50677,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         variant: "standard",
         sx: {
           '& .MuiSelect-select.MuiInputBase-input ': {
+            paddingLeft: "15px",
             minHeight: "1em"
           }
         },
@@ -50695,6 +50697,11 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         inputProps: {
           IconComponent: function IconComponent() {
             return null;
+          },
+          sx: {
+            '&:focus': {
+              backgroundColor: 'transparent'
+            }
           }
         },
         children: options.map(function (obj) {
@@ -50703,18 +50710,32 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
               padding: "3px 0"
             },
             value: obj,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
               sx: {
-                padding: "0px"
+                paddingLeft: "15px"
               },
-              checked: value.some(function (e) {
-                return e.id == obj.id;
-              })
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
               style: {
                 color: obj.color || '#B3B3B3'
               },
               primary: obj.name
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
+              icon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}),
+              checkedIcon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                style: {
+                  width: "12px",
+                  height: "12px"
+                },
+                className: styles.checked
+              }),
+              className: styles.wrapper,
+              sx: {
+                padding: "0px",
+                width: "20px",
+                height: "20px"
+              },
+              checked: value.some(function (e) {
+                return e.id == obj.id;
+              })
             })]
           }, obj.id);
         })
@@ -50739,6 +50760,7 @@ function modalProductsFilter_unsupportedIterableToArray(o, minLen) { if (!o) ret
 function modalProductsFilter_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalProductsFilter_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalProductsFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
