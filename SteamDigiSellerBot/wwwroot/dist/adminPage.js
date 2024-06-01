@@ -26194,7 +26194,7 @@ var mapToFormData = function mapToFormData(val, keys) {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var a = _step.value;
-          var key = prop + '[]';
+          var key = prop + "[".concat(elNum, "]");
           var vl = a;
           if (common_typeof(a) === 'object') {
             Object.entries(a).forEach(function (item, i) {
@@ -26220,6 +26220,7 @@ var mapToFormData = function mapToFormData(val, keys) {
   for (var prop in obj) {
     _loop(prop);
   }
+  console.log(Object.fromEntries(data));
   return data;
 };
 var getUrlQueryParams = function getUrlQueryParams() {
@@ -26544,23 +26545,24 @@ var apiFetchItems = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
+          debugger;
           requestData = {
             method: 'POST'
           };
           if (filter != null) {
             requestData.body = mapToFormData(filter);
           }
-          _context6.next = 4;
+          _context6.next = 5;
           return fetch('/items/list', requestData);
-        case 4:
+        case 5:
           res = _context6.sent;
           _context6.t0 = setItems;
-          _context6.next = 8;
+          _context6.next = 9;
           return res.json();
-        case 8:
+        case 9:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 10:
+        case 11:
         case "end":
           return _context6.stop();
       }
@@ -50559,6 +50561,7 @@ function checkmarksSelect_toPrimitive(t, r) { if ("object" != checkmarksSelect_t
 
 
 
+//import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 //import IconComponent from 
 
 
@@ -50670,7 +50673,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
     children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControl, {
       sx: {
         m: 1,
-        width: 300,
+        width: 226,
         margin: "0px"
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(material_Select_Select, {
@@ -50681,6 +50684,16 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
           },
           '& .MuiSelect-select.MuiInputBase-input span': {
             marginLeft: "15px"
+          },
+          '.MuiSelect-nativeInput': {
+            height: "0px",
+            minHeight: "0px",
+            padding: "0px !important",
+            margin: "0px !important",
+            border: "0px !important"
+          },
+          '& .MuiSvgIcon-root': {
+            color: "rgb(255, 255, 255)"
           }
         },
         multiple: true,
@@ -50697,9 +50710,6 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         slots: slots,
         slotsProps: slots,
         inputProps: {
-          IconComponent: function IconComponent() {
-            return null;
-          },
           sx: {
             '&:focus': {
               backgroundColor: 'transparent'
@@ -50843,6 +50853,9 @@ var ModalFilter = function ModalFilter(_ref) {
       name: c.name
     };
   });
+  var memoRegions = react.useMemo(function () {
+    return regions;
+  }, []);
   var handleChange = function handleChange(prop) {
     return function (val, newVal) {
       if (prop === 'steamCurrencyId') {
@@ -50865,7 +50878,6 @@ var ModalFilter = function ModalFilter(_ref) {
       setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, val)));
     };
   };
-  var currencyVal = item.steamCurrencyId || [];
   var regionVal = (regions.find(function (c) {
     return c.id === item.steamCountryCodeId;
   }) || {}).name;
@@ -50888,7 +50900,7 @@ var ModalFilter = function ModalFilter(_ref) {
         value: item.itemName
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_select, {
         name: 'Регион получения:',
-        options: regions,
+        options: memoRegions,
         onChange: handleChange('steamCountryCodeId'),
         value: regionVal
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {

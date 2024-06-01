@@ -71,6 +71,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           name: c.name,
         };
       });
+
+      const memoRegions = React.useMemo(() => regions, []);
     
       const handleChange = (prop) => (val, newVal) => {
         if (prop === 'steamCurrencyId') {
@@ -95,9 +97,6 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         setItem({ ...item, [prop]: val });
       };
     
-      const currencyVal = (
-        item.steamCurrencyId || []
-      );
     
       const regionVal = (
         regions.find((c) => c.id === item.steamCountryCodeId) || {}
@@ -126,7 +125,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 />
                 <FormItemSelect
                     name={'Регион получения:'}
-                    options={regions}
+                    options={memoRegions}
                     onChange={handleChange('steamCountryCodeId')}
                     value={regionVal}
                 />
@@ -135,24 +134,11 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
 
                     <div className={css.wrapper}>
                       <div>
-                        {/* <FormControl className={css.formItem} sx={{ m: 1, width: 300 }}>
-                          <MultiSelect
-                            sx={{ '& .MuiOption-root ': { padding: 0 } }} 
-                            multiple={true}
-                            value={item.steamCurrencyId}
-                            onChange={handleChange('steamCurrencyId')}
-                            input={<OutlinedInput label="Tag" />}
-                            renderValue={(selected) => selected.map(e => e.name).join(", ")}
-                            // MenuProps={MenuProps}
-                            options={currencies}
-
-                          />
-                        </FormControl> */}
-
                         <MultipleSelectCheckmarks options={memoCurrencies} value={item.steamCurrencyId} onChange={handleChange('steamCurrencyId')}/>
                     </div>
                   </div>
                   </div>
+
 
                 <FormItemText
                     name={'DigisellerIDs:'}

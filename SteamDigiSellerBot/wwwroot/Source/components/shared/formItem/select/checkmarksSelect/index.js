@@ -6,7 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-import css from './styles.scss'
+import css from './styles.scss';
+//import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 //import IconComponent from 
 
 import SelectUnstyled, {
@@ -265,11 +266,14 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
 
     
     <div>
-      <FormControl sx={{ m: 1, width: 300, margin: "0px" }}>
+      <FormControl sx={{ m: 1, width: 226, margin: "0px" }}>
         <Select
           variant='standard'
           sx={{'& .MuiSelect-select.MuiInputBase-input ': { minHeight: "1em" }, 
-                '& .MuiSelect-select.MuiInputBase-input span': { marginLeft:"15px"}}} 
+                '& .MuiSelect-select.MuiInputBase-input span': { marginLeft:"15px"},
+                '.MuiSelect-nativeInput': { height:"0px",minHeight:"0px", padding:"0px !important", margin:"0px !important", border:"0px !important"},
+                '& .MuiSvgIcon-root':{color:"rgb(255, 255, 255)"}
+              }} 
           multiple
           value={value}
           onChange={onChange}
@@ -277,7 +281,7 @@ const MultipleSelectCheckmarks = ({options, onChange, value}) => {
           MenuProps={MenuProps}
           slots = {slots}
           slotsProps = {slots}
-          inputProps={{ IconComponent: () => null , sx:{'&:focus':{backgroundColor:'transparent'}}}}
+          inputProps={{sx:{'&:focus':{backgroundColor:'transparent'}}}}
         >
           {options.map((obj) => (
             <MenuItem sx={{padding:"3px 0", '&.Mui-selected span ':{color:"rgb(255, 255, 255)"}}} key={obj.id} value={obj}>

@@ -23,7 +23,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string appId,
             string productName,
             int? steamCountryCodeId,
-            int? steamCurrencyId,
+            IEnumerable<int> steamCurrencyId,
             string digiSellerId);
     }
 
@@ -59,7 +59,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string appId, 
             string productName, 
             int? steamCountryCodeId,
-            int? steamCurrencyId,
+            IEnumerable<int> steamCurrencyId,
             string digiSellerId)
         {
             await using var db = dbContextFactory.CreateDbContext();
@@ -75,7 +75,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             Expression<Func<Item, bool>> predicate = (item) =>
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
-                    && (!steamCurrencyId.HasValue || steamCurrencyId <= 0 || steamCurrencyId == item.SteamCurrencyId)
+                    && (steamCurrencyId != null || steamCurrencyId.Count(e => e == item.SteamCurrencyId) > 0)
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
                     && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId));
 

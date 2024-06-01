@@ -197,6 +197,7 @@ export const setActiveMenuLink = (name) => {
 };
 
 export const apiFetchItems = async (filter) => {
+  debugger;
   let requestData = {method:'POST'};
   if(filter != null){
     requestData.body = mapToFormData(filter);

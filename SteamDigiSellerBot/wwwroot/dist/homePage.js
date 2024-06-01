@@ -25903,7 +25903,7 @@ var mapToFormData = function mapToFormData(val, keys) {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var a = _step.value;
-          var key = prop + '[]';
+          var key = prop + "[".concat(elNum, "]");
           var vl = a;
           if (common_typeof(a) === 'object') {
             Object.entries(a).forEach(function (item, i) {
@@ -25929,6 +25929,7 @@ var mapToFormData = function mapToFormData(val, keys) {
   for (var prop in obj) {
     _loop(prop);
   }
+  console.log(Object.fromEntries(data));
   return data;
 };
 var getUrlQueryParams = function getUrlQueryParams() {

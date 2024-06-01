@@ -13,7 +13,7 @@ export const mapToFormData = (val, keys) => {
         if (Array.isArray(val[prop])) {
             let elNum = 0;
             for (const a of val[prop]) {
-                let key = prop + '[]';
+                let key = prop + `[${elNum}]`;
                 let vl = a;
 
                 if (typeof a === 'object') {
@@ -33,7 +33,7 @@ export const mapToFormData = (val, keys) => {
             if (val[prop] !== null) data.append(prop, val[prop]);
         }
     }
-
+    console.log(Object.fromEntries(data))
     return data;
 };
 

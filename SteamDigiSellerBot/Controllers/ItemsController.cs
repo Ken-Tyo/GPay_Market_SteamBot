@@ -68,10 +68,11 @@ namespace SteamDigiSellerBot.Controllers
             List<Item> items;
             if(productsFilter != null)
             {
-                items = (await _itemRepository.Filter(productsFilter.AppId, 
+                items = (await _itemRepository.Filter(
+                    productsFilter.AppId, 
                     productsFilter.ProductName, 
-                    productsFilter.SteamCountryCodeId, 
-                    productsFilter.SteamCurrencyId, 
+                    productsFilter.SteamCountryCodeId,
+                    productsFilter?.steamCurrencyId?.Select(e => e.Id).ToList(),
                     productsFilter.DigiSellerId)).result;
             }
             else
