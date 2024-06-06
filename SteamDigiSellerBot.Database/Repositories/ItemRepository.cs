@@ -72,10 +72,16 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .OrderBy(x => x.AddedDateTime)
                 .ThenBy(x => x.AppId);
 
+            HashSet<int> currHashSet = null;
+            if (steamCurrencyId != null && steamCurrencyId.Count() > 0)
+            {
+                currHashSet = new HashSet<int>(steamCurrencyId);
+            }
+
             Expression<Func<Item, bool>> predicate = (item) =>
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
-                    && (steamCurrencyId != null || steamCurrencyId.Count(e => e == item.SteamCurrencyId) > 0)
+                    && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
                     && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId));
 
