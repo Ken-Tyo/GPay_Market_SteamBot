@@ -64,16 +64,16 @@ namespace SteamDigiSellerBot.Database.Repositories
             HashSet<string> codes = null;
             if (!string.IsNullOrWhiteSpace(uniqueCode))
             {
-                codes = new HashSet<string>(uniqueCode.Replace(" ", "").Split(',', StringSplitOptions.RemoveEmptyEntries));
+                codes = new HashSet<string>(uniqueCode.ToLower().Replace(" ", "").Split(',', StringSplitOptions.RemoveEmptyEntries));
             }
 
             Expression<Func<GameSession, bool>> predicate = (gs) =>
                        (!orderId.HasValue || gs.Id == orderId.Value)
                     && (string.IsNullOrWhiteSpace(profileStr) || gs.SteamProfileUrl.Contains(profileStr))
                     && (string.IsNullOrWhiteSpace(appId) || gs.Item.AppId.Contains(appId))
-                    && (string.IsNullOrWhiteSpace(gameName) || gs.Item.Name.Contains(gameName))
+                    && (string.IsNullOrWhiteSpace(gameName) || gs.Item.Name.ToLower().Contains(gameName.ToLower()))
                     && (!steamCurrencyId.HasValue || steamCurrencyId <= 0 || steamCurrencyId == gs.Item.SteamCurrencyId)
-                    && (codes == null || codes.Contains(gs.UniqueCode))
+                    && (codes == null || codes.Contains(gs.UniqueCode.ToLower()))
                     && (!statusId.HasValue || statusId <= 0 || statusId == gs.StatusId);
 
             await using var db = _dbContextFactory.CreateDbContext();
