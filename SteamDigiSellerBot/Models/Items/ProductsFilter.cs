@@ -14,6 +14,8 @@ namespace SteamDigiSellerBot.Models.Items
         public string DigiSellerId { get; set; }
 
         public List<IdName> steamCurrencyId { get; set; }
+
+        public List<IdName> gameRegionsCurrency { get; set; }
     }
 
     public class IdName

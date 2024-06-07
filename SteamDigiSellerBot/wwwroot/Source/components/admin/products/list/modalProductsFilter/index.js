@@ -36,6 +36,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       appId: '',
       productName:"",
       steamCurrencyId: [{id:5, name:"RUB"}],
+      gameRegionsCurrency: [],
       steamCountryCodeId: [28],
       digiSellerIds: "",
       ThirdPartyPriceValue: null,
@@ -75,7 +76,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       const memoRegions = React.useMemo(() => regions, []);
     
       const handleChange = (prop) => (val, newVal) => {
-        if (prop === 'steamCurrencyId') {
+        if (prop === 'steamCurrencyId' || prop === 'gameRegionsCurrency') {
           if(val != null){
             //var newVal = val.targer.value;
             //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
@@ -86,9 +87,9 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           return;
         }
         } else if (prop === 'steamCountryCodeId') {
+
           val = regions.find((c) => c.name === val).id;
-        }
-        else if (prop === 'ThirdPartyPriceType') {
+        } else if (prop === 'ThirdPartyPriceType') {
           val = val === '₽';
         }
     
@@ -101,6 +102,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       const regionVal = (
         regions.find((c) => c.id === item.steamCountryCodeId) || {}
       ).name;
+      
       const ThirdPartyPriceTypeVal = item.ThirdPartyPriceType
           ? digiPriceSetType[1].name
           : digiPriceSetType[0].name;
@@ -135,6 +137,15 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                     <div className={css.wrapper}>
                       <div>
                         <MultipleSelectCheckmarks options={memoCurrencies} value={item.steamCurrencyId} onChange={handleChange('steamCurrencyId')}/>
+                    </div>
+                  </div>
+                  </div>
+                  <div className={css.formItem}>
+                    <div className={css.name}>Выбранные регионы иерархии</div>
+
+                    <div className={css.wrapper}>
+                      <div>
+                        <MultipleSelectCheckmarks options={memoCurrencies} value={item.gameRegionsCurrency} onChange={handleChange('gameRegionsCurrency')}/>
                     </div>
                   </div>
                   </div>

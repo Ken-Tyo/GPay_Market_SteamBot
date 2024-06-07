@@ -24,6 +24,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string productName,
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
+            IEnumerable<int> gamePricesCurr,
             string digiSellerId);
     }
 
@@ -60,6 +61,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string productName, 
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
+            IEnumerable<int> gamePricesCurr,
             string digiSellerId)
         {
             await using var db = dbContextFactory.CreateDbContext();
@@ -78,10 +80,17 @@ namespace SteamDigiSellerBot.Database.Repositories
                 currHashSet = new HashSet<int>(steamCurrencyId);
             }
 
+            HashSet<int> gamePricesCurrHashSet = null;
+            if (gamePricesCurr != null && gamePricesCurr.Count() > 0)
+            {
+                gamePricesCurrHashSet = new HashSet<int>(gamePricesCurr);
+            }
+
             Expression<Func<Item, bool>> predicate = (item) =>
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
+                    && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
                     && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId));
 

@@ -50820,6 +50820,7 @@ var ModalFilter = function ModalFilter(_ref) {
       id: 5,
       name: "RUB"
     }],
+    gameRegionsCurrency: [],
     steamCountryCodeId: [28],
     digiSellerIds: "",
     ThirdPartyPriceValue: null,
@@ -50858,7 +50859,7 @@ var ModalFilter = function ModalFilter(_ref) {
   }, []);
   var handleChange = function handleChange(prop) {
     return function (val, newVal) {
-      if (prop === 'steamCurrencyId') {
+      if (prop === 'steamCurrencyId' || prop === 'gameRegionsCurrency') {
         if (val != null) {
           //var newVal = val.targer.value;
           //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
@@ -50915,6 +50916,21 @@ var ModalFilter = function ModalFilter(_ref) {
               options: memoCurrencies,
               value: item.steamCurrencyId,
               onChange: handleChange('steamCurrencyId')
+            })
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name,
+          children: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0440\u0435\u0433\u0438\u043E\u043D\u044B \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u0438"
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkmarksSelect, {
+              options: memoCurrencies,
+              value: item.gameRegionsCurrency,
+              onChange: handleChange('gameRegionsCurrency')
             })
           })
         })]

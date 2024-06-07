@@ -73,6 +73,7 @@ namespace SteamDigiSellerBot.Controllers
                     productsFilter.ProductName, 
                     productsFilter.SteamCountryCodeId,
                     productsFilter?.steamCurrencyId?.Select(e => e.Id).ToList(),
+                    productsFilter?.gameRegionsCurrency?.Select(e => e.Id).ToList(),
                     productsFilter.DigiSellerId)).result;
             }
             else
