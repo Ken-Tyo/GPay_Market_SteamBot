@@ -26545,24 +26545,23 @@ var apiFetchItems = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          debugger;
           requestData = {
             method: 'POST'
           };
           if (filter != null) {
             requestData.body = mapToFormData(filter);
           }
-          _context6.next = 5;
+          _context6.next = 4;
           return fetch('/items/list', requestData);
-        case 5:
+        case 4:
           res = _context6.sent;
           _context6.t0 = setItems;
-          _context6.next = 9;
+          _context6.next = 8;
           return res.json();
-        case 9:
+        case 8:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 11:
+        case 10:
         case "end":
           return _context6.stop();
       }
@@ -50923,7 +50922,7 @@ var ModalFilter = function ModalFilter(_ref) {
         className: modalProductsFilter_styles.formItem,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: modalProductsFilter_styles.name,
-          children: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0440\u0435\u0433\u0438\u043E\u043D\u044B \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u0438"
+          children: "\u0420\u0435\u0433\u0438\u043E\u043D\u044B \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u0438:"
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: modalProductsFilter_styles.wrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {

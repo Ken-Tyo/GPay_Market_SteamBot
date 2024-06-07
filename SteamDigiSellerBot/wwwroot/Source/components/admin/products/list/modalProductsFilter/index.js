@@ -141,7 +141,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                   </div>
                   </div>
                   <div className={css.formItem}>
-                    <div className={css.name}>Выбранные регионы иерархии</div>
+                    <div className={css.name}>Регионы иерархии:</div>
 
                     <div className={css.wrapper}>
                       <div>
