@@ -1,5 +1,5 @@
-import React from 'react';
-import css from './styles.scss';
+import React from "react";
+import css from "./styles.scss";
 
 const TextBox = ({ hint, onChange, defaultValue, cymbol, width }) => {
   const onChangeText = (event) => {
@@ -11,11 +11,15 @@ const TextBox = ({ hint, onChange, defaultValue, cymbol, width }) => {
     <div
       className={css.wrapper}
       onChange={onChangeText}
-      style={{ width: width }}
+      style={{ width: "auto" }}
     >
       <div className={css.inputControl}>
         <div className={css.inputArea}>
-          <input type={'text'} defaultValue={defaultValue} />
+          <input
+            type={"text"}
+            defaultValue={defaultValue}
+            style={{ width: width }}
+          />
           {cymbol && <div className={css.cymbol}>{cymbol}</div>}
         </div>
       </div>

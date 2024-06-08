@@ -25696,6 +25696,89 @@ module.exports = __webpack_require__.p + "57b7451cc6a447c1275b.svg";
 "use strict";
 module.exports = __webpack_require__.p + "31c51e2457afb4182aa9.svg";
 
+/***/ }),
+
+/***/ 6942:
+/***/ ((module, exports) => {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = '';
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (arg) {
+				classes = appendClass(classes, parseValue(arg));
+			}
+		}
+
+		return classes;
+	}
+
+	function parseValue (arg) {
+		if (typeof arg === 'string' || typeof arg === 'number') {
+			return arg;
+		}
+
+		if (typeof arg !== 'object') {
+			return '';
+		}
+
+		if (Array.isArray(arg)) {
+			return classNames.apply(null, arg);
+		}
+
+		if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes('[native code]')) {
+			return arg.toString();
+		}
+
+		var classes = '';
+
+		for (var key in arg) {
+			if (hasOwn.call(arg, key) && arg[key]) {
+				classes = appendClass(classes, key);
+			}
+		}
+
+		return classes;
+	}
+
+	function appendClass (value, newClass) {
+		if (!newClass) {
+			return value;
+		}
+	
+		if (value) {
+			return value + ' ' + newClass;
+		}
+	
+		return value + newClass;
+	}
+
+	if ( true && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (true) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+			return classNames;
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+}());
+
+
 /***/ })
 
 /******/ 	});
@@ -45202,7 +45285,7 @@ var pageHeader = function pageHeader(_ref) {
 /* harmony default export */ const products_styles = ({"wrapper":"styles__wrapper--u1Nfh","section":"styles__section--Tu6vH","titleSection":"styles__titleSection--LkMYH","title":"styles__title--BM_ee","subTitle":"styles__subTitle--m2YPX","content":"styles__content--WDTvh"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalProductsFilter_styles = ({"css-1km1ehz":"styles__css-1km1ehz--YrFPE","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","MuiPaper-root":"styles__MuiPaper-root--pmmJh","content":"styles__content--HSI89","actions":"styles__actions--iuJTu","currName":"styles__currName--ZGhq_","paddingZero":"styles__paddingZero--iWQwK","MuiOption-root":"styles__MuiOption-root--ROouk","css-1v42tcw":"styles__css-1v42tcw--ULLrJ"});
+/* harmony default export */ const modalProductsFilter_styles = ({"css-1km1ehz":"styles__css-1km1ehz--YrFPE","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","MuiPaper-root":"styles__MuiPaper-root--pmmJh","content":"styles__content--HSI89","formRegionParams":"styles__formRegionParams--sHk5w","actions":"styles__actions--iuJTu","currName":"styles__currName--ZGhq_","paddingZero":"styles__paddingZero--iWQwK","MuiOption-root":"styles__MuiOption-root--ROouk","css-1v42tcw":"styles__css-1v42tcw--ULLrJ","activeHierarchy":"styles__activeHierarchy--sqDVT"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
@@ -45398,7 +45481,11 @@ function select_MultipleSelectPlaceholder(_ref4) {
     })]
   });
 }
+// EXTERNAL MODULE: ./node_modules/classnames/index.js
+var node_modules_classnames = __webpack_require__(6942);
+var classnames_default = /*#__PURE__*/__webpack_require__.n(node_modules_classnames);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/index.js
+
 
 
 
@@ -45408,9 +45495,10 @@ var FormItemSelect = function FormItemSelect(_ref) {
     onChange = _ref.onChange,
     value = _ref.value,
     options = _ref.options,
-    hint = _ref.hint;
+    hint = _ref.hint,
+    className = _ref.className;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    className: formItem_styles.formItem,
+    className: classnames_default()(formItem_styles.formItem, className),
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: formItem_styles.name,
       children: name
@@ -45446,15 +45534,18 @@ var textbox2_TextBox = function TextBox(_ref) {
     className: textbox2_styles.wrapper,
     onChange: onChangeText,
     style: {
-      width: width
+      width: "auto"
     },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: textbox2_styles.inputControl,
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: textbox2_styles.inputArea,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-          type: 'text',
-          defaultValue: defaultValue
+          type: "text",
+          defaultValue: defaultValue,
+          style: {
+            width: width
+          }
         }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: textbox2_styles.cymbol,
           children: cymbol
@@ -50561,7 +50652,7 @@ function checkmarksSelect_toPrimitive(t, r) { if ("object" != checkmarksSelect_t
 
 
 //import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-//import IconComponent from 
+//import IconComponent from
 
 
 
@@ -50571,79 +50662,79 @@ function checkmarksSelect_toPrimitive(t, r) { if ("object" != checkmarksSelect_t
 
 
 var checkmarksSelect_blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75'
+  100: "#DAECFF",
+  200: "#99CCF3",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  900: "#003A75"
 };
 var checkmarksSelect_grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f'
+  50: "#f6f8fa",
+  100: "#eaeef2",
+  200: "#d0d7de",
+  300: "#afb8c1",
+  400: "#8c959f",
+  500: "#6e7781",
+  600: "#57606a",
+  700: "#424a53",
+  800: "#32383f",
+  900: "#24292f"
 };
 var checkmarksSelect_CreateStyledButton = function CreateStyledButton(width, color) {
-  return esm_styled('button')(function (_ref) {
+  return esm_styled("button")(function (_ref) {
     var theme = _ref.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  //padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ").concat(color || '#FFFFFF', ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(checkmarksSelect_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === 'dark' ? checkmarksSelect_blue[500] : checkmarksSelect_blue[200], ";\n  }\n\n//   &.").concat(Select_selectClasses.expanded, " {\n//     &::after {\n//       content: '\u25B4';//url(../../../../../icons/pen.svg);\n//       // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n//       // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n//       // </svg>\");\n//       // width: 16px;\n//       // height: 16px;\n//       color: #FFFFFF;\n//     }\n//   }\n\n//   &::after {\n//     content: '\u25BE';\n//     float: right;\n//     color: #FFFFFF;\n//   }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: 226;\n  height: 51px;\n  //padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ".concat(color || "#FFFFFF", ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(checkmarksSelect_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? checkmarksSelect_blue[500] : checkmarksSelect_blue[200], ";\n  }\n\n//   &.").concat(Select_selectClasses.expanded, " {\n//     &::after {\n//       content: '\u25B4';//url(../../../../../icons/pen.svg);\n//       // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n//       // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n//       // </svg>\");\n//       // width: 16px;\n//       // height: 16px;\n//       color: #FFFFFF;\n//     }\n//   }\n\n//   &::after {\n//     content: '\u25BE';\n//     float: right;\n//     color: #FFFFFF;\n//   }\n  ");
   });
 };
 var ara = function ara(width, height) {
   return "\nfont-family: 'Igra Sans';\nfont-size: 14px;\nline-height: 14px;\nbox-sizing: border-box;\npadding: 6px 6px 6px 6px;\nmargin-top: 10px;\nmargin-left: 0px;\n//position: relative;\n//z-index: -100;\nwidth: ".concat(width || 226, "px;\nheight: ").concat(height || 155, "px;\nborder-radius: 15px;\n//border-radius: 0px 0px 15px 15px;\noverflow: auto;\noutline: 0px;\nbackground: #472159;\nborder: none;\ncolor: ").concat(checkmarksSelect_grey[900], ";\nbox-shadow: none;\n\n&::-webkit-scrollbar {\n  width: 14px\n}\n\n&::-webkit-scrollbar-thumb {\n    border: 6px solid transparent;\n    background-clip: padding-box;\n    border-radius: 9999px;\n    background-color: #83409b\n}\n");
 };
 var checkmarksSelect_CreateStyledListbox = function CreateStyledListbox(width, height) {
-  return esm_styled('ul')(function (_ref2) {
+  return esm_styled("ul")(function (_ref2) {
     var theme = _ref2.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === 'dark' ? checkmarksSelect_grey[300] : checkmarksSelect_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === "dark" ? checkmarksSelect_grey[300] : checkmarksSelect_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
   });
 };
 var bara = function bara(width, height) {
   return checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty({
-    fontFamily: 'Igra Sans',
-    fontSize: '14px',
-    lineHeight: '14px',
-    boxSizing: 'border-box',
-    padding: '6px 6px 6px 6px',
-    marginTop: '10px',
-    marginLeft: '0px',
+    fontFamily: "Igra Sans",
+    fontSize: "14px",
+    lineHeight: "14px",
+    boxSizing: "border-box",
+    padding: "6px 6px 6px 6px",
+    marginTop: "10px",
+    marginLeft: "0px",
     //position: ' relative',
     //z-index: ' -100',
     width: "226px",
     height: "155px",
-    borderRadius: '15px',
+    borderRadius: "15px",
     //border-radius: ' 0px 0px 15px 15px',
-    overflow: 'auto',
-    outline: '0px',
-    background: '#472159',
-    border: 'none',
+    overflow: "auto",
+    outline: "0px",
+    background: "#472159",
+    border: "none",
     color: "".concat(checkmarksSelect_grey[900]),
-    boxShadow: 'none',
-    '&::-webkit-scrollbar': {
-      width: '14px'
+    boxShadow: "none",
+    "&::-webkit-scrollbar": {
+      width: "14px"
     },
-    '&::-webkit-scrollbar-thumb': {
+    "&::-webkit-scrollbar-thumb": {
       border: "6px solid transparent",
       backgroundClip: "padding-box",
       borderRadius: "9999px",
       backgroundColor: "#83409b"
     }
-  }, "fontFamily", 'Igra Sans'), "cursor", "pointer"), "color", "#B3B3B3"), "fontSize", '14px'), "lineHeight", '14px');
+  }, "fontFamily", "Igra Sans"), "cursor", "pointer"), "color", "#B3B3B3"), "fontSize", "14px"), "lineHeight", "14px");
 };
 var checkmarksSelect_StyledOption = esm_styled(Option_Option)(function (_ref4) {
   var theme = _ref4.theme;
-  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? checkmarksSelect_grey[700] : checkmarksSelect_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
+  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === "dark" ? checkmarksSelect_grey[700] : checkmarksSelect_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
 });
 var checkmarksSelect_StyledPopper = esm_styled(Popper_Popper)(checkmarksSelect_templateObject || (checkmarksSelect_templateObject = checkmarksSelect_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
 var slots = {
-  root: checkmarksSelect_CreateStyledButton(undefined, '#FFFFFF'),
+  root: checkmarksSelect_CreateStyledButton(undefined, "#FFFFFF"),
   listbox: checkmarksSelect_CreateStyledListbox(undefined, undefined),
   popper: checkmarksSelect_StyledPopper
 };
@@ -50672,26 +50763,26 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
     children: /*#__PURE__*/(0,jsx_runtime.jsx)(FormControl_FormControl, {
       sx: {
         m: 1,
-        width: 226,
+        width: "100%",
         margin: "0px"
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(material_Select_Select, {
         variant: "standard",
         sx: {
-          '& .MuiSelect-select.MuiInputBase-input ': {
+          "& .MuiSelect-select.MuiInputBase-input ": {
             minHeight: "1em"
           },
-          '& .MuiSelect-select.MuiInputBase-input span': {
+          "& .MuiSelect-select.MuiInputBase-input span": {
             marginLeft: "15px"
           },
-          '.MuiSelect-nativeInput': {
+          ".MuiSelect-nativeInput": {
             height: "0px",
             minHeight: "0px",
             padding: "0px !important",
             margin: "0px !important",
             border: "0px !important"
           },
-          '& .MuiSvgIcon-root': {
+          "& .MuiSvgIcon-root": {
             color: "rgb(255, 255, 255)"
           }
         },
@@ -50710,8 +50801,8 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         slotsProps: slots,
         inputProps: {
           sx: {
-            '&:focus': {
-              backgroundColor: 'transparent'
+            "&:focus": {
+              backgroundColor: "transparent"
             }
           }
         },
@@ -50719,7 +50810,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
           return /*#__PURE__*/(0,jsx_runtime.jsxs)(MenuItem_MenuItem, {
             sx: {
               padding: "3px 0",
-              '&.Mui-selected span ': {
+              "&.Mui-selected span ": {
                 color: "rgb(255, 255, 255)"
               }
             },
@@ -50729,7 +50820,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
                 paddingLeft: "15px"
               },
               style: {
-                color: obj.color || '#B3B3B3'
+                color: obj.color || "#B3B3B3"
               },
               primary: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 children: obj.name
@@ -50760,6 +50851,34 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
   });
 };
 /* harmony default export */ const checkmarksSelect = (MultipleSelectCheckmarks);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/checkBox/index.js
+
+
+
+var FillCheckBox = function FillCheckBox(_ref) {
+  var checked = _ref.checked,
+    _ref$size = _ref.size,
+    size = _ref$size === void 0 ? 20 : _ref$size;
+  var checkedSize = size - 8;
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
+    icon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}),
+    checkedIcon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      style: {
+        width: "".concat(checkedSize, "px"),
+        height: "".concat(checkedSize, "px")
+      },
+      className: styles.checked
+    }),
+    className: styles.wrapper,
+    sx: {
+      padding: "0px",
+      width: "".concat(size, "px"),
+      height: "".concat(size, "px")
+    },
+    checked: checked
+  });
+};
+/* harmony default export */ const checkBox = (FillCheckBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/index.js
 function modalProductsFilter_typeof(o) { "@babel/helpers - typeof"; return modalProductsFilter_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalProductsFilter_typeof(o); }
 function modalProductsFilter_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalProductsFilter_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalProductsFilter_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalProductsFilter_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -50776,6 +50895,8 @@ function modalProductsFilter_unsupportedIterableToArray(o, minLen) { if (!o) ret
 function modalProductsFilter_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function modalProductsFilter_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function modalProductsFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
@@ -50813,7 +50934,7 @@ var ModalFilter = function ModalFilter(_ref) {
     onCancel = _ref.onCancel,
     onSave = _ref.onSave;
   var initial = {
-    appId: '',
+    appId: "",
     productName: "",
     steamCurrencyId: [{
       id: 5,
@@ -50858,7 +50979,7 @@ var ModalFilter = function ModalFilter(_ref) {
   }, []);
   var handleChange = function handleChange(prop) {
     return function (val, newVal) {
-      if (prop === 'steamCurrencyId' || prop === 'gameRegionsCurrency') {
+      if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency") {
         if (val != null) {
           //var newVal = val.targer.value;
           //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
@@ -50867,12 +50988,12 @@ var ModalFilter = function ModalFilter(_ref) {
         } else {
           return;
         }
-      } else if (prop === 'steamCountryCodeId') {
+      } else if (prop === "steamCountryCodeId") {
         val = regions.find(function (c) {
           return c.name === val;
         }).id;
-      } else if (prop === 'ThirdPartyPriceType') {
-        val = val === '₽';
+      } else if (prop === "ThirdPartyPriceType") {
+        val = val === "₽";
       }
       console.log(prop, val);
       setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, val)));
@@ -50885,23 +51006,23 @@ var ModalFilter = function ModalFilter(_ref) {
   console.log(item.steamCurrencyId);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
-    title: 'Фильтры отображения',
+    title: "Фильтры отображения",
     width: 705,
     height: 734,
     children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: modalProductsFilter_styles.content,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
-        name: 'AppID:',
-        onChange: handleChange('appId'),
+        name: "AppID:",
+        onChange: handleChange("appId"),
         value: item.appId
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
-        name: 'Название товара:',
-        onChange: handleChange('productName'),
+        name: "Название товара:",
+        onChange: handleChange("productName"),
         value: item.itemName
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_select, {
-        name: 'Регион получения:',
+        name: "Регион получения:",
         options: memoRegions,
-        onChange: handleChange('steamCountryCodeId'),
+        onChange: handleChange("steamCountryCodeId"),
         value: regionVal
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalProductsFilter_styles.formItem,
@@ -50914,7 +51035,7 @@ var ModalFilter = function ModalFilter(_ref) {
             children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkmarksSelect, {
               options: memoCurrencies,
               value: item.steamCurrencyId,
-              onChange: handleChange('steamCurrencyId')
+              onChange: handleChange("steamCurrencyId")
             })
           })
         })]
@@ -50929,53 +51050,128 @@ var ModalFilter = function ModalFilter(_ref) {
             children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkmarksSelect, {
               options: memoCurrencies,
               value: item.gameRegionsCurrency,
-              onChange: handleChange('gameRegionsCurrency')
+              onChange: handleChange("gameRegionsCurrency")
             })
           })
         })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name,
+          children: "\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B:"
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalProductsFilter_styles.doubleControl,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+              options: digiPriceSetType,
+              defaultValue: ThirdPartyPriceTypeVal,
+              onChange: handleChange("ThirdPartyPriceType"),
+              width: 124,
+              height: 75
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+              options: digiPriceSetType,
+              defaultValue: ThirdPartyPriceTypeVal,
+              onChange: handleChange("ThirdPartyPriceType"),
+              width: 68,
+              height: 75
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
+              onChange: handleChange("ThirdPartyPriceValue"),
+              defaultValue: item.ThirdPartyPriceValue,
+              width: 92
+            })]
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalProductsFilter_styles.doubleControl,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              style: {
+                fontSize: "18px"
+              },
+              children: "\u0438\u0441\u043A\u0430\u0442\u044C \u043A \u043E\u0441\u043D\u043E\u0432\u0435:"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+              options: digiPriceSetType,
+              defaultValue: ThirdPartyPriceTypeVal,
+              onChange: handleChange("ThirdPartyPriceType"),
+              width: 124,
+              height: 75
+            })]
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalProductsFilter_styles.doubleControl,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              style: {
+                fontSize: "18px"
+              },
+              children: "\u0412\u043A\u043B\u044E\u0447\u0430\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u0443\u044E \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u044E:"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: modalProductsFilter_styles.wrapper,
+              style: {
+                width: "30px"
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkBox, {
+                size: 30,
+                checked: function checked() {
+                  return true;
+                }
+              })
+            })]
+          })
+        })]
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
-        name: 'DigisellerIDs:',
-        onChange: handleChange('digiSellerIds'),
+        name: "DigisellerIDs:",
+        onChange: handleChange("digiSellerIds"),
         value: item.digiSellerId
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalProductsFilter_styles.formItem,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: modalProductsFilter_styles.name,
-          children: !item.ThirdPartyPriceType ? 'Процент от Steam:' : 'Цена Digiseller'
+          children: !item.ThirdPartyPriceType ? "Процент от Steam:" : "Цена Digiseller"
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: modalProductsFilter_styles.wrapper,
-            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-              className: modalProductsFilter_styles.doubleControl,
-              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
-                onChange: handleChange('ThirdPartyPriceValue'),
-                defaultValue: item.ThirdPartyPriceValue,
-                width: 157
-              }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
-                options: digiPriceSetType,
-                defaultValue: ThirdPartyPriceTypeVal,
-                onChange: handleChange('ThirdPartyPriceType'),
-                width: 69,
-                height: 75
-              })]
-            })
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalProductsFilter_styles.doubleControl,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
+              onChange: handleChange("ThirdPartyPriceValue"),
+              defaultValue: item.ThirdPartyPriceValue,
+              width: 157
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+              options: digiPriceSetType,
+              defaultValue: ThirdPartyPriceTypeVal,
+              onChange: handleChange("ThirdPartyPriceType"),
+              width: 69,
+              height: 75
+            })]
           })
         })]
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: modalProductsFilter_styles.actions,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-        text: 'Отобразить',
+        text: "Отобразить",
         style: {
-          backgroundColor: '#A348CE',
-          marginRight: '24px',
-          width: '322px'
+          backgroundColor: "#A348CE",
+          marginRight: "24px",
+          width: "322px"
         },
         onClick: function onClick() {
           onSave(item);
         }
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-        text: 'Отмена',
+        text: "Отмена",
         onClick: /*#__PURE__*/modalProductsFilter_asyncToGenerator( /*#__PURE__*/modalProductsFilter_regeneratorRuntime().mark(function _callee() {
           return modalProductsFilter_regeneratorRuntime().wrap(function _callee$(_context) {
             while (1) switch (_context.prev = _context.next) {
@@ -50989,8 +51185,8 @@ var ModalFilter = function ModalFilter(_ref) {
           }, _callee);
         })),
         style: {
-          backgroundColor: '#9A7AA9',
-          marginLeft: '0px'
+          backgroundColor: "#9A7AA9",
+          marginLeft: "0px"
         }
       })]
     })]

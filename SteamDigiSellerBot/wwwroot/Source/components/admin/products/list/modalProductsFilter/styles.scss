@@ -21,9 +21,18 @@
         .name {
             margin-right: 40px;
         }
+        .doubleControl{
+            align-items: baseline;
+            justify-content: space-between;
+        }
     }
 }
 
+.formRegionParams {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
 
 .actions {
     display: flex;
@@ -48,3 +57,8 @@
 .MuiOption-root.css-1v42tcw{
     padding: 0 !important;
 }
+
+.activeHierarchy {
+    justify-content: right;
+}
+

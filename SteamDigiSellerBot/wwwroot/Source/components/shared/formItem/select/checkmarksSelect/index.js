@@ -1,63 +1,63 @@
-import * as React from 'react';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
-import Select from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
-import css from './styles.scss';
+import * as React from "react";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+import css from "./styles.scss";
 //import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-//import IconComponent from 
+//import IconComponent from
 
 import SelectUnstyled, {
   selectClasses as selectUnstyledClasses,
-} from '@mui/base/Select';
+} from "@mui/base/Select";
 import OptionUnstyled, {
   optionClasses as optionUnstyledClasses,
-} from '@mui/base/Option';
-import PopperUnstyled from '@mui/base/Popper';
-import { styled } from '@mui/system';
+} from "@mui/base/Option";
+import PopperUnstyled from "@mui/base/Popper";
+import { styled } from "@mui/system";
 
-import MUISelect from '@mui/material/Select';
-import checkBoxCss from '../../../checkBox/styles.scss'
+import MUISelect from "@mui/material/Select";
+import checkBoxCss from "../../../checkBox/styles.scss";
 
 const blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75',
+  100: "#DAECFF",
+  200: "#99CCF3",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  900: "#003A75",
 };
 
 const grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f',
+  50: "#f6f8fa",
+  100: "#eaeef2",
+  200: "#d0d7de",
+  300: "#afb8c1",
+  400: "#8c959f",
+  500: "#6e7781",
+  600: "#57606a",
+  700: "#424a53",
+  800: "#32383f",
+  900: "#24292f",
 };
 
 const CreateStyledButton = (width, color) =>
-  styled('button')(
+  styled("button")(
     ({ theme }) => `
   font-family: 'Igra Sans';
   font-size: 14px;
   line-height: 14px;
   box-sizing: border-box;
-  width: ${width || 226}px;
+  width: 226;
   height: 51px;
   //padding: 12px;
   border-radius: 15px;
   text-align: left;
   background: #512068;
-  color: ${color || '#FFFFFF'};
+  color: ${color || "#FFFFFF"};
   border: none;
   //z-index: 2;
   //position: relative;
@@ -68,7 +68,7 @@ const CreateStyledButton = (width, color) =>
 
   &.${selectUnstyledClasses.focusVisible} {
     border-color: ${blue[400]};
-    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[500] : blue[200]};
+    outline: 3px solid ${theme.palette.mode === "dark" ? blue[500] : blue[200]};
   }
 
 //   &.${selectUnstyledClasses.expanded} {
@@ -121,11 +121,9 @@ box-shadow: none;
     border-radius: 9999px;
     background-color: #83409b
 }
-`
-;
-
+`;
 const CreateStyledListbox = (width, height) =>
-  styled('ul')(
+  styled("ul")(
     ({ theme }) => `
   font-family: 'Igra Sans';
   font-size: 14px;
@@ -144,7 +142,7 @@ const CreateStyledListbox = (width, height) =>
   outline: 0px;
   background: #472159;
   border: none;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
   box-shadow: none;
 
   &::-webkit-scrollbar {
@@ -160,42 +158,43 @@ const CreateStyledListbox = (width, height) =>
   `
   );
 
-  const bara = (width,height) => {
-    return {
-    fontFamily: 'Igra Sans',
-    fontSize: '14px',
-    lineHeight: '14px',
-    boxSizing: 'border-box',
-    padding: '6px 6px 6px 6px',
-    marginTop: '10px',
-    marginLeft: '0px',
+const bara = (width, height) => {
+  return {
+    fontFamily: "Igra Sans",
+    fontSize: "14px",
+    lineHeight: "14px",
+    boxSizing: "border-box",
+    padding: "6px 6px 6px 6px",
+    marginTop: "10px",
+    marginLeft: "0px",
     //position: ' relative',
     //z-index: ' -100',
     width: `226px`,
     height: `155px`,
-    borderRadius: '15px',
+    borderRadius: "15px",
     //border-radius: ' 0px 0px 15px 15px',
-    overflow: 'auto',
-    outline: '0px',
-    background: '#472159',
-    border: 'none',
+    overflow: "auto",
+    outline: "0px",
+    background: "#472159",
+    border: "none",
     color: `${grey[900]}`,
-    boxShadow: 'none',  
-    '&::-webkit-scrollbar': {
-      width: '14px',
+    boxShadow: "none",
+    "&::-webkit-scrollbar": {
+      width: "14px",
     },
-    '&::-webkit-scrollbar-thumb':{
+    "&::-webkit-scrollbar-thumb": {
       border: "6px solid transparent",
       backgroundClip: "padding-box",
       borderRadius: "9999px",
-      backgroundColor: "#83409b"
+      backgroundColor: "#83409b",
     },
-    fontFamily: 'Igra Sans',
+    fontFamily: "Igra Sans",
     cursor: "pointer",
     color: "#B3B3B3",
-    fontSize: '14px',
-    lineHeight: '14px',
-  }};
+    fontSize: "14px",
+    lineHeight: "14px",
+  };
+};
 
 const StyledOption = styled(OptionUnstyled)(
   ({ theme }) => `
@@ -228,7 +227,7 @@ const StyledOption = styled(OptionUnstyled)(
   }
 
   &.${optionUnstyledClasses.disabled} {
-    color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+    color: ${theme.palette.mode === "dark" ? grey[700] : grey[400]};
   }
 
   &:hover:not(.${optionUnstyledClasses.disabled}) {
@@ -242,14 +241,14 @@ const StyledPopper = styled(PopperUnstyled)`
   z-index: 1400;
 `;
 const slots = {
-        root: CreateStyledButton(undefined, '#FFFFFF'),
-        listbox: CreateStyledListbox(undefined, undefined),
-        popper: StyledPopper,
-}
+  root: CreateStyledButton(undefined, "#FFFFFF"),
+  listbox: CreateStyledListbox(undefined, undefined),
+  popper: StyledPopper,
+};
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  MenuListProps: {sx: {padding:"6px 0px"}},
+  MenuListProps: { sx: { padding: "6px 0px" } },
   PaperProps: {
     sx: bara(undefined, undefined),
     style: {
@@ -258,46 +257,71 @@ const MenuProps = {
   },
 };
 
-const MultipleSelectCheckmarks = ({options, onChange, value}) => {
+const MultipleSelectCheckmarks = ({ options, onChange, value }) => {
   //const [personName, setPersonName] = React.useState([]);
 
-
   return (
-
-    
     <div>
-      <FormControl sx={{ m: 1, width: 226, margin: "0px" }}>
+      <FormControl sx={{ m: 1, width: "100%", margin: "0px" }}>
         <Select
-          variant='standard'
-          sx={{'& .MuiSelect-select.MuiInputBase-input ': { minHeight: "1em" }, 
-                '& .MuiSelect-select.MuiInputBase-input span': { marginLeft:"15px"},
-                '.MuiSelect-nativeInput': { height:"0px",minHeight:"0px", padding:"0px !important", margin:"0px !important", border:"0px !important"},
-                '& .MuiSvgIcon-root':{color:"rgb(255, 255, 255)"}
-              }} 
+          variant="standard"
+          sx={{
+            "& .MuiSelect-select.MuiInputBase-input ": { minHeight: "1em" },
+            "& .MuiSelect-select.MuiInputBase-input span": {
+              marginLeft: "15px",
+            },
+            ".MuiSelect-nativeInput": {
+              height: "0px",
+              minHeight: "0px",
+              padding: "0px !important",
+              margin: "0px !important",
+              border: "0px !important",
+            },
+            "& .MuiSvgIcon-root": { color: "rgb(255, 255, 255)" },
+          }}
           multiple
           value={value}
           onChange={onChange}
-          renderValue={(selected) => <span>{selected.map(e => e.name).join(", ")}</span>}
+          renderValue={(selected) => (
+            <span>{selected.map((e) => e.name).join(", ")}</span>
+          )}
           MenuProps={MenuProps}
-          slots = {slots}
-          slotsProps = {slots}
-          inputProps={{sx:{'&:focus':{backgroundColor:'transparent'}}}}
+          slots={slots}
+          slotsProps={slots}
+          inputProps={{ sx: { "&:focus": { backgroundColor: "transparent" } } }}
         >
           {options.map((obj) => (
-            <MenuItem sx={{padding:"3px 0", '&.Mui-selected span ':{color:"rgb(255, 255, 255)"}}} key={obj.id} value={obj}>
-              <ListItemText sx={{paddingLeft:"15px"}} style={{ color: obj.color || '#B3B3B3' }} primary={<div>{obj.name}</div>} />
-              <Checkbox 
-                icon={<div></div>} 
-                checkedIcon={<div style={{width:"12px", height:"12px"}} className={checkBoxCss.checked}></div>}  
-                className={checkBoxCss.wrapper} 
-                sx={{padding:"0px", width:"20px", height:"20px"}} 
-                checked={value.some(e => e.id == obj.id)}/>
+            <MenuItem
+              sx={{
+                padding: "3px 0",
+                "&.Mui-selected span ": { color: "rgb(255, 255, 255)" },
+              }}
+              key={obj.id}
+              value={obj}
+            >
+              <ListItemText
+                sx={{ paddingLeft: "15px" }}
+                style={{ color: obj.color || "#B3B3B3" }}
+                primary={<div>{obj.name}</div>}
+              />
+              <Checkbox
+                icon={<div></div>}
+                checkedIcon={
+                  <div
+                    style={{ width: "12px", height: "12px" }}
+                    className={checkBoxCss.checked}
+                  ></div>
+                }
+                className={checkBoxCss.wrapper}
+                sx={{ padding: "0px", width: "20px", height: "20px" }}
+                checked={value.some((e) => e.id == obj.id)}
+              />
             </MenuItem>
           ))}
         </Select>
       </FormControl>
     </div>
   );
-}
+};
 
 export default MultipleSelectCheckmarks;
