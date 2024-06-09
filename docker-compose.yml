@@ -18,4 +18,5 @@ services:
     volumes:
       - /bin/digi/logs:/app/Logs      
     networks:
-      - bridge
+      bridge:
+        external: true
