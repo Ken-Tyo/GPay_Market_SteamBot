@@ -83,7 +83,9 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       color: gameSessionsStatuses[prop].color,
     });
   }
-  statuses = [{ id: 0, name: 'Все' }, ...statuses];
+  statuses = [{ id: 0, name: 'Все' },
+              { id: 100, name: 'Только ошибки', color: '#E13F29'},
+              { id: 200, name: 'Только успешные', color: '#4FBD53'},...statuses];
 
   const handleChange = (prop) => (val) => {
     if (prop === 'steamCurrencyId') {
