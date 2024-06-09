@@ -1,8 +1,5 @@
 version: '3.3'
-networks:
-  default:
-    external:
-      name: bridge
+
 services:
   front:
     build:
@@ -21,5 +18,3 @@ services:
       digiSellerEnable: "true"
     volumes:
       - /bin/digi/logs:/app/Logs      
-    networks:
-      - default
