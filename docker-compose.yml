@@ -17,5 +17,5 @@ services:
       digiSellerEnable: "true"
     volumes:
       - /bin/digi/logs:/app/Logs      
-    network:
+    networks:
       - bridge
