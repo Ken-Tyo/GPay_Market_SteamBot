@@ -73,6 +73,13 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 customStatuses = new List<GameSessionStatusEnum> {
                     GameSessionStatusEnum.None,
+                    GameSessionStatusEnum.IncorrectProfile,
+                    GameSessionStatusEnum.RequestReject,
+                    GameSessionStatusEnum.GameRejected,
+                    GameSessionStatusEnum.BotLimit,
+                    GameSessionStatusEnum.ProfileNoSet,
+                    GameSessionStatusEnum.GameIsExists,
+                    GameSessionStatusEnum.BotNotFound,
                     GameSessionStatusEnum.IncorrectRegion,
                     GameSessionStatusEnum.UnknownError,
                     GameSessionStatusEnum.ExpiredTimer,
