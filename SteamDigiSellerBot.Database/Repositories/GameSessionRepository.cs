@@ -85,7 +85,6 @@ namespace SteamDigiSellerBot.Database.Repositories
                     GameSessionStatusEnum.ExpiredTimer,
                     GameSessionStatusEnum.ExpiredDiscount,
                     GameSessionStatusEnum.SteamNetworkProblem,
-                    GameSessionStatusEnum.Closed,
                 };
             }
 
