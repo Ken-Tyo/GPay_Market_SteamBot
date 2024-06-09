@@ -1,4 +1,8 @@
 version: '3.3'
+networks:
+  default:
+    external:
+      name: bridge
 services:
   front:
     build:
@@ -18,5 +22,4 @@ services:
     volumes:
       - /bin/digi/logs:/app/Logs      
     networks:
-      bridge:
-        external: true
+      - default
