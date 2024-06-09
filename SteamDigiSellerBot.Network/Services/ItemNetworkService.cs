@@ -90,7 +90,7 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/1.5M);
+            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/2.22M);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
             while (chunk.Count() > 0)
             {
@@ -218,7 +218,7 @@ namespace SteamDigiSellerBot.Network.Services
                                 $"SetPrices Update: {item.Id} обновление цены {item.CurrentDigiSellerPrice} -> {finalPrice}");
                             else if (prices != null &&
                                      ids.Any(id =>
-                                         prices.ContainsKey(id) && (Math.Round(prices[id]) != Math.Round(finalPrice))))
+                                         prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice)) > 1))
                             {
                                 var id = ids.First(id =>
                                     prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice)) > 1);
