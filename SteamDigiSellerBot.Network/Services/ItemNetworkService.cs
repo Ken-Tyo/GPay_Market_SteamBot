@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Contexts;
@@ -91,7 +90,7 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/1.5M);
+            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/2.22M);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
             while (chunk.Count() > 0)
             {
@@ -147,6 +146,7 @@ namespace SteamDigiSellerBot.Network.Services
             }
         }
 
+        bool requestLocker = false;
         /// <summary>
         /// This method performs a number of operations to set prices for goods and update information in the database.
         /// </summary>
@@ -164,13 +164,27 @@ namespace SteamDigiSellerBot.Network.Services
             try
             {
                 await using var db = _contextFactory.CreateDbContext();
+                db.Database.SetCommandTimeout(TimeSpan.FromMinutes(1));
                 var currencyData = await _currencyDataRepository.GetCurrencyData(true);
 
                 var allCurrencies = currencyData?.Currencies ?? new List<Currency>();
                 allCurrencies = allCurrencies.OrderBy(e => e.Id).ToList();
+
                 // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
-                var dbItems = await db.Items.Include(i => i.GamePrices)
-                    .Where(i => i.AppId == appId && items.Contains(i.SubId)).ToListAsync();
+                while (requestLocker)
+                    await Task.Delay(25);
+                List<Item> dbItems;
+                try
+                {
+                    dbItems = await db.Items.Include(i => i.GamePrices)
+                        .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                }
+                catch
+                {
+                    await Task.Delay(1000);
+                    dbItems = await db.Items.Include(i => i.GamePrices)
+                        .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                }
 
                 var currencyForParse = allCurrencies;
                 var currencyDataLastUpdate = currencyData?.LastUpdateDateTime ?? DateTime.MinValue;
@@ -181,7 +195,7 @@ namespace SteamDigiSellerBot.Network.Services
                     currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
                 }
 
-                await _steamNetworkService.SetSteamPrices(appId, items, currencyForParse, db, 5);
+                await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
 
                 //before update Digiseller price
                 var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
@@ -196,14 +210,28 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         var finalPrice = digiSellerPriceWithAllSales + item.AddPrice;
                         if ((item.CurrentDigiSellerPrice != finalPrice || reUpdate || (prices != null &&
-                                ids.Any(id => prices.ContainsKey(id) && prices[id] != finalPrice))) &&
+                                ids.Any(id => prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice))>1))) &&
                             currentSteamPrice > 0)
                         {
+                            if (item.CurrentDigiSellerPrice != finalPrice)
+                                _logger.LogWarning(
+                                $"SetPrices Update: {item.Id} обновление цены {item.CurrentDigiSellerPrice} -> {finalPrice}");
+                            else if (prices != null &&
+                                     ids.Any(id =>
+                                         prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice)) > 1))
+                            {
+                                var id = ids.First(id =>
+                                    prices.ContainsKey(id) && Math.Abs(Math.Round(prices[id]) - Math.Round(finalPrice)) > 1);
+                                _logger.LogWarning(
+                                    $"SetPrices Update: {item.Id} {id} обновление цены диги {Math.Round(prices[id])} -> {Math.Round(finalPrice)}");
+
+                            }
+
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
                                 finalPrice / item.CurrentDigiSellerPrice < 0.1M)
                             {
                                 _logger.LogWarning(
-                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой в {(finalPrice / item.CurrentDigiSellerPrice * 10):0.0}%");
+                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%");
                                 item.CurrentDigiSellerPriceNeedAttention = true;
                             }
                             else
@@ -285,8 +313,15 @@ namespace SteamDigiSellerBot.Network.Services
                         db.Entry(item).State = EntityState.Modified;
                     }
                     // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
-
-                    await db.SaveChangesAsync();
+                    if (db.ChangeTracker.HasChanges())
+                    {
+                        while (requestLocker)
+                            await Task.Delay(100);
+                        requestLocker = true;
+                        await db.SaveChangesAsync();
+                        await Task.Delay(50);
+                        requestLocker = false;
+                    }
                 }
 
                 if (digiSellerEnable)
@@ -300,6 +335,7 @@ namespace SteamDigiSellerBot.Network.Services
             }
             catch (Exception ex)
             {
+                requestLocker = false;
                 _logger.LogError(ex, $"Ошибка получения цен, appId:{appId} Items:{items.Aggregate((a,b)=> a+","+b)} ");
                 return new();
             }

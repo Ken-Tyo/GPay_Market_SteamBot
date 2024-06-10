@@ -12,6 +12,6 @@ namespace SteamDigiSellerBot.Models.GameSessions
         public int? Page { get; set; } = 1;
         public int? Size { get; set; }
         public string UniqueCodes { get; set; }
-        public GameSessionStatusEnum? StatusId { get; set; }
+        public int? StatusId { get; set; }
     }
 }

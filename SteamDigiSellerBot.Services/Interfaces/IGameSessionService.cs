@@ -5,20 +5,21 @@ using SteamDigiSellerBot.Services.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SteamDigiSellerBot.Database.Contexts;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
 
 namespace SteamDigiSellerBot.Services.Interfaces
 {
     public interface IGameSessionService
     {
-        Task SetSteamContact(GameSession gameSession, params Option[] opts);
-        Task<GameSession> ResetSteamContact(string uniquecode);
+        Task SetSteamContact(DatabaseContext db, GameSession gameSession, params Option[] opts);
+        Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode);
         Task<bool> CheckGameSessionExpiredAndHandle(GameSession gs);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId);
-        Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(GameSession gs, DateTimeOffset? timeForTest = null);
-        Task<(GetBotForSendGameStatus, BotFilterParams, SuperBot)> GetBotForSendGame(GameSession gs);
+        Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null);
+        Task<(GetBotForSendGameStatus, BotFilterParams, SuperBot)> GetBotForSendGame(DatabaseContext db, GameSession gs);
         Task<AddToFriendStatus> AddToFriend(int gsId);
-        Task<AddToFriendStatus> AddToFriend(GameSession gs);
+        Task<AddToFriendStatus> AddToFriend(DatabaseContext db, GameSession gs);
         Task<CheckFriendAddedResult> CheckFriendAddedStatus(int gsId);
         Task<CheckFriendAddedResult> CheckFriendAddedStatus(GameSession gs);
         (int, GamePrice) GetPriorityPrice(Item item);

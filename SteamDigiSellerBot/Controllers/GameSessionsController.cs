@@ -41,12 +41,11 @@ namespace SteamDigiSellerBot.Controllers
 
         private readonly ICurrencyDataService _currencyDataService;
         private readonly IWsNotificationSender _wsNotifSender;
-        private readonly IHubContext<AdminHub> _hub;
         private readonly IUserDBRepository _userDBRepository;
         private readonly GameSessionManager _gameSessionManager;
         private readonly IGameSessionStatusLogRepository gameSessionStatusLogRepository;
         private readonly ILogger<GameSessionsController> logger;
-
+        private readonly DatabaseContext db;
         public GameSessionsController(
             IMapper mapper, 
             IItemRepository itemRepository,
@@ -56,12 +55,12 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionService gameSessionService,
             IWsNotificationSender wsNotificationSender,
             ISuperBotPool botPool,
-            IHubContext<AdminHub> hub,
             IUserDBRepository userDBRepository,
             GameSessionManager gameSessionManager,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
             ISteamNetworkService steamNetworkService,
-            ILogger<GameSessionsController> logger)
+            ILogger<GameSessionsController> logger,
+            DatabaseContext db)
         {
             _mapper = mapper;
 
@@ -71,13 +70,13 @@ namespace SteamDigiSellerBot.Controllers
             _currencyDataService = currencyDataService;
             _gameSessionService = gameSessionService;
             _wsNotifSender = wsNotificationSender;
-            _hub = hub;
             _userDBRepository = userDBRepository;
             _gameSessionManager = gameSessionManager;
-            _botPool=botPool;
+            _botPool = botPool;
             _steamNetworkService = steamNetworkService;
             this.gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             this.logger = logger;
+            this.db = db;
         }
 
         [Authorize, HttpPost, Route("gamesessions/list"), ValidationActionFilter]
@@ -112,7 +111,6 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpGet, Route("gamesessions/{id}"), ValidationActionFilter]
         public async Task<IActionResult> GetGameSession(int id)
         {
-            await using var db = _gameSessionRepository.GetContext();
             var gameSessions = await _gameSessionRepository.GetByIdAsync(db, id);
 
             var gsi = _mapper.Map<GameSessionItemView>(gameSessions);
@@ -135,7 +133,6 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/setstatus")]
         public async Task<IActionResult> SetGameSessionStatus(SetGameSesStatusRequest req)
         {
-            await using var db = _gameSessionRepository.GetContext();
             GameSession gs = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
             if (req.StatusId == GameSessionStatusEnum.Done || req.StatusId == GameSessionStatusEnum.Closed)
             {
@@ -162,7 +159,6 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/reset")]
         public async Task<IActionResult> ResetGameSession(ResetGameSessionRequest req)
         {
-            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             GameSession gs = await _gameSessionRepository.GetForReset(db, req.GameSessionId);
             if (gs == null)
                 return BadRequest();
@@ -220,7 +216,6 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
         {
-            await using var db = _gameSessionRepository.GetContext();
             GameSession gameSession = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
             if (gameSession == null)
                 return BadRequest();
@@ -234,7 +229,6 @@ namespace SteamDigiSellerBot.Controllers
         [Authorize, HttpPost, Route("gamesession"), ValidationActionFilter]
         public async Task<IActionResult> Gamesession(CreateGameSessionRequest req)
         {
-            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             var item = (await _itemRepository
                 .ListAsync(db, i => i.IsDlc == req.IsDlc
                              && i.AppId == req.AppId
@@ -248,6 +242,7 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var user = await _userDBRepository.GetByAspNetUserName(User.Identity.Name);
+            db.Attach(user);
             var (_, prices) = _gameSessionService.GetSortedPriorityPrices(item);
             var firstPrice = prices.FirstOrDefault();
             if (firstPrice == null)
@@ -267,7 +262,7 @@ namespace SteamDigiSellerBot.Controllers
             {
                 var gs = _mapper.Map<GameSession>(req);
 
-                gs.User = user;
+                gs.UserId = user.Id;
                 gs.Item = item;
                 gs.StatusId = GameSessionStatusEnum.ProfileNoSet;
                 gs.PriorityPrice = priorityPriceRub;
@@ -288,7 +283,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
-            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
             var gs = await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(req.Uniquecode));
             if (gs == null)
             {
@@ -297,7 +291,7 @@ namespace SteamDigiSellerBot.Controllers
             }
             
             var opt = new Option { Value = req.SteamContact };
-            await _gameSessionService.SetSteamContact(gs, opt);
+            await _gameSessionService.SetSteamContact(db, gs, opt);
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
             return Ok(gsi);
@@ -308,7 +302,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
-            await using var db = _gameSessionRepository.GetContext();
             var gs =
                 await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(req.Uniquecode));
 
@@ -336,7 +329,7 @@ namespace SteamDigiSellerBot.Controllers
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
 
-            var gs = await _gameSessionService.ResetSteamContact(req.Uniquecode);
+            var gs = await _gameSessionService.ResetSteamContact(db, req.Uniquecode);
             if (gs == null)
             {
                 ModelState.AddModelError("", "такой заказ не найден");
@@ -353,7 +346,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (!ModelState.IsValid)
                 return this.CreateBadRequest();
-            await using var db = _gameSessionRepository.GetContext();
             var gs =
                 await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(req.Uniquecode));
             if (gs == null)

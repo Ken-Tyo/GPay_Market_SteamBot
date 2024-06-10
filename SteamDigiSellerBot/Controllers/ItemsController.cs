@@ -37,6 +37,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IBotRepository _botRepository;
         private readonly ILogger<ItemsController> _logger;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
+        private readonly DatabaseContext db;
 
         public ItemsController(
             IItemRepository itemRepository, 
@@ -46,7 +47,8 @@ namespace SteamDigiSellerBot.Controllers
             ICurrencyDataService currencyDataService,
             IBotRepository botRepository,
             ILogger<ItemsController> logger,
-            IDigiSellerNetworkService digiSellerNetwork)
+            IDigiSellerNetworkService digiSellerNetwork,
+            DatabaseContext db)
         {
             _itemRepository = itemRepository;
             _digiSellerNetworkService = digiSellerNetwork;
@@ -57,6 +59,7 @@ namespace SteamDigiSellerBot.Controllers
             _mapper = mapper;
             _botRepository = botRepository;
             _userManager = userManager;
+            this.db = db;
 
             _logger = logger;
         }
@@ -124,7 +127,7 @@ namespace SteamDigiSellerBot.Controllers
         [Route("items/{id}/info")]
         public async Task<IActionResult> GetItems(int id)
         {
-            Item item = await _itemRepository.GetWithAllPrices(id);
+            Item item = await _itemRepository.GetWithAllPrices(db, id);
 
             var itemView = _mapper.Map<ItemViewModel>(item);
             var currencies = await _currencyDataService.GetCurrencyDictionary();
@@ -161,7 +164,7 @@ namespace SteamDigiSellerBot.Controllers
                 var curLevel = new List<GamePriceViewModel>();
                 var prevPrice = prices.First();
 
-                var allBots = await _botRepository.ListAsync();
+                var allBots = await _botRepository.ListAsync(db);
                 foreach (var gp in prices)
                 {
                     if (Math.Abs(rubPrices[prevPrice.Id] - rubPrices[gp.Id]) <= 30)
@@ -226,7 +229,6 @@ namespace SteamDigiSellerBot.Controllers
 
             if (item != null)
             {
-                await using var db = _itemRepository.GetContext();
                 User user = await _userManager.GetUserAsync(User);
                 Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
 
@@ -253,7 +255,6 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/edit/{id}"), ValidationActionFilter]
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
-            await using var db = _itemRepository.GetContext();
             Item item = await _itemRepository.GetByIdAsync(db,id);
             if (item.IsDeleted)
                 return BadRequest();
@@ -282,7 +283,6 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/bulk/change"), ValidationActionFilter]
         public async Task<IActionResult> BulkChangeAction(BulkActionRequest request)
         {
-            await using var db = _itemRepository.GetContext();
             HashSet<int> idHashSet = request.Ids?.ToHashSet() ?? new HashSet<int>();
             List<Item> items = await _itemRepository
                 .ListAsync(db, i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
@@ -306,7 +306,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             
             HashSet<int> idHashSet = new();
-            await using var db = _itemRepository.GetContext();
             List<Item> items = await _itemRepository
                 .ListAsync(db,i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
 
@@ -323,7 +322,6 @@ namespace SteamDigiSellerBot.Controllers
         {
 
             HashSet<int> idHashSet = new();
-            await using var db = _itemRepository.GetContext();
             List<int> items = (await _itemRepository
                 .ListAsync(db, i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted)
                 ).Select(x=> x.Id).Distinct().ToList();
@@ -341,7 +339,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             foreach (var id in request.Ids)
             {
-                  await using var db = _itemRepository.GetContext();
                 Item item = await _itemRepository.GetByIdAsync(db,id);
 
                 if (item != null)
@@ -355,7 +352,6 @@ namespace SteamDigiSellerBot.Controllers
 
         public async Task<IActionResult> SetActive(string ids)
         {
-            await using var db = _itemRepository.GetContext();
             var idList = new string[0];
             if (!string.IsNullOrEmpty(ids))
                 idList = ids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -393,7 +389,6 @@ namespace SteamDigiSellerBot.Controllers
         {
             if (id > 0)
             {
-                await using var db = _itemRepository.GetContext();
                 Item item = await _itemRepository.GetByIdAsync(db,id);
                 if (item != null)
                 {

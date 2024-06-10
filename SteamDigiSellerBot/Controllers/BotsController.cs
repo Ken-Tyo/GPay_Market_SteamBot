@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Extensions;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
@@ -27,6 +29,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _botPool;
         private readonly IBotSendGameAttemptsRepository _botSendGameAttemptsRepository;
+        private readonly DatabaseContext db;
 
         private readonly IMapper _mapper;
 
@@ -37,7 +40,8 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionRepository gameSessionRepository,
             ISuperBotPool botPoolService,
             IBotSendGameAttemptsRepository botSendGameAttemptsRepository,
-            IMapper mapper)
+            IMapper mapper,
+            DatabaseContext dbContext)
         {
             _steamBotRepository = steamBotRepository;
             _currencyDataService = currencyDataService;
@@ -46,12 +50,12 @@ namespace SteamDigiSellerBot.Controllers
             _botPool = botPoolService;
             _mapper = mapper;
             _botSendGameAttemptsRepository = botSendGameAttemptsRepository;
+            db=dbContext;
         }
 
         [HttpGet, Route("bots/list")]
         public async Task<IActionResult> BotsList()
         {
-            await using var db = _steamBotRepository.GetContext();
             List<Bot> bots = await _steamBotRepository.ListAsync(db);
             bots.ForEach(e =>
             {
@@ -75,7 +79,6 @@ namespace SteamDigiSellerBot.Controllers
 
                 return BadRequest(new { errors });
             };
-            await using var db = _steamBotRepository.GetContext();
             Bot bot = _mapper.Map<Bot>(model);
             Bot oldBot = null;
             if (!model.Id.HasValue && model.MaFile is null)
@@ -109,7 +112,7 @@ namespace SteamDigiSellerBot.Controllers
                 && bot.SteamGuardAccount.AccountName.Equals(model.UserName))
             {
                 CurrencyData currencyData = await _currencyDataService.GetCurrencyData();
-                List<VacGame> vacCheckList = await _vacGamesRepository.ListAsync();
+                List<VacGame> vacCheckList = await _vacGamesRepository.ListAsync(db);
 
                 SuperBot superBot;
 
@@ -166,7 +169,6 @@ namespace SteamDigiSellerBot.Controllers
 
             if (id > 0)
             {
-                await using var db = _gameSessionRepository.GetContext();
                 Bot bot = await _steamBotRepository.GetByIdAsync(db,id);
 
                 if (bot != null)
@@ -191,7 +193,6 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("bots/regionsettings")]
         public async Task<IActionResult> SaveRegionSettings(EditBotRegionSettings req)
         {
-            await using var db = _steamBotRepository.GetContext();
             var bot = await _steamBotRepository.GetByIdAsync(db, req.BotId);
             bot.BotRegionSetting = new BotRegionSetting
             {

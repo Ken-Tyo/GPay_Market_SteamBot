@@ -41,8 +41,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
                     //берем сессии где ожидается принятия заявки в друзья
                     //var sess = gsr.ListAsync(gs => gs.StatusId == 6).Result;
-                    await using var db = gsr.GetContext() as DatabaseContext;
-                    var sess = await gsr.GetGameSessionForPipline(db,gs => gs.Stage == Database.Entities.GameSessionStage.CheckFriend);
+                    var sess = await gsr.GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.CheckFriend);
 
                     foreach (var gs in sess)
                     {

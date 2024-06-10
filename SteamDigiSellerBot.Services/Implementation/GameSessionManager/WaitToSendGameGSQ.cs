@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SteamDigiSellerBot.Services.Interfaces;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 
 namespace SteamDigiSellerBot.Services.Implementation
@@ -38,7 +39,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    await using var db = gsr.GetContext();
+                    await using var db = gsr.GetContext() as DatabaseContext;
                     //берем сессии где ожидается подтвреждение аккаунта и пришло время автоотправки
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 19).Result;
@@ -61,7 +62,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                             //if (gs.Bot == null)
                             //{
-                            var (getBotRes, _, _) = await gss.GetBotForSendGame(gs);
+                            var (getBotRes, _, _) = await gss.GetBotForSendGame(db, gs);
                             if (getBotRes == GetBotForSendGameStatus.botFound)
                             {
                                 //gs.StatusId = 19;

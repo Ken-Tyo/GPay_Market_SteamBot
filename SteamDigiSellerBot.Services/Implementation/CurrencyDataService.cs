@@ -15,12 +15,14 @@ namespace SteamDigiSellerBot.Services.Implementation
     {
         private readonly IMemoryCache _cache;
         private readonly ICurrencyDataRepository _currencyDataRepository;
+        private readonly GlobalVault storage;
         public CurrencyDataService(
             IMemoryCache cache,
-            ICurrencyDataRepository currencyDataRepository)
+            ICurrencyDataRepository currencyDataRepository, GlobalVault _storage)
         {
             _cache = cache;
             _currencyDataRepository = currencyDataRepository;
+            this.storage = _storage;
         }
 
         public async Task<CurrencyData> GetCurrencyData()
@@ -105,6 +107,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public bool CleanCache()
         {
             _cache.Remove(nameof(GetCurrencyData));
+            storage.currencyCache = null;
             return true;
         }
         public async Task ForceUpdateCurrentCurrency()

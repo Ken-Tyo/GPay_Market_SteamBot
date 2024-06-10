@@ -27,7 +27,7 @@ namespace SteamDigiSellerBot.Network.Services
     public interface ISteamNetworkService
     {
         Task SetSteamPrices(
-            string appId, HashSet<string> items, List<Currency> currencies,
+            string appId, List<Game> gamesList, List<Currency> currencies,
             DatabaseContext db, int tries = 10);
 
         Task<(ProfileDataRes, string)> ParseUserProfileData(string link, SteamContactType contactType, Bot bot = null);
@@ -67,7 +67,7 @@ namespace SteamDigiSellerBot.Network.Services
 
         public async Task SetSteamPrices(
             string appId,
-            HashSet<string> items,
+            List<Game> gamesList,
             List<Currency> currencies,
             DatabaseContext db,
             int tries = 10)
@@ -77,7 +77,7 @@ namespace SteamDigiSellerBot.Network.Services
                 var notRfBotHS = new HashSet<int>();
                 HttpRequest request = CreateBaseHttpRequest();
 
-                var gamesList = await db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToListAsync();
+                //var gamesList = await db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToListAsync();
 
                 //парсим цены в разных валютых через апи (без прокси)
                 await ParsePrices(appId, currencies, db, PerformWithCustomHttpClient, true, gamesList);
@@ -194,7 +194,7 @@ namespace SteamDigiSellerBot.Network.Services
                             db.Entry(targetPrice).State = targetPrice.Id == 0
                                 ? EntityState.Added
                                 : EntityState.Modified;
-                            db.SaveChanges();
+                            //await db.SaveChangesAsync();
                         }
 
 #if DEBUG
@@ -252,7 +252,7 @@ namespace SteamDigiSellerBot.Network.Services
 
                             game.UpdateIsDiscount(db, sub.IsDiscount);
 
-                            db.SaveChanges();
+                            //await db.SaveChangesAsync();
                         }
                 }
                 catch (HttpException ex)
@@ -288,7 +288,7 @@ namespace SteamDigiSellerBot.Network.Services
                 {
                     g.IsPriceParseError = true;
                     db.Entry(g).Property(g => g.IsPriceParseError).IsModified = true;
-                    db.SaveChanges();
+                    //await db.SaveChangesAsync();
                 }
 
                 return;
@@ -436,7 +436,7 @@ namespace SteamDigiSellerBot.Network.Services
                             {
                                 db.Entry(game).Property(g => g.DiscountEndTimeUtc).IsModified = true;
                                 db.Entry(price).State = EntityState.Modified;
-                                db.SaveChanges();
+                                //db.SaveChanges();
                             }
                         }
                         else
@@ -450,7 +450,7 @@ namespace SteamDigiSellerBot.Network.Services
 
                     //db.Entry(game).State = EntityState.Modified;
 
-                    db.SaveChanges();
+                    //db.SaveChanges();
                 }
             }
         }
@@ -546,7 +546,7 @@ namespace SteamDigiSellerBot.Network.Services
                         db.Entry(bundle).Property(g => g.IsPriceParseError).IsModified = true;
                     }
 
-                    db.SaveChanges();
+                    //await db.SaveChangesAsync();
                     continue;
                 }
 
@@ -580,7 +580,7 @@ namespace SteamDigiSellerBot.Network.Services
                     bundle.IsPriceParseError = false;
                     db.Entry(bundle).Property(g => g.IsPriceParseError).IsModified = true;
 
-                    db.SaveChanges();
+                    //await db.SaveChangesAsync();
                 }
             }
         }

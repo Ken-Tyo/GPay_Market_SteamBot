@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SteamDigiSellerBot.Database.Repositories
 {
@@ -29,6 +30,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         //private readonly ISteamProxyRepository _steamProxyRepository;
         private readonly GlobalVault _global;
+        private readonly ILogger<CurrencyDataRepository> _logger;
 
         private readonly Dictionary<string, string> _codeAndSymbols = new Dictionary<string, string>()
         {
@@ -123,11 +125,11 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 104, Code = "ARS", SteamSymbol = "$", Position = 104, Name = "Аргентинское песо", CountryCode = "AR" },
         };
 
-        public CurrencyDataRepository(IDbContextFactory<DatabaseContext> dbContextFactory, GlobalVault global)
+        public CurrencyDataRepository(IDbContextFactory<DatabaseContext> dbContextFactory, GlobalVault global, ILogger<CurrencyDataRepository> logger)
             : base(dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
-
+            _logger=logger;
             //_steamProxyRepository = steamProxyRepository;
             _global = global;
             //new Currency { Code = "", SteamSymbol = }
@@ -144,12 +146,14 @@ namespace SteamDigiSellerBot.Database.Repositories
 
         public async Task UpdateCurrencyData(CurrencyData currencyData)
         {
-            _global.currencyCache = null;
+            await using var db = _dbContextFactory.CreateDbContext();
+          
             var client = new System.Net.Http.HttpClient();
             var timeoutSec = 61;
             var res = await client.GetAsync("http://steamcommunity.com/market/priceoverview/?appid=440&currency=1&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
             var json = await res.Content.ReadAsStringAsync();
             var usdPrice = JsonConvert.DeserializeObject<SteamMarketPriceOwerview>(json).GetPrice();
+            
 
             int reqCount = 0;
             for (int i = 0; i < currencyData.Currencies.Count; )
@@ -163,8 +167,14 @@ namespace SteamDigiSellerBot.Database.Repositories
                         $"http://steamcommunity.com/market/priceoverview/?appid=440&currency={currency.SteamId}&market_hash_name=Mann%20Co.%20Supply%20Crate%20Key");
                     json = await res.Content.ReadAsStringAsync();
                     var currPrice = JsonConvert.DeserializeObject<SteamMarketPriceOwerview>(json).GetPrice();
-
-                    currency.Value = currPrice / usdPrice;
+                    var curToRub = currPrice / usdPrice;
+                    _logger.LogInformation(
+                        $"UpdateCurrencyData ({currencyData.Id}) currency {currency.SteamId} {currency.SteamSymbol}: old value {currency.Value} new value {curToRub}");
+                    if (currency.Value != curToRub)
+                    {
+                        currency.Value = curToRub;
+                        db.Entry(currency).State= EntityState.Modified;
+                    }
 
                     i++;
                     reqCount++;
@@ -176,8 +186,10 @@ namespace SteamDigiSellerBot.Database.Repositories
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogWarning(
+                        $"UpdateCurrencyData error {currency.Code} - {currency.Name}: {ex.Message}\n{ex.StackTrace}");
                     Console.WriteLine("\n------------\n");
-                    Console.WriteLine($"UpdateCurrencyData - {ex.Message}\n{ex.StackTrace}\n");
+                    Console.WriteLine($"UpdateCurrencyData - ");
                     Console.WriteLine($"{currency.Code} - {currency.Name}\n");
                     Console.WriteLine($"TIMEOUT - {timeoutSec} sec");
                     Console.WriteLine("\n------------\n");
@@ -188,13 +200,16 @@ namespace SteamDigiSellerBot.Database.Repositories
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
-            await EditAsync(currencyData);
-            //await context.SaveChangesAsync();
+            db.Entry(currencyData).State= EntityState.Modified;
+            //await EditAsync(db,currencyData);
+            await db.SaveChangesAsync();
+            _global.currencyCache = null;
+            
         }
 
         public async Task UpdateCurrencyDataManual(CurrencyData newCurrencyData)
         {
-            _global.currencyCache = null;
+
             CurrencyData currencyData = await InitCurrencyData();
 
             foreach (Currency currency in currencyData.Currencies)
@@ -208,6 +223,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
             await EditAsync(currencyData);
+            _global.currencyCache = null;
         }
 
         public async Task<Dictionary<int, Currency>> GetCurrencyDictionary(bool useCache = false)

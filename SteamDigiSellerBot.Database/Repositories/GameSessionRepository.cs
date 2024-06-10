@@ -24,14 +24,14 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
-            GameSessionStatusEnum? statusId,
+            int? statusId,
             int? page = 1,
             int? size = 50);
 
         Task<GameSession> GetForReset(DatabaseContext db, int id);
         Task UpdateQueueInfo(GameSession gs);
         Task<GameSessionStage> GetStageBy(int gsId);
-        Task<List<GameSession>> GetGameSessionForPipline(DatabaseContext db, Expression<Func<GameSession, bool>> predicate);
+        Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate);
     }
 
     public class GameSessionRepository : BaseRepositoryEx<GameSession>, IGameSessionRepository
@@ -51,10 +51,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
-            GameSessionStatusEnum? statusId,
+            int? statusId,
             int? page,
             int? size)
         {
+            var customStatuses = new List<GameSessionStatusEnum>();
+
             if (page == null)
                 page = 1;
 
@@ -64,17 +66,41 @@ namespace SteamDigiSellerBot.Database.Repositories
             HashSet<string> codes = null;
             if (!string.IsNullOrWhiteSpace(uniqueCode))
             {
-                codes = new HashSet<string>(uniqueCode.Replace(" ", "").Split(',', StringSplitOptions.RemoveEmptyEntries));
+                codes = new HashSet<string>(uniqueCode.ToLower().Replace(" ", "").Split(',', StringSplitOptions.RemoveEmptyEntries));
+            }
+
+            if (statusId == 100)
+            {
+                customStatuses = new List<GameSessionStatusEnum> {
+                    GameSessionStatusEnum.None,
+                    GameSessionStatusEnum.IncorrectProfile,
+                    GameSessionStatusEnum.RequestReject,
+                    GameSessionStatusEnum.GameRejected,
+                    GameSessionStatusEnum.BotLimit,
+                    GameSessionStatusEnum.ProfileNoSet,
+                    GameSessionStatusEnum.GameIsExists,
+                    GameSessionStatusEnum.BotNotFound,
+                    GameSessionStatusEnum.IncorrectRegion,
+                    GameSessionStatusEnum.UnknownError,
+                    GameSessionStatusEnum.ExpiredTimer,
+                    GameSessionStatusEnum.ExpiredDiscount,
+                    GameSessionStatusEnum.SteamNetworkProblem,
+                };
+            }
+
+            if (statusId == 200)
+            {
+                customStatuses = new List<GameSessionStatusEnum> {GameSessionStatusEnum.Done, GameSessionStatusEnum.Received};
             }
 
             Expression<Func<GameSession, bool>> predicate = (gs) =>
                        (!orderId.HasValue || gs.Id == orderId.Value)
                     && (string.IsNullOrWhiteSpace(profileStr) || gs.SteamProfileUrl.Contains(profileStr))
                     && (string.IsNullOrWhiteSpace(appId) || gs.Item.AppId.Contains(appId))
-                    && (string.IsNullOrWhiteSpace(gameName) || gs.Item.Name.Contains(gameName))
+                    && (string.IsNullOrWhiteSpace(gameName) || gs.Item.Name.ToLower().Contains(gameName.ToLower()))
                     && (!steamCurrencyId.HasValue || steamCurrencyId <= 0 || steamCurrencyId == gs.Item.SteamCurrencyId)
-                    && (codes == null || codes.Contains(gs.UniqueCode))
-                    && (!statusId.HasValue || statusId <= 0 || statusId == gs.StatusId);
+                    && (codes == null || codes.Contains(gs.UniqueCode.ToLower()))
+                    && (!statusId.HasValue || statusId <= 0 || statusId == (int)gs.StatusId || customStatuses.Contains(gs.StatusId));
 
             await using var db = _dbContextFactory.CreateDbContext();
             var total = await db.GameSessions
@@ -139,21 +165,38 @@ namespace SteamDigiSellerBot.Database.Repositories
             return await GetGameSessionIds(db, predicate);
         }
 
-        public async Task<List<GameSession>> GetGameSessionForPipline(DatabaseContext db, Expression<Func<GameSession, bool>> predicate)
+        public async Task<List<GameSession>> GetGameSessionForPipline(Expression<Func<GameSession, bool>> predicate)
         {
-            return await db.GameSessions
-                .Include(x=> x.Item)
-                .Include(x=> x.GameSessionStatusLogs)
-                .AsNoTracking()
-                .Where(predicate)
-                .Select(gs => new GameSession
-                {
-                    Id = gs.Id,
-                    StatusId = gs.StatusId,
-                    Stage = gs.Stage,
-                    AutoSendInvitationTime = gs.AutoSendInvitationTime
-                })
-                .ToListAsync();
+            await using var db = _dbContextFactory.CreateDbContext();
+            try
+            {
+                return await db.GameSessions
+                    .AsNoTracking()
+                    .Where(predicate)
+                    .Select(gs => new GameSession
+                    {
+                        Id = gs.Id,
+                        StatusId = gs.StatusId,
+                        Stage = gs.Stage,
+                        AutoSendInvitationTime = gs.AutoSendInvitationTime
+                    })
+                    .ToListAsync();
+            }
+            catch
+            {
+                await Task.Delay(TimeSpan.FromSeconds(3));
+                return await db.GameSessions
+                    .AsNoTracking()
+                    .Where(predicate)
+                    .Select(gs => new GameSession
+                    {
+                        Id = gs.Id,
+                        StatusId = gs.StatusId,
+                        Stage = gs.Stage,
+                        AutoSendInvitationTime = gs.AutoSendInvitationTime
+                    })
+                    .ToListAsync();
+            }
         }
 
         public async Task<GameSession> GetForReset(DatabaseContext db, int id)

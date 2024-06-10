@@ -70,7 +70,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             _logger = logger;
         }
 
-        public async Task SetSteamContact(GameSession gs, params Option[] opts)
+        public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
         {
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
 
@@ -136,13 +136,12 @@ namespace SteamDigiSellerBot.Services.Implementation
             });
             gs.BotSwitchList = new();
 
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
         }
     
-        public async Task<GameSession> ResetSteamContact(string uniquecode)
+        public async Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode)
         {
-            await using var db = _gameSessionRepository.GetContext();
             var gs =
                 await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode));
 
@@ -422,8 +421,9 @@ namespace SteamDigiSellerBot.Services.Implementation
             GameSession gs, HashSet<int> botIdFilter = null)
         {
             var res = Enumerable.Empty<Bot>();
+            await using var db = _botRepository.GetContext();
             IEnumerable<Bot> botFilterRes = await _botRepository
-                .ListAsync(b => (b.State == BotState.active || b.State == BotState.tempLimit) 
+                .ListAsync(db, b => (b.State == BotState.active || b.State == BotState.tempLimit) 
                               && b.SendedGiftsSum < b.MaxSendedGiftsSum //сумма подарков не превышает максимальную
                               && b.IsON);
 
@@ -561,7 +561,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         }
 
         public async Task<(GetBotForSendGameStatus, BotFilterParams, SuperBot)> GetBotForSendGame(
-            GameSession gs)
+           DatabaseContext db, GameSession gs)
         {
             retry_mark:
             SuperBot sbot = null;
@@ -596,6 +596,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                         sbot = sb;
                         break;
                     }
+                    if (i == 1)
+                        _botPool.ReLogin(bot);
+                    await Task.Delay(TimeSpan.FromSeconds(5));
                 }
 
                 if (!successLogin)
@@ -603,8 +606,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                     if (gs.BotSwitchList.Count < 3)
                     {
                         gs.BotSwitchList.Add(bot.Id);
-                        await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BotSwitchList);
-                        await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog()
+                        await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BotSwitchList);
+                        await _gameSessionStatusLogRepository.AddAsync(db, new GameSessionStatusLog()
                         
                         { GameSessionId = gs.Id, StatusId = GameSessionStatusEnum.SwitchBot, Value  = new ValueJson() { message = "Не удалось залогиниться в процессе подбора бота", botId = bot.Id, botName = bot.UserName}});
                         goto retry_mark;
@@ -620,8 +623,9 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<AddToFriendStatus> AddToFriend(int gsId)
         {
-            var gs = await _gameSessionRepository.GetByIdAsync(gsId);
-            return await AddToFriend(gs);
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+            var gs = await db!.GameSessions.Include(x => x.Item).ThenInclude(x => x.GamePrices).FirstAsync(x => x.Id == gsId);
+            return await AddToFriend(db, gs);
         }
 
         private async Task<string> GetBotRegionName(Bot bot)
@@ -629,15 +633,14 @@ namespace SteamDigiSellerBot.Services.Implementation
             return (await _steamCountryCodeRepository.GetByPredicateAsync(scc => scc.Code == bot.Region))?.Name;
         }
 
-        public async Task<AddToFriendStatus> AddToFriend(GameSession gs)
+        public async Task<AddToFriendStatus> AddToFriend(DatabaseContext db, GameSession gs)
         {
-            await using var db = _gameSessionRepository.GetContext();
-            var user = await _userDBRepository.GetByIdAsync(gs.UserId);
+            var user = await _userDBRepository.GetByIdAsync(db, gs.UserId);
             gs.AutoSendInvitationTime = null;
             await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.AutoSendInvitationTime);
 
             //находим бота
-            var (getBotRes, filter, superBot) = await GetBotForSendGame(gs);
+            var (getBotRes, filter, superBot) = await GetBotForSendGame(db, gs);
             if (getBotRes == GetBotForSendGameStatus.botNotFound)
             {
                 gs.StatusId = GameSessionStatusEnum.BotNotFound;//Бот не найден
@@ -647,7 +650,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 await _gameSessionRepository.UpdateFieldsAsync(db, gs, gs => gs.StatusId, gs=> gs.BotId);
 
 
-                await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
+                await _gameSessionStatusLogRepository.AddAsync(db,new GameSessionStatusLog
                 {
                     GameSessionId = gs.Id,
                     StatusId = gs.StatusId,
@@ -672,7 +675,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                 await _gameSessionRepository.UpdateFieldsAsync(db, gs, gs => gs.StatusId, gs => gs.BotId);
 
-                await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
+                await _gameSessionStatusLogRepository.AddAsync(db,new GameSessionStatusLog
                 {
                     GameSessionId = gs.Id,
                     StatusId = gs.StatusId,
@@ -688,7 +691,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
                 await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
 
-                await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
+                await _gameSessionStatusLogRepository.AddAsync(db,new GameSessionStatusLog
                 {
                     GameSessionId = gs.Id,
                     StatusId = gs.StatusId,
@@ -706,7 +709,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return AddToFriendStatus.error;
             }
 
-            var bot = await _botRepository.GetByIdAsync(superBot.Bot.Id);
+            var bot = await _botRepository.GetByIdAsync(db, superBot.Bot.Id);
             gs.Bot = bot;
             gs.BotId = bot.Id;
             await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BotId);
@@ -778,7 +781,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             //if (gs.StatusId != 18)
             //gs.GameSessionStatusLogs.Add(log);
-            await _gameSessionStatusLogRepository.AddAsync(log);
+            await _gameSessionStatusLogRepository.AddAsync(db,log);
             await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
             //await _gameSessionRepository.EditAsync(gs);
             await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
@@ -1073,7 +1076,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var percentDiff = ((decimal)(newPriorityPriceRub * 100) / gs.PriorityPrice) - 100;
                 if (percentDiff > percentDiffMax)
                 {
-                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи {gs.PriorityPrice}, сохраненная в рублях {gs.Item.CurrentDigiSellerPrice}. Разница {percentDiff}% вместо {percentDiffMax}%" );
+                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи {gs.PriorityPrice}, сохраненная в рублях {gs.Item.CurrentDigiSellerPrice}. Разница {percentDiff.Value.ToString("0.000")}% вместо {percentDiffMax}%" );
                     //gs.StatusId = 7;//неизвестная ошибка
                     //await _gameSessionRepository.UpdateField(gs, gs => gs.StatusId);
                     //await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
@@ -1175,11 +1178,12 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId)
         {
-            var gs = await _gameSessionRepository.GetByIdAsync(gsId);
-            return await SendGame(gs);
+            await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
+            var gs = await _gameSessionRepository.GetByIdAsync(db,gsId);
+            return await SendGame(db, gs);
         }
 
-        public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(GameSession gs, DateTimeOffset? timeForTest = null)
+        public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null)
         {
             var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             SendGameStatus sendStatus;
@@ -1209,7 +1213,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                 });
                 //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
-                await _gameSessionRepository.EditAsync(gs);
+                await _gameSessionRepository.EditAsync(db,gs);
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch ); //readyState
             }
 
@@ -1248,7 +1252,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             GameSessionStatusLog.ValueJson valueJson = null;
             if (sendRes.result == SendeGameResult.sended)
             {
-                var region = await _steamCountryCodeRepository.GetByPredicateAsync(r => r.Code == gs.Bot.Region);
+                var region = await _steamCountryCodeRepository.GetByPredicateAsync(db, r => r.Code == gs.Bot.Region);
                 gs.Item.LastSendedRegion = region;
                 gs.SendRegion = region;
                 gs.StatusId = GameSessionStatusEnum.Received;//Игра получена
@@ -1315,7 +1319,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             };
             gs.GameSessionStatusLogs.Add(log);
             //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
             await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
 
@@ -1372,7 +1376,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //    })
             //});
 
-            await _gameSessionRepository.EditAsync(gs);
+            await _gameSessionRepository.EditAsync(db, gs);
             return (sendRes.result == SendeGameResult.sended
                 ? SendGameStatus.sended
                 : SendGameStatus.otherError,

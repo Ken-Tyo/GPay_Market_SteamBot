@@ -40,10 +40,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
 
                     //берем сессии где ожидается подтвреждение аккаунта и пришло время автоотправки
-                    using var db = gsr.GetContext() as DatabaseContext;
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 16 && gs.AutoSendInvitationTime != null).Result;
-                        .GetGameSessionForPipline(db, gs => gs.Stage == Database.Entities.GameSessionStage.WaitConfirmation);
+                        .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.WaitConfirmation);
 
                     //var ids = sess.Select(s => s.Id).ToHashSet();
                     //foreach(var p in q)

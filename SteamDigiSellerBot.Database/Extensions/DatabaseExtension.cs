@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,10 +20,14 @@ namespace SteamDigiSellerBot.Database.Extensions
 #endif
 
             services.AddPooledDbContextFactory<DatabaseContext>(options =>
+            {
                 options.UseLazyLoadingProxies()
-                       .UseNpgsql(configuration.GetConnectionString(connection)));
+                    .UseNpgsql(configuration.GetConnectionString(connection), options2=> options2
+                        .EnableRetryOnFailure(3, TimeSpan.FromSeconds(15), null)
+                        .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            }, poolSize: 256);
 
-            services.AddTransient<DatabaseContext>(p => p
+            services.AddScoped<DatabaseContext>(p => p
                 .GetRequiredService<IDbContextFactory<DatabaseContext>>()
                 .CreateDbContext());
 

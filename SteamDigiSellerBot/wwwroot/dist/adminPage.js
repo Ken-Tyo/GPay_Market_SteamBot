@@ -57814,6 +57814,14 @@ var modalFilter_ModalFilter = function ModalFilter(_ref3) {
   statuses = [{
     id: 0,
     name: 'Все'
+  }, {
+    id: 100,
+    name: 'Только ошибки',
+    color: '#E13F29'
+  }, {
+    id: 200,
+    name: 'Только успешные',
+    color: '#4FBD53'
   }].concat(modalFilter_toConsumableArray(statuses));
   var handleChange = function handleChange(prop) {
     return function (val) {
