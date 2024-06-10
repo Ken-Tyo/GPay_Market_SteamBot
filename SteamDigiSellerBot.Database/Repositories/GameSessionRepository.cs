@@ -24,7 +24,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
-            GameSessionStatusEnum? statusId,
+            int? statusId,
             int? page = 1,
             int? size = 50);
 
@@ -51,10 +51,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
-            GameSessionStatusEnum? statusId,
+            int? statusId,
             int? page,
             int? size)
         {
+            var customStatuses = new List<GameSessionStatusEnum>();
+
             if (page == null)
                 page = 1;
 
@@ -67,6 +69,30 @@ namespace SteamDigiSellerBot.Database.Repositories
                 codes = new HashSet<string>(uniqueCode.ToLower().Replace(" ", "").Split(',', StringSplitOptions.RemoveEmptyEntries));
             }
 
+            if (statusId == 100)
+            {
+                customStatuses = new List<GameSessionStatusEnum> {
+                    GameSessionStatusEnum.None,
+                    GameSessionStatusEnum.IncorrectProfile,
+                    GameSessionStatusEnum.RequestReject,
+                    GameSessionStatusEnum.GameRejected,
+                    GameSessionStatusEnum.BotLimit,
+                    GameSessionStatusEnum.ProfileNoSet,
+                    GameSessionStatusEnum.GameIsExists,
+                    GameSessionStatusEnum.BotNotFound,
+                    GameSessionStatusEnum.IncorrectRegion,
+                    GameSessionStatusEnum.UnknownError,
+                    GameSessionStatusEnum.ExpiredTimer,
+                    GameSessionStatusEnum.ExpiredDiscount,
+                    GameSessionStatusEnum.SteamNetworkProblem,
+                };
+            }
+
+            if (statusId == 200)
+            {
+                customStatuses = new List<GameSessionStatusEnum> {GameSessionStatusEnum.Done, GameSessionStatusEnum.Received};
+            }
+
             Expression<Func<GameSession, bool>> predicate = (gs) =>
                        (!orderId.HasValue || gs.Id == orderId.Value)
                     && (string.IsNullOrWhiteSpace(profileStr) || gs.SteamProfileUrl.Contains(profileStr))
@@ -74,7 +100,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (string.IsNullOrWhiteSpace(gameName) || gs.Item.Name.ToLower().Contains(gameName.ToLower()))
                     && (!steamCurrencyId.HasValue || steamCurrencyId <= 0 || steamCurrencyId == gs.Item.SteamCurrencyId)
                     && (codes == null || codes.Contains(gs.UniqueCode.ToLower()))
-                    && (!statusId.HasValue || statusId <= 0 || statusId == gs.StatusId);
+                    && (!statusId.HasValue || statusId <= 0 || statusId == (int)gs.StatusId || customStatuses.Contains(gs.StatusId));
 
             await using var db = _dbContextFactory.CreateDbContext();
             var total = await db.GameSessions
