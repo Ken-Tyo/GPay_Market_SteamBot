@@ -1,38 +1,38 @@
-import React, { useState } from 'react';
-import SelectUnstyled, {
+import * as React from "react";
+import Select, {
   selectClasses as selectUnstyledClasses,
-} from '@mui/base/Select';
-import OptionUnstyled, {
+} from "@mui/base/Select";
+import Option, {
   optionClasses as optionUnstyledClasses,
-} from '@mui/base/Option';
-import PopperUnstyled from '@mui/base/Popper';
-import { styled } from '@mui/system';
-import css from './styles.scss';
+} from "@mui/base/Option";
+import Popper from "@mui/base/Popper";
+import { styled } from "@mui/system";
+import css from "./styles.scss";
 
 const blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75',
+  100: "#DAECFF",
+  200: "#99CCF3",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  900: "#003A75",
 };
 
 const grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f',
+  50: "#f6f8fa",
+  100: "#eaeef2",
+  200: "#d0d7de",
+  300: "#afb8c1",
+  400: "#8c959f",
+  500: "#6e7781",
+  600: "#57606a",
+  700: "#424a53",
+  800: "#32383f",
+  900: "#24292f",
 };
 
-const CreateStyledButton = (width, color) =>
-  styled('button')(
+const CreateStyledButton = (width) =>
+  styled("button")(
     ({ theme }) => `
   font-family: 'Igra Sans';
   font-size: 14px;
@@ -44,7 +44,7 @@ const CreateStyledButton = (width, color) =>
   border-radius: 15px;
   text-align: left;
   background: #512068;
-  color: ${color || '#FFFFFF'};
+  color: #FFFFFF;
   border: none;
   //z-index: 2;
   //position: relative;
@@ -55,7 +55,7 @@ const CreateStyledButton = (width, color) =>
 
   &.${selectUnstyledClasses.focusVisible} {
     border-color: ${blue[400]};
-    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[500] : blue[200]};
+    outline: 3px solid ${theme.palette.mode === "dark" ? blue[500] : blue[200]};
   }
 
   &.${selectUnstyledClasses.expanded} {
@@ -66,20 +66,18 @@ const CreateStyledButton = (width, color) =>
       // </svg>");
       // width: 16px;
       // height: 16px;
-      color: #FFFFFF;
     }
   }
 
   &::after {
     content: '▾';
     float: right;
-    color: #FFFFFF;
   }
   `
   );
 
 const CreateStyledListbox = (width, height) =>
-  styled('ul')(
+  styled("ul")(
     ({ theme }) => `
   font-family: 'Igra Sans';
   font-size: 14px;
@@ -98,7 +96,7 @@ const CreateStyledListbox = (width, height) =>
   outline: 0px;
   background: #472159;
   border: none;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
   box-shadow: none;
 
   &::-webkit-scrollbar {
@@ -114,7 +112,7 @@ const CreateStyledListbox = (width, height) =>
   `
   );
 
-const StyledOption = styled(OptionUnstyled)(
+const StyledOption = styled(Option)(
   ({ theme }) => `
   font-family: 'Igra Sans';
   list-style: none;
@@ -145,7 +143,7 @@ const StyledOption = styled(OptionUnstyled)(
   }
 
   &.${optionUnstyledClasses.disabled} {
-    color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+    color: ${theme.palette.mode === "dark" ? grey[700] : grey[400]};
   }
 
   &:hover:not(.${optionUnstyledClasses.disabled}) {
@@ -155,57 +153,48 @@ const StyledOption = styled(OptionUnstyled)(
   `
 );
 
-const StyledPopper = styled(PopperUnstyled)`
+// const StyledPopper = styled(Popper)(
+//   ({ theme }) => `
+//     z-index: 1;
+//   `
+// );
+
+const StyledPopper = styled(Popper)`
   z-index: 1400;
 `;
 
-const defaultOption = (i) =>{
-        <StyledOption
-            key={i.name}
-            value={i.name}
-            style={{ color: i.color || '#B3B3B3' }}
-          > 
-          {i.name}
-          </StyledOption>
-}
-
 export default function MultipleSelectPlaceholder({
-  props,
-  customRenderChild = null,
   options,
-  multiple = false,
+  multiple,
   defaultValue,
   onChange,
   hint,
   width,
   height,
 }) {
-  const [rootColor, setRootColor] = useState('#FFFFFF');
   const handleChange = (event, newValue) => {
     if (onChange) onChange(newValue);
-    let currOpt = options?.find((o) => o.name === newValue);
-    if (currOpt) setRootColor(currOpt.color);
   };
-  
+
   const CustomSelect = React.forwardRef(function CustomSelect(props, ref) {
     const slots = {
-      root: CreateStyledButton(width, rootColor),
+      root: CreateStyledButton(width),
       listbox: CreateStyledListbox(width, height),
       popper: StyledPopper,
       ...props.slots,
     };
 
-    return <SelectUnstyled {...props} ref={ref} slots={slots} />;
+    return <Select {...props} ref={ref} slots={slots} />;
   });
-  const renderItem = customRenderChild == null?defaultOption:customRenderChild;
+
   return (
     <div className={css.wrapper} style={{ width: width }}>
-      <CustomSelect {...props} defaultValue={defaultValue} onChange={handleChange} multiple={multiple}>
-      
+      <CustomSelect defaultValue={defaultValue} onChange={handleChange}>
         {(options || []).map((i) => (
-          renderItem(i)
+          <StyledOption key={i.name} value={i.name}>
+            {i.name}
+          </StyledOption>
         ))}
-
       </CustomSelect>
       {hint && <div className={css.hint}>{hint}</div>}
     </div>

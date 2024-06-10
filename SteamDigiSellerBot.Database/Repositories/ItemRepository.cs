@@ -25,7 +25,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
-            string digiSellerId);
+            string digiSellerId,
+            int? hierarchyParams_targetSteamCurrencyId,
+            int? hierarchyParams_baseSteamCurrencyId,
+            string hierarchyParams_compareSign,
+            int? hierarchyParams_percentDiff,
+            bool? hierarchyParams_isActiveHierarchyOn);
     }
 
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
@@ -62,7 +67,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
-            string digiSellerId)
+            string digiSellerId,
+            int? hierarchyParams_targetSteamCurrencyId,
+            int? hierarchyParams_baseSteamCurrencyId,
+            string hierarchyParams_compareSign,
+            int? hierarchyParams_percentDiff,
+            bool? hierarchyParams_isActiveHierarchyOn)
         {
             await using var db = dbContextFactory.CreateDbContext();
             var sortedQuery = db.Items
@@ -85,14 +95,30 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 gamePricesCurrHashSet = new HashSet<int>(gamePricesCurr);
             }
-
+            Expression<Func<bool>> hierarchyParamsIsNull = () =>
+            
+                !hierarchyParams_targetSteamCurrencyId.HasValue ||
+                !hierarchyParams_baseSteamCurrencyId.HasValue ||
+                hierarchyParams_compareSign == null ||
+                !hierarchyParams_percentDiff.HasValue ||
+                !hierarchyParams_isActiveHierarchyOn.HasValue;
+            
             Expression<Func<Item, bool>> predicate = (item) =>
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
-                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId));
+                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId)
+                    && (!hierarchyParams_targetSteamCurrencyId.HasValue ||
+                        !hierarchyParams_baseSteamCurrencyId.HasValue ||
+                        hierarchyParams_compareSign == null ||
+                        !hierarchyParams_percentDiff.HasValue ||
+                        !hierarchyParams_isActiveHierarchyOn.HasValue ||
+                        ((item.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId).CurrentSteamPrice / 
+                        item.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId).CurrentSteamPrice) * 100 > hierarchyParams_percentDiff)
+
+                        ));
 
             var total = await db.Items
                 .CountAsync(predicate);

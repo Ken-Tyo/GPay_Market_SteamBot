@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using User = SteamDigiSellerBot.Database.Models.User;
 using SteamDigiSellerBot.Database.Contexts;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -62,11 +63,11 @@ namespace SteamDigiSellerBot.Controllers
 
         [HttpPost]
         [Route("items/list")]
-        public async Task<IActionResult> GetItems(ProductsFilter productsFilter)
+        public async Task<IActionResult> GetItems([MaybeNull] ProductsFilter productsFilter)
         {
 
             List<Item> items;
-            if(productsFilter != null)
+            if(productsFilter.IsFilterOn)
             {
                 items = (await _itemRepository.Filter(
                     productsFilter.AppId, 
@@ -74,7 +75,13 @@ namespace SteamDigiSellerBot.Controllers
                     productsFilter.SteamCountryCodeId,
                     productsFilter?.steamCurrencyId?.Select(e => e.Id).ToList(),
                     productsFilter?.gameRegionsCurrency?.Select(e => e.Id).ToList(),
-                    productsFilter.DigiSellerId)).result;
+                    productsFilter.DigiSellerId,
+                    productsFilter.hierarchyParams_targetSteamCurrencyId,
+                    productsFilter.hierarchyParams_baseSteamCurrencyId,
+                    productsFilter.hierarchyParams_compareSign,
+                    productsFilter.hierarchyParams_percentDiff,
+                    productsFilter.hierarchyParams_isActiveHierarchyOn
+                    )).result;
             }
             else
             {

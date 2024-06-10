@@ -39,13 +39,23 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     productName: "",
     steamCurrencyId: [{ id: 5, name: "RUB" }],
     gameRegionsCurrency: [],
-    steamCountryCodeId: [28],
+    steamCountryCodeId: "",
     digiSellerIds: "",
     ThirdPartyPriceValue: null,
     ThirdPartyPriceType: 0,
+    hierarchyParams_targetSteamCurrencyId: "RUB",
+    hierarchyParams_baseSteamCurrencyId: "RUB",
+    hierarchyParams_compareSign: "<>",
+    hierarchyParams_percentDiff: 15,
+    hierarchyParams_isActiveHierarchyOn: true,
   };
   const [item, setItem] = useState(initial);
   const { digiPriceSetType } = state.use();
+  const signOptions = [
+    { id: 0, name: ">=" },
+    { id: 1, name: "=<" },
+    { id: 2, name: "<>" },
+  ];
 
   useEffect(() => {
     if (value) {
@@ -78,6 +88,9 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   const memoRegions = React.useMemo(() => regions, []);
 
   const handleChange = (prop) => (val, newVal) => {
+    if (val == null) {
+      return;
+    }
     if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency") {
       if (val != null) {
         //var newVal = val.targer.value;
@@ -87,15 +100,28 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       } else {
         return;
       }
-    } else if (prop === "steamCountryCodeId") {
-      val = regions.find((c) => c.name === val).id;
+    } else if (prop === "hierarchyParams_percentDiff") {
+      var isValid = !Number.isNaN(val);
+      if (!isValid) {
+        return;
+      }
     } else if (prop === "ThirdPartyPriceType") {
       val = val === "₽";
     }
-
+    console.log(item);
     console.log(prop, val);
-
     setItem({ ...item, [prop]: val });
+  };
+
+  const handleOnSave = (transferObject) => {
+    transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(
+      (c) => c.name === transferObject.hierarchyParams_baseSteamCurrencyId
+    ).id;
+    transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(
+      (c) => c.name === transferObject.hierarchyParams_targetSteamCurrencyId
+    ).id;
+    transferObject.IsFilterOn = true;
+    onSave(transferObject);
   };
 
   const regionVal = (
@@ -105,7 +131,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   const ThirdPartyPriceTypeVal = item.ThirdPartyPriceType
     ? digiPriceSetType[1].name
     : digiPriceSetType[0].name;
-  console.log(item.steamCurrencyId);
+
   return (
     <ModalBase
       isOpen={isOpen}
@@ -124,12 +150,20 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           onChange={handleChange("productName")}
           value={item.itemName}
         />
-        <FormItemSelect
-          name={"Регион получения:"}
-          options={memoRegions}
-          onChange={handleChange("steamCountryCodeId")}
-          value={regionVal}
-        />
+        <div className={css.formItem}>
+          <div className={css.name}>Регион получения:</div>
+
+          <div className={css.wrapper}>
+            <div className={css.doubleControl}>
+              <Select
+                options={regions}
+                defaultValue={item.steamCountryCodeId}
+                onChange={handleChange("steamCountryCodeId")}
+                width={302}
+              />
+            </div>
+          </div>
+        </div>
         <div className={css.formItem}>
           <div className={css.name}>Ценовая основа:</div>
 
@@ -162,24 +196,23 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           <div className={css.wrapper}>
             <div className={css.doubleControl}>
               <Select
-                options={digiPriceSetType}
-                defaultValue={ThirdPartyPriceTypeVal}
-                onChange={handleChange("ThirdPartyPriceType")}
+                options={currencies}
+                defaultValue={item.hierarchyParams_targetSteamCurrencyId}
+                onChange={handleChange("hierarchyParams_targetSteamCurrencyId")}
                 width={124}
-                height={75}
               />
               <Select
-                options={digiPriceSetType}
-                defaultValue={ThirdPartyPriceTypeVal}
-                onChange={handleChange("ThirdPartyPriceType")}
+                options={signOptions}
+                defaultValue={item.hierarchyParams_compareSign}
+                onChange={handleChange("hierarchyParams_compareSign")}
                 width={68}
-                height={75}
               />
 
               <TextBox
-                onChange={handleChange("ThirdPartyPriceValue")}
-                defaultValue={item.ThirdPartyPriceValue}
+                onChange={handleChange("hierarchyParams_percentDiff")}
+                defaultValue={item.hierarchyParams_percentDiff}
                 width={92}
+                type="number"
               />
             </div>
           </div>
@@ -190,13 +223,14 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
 
           <div className={css.wrapper}>
             <div className={css.doubleControl}>
-              <div style={{ fontSize: "18px" }}>искать к основе:</div>
+              <div style={{ fontSize: "18px", paddingLeft: "11px" }}>
+                искать к основе:
+              </div>
               <Select
-                options={digiPriceSetType}
-                defaultValue={ThirdPartyPriceTypeVal}
-                onChange={handleChange("ThirdPartyPriceType")}
+                options={currencies}
+                defaultValue={item.hierarchyParams_baseSteamCurrencyId}
+                onChange={handleChange("hierarchyParams_baseSteamCurrencyId")}
                 width={124}
-                height={75}
               />
             </div>
           </div>
@@ -205,10 +239,14 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           <div className={css.name}></div>
 
           <div className={css.wrapper}>
-            <div className={css.doubleControl}>
+            <div className={css.doubleControl} style={{ padding: "0 11px" }}>
               <div style={{ fontSize: "18px" }}>Включая активную иерархию:</div>
               <div className={css.wrapper} style={{ width: "30px" }}>
-                <FillCheckBox size={30} checked={() => true} />
+                <FillCheckBox
+                  size={30}
+                  checked={item.hierarchyParams_isActiveHierarchyOn}
+                  onChange={handleChange("hierarchyParams_isActiveHierarchyOn")}
+                />
               </div>
             </div>
           </div>
@@ -253,7 +291,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
             width: "322px",
           }}
           onClick={() => {
-            onSave(item);
+            handleOnSave(item);
           }}
         />
         <Button

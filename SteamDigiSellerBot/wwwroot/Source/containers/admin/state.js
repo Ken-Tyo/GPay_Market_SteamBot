@@ -1,32 +1,28 @@
-import { entity } from 'simpler-state';
-import { mapToFormData, getUrlQueryParams } from '../../utils/common';
-import { itemsMode as iMode } from '../../containers/admin/common';
-const signalR = require('@microsoft/signalr');
+import { entity } from "simpler-state";
+import { mapToFormData, getUrlQueryParams } from "../../utils/common";
+import { itemsMode as iMode } from "../../containers/admin/common";
+const signalR = require("@microsoft/signalr");
 
 export const state = entity({
-  user: { digisellerId: '', digisellerApiKey: '' },
-  activeMenuLink: '',
-  newUniqueCodes:[],
+  user: { digisellerId: "", digisellerApiKey: "" },
+  activeMenuLink: "",
+  newUniqueCodes: [],
   items: [],
   gameSessions: [],
   gameSessionsTotal: 0,
   gameSessionsFilter: {
-    appId: '',
-    gameName: '',
+    appId: "",
+    gameName: "",
     orderId: null,
-    profileStr: '',
-    uniqueCodes: '',
+    profileStr: "",
+    uniqueCodes: "",
     steamCurrencyId: null,
     statusId: null,
     page: 1,
     size: 50,
   },
-  productsFilter:{
-      appId: '',
-      productName:"",
-      steamCurrencyId: [],
-      steamCountryCodeId: [],
-      digiSellerId: ""
+  productsFilter: {
+    IsFilterOn: false,
   },
   gameSessionsStatuses: {},
   bots: [],
@@ -38,8 +34,8 @@ export const state = entity({
   currencies: [],
   steamRegions: [],
   digiPriceSetType: [
-    { id: 1, name: '%' },
-    { id: 2, name: '₽' },
+    { id: 1, name: "%" },
+    { id: 2, name: "₽" },
   ],
   editBotResponse: { loading: false, errors: [] },
   editOrderResponse: { loading: false, errors: [] },
@@ -56,11 +52,11 @@ export const state = entity({
   editItemModalIsOpen: false,
   editOrderModalIsOpen: false,
   filterOrdersModalIsOpen: false,
-  filterProductsModalIsOpen:false,
+  filterProductsModalIsOpen: false,
   botRegionSetEditModalIsOpen: false,
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
-  orderCreationInfoIsOpen:false,
+  orderCreationInfoIsOpen: false,
   wsconn: null,
 });
 
@@ -70,10 +66,10 @@ export const initAdmin = async () => {
   if (!wsconn) {
     let connection = new signalR.HubConnectionBuilder()
       //.configureLogging(signalR.LogLevel.Trace)
-      .withUrl('/adminhub')
+      .withUrl("/adminhub")
       .build();
-    setStateProp('wsconn', connection);
-    connection.on('Notify', async function (mes) {
+    setStateProp("wsconn", connection);
+    connection.on("Notify", async function (mes) {
       //let arg = data.arguments[0];
       console.log(mes);
       if (!mes) return;
@@ -111,7 +107,7 @@ export const initBotsPage = async () => {
   await apiGetCurrencies();
 
   let params = getUrlQueryParams();
-  console.log('params', params);
+  console.log("params", params);
   let botId = Number(params.id || 0);
   if (botId) {
     const { bots } = state.get();
@@ -197,12 +193,13 @@ export const setActiveMenuLink = (name) => {
 };
 
 export const apiFetchItems = async (filter) => {
-
-  let requestData = {method:'POST'};
-  if(filter != null){
-    requestData.body = mapToFormData(filter);
+  debugger;
+  let requestData = { method: "POST" };
+  if (filter == null) {
+    filter = { IsFilterOn: false };
   }
-  let res = await fetch('/items/list', requestData);
+  requestData.body = mapToFormData(filter);
+  let res = await fetch("/items/list", requestData);
   setItems(await res.json());
 };
 
@@ -214,7 +211,7 @@ export const setItemPrice = async (gpId, newPrice, itemId) => {
   }
 };
 export const apiSetItemPrice = async (gpId, newPrice) => {
-  let res = await fetch(`/items/price/${gpId}/${newPrice}`, { method: 'POST' });
+  let res = await fetch(`/items/price/${gpId}/${newPrice}`, { method: "POST" });
   return res;
 };
 
@@ -227,14 +224,14 @@ export const setItemPricePriority = async (gpId, itemId) => {
 };
 
 export const apiSetItemPricePriority = async (gpId) => {
-  let res = await fetch(`/items/price/${gpId}/priority`, { method: 'POST' });
+  let res = await fetch(`/items/price/${gpId}/priority`, { method: "POST" });
   console.log(res);
   return res;
 };
 
 export const apiFetchGameSessions = async (filter) => {
-  let res = await fetch('/gamesessions/list', {
-    method: 'POST',
+  let res = await fetch("/gamesessions/list", {
+    method: "POST",
     body: mapToFormData({
       appId: filter.appId,
       gameName: filter.gameName,
@@ -248,8 +245,8 @@ export const apiFetchGameSessions = async (filter) => {
   });
 
   const json = await res.json();
-  setStateProp('gameSessions', json.list);
-  setStateProp('gameSessionsTotal', json.total);
+  setStateProp("gameSessions", json.list);
+  setStateProp("gameSessionsTotal", json.total);
 };
 
 export const apiFetchGameSessionsWithCurrentFilter = async () => {
@@ -272,24 +269,24 @@ export const apiFetchGameSessStatuses = async () => {
   if (gameSessionsStatuses && Object.keys(gameSessionsStatuses).length > 0)
     return;
 
-  let res = await fetch('/gamesessions/statuses');
-  setStateProp('gameSessionsStatuses', await res.json());
+  let res = await fetch("/gamesessions/statuses");
+  setStateProp("gameSessionsStatuses", await res.json());
 };
 
 export const apiFetchBots = async () => {
-  let res = await fetch('/bots/list');
+  let res = await fetch("/bots/list");
   setBots(await res.json());
 };
 
 export const apiFetchProxies = async () => {
-  let res = await fetch('/proxy/list');
+  let res = await fetch("/proxy/list");
   setProxies(await res.json());
 };
 
 export const apiSetItemActiveStatus = async (ids) => {
-  let idParam = '';
+  let idParam = "";
   if (ids && ids.length > 0) {
-    idParam = ids.join(',');
+    idParam = ids.join(",");
   }
 
   if (!ids || ids.length > 1) setItemsLoading(true);
@@ -313,7 +310,7 @@ export const apiDeleteItem = async (id) => {
 
 export const apiBulkDeleteItem = async (Ids) => {
   let res = await fetch(`/items/bulk/delete`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData({
       Ids,
     }),
@@ -349,7 +346,7 @@ export const apiDeleteProxyAll = async (id) => {
 
 export const apiLoadNewProxy = async (data) => {
   let res = await fetch(`/proxy/load`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(data),
   });
   if (!res.ok) {
@@ -360,13 +357,13 @@ export const apiLoadNewProxy = async (data) => {
 };
 
 export const apiEditBot = async (item) => {
-  setStateProp('editBotResponse', {
+  setStateProp("editBotResponse", {
     loading: true,
     errors: [],
   });
 
   let res = await fetch(`/bots/add`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(item),
   });
 
@@ -376,13 +373,13 @@ export const apiEditBot = async (item) => {
     await apiFetchBots();
   } else {
     if (res.status === 500) {
-      errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
+      errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
     } else {
       errors = (await res.json()).errors;
     }
   }
 
-  setStateProp('editBotResponse', {
+  setStateProp("editBotResponse", {
     loading: false,
     errors: errors,
   });
@@ -404,7 +401,7 @@ export const apiDeleteBot = async (id) => {
 
 export const apiBotSetIsOn = async (id, isOn) => {
   let res = await fetch(`/bots/setison`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData({
       botId: id,
       isOn: isOn,
@@ -415,13 +412,13 @@ export const apiBotSetIsOn = async (id, isOn) => {
 };
 
 export const apiSaveBotRegionSettings = async (item) => {
-  setStateProp('saveBotRegionSetResponse', {
+  setStateProp("saveBotRegionSetResponse", {
     loading: true,
     errors: [],
   });
 
   let res = await fetch(`/bots/regionsettings`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(item),
   });
 
@@ -431,13 +428,13 @@ export const apiSaveBotRegionSettings = async (item) => {
     await apiFetchBots();
   } else {
     if (res.status === 500) {
-      errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
+      errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
     } else {
       errors = (await res.json()).errors;
     }
   }
 
-  setStateProp('saveBotRegionSetResponse', {
+  setStateProp("saveBotRegionSetResponse", {
     loading: false,
     errors: errors,
   });
@@ -450,7 +447,7 @@ export const apiChangeItem = async (item) => {
   toggleEditItemModal(false);
 
   let res = await fetch(`/items/edit/${item.id}`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(item),
   });
 
@@ -467,7 +464,7 @@ export const apiCreateItem = async (item) => {
   toggleEditItemModal(false);
 
   let res = await fetch(`/items/add`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(item),
   });
 
@@ -507,11 +504,11 @@ export const toggleLoadProxiesModal = (isOpen) => {
 };
 
 export const toggleAddGameSesCommentModal = (isOpen) => {
-  setStateProp('addGameSesCommentIsOpen', isOpen);
+  setStateProp("addGameSesCommentIsOpen", isOpen);
 };
 
 export const toggleViewStatusHistoryModal = (isOpen) => {
-  setStateProp('statusHistoryModalIsOpen', isOpen);
+  setStateProp("statusHistoryModalIsOpen", isOpen);
 };
 
 export const toggleDigisellerEditModal = async (isOpen) => {
@@ -541,7 +538,7 @@ export const toggleExchangeRatesModal = async (isOpen) => {
 };
 
 export const toggleBotDetailsModal = (isOpen) => {
-  setStateProp('botDetailsModalIsOpen', isOpen);
+  setStateProp("botDetailsModalIsOpen", isOpen);
 };
 
 export const toggleChangePasswordModal = async (isOpen) => {
@@ -598,7 +595,6 @@ export const toggleFilterProductsModal = async (isOpen) => {
   });
 };
 
-
 export const toggleEditItemModal = async (isOpen) => {
   state.set((value) => {
     return {
@@ -608,19 +604,19 @@ export const toggleEditItemModal = async (isOpen) => {
   });
 };
 
-export const toggleOrderCreationInfoModal = async(isOpen) => {
-    state.set((value) => {
-        return {
-            ...value,
-            orderCreationInfoIsOpen: isOpen,
-        };
-    });
+export const toggleOrderCreationInfoModal = async (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      orderCreationInfoIsOpen: isOpen,
+    };
+  });
 };
 
 export const apiChangeItemBulk = async (SteamPercent, Ids) => {
   setItemsLoading(true);
   let res = await fetch(`/items/bulk/change`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData({
       SteamPercent,
       Ids,
@@ -633,14 +629,14 @@ export const apiChangeItemBulk = async (SteamPercent, Ids) => {
 
 export const apiChangeDigisellerData = async (data) => {
   let res = await fetch(`/user/edit/digiseller`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(data),
   });
 };
 
 export const apiChangeUserPassword = async (data) => {
   let res = await fetch(`/user/password`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(data),
   });
 
@@ -672,7 +668,7 @@ export const apiGetExchageRates = async () => {
 export const apiUpdateExchangeDataManual = async (data) => {
   //let res = await
   fetch(`/exchangerates/update`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(data),
   });
 
@@ -718,14 +714,14 @@ export const apiGetSteamRegions = async () => {
   let data = await res.json();
 
   steamRegions = data;
-  setStateProp('steamRegions', steamRegions);
+  setStateProp("steamRegions", steamRegions);
 };
 
 export const apiSetGameSessionStatus = async (gSesId, statusId) => {
   const { gameSessionsFilter } = state.get();
 
   let res = await fetch(`/gamesessions/setstatus`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData({
       gameSessionId: gSesId,
       statusId: statusId,
@@ -739,7 +735,7 @@ export const apiResetGameSession = async (gSesId) => {
   const { gameSessionsFilter } = state.get();
 
   let res = await fetch(`/gamesessions/reset`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData({
       gameSessionId: gSesId,
     }),
@@ -753,7 +749,7 @@ export const apiAddCommentGameSession = async (gSesId, comment) => {
   toggleAddGameSesCommentModal(false);
 
   let res = await fetch(`/gamesessions/comment`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData({
       gameSessionId: gSesId,
       comment: comment,
@@ -769,9 +765,9 @@ export const updateGameSessionsFilter = async (newData) => {
     ...gameSessionsFilter,
     ...newData,
   };
-  console.log('new f', newFilter);
+  console.log("new f", newFilter);
 
-  setStateProp('gameSessionsFilter', newFilter);
+  setStateProp("gameSessionsFilter", newFilter);
   await apiFetchGameSessions(newFilter);
 };
 
@@ -781,20 +777,20 @@ export const updateProductsFilter = async (newData) => {
     ...productsFilter,
     ...newData,
   };
-  console.log('new f', newFilter);
+  console.log("new f", newFilter);
 
-  setStateProp('productsFilter', newFilter);
+  setStateProp("productsFilter", newFilter);
   await apiFetchItems(newFilter);
 };
 
 export const apiAddGameSession = async (data) => {
-  setStateProp('editOrderResponse', {
+  setStateProp("editOrderResponse", {
     loading: true,
     errors: [],
   });
 
   let res = await fetch(`/gamesession`, {
-    method: 'POST',
+    method: "POST",
     body: mapToFormData(data),
   });
 
@@ -805,26 +801,26 @@ export const apiAddGameSession = async (data) => {
     toggleEditOrderModal(false);
   } else {
     if (res.status === 500) {
-      errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
+      errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
     } else {
       errors = (await res.json()).errors;
     }
   }
 
-  setStateProp('editOrderResponse', {
+  setStateProp("editOrderResponse", {
     loading: false,
     errors: errors,
   });
 
-    if (res.ok) {
-        var newUniqueCodes = await res.json();
-        console.log(newUniqueCodes);
-        state.set((value) => {
-            return {
-                ...value,
-                newUniqueCodes: newUniqueCodes,
-            };
-        });
-        toggleOrderCreationInfoModal(true);
-    }
+  if (res.ok) {
+    var newUniqueCodes = await res.json();
+    console.log(newUniqueCodes);
+    state.set((value) => {
+      return {
+        ...value,
+        newUniqueCodes: newUniqueCodes,
+      };
+    });
+    toggleOrderCreationInfoModal(true);
+  }
 };

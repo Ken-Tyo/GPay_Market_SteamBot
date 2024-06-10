@@ -1,8 +1,11 @@
 import checkBoxCss from "./styles.scss";
 import Checkbox from "@mui/material/Checkbox";
 
-const FillCheckBox = ({ checked, size = 20 }) => {
+const FillCheckBox = ({ checked, size = 20, onChange }) => {
   const checkedSize = size - 8;
+  const handleChange = (event, newValue) => {
+    if (onChange) onChange(newValue);
+  };
   return (
     <Checkbox
       icon={<div></div>}
@@ -15,6 +18,7 @@ const FillCheckBox = ({ checked, size = 20 }) => {
       className={checkBoxCss.wrapper}
       sx={{ padding: "0px", width: `${size}px`, height: `${size}px` }}
       checked={checked}
+      onChange={handleChange}
     />
   );
 };

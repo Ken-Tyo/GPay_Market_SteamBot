@@ -26357,31 +26357,27 @@ function state_asyncToGenerator(fn) { return function () { var self = this, args
 var signalR = __webpack_require__(2520);
 var state = es_entity({
   user: {
-    digisellerId: '',
-    digisellerApiKey: ''
+    digisellerId: "",
+    digisellerApiKey: ""
   },
-  activeMenuLink: '',
+  activeMenuLink: "",
   newUniqueCodes: [],
   items: [],
   gameSessions: [],
   gameSessionsTotal: 0,
   gameSessionsFilter: {
-    appId: '',
-    gameName: '',
+    appId: "",
+    gameName: "",
     orderId: null,
-    profileStr: '',
-    uniqueCodes: '',
+    profileStr: "",
+    uniqueCodes: "",
     steamCurrencyId: null,
     statusId: null,
     page: 1,
     size: 50
   },
   productsFilter: {
-    appId: '',
-    productName: "",
-    steamCurrencyId: [],
-    steamCountryCodeId: [],
-    digiSellerId: ""
+    IsFilterOn: false
   },
   gameSessionsStatuses: {},
   bots: [],
@@ -26394,10 +26390,10 @@ var state = es_entity({
   steamRegions: [],
   digiPriceSetType: [{
     id: 1,
-    name: '%'
+    name: "%"
   }, {
     id: 2,
-    name: '₽'
+    name: "₽"
   }],
   editBotResponse: {
     loading: false,
@@ -26443,9 +26439,9 @@ var initAdmin = /*#__PURE__*/function () {
           }
           connection = new signalR.HubConnectionBuilder()
           //.configureLogging(signalR.LogLevel.Trace)
-          .withUrl('/adminhub').build();
-          setStateProp('wsconn', connection);
-          connection.on('Notify', /*#__PURE__*/function () {
+          .withUrl("/adminhub").build();
+          setStateProp("wsconn", connection);
+          connection.on("Notify", /*#__PURE__*/function () {
             var _ref2 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee(mes) {
               var gs;
               return state_regeneratorRuntime().wrap(function _callee$(_context) {
@@ -26514,7 +26510,7 @@ var initBotsPage = /*#__PURE__*/function () {
           return apiGetCurrencies();
         case 4:
           params = getUrlQueryParams();
-          console.log('params', params);
+          console.log("params", params);
           botId = Number(params.id || 0);
           if (!botId) {
             _context3.next = 14;
@@ -26628,23 +26624,27 @@ var apiFetchItems = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
+          debugger;
           requestData = {
-            method: 'POST'
+            method: "POST"
           };
-          if (filter != null) {
-            requestData.body = mapToFormData(filter);
+          if (filter == null) {
+            filter = {
+              IsFilterOn: false
+            };
           }
-          _context6.next = 4;
-          return fetch('/items/list', requestData);
-        case 4:
+          requestData.body = mapToFormData(filter);
+          _context6.next = 6;
+          return fetch("/items/list", requestData);
+        case 6:
           res = _context6.sent;
           _context6.t0 = setItems;
-          _context6.next = 8;
+          _context6.next = 10;
           return res.json();
-        case 8:
+        case 10:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 10:
+        case 12:
         case "end":
           return _context6.stop();
       }
@@ -26691,7 +26691,7 @@ var apiSetItemPrice = /*#__PURE__*/function () {
         case 0:
           _context8.next = 2;
           return fetch("/items/price/".concat(gpId, "/").concat(newPrice), {
-            method: 'POST'
+            method: "POST"
           });
         case 2:
           res = _context8.sent;
@@ -26743,7 +26743,7 @@ var apiSetItemPricePriority = /*#__PURE__*/function () {
         case 0:
           _context10.next = 2;
           return fetch("/items/price/".concat(gpId, "/priority"), {
-            method: 'POST'
+            method: "POST"
           });
         case 2:
           res = _context10.sent;
@@ -26766,8 +26766,8 @@ var apiFetchGameSessions = /*#__PURE__*/function () {
       while (1) switch (_context11.prev = _context11.next) {
         case 0:
           _context11.next = 2;
-          return fetch('/gamesessions/list', {
-            method: 'POST',
+          return fetch("/gamesessions/list", {
+            method: "POST",
             body: mapToFormData({
               appId: filter.appId,
               gameName: filter.gameName,
@@ -26785,8 +26785,8 @@ var apiFetchGameSessions = /*#__PURE__*/function () {
           return res.json();
         case 5:
           json = _context11.sent;
-          setStateProp('gameSessions', json.list);
-          setStateProp('gameSessionsTotal', json.total);
+          setStateProp("gameSessions", json.list);
+          setStateProp("gameSessionsTotal", json.total);
         case 8:
         case "end":
           return _context11.stop();
@@ -26861,7 +26861,7 @@ var apiFetchGameSessStatuses = /*#__PURE__*/function () {
           return _context14.abrupt("return");
         case 3:
           _context14.next = 5;
-          return fetch('/gamesessions/statuses');
+          return fetch("/gamesessions/statuses");
         case 5:
           res = _context14.sent;
           _context14.t0 = setStateProp;
@@ -26869,7 +26869,7 @@ var apiFetchGameSessStatuses = /*#__PURE__*/function () {
           return res.json();
         case 9:
           _context14.t1 = _context14.sent;
-          (0, _context14.t0)('gameSessionsStatuses', _context14.t1);
+          (0, _context14.t0)("gameSessionsStatuses", _context14.t1);
         case 11:
         case "end":
           return _context14.stop();
@@ -26887,7 +26887,7 @@ var apiFetchBots = /*#__PURE__*/function () {
       while (1) switch (_context15.prev = _context15.next) {
         case 0:
           _context15.next = 2;
-          return fetch('/bots/list');
+          return fetch("/bots/list");
         case 2:
           res = _context15.sent;
           _context15.t0 = setBots;
@@ -26913,7 +26913,7 @@ var apiFetchProxies = /*#__PURE__*/function () {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
           _context16.next = 2;
-          return fetch('/proxy/list');
+          return fetch("/proxy/list");
         case 2:
           res = _context16.sent;
           _context16.t0 = setProxies;
@@ -26938,9 +26938,9 @@ var apiSetItemActiveStatus = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee17$(_context17) {
       while (1) switch (_context17.prev = _context17.next) {
         case 0:
-          idParam = '';
+          idParam = "";
           if (ids && ids.length > 0) {
-            idParam = ids.join(',');
+            idParam = ids.join(",");
           }
           if (!ids || ids.length > 1) setItemsLoading(true);
           _context17.next = 5;
@@ -26998,7 +26998,7 @@ var apiBulkDeleteItem = /*#__PURE__*/function () {
         case 0:
           _context19.next = 2;
           return fetch("/items/bulk/delete", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData({
               Ids: Ids
             })
@@ -27083,7 +27083,7 @@ var apiLoadNewProxy = /*#__PURE__*/function () {
         case 0:
           _context22.next = 2;
           return fetch("/proxy/load", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(data)
           });
         case 2:
@@ -27113,13 +27113,13 @@ var apiEditBot = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee23$(_context23) {
       while (1) switch (_context23.prev = _context23.next) {
         case 0:
-          setStateProp('editBotResponse', {
+          setStateProp("editBotResponse", {
             loading: true,
             errors: []
           });
           _context23.next = 3;
           return fetch("/bots/add", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(item)
           });
         case 3:
@@ -27140,7 +27140,7 @@ var apiEditBot = /*#__PURE__*/function () {
             _context23.next = 15;
             break;
           }
-          errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
           _context23.next = 18;
           break;
         case 15:
@@ -27149,7 +27149,7 @@ var apiEditBot = /*#__PURE__*/function () {
         case 17:
           errors = _context23.sent.errors;
         case 18:
-          setStateProp('editBotResponse', {
+          setStateProp("editBotResponse", {
             loading: false,
             errors: errors
           });
@@ -27201,7 +27201,7 @@ var apiBotSetIsOn = /*#__PURE__*/function () {
         case 0:
           _context25.next = 2;
           return fetch("/bots/setison", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData({
               botId: id,
               isOn: isOn
@@ -27225,13 +27225,13 @@ var apiSaveBotRegionSettings = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee26$(_context26) {
       while (1) switch (_context26.prev = _context26.next) {
         case 0:
-          setStateProp('saveBotRegionSetResponse', {
+          setStateProp("saveBotRegionSetResponse", {
             loading: true,
             errors: []
           });
           _context26.next = 3;
           return fetch("/bots/regionsettings", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(item)
           });
         case 3:
@@ -27252,7 +27252,7 @@ var apiSaveBotRegionSettings = /*#__PURE__*/function () {
             _context26.next = 15;
             break;
           }
-          errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
           _context26.next = 18;
           break;
         case 15:
@@ -27261,7 +27261,7 @@ var apiSaveBotRegionSettings = /*#__PURE__*/function () {
         case 17:
           errors = _context26.sent.errors;
         case 18:
-          setStateProp('saveBotRegionSetResponse', {
+          setStateProp("saveBotRegionSetResponse", {
             loading: false,
             errors: errors
           });
@@ -27286,7 +27286,7 @@ var apiChangeItem = /*#__PURE__*/function () {
           toggleEditItemModal(false);
           _context27.next = 4;
           return fetch("/items/edit/".concat(item.id), {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(item)
           });
         case 4:
@@ -27324,7 +27324,7 @@ var apiCreateItem = /*#__PURE__*/function () {
           toggleEditItemModal(false);
           _context28.next = 4;
           return fetch("/items/add", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(item)
           });
         case 4:
@@ -27374,10 +27374,10 @@ var toggleLoadProxiesModal = function toggleLoadProxiesModal(isOpen) {
   });
 };
 var toggleAddGameSesCommentModal = function toggleAddGameSesCommentModal(isOpen) {
-  setStateProp('addGameSesCommentIsOpen', isOpen);
+  setStateProp("addGameSesCommentIsOpen", isOpen);
 };
 var toggleViewStatusHistoryModal = function toggleViewStatusHistoryModal(isOpen) {
-  setStateProp('statusHistoryModalIsOpen', isOpen);
+  setStateProp("statusHistoryModalIsOpen", isOpen);
 };
 var toggleDigisellerEditModal = /*#__PURE__*/function () {
   var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(isOpen) {
@@ -27434,7 +27434,7 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
   };
 }();
 var toggleBotDetailsModal = function toggleBotDetailsModal(isOpen) {
-  setStateProp('botDetailsModalIsOpen', isOpen);
+  setStateProp("botDetailsModalIsOpen", isOpen);
 };
 var toggleChangePasswordModal = /*#__PURE__*/function () {
   var _ref31 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee31(isOpen) {
@@ -27605,7 +27605,7 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
           setItemsLoading(true);
           _context39.next = 3;
           return fetch("/items/bulk/change", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData({
               SteamPercent: SteamPercent,
               Ids: Ids
@@ -27635,7 +27635,7 @@ var apiChangeDigisellerData = /*#__PURE__*/function () {
         case 0:
           _context40.next = 2;
           return fetch("/user/edit/digiseller", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(data)
           });
         case 2:
@@ -27658,7 +27658,7 @@ var apiChangeUserPassword = /*#__PURE__*/function () {
         case 0:
           _context41.next = 2;
           return fetch("/user/password", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(data)
           });
         case 2:
@@ -27739,7 +27739,7 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
         case 0:
           //let res = await
           fetch("/exchangerates/update", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(data)
           });
 
@@ -27845,7 +27845,7 @@ var apiGetSteamRegions = /*#__PURE__*/function () {
         case 8:
           data = _context47.sent;
           steamRegions = data;
-          setStateProp('steamRegions', steamRegions);
+          setStateProp("steamRegions", steamRegions);
         case 11:
         case "end":
           return _context47.stop();
@@ -27865,7 +27865,7 @@ var apiSetGameSessionStatus = /*#__PURE__*/function () {
           _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
           _context48.next = 3;
           return fetch("/gamesessions/setstatus", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData({
               gameSessionId: gSesId,
               statusId: statusId
@@ -27893,7 +27893,7 @@ var apiResetGameSession = /*#__PURE__*/function () {
           _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
           _context49.next = 3;
           return fetch("/gamesessions/reset", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData({
               gameSessionId: gSesId
             })
@@ -27921,7 +27921,7 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
           toggleAddGameSesCommentModal(false);
           _context50.next = 4;
           return fetch("/gamesessions/comment", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData({
               gameSessionId: gSesId,
               comment: comment
@@ -27948,8 +27948,8 @@ var updateGameSessionsFilter = /*#__PURE__*/function () {
         case 0:
           _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
           newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log('new f', newFilter);
-          setStateProp('gameSessionsFilter', newFilter);
+          console.log("new f", newFilter);
+          setStateProp("gameSessionsFilter", newFilter);
           _context51.next = 6;
           return apiFetchGameSessions(newFilter);
         case 6:
@@ -27970,8 +27970,8 @@ var updateProductsFilter = /*#__PURE__*/function () {
         case 0:
           _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
           newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
-          console.log('new f', newFilter);
-          setStateProp('productsFilter', newFilter);
+          console.log("new f", newFilter);
+          setStateProp("productsFilter", newFilter);
           _context52.next = 6;
           return apiFetchItems(newFilter);
         case 6:
@@ -27990,13 +27990,13 @@ var apiAddGameSession = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
       while (1) switch (_context53.prev = _context53.next) {
         case 0:
-          setStateProp('editOrderResponse', {
+          setStateProp("editOrderResponse", {
             loading: true,
             errors: []
           });
           _context53.next = 3;
           return fetch("/gamesession", {
-            method: 'POST',
+            method: "POST",
             body: mapToFormData(data)
           });
         case 3:
@@ -28018,7 +28018,7 @@ var apiAddGameSession = /*#__PURE__*/function () {
             _context53.next = 16;
             break;
           }
-          errors.push('Произошла непредвиденная ошибка, проверьте консоль.');
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
           _context53.next = 19;
           break;
         case 16:
@@ -28027,7 +28027,7 @@ var apiAddGameSession = /*#__PURE__*/function () {
         case 18:
           errors = _context53.sent.errors;
         case 19:
-          setStateProp('editOrderResponse', {
+          setStateProp("editOrderResponse", {
             loading: false,
             errors: errors
           });
@@ -40809,7 +40809,7 @@ function Select_useUtilityClasses(ownerState) {
  *
  * - [Select API](https://mui.com/base/react-select/components-api/#select)
  */
-const Select = /*#__PURE__*/react.forwardRef(function Select(props, forwardedRef) {
+const Select_Select = /*#__PURE__*/react.forwardRef(function Select(props, forwardedRef) {
   var _ref, _slots$listbox, _slots$popper;
   const {
       autoFocus,
@@ -40938,7 +40938,7 @@ const Select = /*#__PURE__*/react.forwardRef(function Select(props, forwardedRef
   });
 });
  false ? 0 : void 0;
-/* harmony default export */ const Select_Select = (Select);
+/* harmony default export */ const base_Select_Select = (Select_Select);
 ;// CONCATENATED MODULE: ./node_modules/@mui/base/Option/optionClasses.js
 
 
@@ -41323,7 +41323,7 @@ function MultipleSelectPlaceholder(_ref4) {
       listbox: CreateStyledListbox(width, height),
       popper: StyledPopper
     }, props.slots);
-    return /*#__PURE__*/(0,jsx_runtime.jsx)(Select_Select, select_objectSpread(select_objectSpread({}, props), {}, {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(base_Select_Select, select_objectSpread(select_objectSpread({}, props), {}, {
       ref: ref,
       slots: slots
     }));
@@ -45368,12 +45368,6 @@ function shared_select_objectSpread(e) { for (var r = 1; r < arguments.length; r
 function shared_select_defineProperty(obj, key, value) { key = shared_select_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function shared_select_toPropertyKey(t) { var i = shared_select_toPrimitive(t, "string"); return "symbol" == shared_select_typeof(i) ? i : i + ""; }
 function shared_select_toPrimitive(t, r) { if ("object" != shared_select_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != shared_select_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function select_slicedToArray(arr, i) { return select_arrayWithHoles(arr) || select_iterableToArrayLimit(arr, i) || select_unsupportedIterableToArray(arr, i) || select_nonIterableRest(); }
-function select_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function select_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return select_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return select_arrayLikeToArray(o, minLen); }
-function select_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function select_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function select_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function select_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
@@ -45383,99 +45377,86 @@ function select_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.
 
 
 var shared_select_blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75'
+  100: "#DAECFF",
+  200: "#99CCF3",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  900: "#003A75"
 };
 var shared_select_grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f'
+  50: "#f6f8fa",
+  100: "#eaeef2",
+  200: "#d0d7de",
+  300: "#afb8c1",
+  400: "#8c959f",
+  500: "#6e7781",
+  600: "#57606a",
+  700: "#424a53",
+  800: "#32383f",
+  900: "#24292f"
 };
-var select_CreateStyledButton = function CreateStyledButton(width, color) {
-  return esm_styled('button')(function (_ref) {
+var select_CreateStyledButton = function CreateStyledButton(width) {
+  return esm_styled("button")(function (_ref) {
     var theme = _ref.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: ").concat(color || '#FFFFFF', ";\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === 'dark' ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n      color: #FFFFFF;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n    color: #FFFFFF;\n  }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n  }\n  ");
   });
 };
 var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
-  return esm_styled('ul')(function (_ref2) {
+  return esm_styled("ul")(function (_ref2) {
     var theme = _ref2.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[300] : shared_select_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  padding: 6px 6px 6px 6px;\n  margin-top: 10px;\n  margin-left: 0px;\n  //position: relative;\n  //z-index: -100;\n  width: ".concat(width || 226, "px;\n  height: ").concat(height || 155, "px;\n  border-radius: 15px;\n  //border-radius: 0px 0px 15px 15px;\n  overflow: auto;\n  outline: 0px;\n  background: #472159;\n  border: none;\n  color: ").concat(theme.palette.mode === "dark" ? shared_select_grey[300] : shared_select_grey[900], ";\n  box-shadow: none;\n\n  &::-webkit-scrollbar {\n    width: 14px\n  }\n\n  &::-webkit-scrollbar-thumb {\n      border: 6px solid transparent;\n      background-clip: padding-box;\n      border-radius: 9999px;\n      background-color: #83409b\n  }\n  ");
   });
 };
 var select_StyledOption = esm_styled(Option_Option)(function (_ref3) {
   var theme = _ref3.theme;
-  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
+  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === "dark" ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
 });
+
+// const StyledPopper = styled(Popper)(
+//   ({ theme }) => `
+//     z-index: 1;
+//   `
+// );
+
 var select_StyledPopper = esm_styled(Popper_Popper)(select_templateObject || (select_templateObject = select_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
-var defaultOption = function defaultOption(i) {
-  /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
-    value: i.name,
-    style: {
-      color: i.color || '#B3B3B3'
-    },
-    children: i.name
-  }, i.name);
-};
 function select_MultipleSelectPlaceholder(_ref4) {
-  var props = _ref4.props,
-    _ref4$customRenderChi = _ref4.customRenderChild,
-    customRenderChild = _ref4$customRenderChi === void 0 ? null : _ref4$customRenderChi,
-    options = _ref4.options,
-    _ref4$multiple = _ref4.multiple,
-    multiple = _ref4$multiple === void 0 ? false : _ref4$multiple,
+  var options = _ref4.options,
+    multiple = _ref4.multiple,
     defaultValue = _ref4.defaultValue,
     onChange = _ref4.onChange,
     hint = _ref4.hint,
     width = _ref4.width,
     height = _ref4.height;
-  var _useState = (0,react.useState)('#FFFFFF'),
-    _useState2 = select_slicedToArray(_useState, 2),
-    rootColor = _useState2[0],
-    setRootColor = _useState2[1];
   var handleChange = function handleChange(event, newValue) {
     if (onChange) onChange(newValue);
-    var currOpt = options === null || options === void 0 ? void 0 : options.find(function (o) {
-      return o.name === newValue;
-    });
-    if (currOpt) setRootColor(currOpt.color);
   };
   var CustomSelect = /*#__PURE__*/react.forwardRef(function CustomSelect(props, ref) {
     var slots = shared_select_objectSpread({
-      root: select_CreateStyledButton(width, rootColor),
+      root: select_CreateStyledButton(width),
       listbox: select_CreateStyledListbox(width, height),
       popper: select_StyledPopper
     }, props.slots);
-    return /*#__PURE__*/(0,jsx_runtime.jsx)(Select_Select, shared_select_objectSpread(shared_select_objectSpread({}, props), {}, {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(base_Select_Select, shared_select_objectSpread(shared_select_objectSpread({}, props), {}, {
       ref: ref,
       slots: slots
     }));
   });
-  var renderItem = customRenderChild == null ? defaultOption : customRenderChild;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_select_styles.wrapper,
     style: {
       width: width
     },
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect, shared_select_objectSpread(shared_select_objectSpread({}, props), {}, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect, {
       defaultValue: defaultValue,
       onChange: handleChange,
-      multiple: multiple,
       children: (options || []).map(function (i) {
-        return renderItem(i);
+        return /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
+          value: i.name,
+          children: i.name
+        }, i.name);
       })
-    })), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: shared_select_styles.hint,
       children: hint
     })]
@@ -45483,7 +45464,6 @@ function select_MultipleSelectPlaceholder(_ref4) {
 }
 // EXTERNAL MODULE: ./node_modules/classnames/index.js
 var node_modules_classnames = __webpack_require__(6942);
-var classnames_default = /*#__PURE__*/__webpack_require__.n(node_modules_classnames);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/index.js
 
 
@@ -45497,13 +45477,13 @@ var FormItemSelect = function FormItemSelect(_ref) {
     options = _ref.options,
     hint = _ref.hint,
     className = _ref.className;
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    className: classnames_default()(formItem_styles.formItem, className),
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: formItem_styles.name,
+  return /*#__PURE__*/_jsxs("div", {
+    className: classNames(css.formItem, className),
+    children: [/*#__PURE__*/_jsx("div", {
+      className: css.name,
       children: name
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+    }), /*#__PURE__*/_jsx("div", {
+      children: /*#__PURE__*/_jsx(Select, {
         options: options,
         defaultValue: value,
         onChange: onChange,
@@ -45512,7 +45492,7 @@ var FormItemSelect = function FormItemSelect(_ref) {
     })]
   });
 };
-/* harmony default export */ const formItem_select = (FormItemSelect);
+/* harmony default export */ const formItem_select = ((/* unused pure expression or super */ null && (FormItemSelect)));
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const textbox2_styles = ({"wrapper":"styles__wrapper--NNUA1","inputControl":"styles__inputControl--PRK2k","inputArea":"styles__inputArea--lD00m","cymbol":"styles__cymbol--ja7q_","hint":"styles__hint--RpynI"});
@@ -45525,14 +45505,15 @@ var textbox2_TextBox = function TextBox(_ref) {
     onChange = _ref.onChange,
     defaultValue = _ref.defaultValue,
     cymbol = _ref.cymbol,
-    width = _ref.width;
+    width = _ref.width,
+    _ref$type = _ref.type,
+    type = _ref$type === void 0 ? "text" : _ref$type;
   var onChangeText = function onChangeText(event) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: textbox2_styles.wrapper,
-    onChange: onChangeText,
     style: {
       width: "auto"
     },
@@ -45541,10 +45522,20 @@ var textbox2_TextBox = function TextBox(_ref) {
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: textbox2_styles.inputArea,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-          type: "text",
-          defaultValue: defaultValue,
+          type: type,
+          value: defaultValue,
           style: {
             width: width
+          },
+          onChange: onChangeText
+          //Защита от изменения прокрутки значения, есть type=numeric
+          ,
+          onFocus: function onFocus(e) {
+            return e.target.addEventListener("wheel", function (e) {
+              return e.preventDefault();
+            }, {
+              passive: false
+            });
           }
         }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: textbox2_styles.cymbol,
@@ -45657,7 +45648,7 @@ var multiselect_StyledOption = esm_styled(Option_Option)(function (_ref3) {
   return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === 'dark' ? multiselect_grey[700] : multiselect_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
 });
 var multiselect_StyledPopper = esm_styled(Popper_Popper)(multiselect_templateObject || (multiselect_templateObject = multiselect_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
-var multiselect_defaultOption = function defaultOption(i) {
+var defaultOption = function defaultOption(i) {
   /*#__PURE__*/_jsx(multiselect_StyledOption, {
     value: i,
     style: {
@@ -50858,8 +50849,12 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
 var FillCheckBox = function FillCheckBox(_ref) {
   var checked = _ref.checked,
     _ref$size = _ref.size,
-    size = _ref$size === void 0 ? 20 : _ref$size;
+    size = _ref$size === void 0 ? 20 : _ref$size,
+    onChange = _ref.onChange;
   var checkedSize = size - 8;
+  var handleChange = function handleChange(event, newValue) {
+    if (onChange) onChange(newValue);
+  };
   return /*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
     icon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}),
     checkedIcon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -50875,7 +50870,8 @@ var FillCheckBox = function FillCheckBox(_ref) {
       width: "".concat(size, "px"),
       height: "".concat(size, "px")
     },
-    checked: checked
+    checked: checked,
+    onChange: handleChange
   });
 };
 /* harmony default export */ const checkBox = (FillCheckBox);
@@ -50941,10 +50937,15 @@ var ModalFilter = function ModalFilter(_ref) {
       name: "RUB"
     }],
     gameRegionsCurrency: [],
-    steamCountryCodeId: [28],
+    steamCountryCodeId: "",
     digiSellerIds: "",
     ThirdPartyPriceValue: null,
-    ThirdPartyPriceType: 0
+    ThirdPartyPriceType: 0,
+    hierarchyParams_targetSteamCurrencyId: "RUB",
+    hierarchyParams_baseSteamCurrencyId: "RUB",
+    hierarchyParams_compareSign: "<>",
+    hierarchyParams_percentDiff: 15,
+    hierarchyParams_isActiveHierarchyOn: true
   };
   var _useState = (0,react.useState)(initial),
     _useState2 = modalProductsFilter_slicedToArray(_useState, 2),
@@ -50952,6 +50953,16 @@ var ModalFilter = function ModalFilter(_ref) {
     setItem = _useState2[1];
   var _state$use = state.use(),
     digiPriceSetType = _state$use.digiPriceSetType;
+  var signOptions = [{
+    id: 0,
+    name: ">="
+  }, {
+    id: 1,
+    name: "=<"
+  }, {
+    id: 2,
+    name: "<>"
+  }];
   (0,react.useEffect)(function () {
     if (value) {
       var stateVal = modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, initial), value);
@@ -50979,6 +50990,9 @@ var ModalFilter = function ModalFilter(_ref) {
   }, []);
   var handleChange = function handleChange(prop) {
     return function (val, newVal) {
+      if (val == null) {
+        return;
+      }
       if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency") {
         if (val != null) {
           //var newVal = val.targer.value;
@@ -50988,22 +51002,33 @@ var ModalFilter = function ModalFilter(_ref) {
         } else {
           return;
         }
-      } else if (prop === "steamCountryCodeId") {
-        val = regions.find(function (c) {
-          return c.name === val;
-        }).id;
+      } else if (prop === "hierarchyParams_percentDiff") {
+        var isValid = !Number.isNaN(val);
+        if (!isValid) {
+          return;
+        }
       } else if (prop === "ThirdPartyPriceType") {
         val = val === "₽";
       }
+      console.log(item);
       console.log(prop, val);
       setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, val)));
     };
+  };
+  var handleOnSave = function handleOnSave(transferObject) {
+    transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(function (c) {
+      return c.name === transferObject.hierarchyParams_baseSteamCurrencyId;
+    }).id;
+    transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(function (c) {
+      return c.name === transferObject.hierarchyParams_targetSteamCurrencyId;
+    }).id;
+    transferObject.IsFilterOn = true;
+    onSave(transferObject);
   };
   var regionVal = (regions.find(function (c) {
     return c.id === item.steamCountryCodeId;
   }) || {}).name;
   var ThirdPartyPriceTypeVal = item.ThirdPartyPriceType ? digiPriceSetType[1].name : digiPriceSetType[0].name;
-  console.log(item.steamCurrencyId);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: "Фильтры отображения",
@@ -51019,11 +51044,23 @@ var ModalFilter = function ModalFilter(_ref) {
         name: "Название товара:",
         onChange: handleChange("productName"),
         value: item.itemName
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_select, {
-        name: "Регион получения:",
-        options: memoRegions,
-        onChange: handleChange("steamCountryCodeId"),
-        value: regionVal
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name,
+          children: "\u0420\u0435\u0433\u0438\u043E\u043D \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F:"
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: modalProductsFilter_styles.doubleControl,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
+              options: regions,
+              defaultValue: item.steamCountryCodeId,
+              onChange: handleChange("steamCountryCodeId"),
+              width: 302
+            })
+          })
+        })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalProductsFilter_styles.formItem,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -51064,21 +51101,20 @@ var ModalFilter = function ModalFilter(_ref) {
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: modalProductsFilter_styles.doubleControl,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
-              options: digiPriceSetType,
-              defaultValue: ThirdPartyPriceTypeVal,
-              onChange: handleChange("ThirdPartyPriceType"),
-              width: 124,
-              height: 75
+              options: currencies,
+              defaultValue: item.hierarchyParams_targetSteamCurrencyId,
+              onChange: handleChange("hierarchyParams_targetSteamCurrencyId"),
+              width: 124
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
-              options: digiPriceSetType,
-              defaultValue: ThirdPartyPriceTypeVal,
-              onChange: handleChange("ThirdPartyPriceType"),
-              width: 68,
-              height: 75
+              options: signOptions,
+              defaultValue: item.hierarchyParams_compareSign,
+              onChange: handleChange("hierarchyParams_compareSign"),
+              width: 68
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
-              onChange: handleChange("ThirdPartyPriceValue"),
-              defaultValue: item.ThirdPartyPriceValue,
-              width: 92
+              onChange: handleChange("hierarchyParams_percentDiff"),
+              defaultValue: item.hierarchyParams_percentDiff,
+              width: 92,
+              type: "number"
             })]
           })
         })]
@@ -51092,15 +51128,15 @@ var ModalFilter = function ModalFilter(_ref) {
             className: modalProductsFilter_styles.doubleControl,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               style: {
-                fontSize: "18px"
+                fontSize: "18px",
+                paddingLeft: "11px"
               },
               children: "\u0438\u0441\u043A\u0430\u0442\u044C \u043A \u043E\u0441\u043D\u043E\u0432\u0435:"
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
-              options: digiPriceSetType,
-              defaultValue: ThirdPartyPriceTypeVal,
-              onChange: handleChange("ThirdPartyPriceType"),
-              width: 124,
-              height: 75
+              options: currencies,
+              defaultValue: item.hierarchyParams_baseSteamCurrencyId,
+              onChange: handleChange("hierarchyParams_baseSteamCurrencyId"),
+              width: 124
             })]
           })
         })]
@@ -51112,6 +51148,9 @@ var ModalFilter = function ModalFilter(_ref) {
           className: modalProductsFilter_styles.wrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: modalProductsFilter_styles.doubleControl,
+            style: {
+              padding: "0 11px"
+            },
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               style: {
                 fontSize: "18px"
@@ -51124,9 +51163,8 @@ var ModalFilter = function ModalFilter(_ref) {
               },
               children: /*#__PURE__*/(0,jsx_runtime.jsx)(checkBox, {
                 size: 30,
-                checked: function checked() {
-                  return true;
-                }
+                checked: item.hierarchyParams_isActiveHierarchyOn,
+                onChange: handleChange("hierarchyParams_isActiveHierarchyOn")
               })
             })]
           })
@@ -51168,7 +51206,7 @@ var ModalFilter = function ModalFilter(_ref) {
           width: "322px"
         },
         onClick: function onClick() {
-          onSave(item);
+          handleOnSave(item);
         }
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         text: "Отмена",
@@ -61207,7 +61245,7 @@ function modalEdit_select_MultipleSelectPlaceholder(_ref4) {
       listbox: modalEdit_select_CreateStyledListbox(width, height),
       popper: modalEdit_select_StyledPopper
     }, props.slots);
-    return /*#__PURE__*/(0,jsx_runtime.jsx)(Select_Select, modalEdit_select_objectSpread(modalEdit_select_objectSpread({}, props), {}, {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(base_Select_Select, modalEdit_select_objectSpread(modalEdit_select_objectSpread({}, props), {}, {
       ref: ref,
       slots: slots
     }));
