@@ -155,7 +155,7 @@ namespace SteamDigiSellerBot.Network.Services
                             // Избегаем попадать в лимит при обращении к серверу
                             Thread.Sleep(TimeSpan.FromSeconds(1));
 
-                            DigiSellerItem digiSellerItem = JsonConvert.DeserializeObject<DigiSellerItem>(s);
+                            DigiSellerItem digiSellerItem = JsonConvert.DeserializeObject<DigiSellerItem>(s.Replace("&amp;", "&"));
 
                             return digiSellerItem;
                         }
