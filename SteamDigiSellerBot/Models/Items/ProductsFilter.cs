@@ -27,6 +27,10 @@ namespace SteamDigiSellerBot.Models.Items
         public int? hierarchyParams_percentDiff { get; set; }
 
         public bool? hierarchyParams_isActiveHierarchyOn { get; set; }
+
+        public int? thirdPartyPriceValue { get; set; }
+
+        public bool? thirdPartyPriceType { get; set; }
     }
 
     public class IdName

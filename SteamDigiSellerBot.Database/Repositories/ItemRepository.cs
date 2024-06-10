@@ -32,7 +32,9 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? hierarchyParams_baseSteamCurrencyId,
             string hierarchyParams_compareSign,
             int? hierarchyParams_percentDiff,
-            bool? hierarchyParams_isActiveHierarchyOn);
+            bool? hierarchyParams_isActiveHierarchyOn,
+            bool? thirdPartyPriceType,
+            int? thirdPartyPriceValue);
     }
 
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
@@ -73,7 +75,9 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? hierarchyParams_baseSteamCurrencyId,
             string hierarchyParams_compareSign,
             int? hierarchyParams_percentDiff,
-            bool? hierarchyParams_isActiveHierarchyOn)
+            bool? hierarchyParams_isActiveHierarchyOn,
+            bool? thirdPartyPriceType,
+            int? thirdPartyPriceValue)
         {
             await using var db = dbContextFactory.CreateDbContext();
 
@@ -103,6 +107,19 @@ namespace SteamDigiSellerBot.Database.Repositories
             //    }
             //}
 
+            Expression<Func<Item,bool>> compareThirdPartyPrice = null;
+            if(thirdPartyPriceType.HasValue && thirdPartyPriceValue.HasValue)
+            {
+                if(thirdPartyPriceType.Value == true)
+                {
+                    compareThirdPartyPrice = (Item item) => item.FixedDigiSellerPrice == thirdPartyPriceValue;
+                }
+                else
+                {
+                    compareThirdPartyPrice = (Item item) => item.SteamPercent == thirdPartyPriceValue;
+                }
+            }
+
             Func<bool> hierarchyParamsIsValid = () =>
 
                 hierarchyParams_targetSteamCurrencyId.HasValue &&
@@ -126,7 +143,9 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
-                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId)));
+                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId))
+                    && (thirdPartyPriceType.HasValue && item.IsFixedPrice == thirdPartyPriceType 
+                        && (thirdPartyPriceType.Value?item.FixedDigiSellerPrice == thirdPartyPriceValue: item.SteamPercent == thirdPartyPriceValue)));
 
             var result = await sortedQuery.ToListAsync();
 

@@ -193,7 +193,7 @@ export const setActiveMenuLink = (name) => {
 };
 
 export const apiFetchItems = async (filter) => {
-  debugger;
+  //debugger;
   let requestData = { method: "POST" };
   if (filter == null) {
     filter = { IsFilterOn: false };

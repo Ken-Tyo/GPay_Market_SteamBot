@@ -83,7 +83,9 @@ namespace SteamDigiSellerBot.Controllers
                     productsFilter.hierarchyParams_baseSteamCurrencyId,
                     productsFilter.hierarchyParams_compareSign,
                     productsFilter.hierarchyParams_percentDiff,
-                    productsFilter.hierarchyParams_isActiveHierarchyOn
+                    productsFilter.hierarchyParams_isActiveHierarchyOn,
+                    productsFilter.thirdPartyPriceType,
+                    productsFilter.thirdPartyPriceValue
                     )).result;
             }
             else

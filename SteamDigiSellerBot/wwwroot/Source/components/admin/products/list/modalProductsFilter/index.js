@@ -41,8 +41,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     gameRegionsCurrency: [],
     steamCountryCodeId: "",
     digiSellerIds: "",
-    ThirdPartyPriceValue: null,
-    ThirdPartyPriceType: 0,
+    thirdPartyPriceValue: null,
+    thirdPartyPriceType: false,
     hierarchyParams_targetSteamCurrencyId: null,
     hierarchyParams_baseSteamCurrencyId: null,
     hierarchyParams_compareSign: "<>",
@@ -109,7 +109,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       if (!isValid) {
         return;
       }
-    } else if (prop === "ThirdPartyPriceType") {
+    } else if (prop === "thirdPartyPriceType") {
       val = val === "₽";
     }
     console.log(item);
@@ -140,7 +140,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     regions.find((c) => c.name === item.steamCountryCodeId) || {}
   ).id;
 
-  const ThirdPartyPriceTypeVal = item.ThirdPartyPriceType
+  const thirdPartyPriceTypeVal = item.thirdPartyPriceType
     ? digiPriceSetType[1].name
     : digiPriceSetType[0].name;
 
@@ -275,19 +275,19 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
               ? "Процент от Steam:"
               : "Цена Digiseller"}
           </div>
-
-          <div className={css.wrapper}>
-            <div className={css.doubleControl}>
+          <div style={{ width: "302px" }}>
+            <div className={css.doubleControl} style={{ paddingLeft: "0px" }}>
               <TextBox
-                onChange={handleChange("ThirdPartyPriceValue")}
-                defaultValue={item.ThirdPartyPriceValue}
-                width={157}
+                onChange={handleChange("thirdPartyPriceValue")}
+                defaultValue={item.thirdPartyPriceValue}
+                width={"250px"}
+                wrapperWidth={"170px"}
               />
               <Select
                 options={digiPriceSetType}
-                defaultValue={ThirdPartyPriceTypeVal}
-                onChange={handleChange("ThirdPartyPriceType")}
-                width={69}
+                defaultValue={thirdPartyPriceTypeVal}
+                onChange={handleChange("thirdPartyPriceType")}
+                width={75}
                 height={75}
               />
             </div>

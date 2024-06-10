@@ -26624,7 +26624,7 @@ var apiFetchItems = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          debugger;
+          //debugger;
           requestData = {
             method: "POST"
           };
@@ -26634,17 +26634,17 @@ var apiFetchItems = /*#__PURE__*/function () {
             };
           }
           requestData.body = mapToFormData(filter);
-          _context6.next = 6;
+          _context6.next = 5;
           return fetch("/items/list", requestData);
-        case 6:
+        case 5:
           res = _context6.sent;
           _context6.t0 = setItems;
-          _context6.next = 10;
+          _context6.next = 9;
           return res.json();
-        case 10:
+        case 9:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 12:
+        case 11:
         case "end":
           return _context6.stop();
       }
@@ -45301,7 +45301,9 @@ var textbox2_TextBox = function TextBox(_ref) {
     _ref$width = _ref.width,
     width = _ref$width === void 0 ? "302px" : _ref$width,
     _ref$type = _ref.type,
-    type = _ref$type === void 0 ? "text" : _ref$type;
+    type = _ref$type === void 0 ? "text" : _ref$type,
+    _ref$wrapperWidth = _ref.wrapperWidth,
+    wrapperWidth = _ref$wrapperWidth === void 0 ? "100%" : _ref$wrapperWidth;
   var onChangeText = function onChangeText(event) {
     var val = event.target.value;
     if (onChange) onChange(val);
@@ -45309,7 +45311,7 @@ var textbox2_TextBox = function TextBox(_ref) {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: textbox2_styles.wrapper,
     style: {
-      width: "auto"
+      width: wrapperWidth
     },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: textbox2_styles.inputControl,
@@ -50895,8 +50897,8 @@ var ModalFilter = function ModalFilter(_ref) {
     gameRegionsCurrency: [],
     steamCountryCodeId: "",
     digiSellerIds: "",
-    ThirdPartyPriceValue: null,
-    ThirdPartyPriceType: 0,
+    thirdPartyPriceValue: null,
+    thirdPartyPriceType: false,
     hierarchyParams_targetSteamCurrencyId: null,
     hierarchyParams_baseSteamCurrencyId: null,
     hierarchyParams_compareSign: "<>",
@@ -50968,7 +50970,7 @@ var ModalFilter = function ModalFilter(_ref) {
         if (!isValid) {
           return;
         }
-      } else if (prop === "ThirdPartyPriceType") {
+      } else if (prop === "thirdPartyPriceType") {
         val = val === "₽";
       }
       console.log(item);
@@ -50999,7 +51001,7 @@ var ModalFilter = function ModalFilter(_ref) {
   var regionVal = (regions.find(function (c) {
     return c.name === item.steamCountryCodeId;
   }) || {}).id;
-  var ThirdPartyPriceTypeVal = item.ThirdPartyPriceType ? digiPriceSetType[1].name : digiPriceSetType[0].name;
+  var thirdPartyPriceTypeVal = item.thirdPartyPriceType ? digiPriceSetType[1].name : digiPriceSetType[0].name;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: "Фильтры отображения",
@@ -51150,18 +51152,24 @@ var ModalFilter = function ModalFilter(_ref) {
           className: modalProductsFilter_styles.name,
           children: !item.ThirdPartyPriceType ? "Процент от Steam:" : "Цена Digiseller"
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: modalProductsFilter_styles.wrapper,
+          style: {
+            width: "302px"
+          },
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: modalProductsFilter_styles.doubleControl,
+            style: {
+              paddingLeft: "0px"
+            },
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
-              onChange: handleChange("ThirdPartyPriceValue"),
-              defaultValue: item.ThirdPartyPriceValue,
-              width: 157
+              onChange: handleChange("thirdPartyPriceValue"),
+              defaultValue: item.thirdPartyPriceValue,
+              width: "250px",
+              wrapperWidth: "170px"
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
               options: digiPriceSetType,
-              defaultValue: ThirdPartyPriceTypeVal,
-              onChange: handleChange("ThirdPartyPriceType"),
-              width: 69,
+              defaultValue: thirdPartyPriceTypeVal,
+              onChange: handleChange("thirdPartyPriceType"),
+              width: 75,
               height: 75
             })]
           })
