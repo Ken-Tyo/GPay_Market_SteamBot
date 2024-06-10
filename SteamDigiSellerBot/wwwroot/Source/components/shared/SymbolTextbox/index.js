@@ -1,5 +1,5 @@
-import React from 'react';
-import css from './styles.scss';
+import React from "react";
+import css from "./styles.scss";
 
 const SymbolTextBox = ({ hint, onChange, defaultValue, symbol, width }) => {
   const onChangeText = (event) => {
@@ -8,14 +8,14 @@ const SymbolTextBox = ({ hint, onChange, defaultValue, symbol, width }) => {
   };
 
   return (
-    <div
-      className={css.wrapper}
-      onChange={onChangeText}
-      style={{ width: width }}
-    >
+    <div className={css.wrapper} style={{ width: width }}>
       <div className={css.inputControl}>
         <div className={css.inputArea}>
-          <input type={'text'} defaultValue={defaultValue} />
+          <input
+            type={"text"}
+            defaultValue={defaultValue}
+            onChange={onChangeText}
+          />
           {symbol && <div className={css.symbol}>{symbol}</div>}
         </div>
       </div>

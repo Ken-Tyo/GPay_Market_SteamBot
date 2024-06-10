@@ -45286,48 +45286,63 @@ var pageHeader = function pageHeader(_ref) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalProductsFilter/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalProductsFilter_styles = ({"css-1km1ehz":"styles__css-1km1ehz--YrFPE","formItem":"styles__formItem--N4zLg","name":"styles__name--g6c3i","doubleControl":"styles__doubleControl--bFtdP","wrapper":"styles__wrapper--G5l1W","inputControl":"styles__inputControl--lP1Iq","inputArea":"styles__inputArea--Gvlon","symbol":"styles__symbol--DSL0A","hint":"styles__hint--TUBnB","MuiPaper-root":"styles__MuiPaper-root--pmmJh","content":"styles__content--HSI89","formRegionParams":"styles__formRegionParams--sHk5w","actions":"styles__actions--iuJTu","currName":"styles__currName--ZGhq_","paddingZero":"styles__paddingZero--iWQwK","MuiOption-root":"styles__MuiOption-root--ROouk","css-1v42tcw":"styles__css-1v42tcw--ULLrJ","activeHierarchy":"styles__activeHierarchy--sqDVT"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/index.js
+/* harmony default export */ const textbox2_styles = ({"wrapper":"styles__wrapper--NNUA1","inputControl":"styles__inputControl--PRK2k","inputArea":"styles__inputArea--lD00m","cymbol":"styles__cymbol--ja7q_","hint":"styles__hint--RpynI"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/index.js
 
 
 
-var SymbolTextBox = function SymbolTextBox(_ref) {
+var textbox2_TextBox = function TextBox(_ref) {
   var hint = _ref.hint,
     onChange = _ref.onChange,
     defaultValue = _ref.defaultValue,
-    symbol = _ref.symbol,
-    width = _ref.width;
+    cymbol = _ref.cymbol,
+    _ref$width = _ref.width,
+    width = _ref$width === void 0 ? "302px" : _ref$width,
+    _ref$type = _ref.type,
+    type = _ref$type === void 0 ? "text" : _ref$type;
   var onChangeText = function onChangeText(event) {
     var val = event.target.value;
     if (onChange) onChange(val);
   };
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    className: SymbolTextbox_styles.wrapper,
-    onChange: onChangeText,
+    className: textbox2_styles.wrapper,
     style: {
-      width: width
+      width: "auto"
     },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: SymbolTextbox_styles.inputControl,
+      className: textbox2_styles.inputControl,
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: SymbolTextbox_styles.inputArea,
+        className: textbox2_styles.inputArea,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-          type: 'text',
-          defaultValue: defaultValue
-        }), symbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: SymbolTextbox_styles.symbol,
-          children: symbol
+          type: type,
+          value: defaultValue,
+          style: {
+            width: width
+          },
+          onChange: onChangeText
+          //Защита от изменения прокрутки значения, есть type=numeric
+          ,
+          onFocus: function onFocus(e) {
+            return e.target.addEventListener("wheel", function (e) {
+              return e.preventDefault();
+            }, {
+              passive: false
+            });
+          }
+        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: textbox2_styles.cymbol,
+          children: cymbol
         })]
       })
     }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: SymbolTextbox_styles.hint,
+      className: textbox2_styles.hint,
       children: hint
     })]
   });
 };
-/* harmony default export */ const SymbolTextbox = (SymbolTextBox);
+/* harmony default export */ const textbox2 = (textbox2_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const formItem_styles = ({"formItem":"styles__formItem--xdAfh","name":"styles__name--yx_Cq","doubleControl":"styles__doubleControl--U0Lj5","wrapper":"styles__wrapper--6H6Ar","inputControl":"styles__inputControl--EQ3c1","inputArea":"styles__inputArea--IAL8q","symbol":"styles__symbol--avEND","hint":"styles__hint--D35Jd","MuiPaper-root":"styles__MuiPaper-root--Ajcjp"});
@@ -45347,7 +45362,7 @@ var FormItemText = function FormItemText(_ref) {
       className: formItem_styles.name,
       children: name
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      children: /*#__PURE__*/(0,jsx_runtime.jsx)(SymbolTextbox, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
         hint: hint,
         onChange: onChange,
         defaultValue: value,
@@ -45493,62 +45508,6 @@ var FormItemSelect = function FormItemSelect(_ref) {
   });
 };
 /* harmony default export */ const formItem_select = ((/* unused pure expression or super */ null && (FormItemSelect)));
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const textbox2_styles = ({"wrapper":"styles__wrapper--NNUA1","inputControl":"styles__inputControl--PRK2k","inputArea":"styles__inputArea--lD00m","cymbol":"styles__cymbol--ja7q_","hint":"styles__hint--RpynI"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox2/index.js
-
-
-
-var textbox2_TextBox = function TextBox(_ref) {
-  var hint = _ref.hint,
-    onChange = _ref.onChange,
-    defaultValue = _ref.defaultValue,
-    cymbol = _ref.cymbol,
-    width = _ref.width,
-    _ref$type = _ref.type,
-    type = _ref$type === void 0 ? "text" : _ref$type;
-  var onChangeText = function onChangeText(event) {
-    var val = event.target.value;
-    if (onChange) onChange(val);
-  };
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    className: textbox2_styles.wrapper,
-    style: {
-      width: "auto"
-    },
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: textbox2_styles.inputControl,
-      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: textbox2_styles.inputArea,
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-          type: type,
-          value: defaultValue,
-          style: {
-            width: width
-          },
-          onChange: onChangeText
-          //Защита от изменения прокрутки значения, есть type=numeric
-          ,
-          onFocus: function onFocus(e) {
-            return e.target.addEventListener("wheel", function (e) {
-              return e.preventDefault();
-            }, {
-              passive: false
-            });
-          }
-        }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: textbox2_styles.cymbol,
-          children: cymbol
-        })]
-      })
-    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: textbox2_styles.hint,
-      children: hint
-    })]
-  });
-};
-/* harmony default export */ const textbox2 = (textbox2_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/select/styledOption.js
 var styledOption_templateObject;
 function styledOption_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
@@ -50938,10 +50897,10 @@ var ModalFilter = function ModalFilter(_ref) {
     digiSellerIds: "",
     ThirdPartyPriceValue: null,
     ThirdPartyPriceType: 0,
-    hierarchyParams_targetSteamCurrencyId: "RUB",
-    hierarchyParams_baseSteamCurrencyId: "RUB",
+    hierarchyParams_targetSteamCurrencyId: null,
+    hierarchyParams_baseSteamCurrencyId: null,
     hierarchyParams_compareSign: "<>",
-    hierarchyParams_percentDiff: 15,
+    hierarchyParams_percentDiff: null,
     hierarchyParams_isActiveHierarchyOn: true
   };
   var _useState = (0,react.useState)(initial),
@@ -50985,6 +50944,7 @@ var ModalFilter = function ModalFilter(_ref) {
   var memoRegions = react.useMemo(function () {
     return regions;
   }, []);
+  var digiSellerIdsIsNotValid = new RegExp("[^,\\d]");
   var handleChange = function handleChange(prop) {
     return function (val, newVal) {
       if (val == null) {
@@ -50997,6 +50957,10 @@ var ModalFilter = function ModalFilter(_ref) {
           //debugger;
           val = val.target.value;
         } else {
+          return;
+        }
+      } else if (prop === "digiSellerIds") {
+        if (digiSellerIdsIsNotValid.test(val)) {
           return;
         }
       } else if (prop === "hierarchyParams_percentDiff") {
@@ -51012,19 +50976,29 @@ var ModalFilter = function ModalFilter(_ref) {
       setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, val)));
     };
   };
+  var isNullOrEmpty = function isNullOrEmpty(target) {
+    return target != null && target != "";
+  };
   var handleOnSave = function handleOnSave(transferObject) {
-    transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(function (c) {
-      return c.name === transferObject.hierarchyParams_baseSteamCurrencyId;
-    }).id;
-    transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(function (c) {
-      return c.name === transferObject.hierarchyParams_targetSteamCurrencyId;
-    }).id;
+    if (isNullOrEmpty(transferObject.hierarchyParams_baseSteamCurrencyId)) {
+      transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(function (c) {
+        return c.name === transferObject.hierarchyParams_baseSteamCurrencyId;
+      }).id;
+    }
+    if (isNullOrEmpty(transferObject.hierarchyParams_targetSteamCurrencyId)) {
+      transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(function (c) {
+        return c.name === transferObject.hierarchyParams_targetSteamCurrencyId;
+      }).id;
+    }
+    if (isNullOrEmpty(transferObject.steamCountryCodeId)) {
+      transferObject.steamCountryCodeId = regionVal;
+    }
     transferObject.IsFilterOn = true;
     onSave(transferObject);
   };
   var regionVal = (regions.find(function (c) {
-    return c.id === item.steamCountryCodeId;
-  }) || {}).name;
+    return c.name === item.steamCountryCodeId;
+  }) || {}).id;
   var ThirdPartyPriceTypeVal = item.ThirdPartyPriceType ? digiPriceSetType[1].name : digiPriceSetType[0].name;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
@@ -51167,9 +51141,9 @@ var ModalFilter = function ModalFilter(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
-        name: "DigisellerIDs:",
+        name: "DigisellerID:",
         onChange: handleChange("digiSellerIds"),
-        value: item.digiSellerId
+        value: item.digiSellerIds
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalProductsFilter_styles.formItem,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -57689,6 +57663,48 @@ var headers = {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const orders_styles = ({"wrapper":"styles__wrapper--xtlFR","section":"styles__section--rwRse","titleSection":"styles__titleSection--zYrhD","title":"styles__title--WKZpi","subTitle":"styles__subTitle--js79u","content":"styles__content--Sp65e"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const SymbolTextbox_styles = ({"wrapper":"styles__wrapper--PnqIN","inputControl":"styles__inputControl--KvtKx","inputArea":"styles__inputArea--T3dHS","symbol":"styles__symbol--lTITL","hint":"styles__hint--Bzzob"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/SymbolTextbox/index.js
+
+
+
+var SymbolTextBox = function SymbolTextBox(_ref) {
+  var hint = _ref.hint,
+    onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue,
+    symbol = _ref.symbol,
+    width = _ref.width;
+  var onChangeText = function onChangeText(event) {
+    var val = event.target.value;
+    if (onChange) onChange(val);
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: SymbolTextbox_styles.wrapper,
+    style: {
+      width: width
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: SymbolTextbox_styles.inputControl,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: SymbolTextbox_styles.inputArea,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+          type: "text",
+          defaultValue: defaultValue,
+          onChange: onChangeText
+        }), symbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: SymbolTextbox_styles.symbol,
+          children: symbol
+        })]
+      })
+    }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: SymbolTextbox_styles.hint,
+      children: hint
+    })]
+  });
+};
+/* harmony default export */ const SymbolTextbox = (SymbolTextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalFilter/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalFilter_styles = ({"content":"styles__content--LLrX9","formItem":"styles__formItem--Q9nn_","name":"styles__name--DEGFv","doubleControl":"styles__doubleControl--xN7Ry","actions":"styles__actions--HJ7Es"});

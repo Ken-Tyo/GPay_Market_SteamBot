@@ -12,7 +12,7 @@ namespace SteamDigiSellerBot.Models.Items
 
         public int? SteamCountryCodeId { get; set; }
 
-        public string DigiSellerId { get; set; }
+        public string DigiSellerIds { get; set; }
 
         public List<IdName> steamCurrencyId { get; set; }
 

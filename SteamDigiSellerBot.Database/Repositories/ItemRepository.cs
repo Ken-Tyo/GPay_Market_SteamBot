@@ -7,6 +7,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System;
+using SteamDigiSellerBot.Utilities;
+using Castle.Core.Internal;
 
 namespace SteamDigiSellerBot.Database.Repositories
 {
@@ -61,8 +63,8 @@ namespace SteamDigiSellerBot.Database.Repositories
 
 
         public async Task<(List<Item> result, int count)> Filter(
-            string appId, 
-            string productName, 
+            string appId,
+            string productName,
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
@@ -74,7 +76,6 @@ namespace SteamDigiSellerBot.Database.Repositories
             bool? hierarchyParams_isActiveHierarchyOn)
         {
             await using var db = dbContextFactory.CreateDbContext();
-            
 
             HashSet<int> currHashSet = null;
             if (steamCurrencyId != null && steamCurrencyId.Count() > 0)
@@ -87,16 +88,32 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 gamePricesCurrHashSet = new HashSet<int>(gamePricesCurr);
             }
-            Expression<Func<bool>> hierarchyParamsIsNull = () =>
-            
-                !hierarchyParams_targetSteamCurrencyId.HasValue ||
-                !hierarchyParams_baseSteamCurrencyId.HasValue ||
-                hierarchyParams_compareSign == null ||
-                !hierarchyParams_percentDiff.HasValue ||
-                !hierarchyParams_isActiveHierarchyOn.HasValue;
+
+            //HashSet<string> digiSellerIds = null;
+            //if (digiSellerId != null)
+            //{
+            //    var noWhitespace = digiSellerId.RemoveWhitespaces();
+            //    if (digiSellerId.Contains(","))
+            //    {
+            //        digiSellerIds = new HashSet<string>(noWhitespace.Split(","));
+            //    }
+            //    else if (!digiSellerId.IsNullOrEmpty())
+            //    {
+            //        digiSellerIds = new HashSet<string>(new[] { noWhitespace });
+            //    }
+            //}
+
+            Func<bool> hierarchyParamsIsValid = () =>
+
+                hierarchyParams_targetSteamCurrencyId.HasValue &&
+                hierarchyParams_baseSteamCurrencyId.HasValue &&
+                hierarchyParams_compareSign != null &&
+                hierarchyParams_percentDiff.HasValue &&
+                hierarchyParams_isActiveHierarchyOn.HasValue;
+
 
             var sortedQuery = db.Items
-                //.AsNoTracking()
+                .AsNoTracking()
                 .Include(i => i.GamePrices)
                 .Include(i => i.Region)
                 .Include(i => i.LastSendedRegion)
@@ -111,42 +128,51 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
                     && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId)));
 
-            //var total = await db.Items
-            //    .CountAsync(predicate);
-
             var result = await sortedQuery.ToListAsync();
 
-            var finalResult = new List<Item>();
-
-            Func<decimal,int, bool> compareFunc = hierarchyParams_compareSign switch
+            List<Item> finalResult;
+            List<decimal?> debugResult = new List<decimal?>();
+            if (!hierarchyParamsIsValid())
             {
-                ">=" => MoreOrEqual,
-                "=<" => LessOrEqual,
-                "<>" => MoreOrLessEqual,
-                _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
-            };
-            foreach (var e in result)
+                finalResult = result;
+            }
+            else
             {
-                var targetPrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId)?.CurrentSteamPrice;
-                var basePrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)?.CurrentSteamPrice;
-
-                if(targetPrice.HasValue && basePrice.HasValue)
+                finalResult = new List<Item>();
+                Func<decimal, int, bool> compareFunc = hierarchyParams_compareSign switch
                 {
-                    var diffPrice = (((targetPrice / basePrice) * 100) - 100);
-                    
-                    if(compareFunc(diffPrice.Value, hierarchyParams_percentDiff.Value))
+                    ">=" => MoreOrEqual,
+                    "=<" => LessOrEqual,
+                    "<>" => MoreOrLessEqual,
+                    _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+                };
+                foreach (var e in result)
+                {
+                    var targetPrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId)?.CurrentSteamPrice;
+                    var basePrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)?.CurrentSteamPrice;
+
+                    if (targetPrice.HasValue && basePrice.HasValue)
                     {
-                        finalResult.Add(e);
+                        var diffPrice = (((targetPrice / basePrice) * 100) - 100);
+                        debugResult.Add(diffPrice);
+                        if (compareFunc(diffPrice.Value, hierarchyParams_percentDiff.Value))
+                        {
+                            finalResult.Add(e);
+                        }
                     }
                 }
             }
 
             return await Task.FromResult((finalResult, finalResult.Count));
         }
-        private bool MoreOrEqual(decimal calc, int target) => calc >= target;
 
+        private bool MoreOrEqual(decimal calc, int target) => calc >= target;
         private bool LessOrEqual(decimal calc, int target) => calc <= target;
-        private bool MoreOrLessEqual(decimal calc, int target) => MoreOrEqual(calc,target) || LessOrEqual(calc,target);
+        private bool MoreOrLessEqual(decimal calc, int target) {
+            var absCalc = Math.Abs(calc);
+            var absTarget = Math.Abs(target);
+            return MoreOrEqual(absCalc, absTarget) || LessOrEqual(-absCalc, -absTarget);
+        }
 
 
         private async Task<IQueryable<Item>> GetSortedItemsAsQuery()

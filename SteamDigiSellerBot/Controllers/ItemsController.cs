@@ -78,7 +78,7 @@ namespace SteamDigiSellerBot.Controllers
                     productsFilter.SteamCountryCodeId,
                     productsFilter?.steamCurrencyId?.Select(e => e.Id).ToList(),
                     productsFilter?.gameRegionsCurrency?.Select(e => e.Id).ToList(),
-                    productsFilter.DigiSellerId,
+                    productsFilter.DigiSellerIds,
                     productsFilter.hierarchyParams_targetSteamCurrencyId,
                     productsFilter.hierarchyParams_baseSteamCurrencyId,
                     productsFilter.hierarchyParams_compareSign,

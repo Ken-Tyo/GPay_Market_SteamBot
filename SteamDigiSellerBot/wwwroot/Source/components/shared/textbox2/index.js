@@ -6,7 +6,7 @@ const TextBox = ({
   onChange,
   defaultValue,
   cymbol,
-  width,
+  width = "302px",
   type = "text",
 }) => {
   const onChangeText = (event) => {

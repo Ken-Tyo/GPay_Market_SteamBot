@@ -43,10 +43,10 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     digiSellerIds: "",
     ThirdPartyPriceValue: null,
     ThirdPartyPriceType: 0,
-    hierarchyParams_targetSteamCurrencyId: "RUB",
-    hierarchyParams_baseSteamCurrencyId: "RUB",
+    hierarchyParams_targetSteamCurrencyId: null,
+    hierarchyParams_baseSteamCurrencyId: null,
     hierarchyParams_compareSign: "<>",
-    hierarchyParams_percentDiff: 15,
+    hierarchyParams_percentDiff: null,
     hierarchyParams_isActiveHierarchyOn: true,
   };
   const [item, setItem] = useState(initial);
@@ -86,7 +86,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   });
 
   const memoRegions = React.useMemo(() => regions, []);
-
+  const digiSellerIdsIsNotValid = new RegExp("[^,\\d]");
   const handleChange = (prop) => (val, newVal) => {
     if (val == null) {
       return;
@@ -98,6 +98,10 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         //debugger;
         val = val.target.value;
       } else {
+        return;
+      }
+    } else if (prop === "digiSellerIds") {
+      if (digiSellerIdsIsNotValid.test(val)) {
         return;
       }
     } else if (prop === "hierarchyParams_percentDiff") {
@@ -112,21 +116,29 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     console.log(prop, val);
     setItem({ ...item, [prop]: val });
   };
-
+  const isNullOrEmpty = (target) => target != null && target != "";
   const handleOnSave = (transferObject) => {
-    transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(
-      (c) => c.name === transferObject.hierarchyParams_baseSteamCurrencyId
-    ).id;
-    transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(
-      (c) => c.name === transferObject.hierarchyParams_targetSteamCurrencyId
-    ).id;
+    if (isNullOrEmpty(transferObject.hierarchyParams_baseSteamCurrencyId)) {
+      transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(
+        (c) => c.name === transferObject.hierarchyParams_baseSteamCurrencyId
+      ).id;
+    }
+    if (isNullOrEmpty(transferObject.hierarchyParams_targetSteamCurrencyId)) {
+      transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(
+        (c) => c.name === transferObject.hierarchyParams_targetSteamCurrencyId
+      ).id;
+    }
+
+    if (isNullOrEmpty(transferObject.steamCountryCodeId)) {
+      transferObject.steamCountryCodeId = regionVal;
+    }
     transferObject.IsFilterOn = true;
     onSave(transferObject);
   };
 
   const regionVal = (
-    regions.find((c) => c.id === item.steamCountryCodeId) || {}
-  ).name;
+    regions.find((c) => c.name === item.steamCountryCodeId) || {}
+  ).id;
 
   const ThirdPartyPriceTypeVal = item.ThirdPartyPriceType
     ? digiPriceSetType[1].name
@@ -252,9 +264,9 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           </div>
         </div>
         <FormItemText
-          name={"DigisellerIDs:"}
+          name={"DigisellerID:"}
           onChange={handleChange("digiSellerIds")}
-          value={item.digiSellerId}
+          value={item.digiSellerIds}
         />
 
         <div className={css.formItem}>
