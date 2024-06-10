@@ -50932,10 +50932,7 @@ var ModalFilter = function ModalFilter(_ref) {
   var initial = {
     appId: "",
     productName: "",
-    steamCurrencyId: [{
-      id: 5,
-      name: "RUB"
-    }],
+    steamCurrencyId: [],
     gameRegionsCurrency: [],
     steamCountryCodeId: "",
     digiSellerIds: "",

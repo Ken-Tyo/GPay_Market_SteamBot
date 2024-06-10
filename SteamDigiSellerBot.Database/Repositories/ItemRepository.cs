@@ -45,7 +45,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<List<Item>> GetSortedItems()
         {
             await using var db = dbContextFactory.CreateDbContext();
-            var query = db.Items
+            var items = await db.Items
                 .AsNoTracking()
                 .Include(i => i.GamePrices)
                 .Include(i => i.Region)
@@ -74,14 +74,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             bool? hierarchyParams_isActiveHierarchyOn)
         {
             await using var db = dbContextFactory.CreateDbContext();
-            var sortedQuery = db.Items
-                .AsNoTracking()
-                .Include(i => i.GamePrices)
-                .Include(i => i.Region)
-                .Include(i => i.LastSendedRegion)
-                .Where(i => !i.IsDeleted)
-                .OrderBy(x => x.AddedDateTime)
-                .ThenBy(x => x.AppId);
+            
 
             HashSet<int> currHashSet = null;
             if (steamCurrencyId != null && steamCurrencyId.Count() > 0)
@@ -101,32 +94,59 @@ namespace SteamDigiSellerBot.Database.Repositories
                 hierarchyParams_compareSign == null ||
                 !hierarchyParams_percentDiff.HasValue ||
                 !hierarchyParams_isActiveHierarchyOn.HasValue;
-            
-            Expression<Func<Item, bool>> predicate = (item) =>
+
+            var sortedQuery = db.Items
+                //.AsNoTracking()
+                .Include(i => i.GamePrices)
+                .Include(i => i.Region)
+                .Include(i => i.LastSendedRegion)
+                .Where(i => !i.IsDeleted)
+                .OrderBy(x => x.AddedDateTime)
+                .ThenBy(x => x.AppId)
+                .Where((item) =>
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
-                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId)
-                    && (!hierarchyParams_targetSteamCurrencyId.HasValue ||
-                        !hierarchyParams_baseSteamCurrencyId.HasValue ||
-                        hierarchyParams_compareSign == null ||
-                        !hierarchyParams_percentDiff.HasValue ||
-                        !hierarchyParams_isActiveHierarchyOn.HasValue ||
-                        ((item.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId).CurrentSteamPrice / 
-                        item.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId).CurrentSteamPrice) * 100 > hierarchyParams_percentDiff)
+                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId)));
 
-                        ));
+            //var total = await db.Items
+            //    .CountAsync(predicate);
 
-            var total = await db.Items
-                .CountAsync(predicate);
+            var result = await sortedQuery.ToListAsync();
 
-            var result = await sortedQuery.Where(predicate)
-                .ToListAsync();
+            var finalResult = new List<Item>();
 
-            return await Task.FromResult((result, result.Count));
+            Func<decimal,int, bool> compareFunc = hierarchyParams_compareSign switch
+            {
+                ">=" => MoreOrEqual,
+                "=<" => LessOrEqual,
+                "<>" => MoreOrLessEqual,
+                _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+            };
+            foreach (var e in result)
+            {
+                var targetPrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId)?.CurrentSteamPrice;
+                var basePrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)?.CurrentSteamPrice;
+
+                if(targetPrice.HasValue && basePrice.HasValue)
+                {
+                    var diffPrice = (((targetPrice / basePrice) * 100) - 100);
+                    
+                    if(compareFunc(diffPrice.Value, hierarchyParams_percentDiff.Value))
+                    {
+                        finalResult.Add(e);
+                    }
+                }
+            }
+
+            return await Task.FromResult((finalResult, finalResult.Count));
         }
+        private bool MoreOrEqual(decimal calc, int target) => calc >= target;
+
+        private bool LessOrEqual(decimal calc, int target) => calc <= target;
+        private bool MoreOrLessEqual(decimal calc, int target) => MoreOrEqual(calc,target) || LessOrEqual(calc,target);
 
 
         private async Task<IQueryable<Item>> GetSortedItemsAsQuery()

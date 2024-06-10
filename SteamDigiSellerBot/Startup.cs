@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Repositories;
@@ -66,7 +67,10 @@ namespace SteamDigiSellerBot
             services.AddSingleton<IWsNotificationSender, WsNotificationSender>();
             services.AddSingleton<GameSessionCommon>();
             services.AddSingleton<GameSessionManager>();
-
+            services.AddLogging(e => {
+                e.AddConsole();
+                e.AddDebug();
+                });
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllersWithViews().AddNewtonsoftJson();
@@ -89,7 +93,7 @@ namespace SteamDigiSellerBot
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-
+            
             app.UseSerilogRequestLogging();
             app.UseRouting();
 

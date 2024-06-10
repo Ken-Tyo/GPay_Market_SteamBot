@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Models;
 
@@ -21,6 +23,9 @@ namespace SteamDigiSellerBot.Database.Extensions
 
             services.AddPooledDbContextFactory<DatabaseContext>(options =>
             {
+                //options
+                //    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name });
+                options.LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuted });
                 options.UseLazyLoadingProxies()
                     .UseNpgsql(configuration.GetConnectionString(connection), options2=> options2
                         .EnableRetryOnFailure(3, TimeSpan.FromSeconds(15), null)

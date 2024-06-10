@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Models;
+using System;
 
 namespace SteamDigiSellerBot.Database.Contexts
 {

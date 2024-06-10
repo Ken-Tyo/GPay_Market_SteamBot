@@ -37,7 +37,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   const initial = {
     appId: "",
     productName: "",
-    steamCurrencyId: [{ id: 5, name: "RUB" }],
+    steamCurrencyId: [],
     gameRegionsCurrency: [],
     steamCountryCodeId: "",
     digiSellerIds: "",
