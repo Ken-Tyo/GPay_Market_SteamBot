@@ -1,5 +1,4 @@
 version: '3.3'
-
 services:
   front:
     build:
@@ -18,3 +17,4 @@ services:
       digiSellerEnable: "true"
     volumes:
       - /bin/digi/logs:/app/Logs      
+    network_mode: bridge
