@@ -144,8 +144,9 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
                     && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId))
-                    && (thirdPartyPriceType.HasValue && item.IsFixedPrice == thirdPartyPriceType 
-                        && (thirdPartyPriceType.Value?item.FixedDigiSellerPrice == thirdPartyPriceValue: item.SteamPercent == thirdPartyPriceValue)));
+                    && (thirdPartyPriceType.HasValue && thirdPartyPriceValue.HasValue
+                        && item.IsFixedPrice == thirdPartyPriceType 
+                        && (thirdPartyPriceType.Value? item.FixedDigiSellerPrice == thirdPartyPriceValue: item.SteamPercent == thirdPartyPriceValue)));
 
             var result = await sortedQuery.ToListAsync();
 
