@@ -13,5 +13,6 @@ namespace SteamDigiSellerBot.Models.GameSessions
         public int? Size { get; set; }
         public string UniqueCodes { get; set; }
         public int? StatusId { get; set; }
+        public string Comment { get; set; }
     }
 }

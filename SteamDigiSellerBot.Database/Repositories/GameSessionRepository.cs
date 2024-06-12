@@ -24,6 +24,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
+            string comment,
             int? statusId,
             int? page = 1,
             int? size = 50);
@@ -51,6 +52,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             string profileStr,
             int? steamCurrencyId,
             string uniqueCode,
+            string comment,
             int? statusId,
             int? page,
             int? size)
@@ -100,7 +102,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (string.IsNullOrWhiteSpace(gameName) || gs.Item.Name.ToLower().Contains(gameName.ToLower()))
                     && (!steamCurrencyId.HasValue || steamCurrencyId <= 0 || steamCurrencyId == gs.Item.SteamCurrencyId)
                     && (codes == null || codes.Contains(gs.UniqueCode.ToLower()))
-                    && (!statusId.HasValue || statusId <= 0 || statusId == (int)gs.StatusId || customStatuses.Contains(gs.StatusId));
+                    && (!statusId.HasValue || statusId <= 0 || statusId == (int)gs.StatusId || customStatuses.Contains(gs.StatusId))
+                    && (string.IsNullOrWhiteSpace(comment) || gs.Comment.ToLower().Contains(comment.ToLower()));
 
             await using var db = _dbContextFactory.CreateDbContext();
             var total = await db.GameSessions
