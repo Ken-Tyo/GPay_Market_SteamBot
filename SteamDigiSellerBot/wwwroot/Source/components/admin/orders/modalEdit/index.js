@@ -206,7 +206,7 @@ const ModalEdit = ({
                 name={'Комментарий:'}
                 onChange={handleChange('comment')}
                 value={item.comment}
-                placeholder={'поиск по конкретному комментарию у сессии'}
+                placeholder={'комментарий ко всем заказам'}
             />
           </div>
 

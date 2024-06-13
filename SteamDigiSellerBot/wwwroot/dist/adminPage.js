@@ -61625,7 +61625,7 @@ var orders_modalEdit_ModalEdit = function ModalEdit(_ref5) {
           name: 'Комментарий:',
           onChange: handleChange('comment'),
           value: item.comment,
-          placeholder: 'поиск по конкретному комментарию у сессии'
+          placeholder: 'комментарий ко всем заказам'
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: orders_modalEdit_styles.actions,
