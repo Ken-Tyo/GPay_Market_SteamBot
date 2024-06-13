@@ -10,18 +10,14 @@ const SymbolTextarea = ({onChange, defaultValue, width, placeholder }) => {
   return (
     <div className={css.wrapper} style={{ width: width }}>
       <div className={css.inputControl}>
-        <div className={css.inputArea}>
-          <div className={css.boxes}>
-            <div>
-            <textarea
-                onChange={onChangeTextarea}
-                rows="18"
-                className={css.textarea}
-                defaultValue={defaultValue}
-                placeholder={placeholder}
-            ></textarea>
-            </div>
-          </div>
+        <div className={css.boxes}>
+          <textarea
+            onChange={onChangeTextarea}
+            rows="18"
+            className={css.textarea}
+            defaultValue={defaultValue}
+            placeholder={placeholder}
+          ></textarea>
         </div>
       </div>
     </div>

@@ -57742,18 +57742,13 @@ var SymbolTextarea = function SymbolTextarea(_ref) {
     children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: SymbolTextarea_styles.inputControl,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: SymbolTextarea_styles.inputArea,
-        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: SymbolTextarea_styles.boxes,
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("textarea", {
-              onChange: onChangeTextarea,
-              rows: "18",
-              className: SymbolTextarea_styles.textarea,
-              defaultValue: defaultValue,
-              placeholder: placeholder
-            })
-          })
+        className: SymbolTextarea_styles.boxes,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("textarea", {
+          onChange: onChangeTextarea,
+          rows: "18",
+          className: SymbolTextarea_styles.textarea,
+          defaultValue: defaultValue,
+          placeholder: placeholder
         })
       })
     })
