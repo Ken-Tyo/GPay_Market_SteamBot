@@ -45,7 +45,6 @@ namespace SteamDigiSellerBot.MappingProfiles
                 //.ForMember(t => t.Status, x => x.Ignore())
                 .ForMember(t => t.StatusId, x => x.Ignore())
                 .ForMember(t => t.SteamProfileUrl, x => x.Ignore())
-                .ForMember(t => t.Comment, x => x.Ignore())
                 ;
 
             CreateMap<GameSession, LastOrder>()

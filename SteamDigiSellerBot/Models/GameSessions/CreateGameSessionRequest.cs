@@ -22,5 +22,6 @@ namespace SteamDigiSellerBot.Models.GameSessions
         public int? CopyCount { get; set; }
         [Required]
         public int SteamCountryCodeId { get; set; }
+        public string Comment { get; set; }
     }
 }
