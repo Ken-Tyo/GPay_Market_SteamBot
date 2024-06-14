@@ -191,7 +191,7 @@ export default function MultipleSelectPlaceholder({
     <div className={css.wrapper} style={{ width: width }}>
       <CustomSelect defaultValue={defaultValue} onChange={handleChange}>
         {(options || []).map((i) => (
-          <StyledOption key={i.name} value={i.name}>
+          <StyledOption key={i.name} value={i.name} style={{ color: i.color || '#B3B3B3' }}>
             {i.name}
           </StyledOption>
         ))}
