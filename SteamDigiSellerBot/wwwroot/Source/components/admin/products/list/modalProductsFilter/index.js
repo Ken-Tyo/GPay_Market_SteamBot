@@ -21,6 +21,7 @@ import MultipleSelectCheckmarks from "../../../../shared/formItem/select/checkma
 
 import classNames from "classnames";
 import FillCheckBox from "../../../../shared/checkBox";
+import SymbolTextBox from "../../../../shared/SymbolTextbox";
 
 // const ITEM_HEIGHT = 48;
 // const ITEM_PADDING_TOP = 8;
@@ -206,7 +207,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           <div className={css.name}>Параметры:</div>
 
           <div className={css.wrapper}>
-            <div className={css.doubleControl}>
+            <div className={css.doubleControl} style={{ gridGap: "10px" }}>
               <Select
                 options={currencies}
                 defaultValue={item.hierarchyParams_targetSteamCurrencyId}
@@ -218,6 +219,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 defaultValue={item.hierarchyParams_compareSign}
                 onChange={handleChange("hierarchyParams_compareSign")}
                 width={68}
+                style={{ padding: "10px 0" }}
               />
 
               <TextBox
@@ -268,10 +270,40 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           onChange={handleChange("digiSellerIds")}
           value={item.digiSellerIds}
         />
-
         <div className={css.formItem}>
           <div className={css.name}>
-            {!item.ThirdPartyPriceType
+            {!item.thirdPartyPriceType
+              ? "Процент от Steam:"
+              : "Цена Digiseller"}
+          </div>
+          <div
+            className={classNames(css.doubleControl, "percent")}
+            style={{ alignItems: "baseline" }}
+          >
+            <div className={css.wrapper}>
+              <div className={css.inputControl}>
+                <div className={css.inputArea}>
+                  <input
+                    type={"text"}
+                    defaultValue={item.thirdPartyPriceValue}
+                    onChange={handleChange("thirdPartyPriceValue")}
+                    width={233}
+                  />
+                  <Select
+                    options={digiPriceSetType}
+                    defaultValue={thirdPartyPriceTypeVal}
+                    onChange={handleChange("thirdPartyPriceType")}
+                    width={69}
+                    height={75}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <div className={classNames(css.formItem, css.params)}>
+          <div className={css.name}>
+            {!item.thirdPartyPriceValue
               ? "Процент от Steam:"
               : "Цена Digiseller"}
           </div>
@@ -281,7 +313,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 onChange={handleChange("thirdPartyPriceValue")}
                 defaultValue={item.thirdPartyPriceValue}
                 width={"250px"}
-                wrapperWidth={"170px"}
+                wrapperWidth={"revert-layer"}
+                inputControlWidth={"115%"}
               />
               <Select
                 options={digiPriceSetType}
@@ -292,7 +325,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className={css.actions}>
         <Button

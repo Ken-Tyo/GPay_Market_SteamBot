@@ -9,6 +9,7 @@ const TextBox = ({
   width = "302px",
   type = "text",
   wrapperWidth = "100%",
+  inputControlWidth = "100%",
 }) => {
   const onChangeText = (event) => {
     let val = event.target.value;
@@ -17,7 +18,7 @@ const TextBox = ({
 
   return (
     <div className={css.wrapper} style={{ width: wrapperWidth }}>
-      <div className={css.inputControl}>
+      <div className={css.inputControl} style={{ width: inputControlWidth }}>
         <div className={css.inputArea}>
           <input
             type={type}

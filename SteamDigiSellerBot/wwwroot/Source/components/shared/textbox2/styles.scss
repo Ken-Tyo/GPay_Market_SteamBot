@@ -3,13 +3,13 @@
 .wrapper {
     $padding-left: 15px;
     $padding-right: 0px;
-
+    border-radius: 15px;
     width: 226px; // - $padding-left - $padding-right;
 
 
     .inputControl {
         height: 51px;
-        width: 100%;
+        //width: 100%;
 
         .inputArea {
             display: flex;
