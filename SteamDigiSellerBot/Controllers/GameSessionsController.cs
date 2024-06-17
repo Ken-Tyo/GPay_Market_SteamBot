@@ -89,6 +89,7 @@ namespace SteamDigiSellerBot.Controllers
                 filter.ProfileStr,
                 filter.SteamCurrencyId,
                 filter.UniqueCodes,
+                filter.Comment,
                 filter.StatusId,
                 filter.Page,
                 filter.Size);

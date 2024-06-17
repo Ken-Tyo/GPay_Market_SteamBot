@@ -5,6 +5,7 @@ import SymbolTextBox from '../../../shared/SymbolTextbox';
 import Select from '../../../shared/select';
 import css from './styles.scss';
 import { state } from '../../../../containers/admin/state';
+import SymbolTextarea from "../../../shared/SymbolTextarea";
 
 const FromItemText = ({ name, onChange, hint, value, symbol }) => {
   return (
@@ -39,6 +40,21 @@ const FromItemSelect = ({ name, onChange, value, options, hint }) => {
   );
 };
 
+const FromItemTextarea = ({ name, onChange, value, placeholder }) => {
+  return (
+      <div className={css.formItem}>
+        <div className={css.name}>{name}</div>
+        <div>
+          <SymbolTextarea
+              onChange={onChange}
+              defaultValue={value}
+              placeholder={placeholder}
+          />
+        </div>
+      </div>
+  );
+};
+
 const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   const initial = {
     appId: '',
@@ -48,6 +64,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     uniqueCodes: '',
     profileStr: '',
     orderId: null,
+    comment: '',
   };
   const [item, setItem] = useState(initial);
 
@@ -156,6 +173,13 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           options={statuses}
           onChange={handleChange('statusId')}
           value={statusVal}
+        />
+
+        <FromItemTextarea
+            name={'Комментарий:'}
+            onChange={handleChange('comment')}
+            value={item.comment}
+            placeholder={'поиск по конкретному комментарию у сессии'}
         />
       </div>
 

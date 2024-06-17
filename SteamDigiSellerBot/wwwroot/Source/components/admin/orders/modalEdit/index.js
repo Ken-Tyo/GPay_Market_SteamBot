@@ -6,6 +6,7 @@ import TextSwitch from './textSwitch';
 import Select from './select';
 import css from './styles.scss';
 import { state } from '../../../../containers/admin/state';
+import Textarea from "./textarea";
 
 const FromItemText = ({ name, onChange, hint, value, symbol }) => {
   return (
@@ -51,6 +52,21 @@ const FromItemTextSwitch = ({ name, onChange, value, options }) => {
         />
       </div>
     </div>
+  );
+};
+
+const FromItemTextarea = ({ name, onChange, value, placeholder }) => {
+  return (
+      <div className={css.formItem}>
+        <div className={css.name}>{name}</div>
+        <div>
+          <Textarea
+              onChange={onChange}
+              defaultValue={value}
+              placeholder={placeholder}
+          />
+        </div>
+      </div>
   );
 };
 
@@ -184,6 +200,13 @@ const ModalEdit = ({
               onChange={handleChange('copyCount')}
               value={item.copyCount}
               symbol={'шт'}
+            />
+
+            <FromItemTextarea
+                name={'Комментарий:'}
+                onChange={handleChange('comment')}
+                value={item.comment}
+                placeholder={'комментарий ко всем заказам'}
             />
           </div>
 
