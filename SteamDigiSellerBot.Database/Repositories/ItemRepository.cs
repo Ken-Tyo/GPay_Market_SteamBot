@@ -143,8 +143,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
-                    && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId)
-                    && (string.IsNullOrWhiteSpace(digiSellerId) || item.DigiSellerIds.Contains(digiSellerId)));
+                    && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId));
+                    
 
             if(thirdPartyPriceType.HasValue && thirdPartyPriceValue.HasValue)
             {
@@ -159,15 +159,26 @@ namespace SteamDigiSellerBot.Database.Repositories
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(digiSellerId)) {
+                var noWhitespace = digiSellerId.RemoveWhitespaces();
+                //if (digiSellerId.Contains(","))
+                //{
+                //    HashSet<string> digiSellerIds = new HashSet<string>(noWhitespace.Split(","));
+                //    sortedQuery = sortedQuery.Where(e => string.Join(',',e.DigiSellerIds).Contains(no);
+                //    sortedQuery.Jo
+                //}
+                //else if (!digiSellerId.IsNullOrEmpty())
+                //{
+                sortedQuery = sortedQuery.Where(e => e.DigiSellerIds.Contains(noWhitespace));
+                //}
+            }
+
 
             List<Item> result;
             List<Item> finalResult;
             try
             {
-
-
                 result = await sortedQuery.ToListAsync();
-
 
                 List<decimal?> debugResult = new List<decimal?>();
                 if (!hierarchyParamsIsValid())

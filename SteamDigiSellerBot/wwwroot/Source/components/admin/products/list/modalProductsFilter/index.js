@@ -77,6 +77,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       name: c.code,
     };
   });
+
   const memoCurrencies = React.useMemo(() => currencies, []);
 
   const regions = state.use().steamRegions.map((c) => {
