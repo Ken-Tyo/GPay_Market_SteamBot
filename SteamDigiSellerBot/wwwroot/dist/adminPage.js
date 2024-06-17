@@ -51024,6 +51024,11 @@ var ModalFilter = function ModalFilter(_ref) {
         if (!isValid) {
           return;
         }
+      } else if (prop === "thirdPartyPriceValue") {
+        var isValid = !Number.isNaN(val);
+        if (!isValid) {
+          return;
+        }
       } else if (prop === "thirdPartyPriceType") {
         val = val === "₽";
       }
@@ -51222,11 +51227,11 @@ var ModalFilter = function ModalFilter(_ref) {
               className: modalProductsFilter_styles.inputControl,
               children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
                 className: modalProductsFilter_styles.inputArea,
-                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-                  type: "text",
-                  defaultValue: item.thirdPartyPriceValue,
+                children: [/*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
                   onChange: handleChange("thirdPartyPriceValue"),
-                  width: 233
+                  defaultValue: item.thirdPartyPriceValue,
+                  width: 233,
+                  type: "number"
                 }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
                   options: digiPriceSetType,
                   defaultValue: thirdPartyPriceTypeVal,

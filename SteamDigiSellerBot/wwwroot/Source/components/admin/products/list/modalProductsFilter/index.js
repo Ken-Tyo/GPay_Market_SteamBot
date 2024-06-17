@@ -111,6 +111,11 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       if (!isValid) {
         return;
       }
+    } else if (prop === "thirdPartyPriceValue") {
+      var isValid = !Number.isNaN(val);
+      if (!isValid) {
+        return;
+      }
     } else if (prop === "thirdPartyPriceType") {
       val = val === "₽";
     }
@@ -284,11 +289,11 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
             <div className={css.wrapper}>
               <div className={css.inputControl}>
                 <div className={css.inputArea}>
-                  <input
-                    type={"text"}
-                    defaultValue={item.thirdPartyPriceValue}
+                  <TextBox
                     onChange={handleChange("thirdPartyPriceValue")}
+                    defaultValue={item.thirdPartyPriceValue}
                     width={233}
+                    type="number"
                   />
                   <Select
                     options={digiPriceSetType}
