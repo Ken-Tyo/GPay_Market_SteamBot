@@ -294,10 +294,14 @@ const MultipleSelectCheckmarks = ({ options, onChange, value }) => {
         <Select
           variant="standard"
           sx={{
-            "& .MuiSelect-select.MuiInputBase-input ": { minHeight: "1em" },
+            "& .MuiSelect-select.MuiInputBase-input ": {
+              minHeight: "1em",
+              maxWidth: "90%",
+            },
             "& .MuiSelect-select.MuiInputBase-input span": {
               marginLeft: "12px",
             },
+            "& .MuiInputBase-root.MuiInput-root ": { paddingRight: "9px" },
             ".MuiSelect-nativeInput": {
               height: "0px",
               minHeight: "0px",
@@ -305,7 +309,10 @@ const MultipleSelectCheckmarks = ({ options, onChange, value }) => {
               margin: "0px !important",
               border: "0px !important",
             },
-            "& .MuiSvgIcon-root": { color: "rgb(255, 255, 255)" },
+            "& .MuiSvgIcon-root": {
+              color: "rgb(255, 255, 255)",
+              margin: "0 9px 0 0",
+            },
           }}
           multiple
           value={value}

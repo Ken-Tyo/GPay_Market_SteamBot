@@ -26637,7 +26637,6 @@ var apiFetchItems = /*#__PURE__*/function () {
               IsFilterOn: false
             };
           } else {
-            debugger;
             currencies = state.get().currencies.map(function (c) {
               return {
                 id: c.steamId,
@@ -45457,7 +45456,7 @@ var shared_select_grey = {
 var select_CreateStyledButton = function CreateStyledButton(width) {
   return esm_styled("button")(function (_ref) {
     var theme = _ref.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 0 0 0 15px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      //content: '\u25B4';//url(../../../../../icons/pen.svg);\n      content: url(\"data:image/svg+xml,<svg class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-1utq5rl' focusable='false' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'><path d='M7 10l5 5 5-5z'></path></svg>\");\n      width: 24px;\n      height: 24px;\n    }\n  }\n\n  &::after {\n    content: ' ';\n    background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'%3E%3Cpath fill='%23FFFFFF' d='m7 10 5 5 5-5z'/%3E%3C/svg%3E\");    //content: '\u25BE';\n    //content: url('data:image/svg+xml,<svg class=\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard\" aria-hidden=\"true\" viewBox=\"0 0 24 24\" data-testid=\"ArrowDropDownIcon\"><path d=\"m7 10 5 5 5-5z\"/></svg>');\n    \n    width: 24px;\n    height: 24px;\n    float: right;\n  }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 0 0 0 15px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      //content: '\u25B4';//url(../../../../../icons/pen.svg);\n      content: url(\"data:image/svg+xml,<svg class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-1utq5rl' focusable='false' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'><path d='M7 10l5 5 5-5z'></path></svg>\");\n      width: 24px;\n      height: 24px;\n      margin: 0 9px 0 0;\n      transform: rotate(180deg);\n    }\n  }\n\n  &::after {\n    content: ' ';\n    background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'%3E%3Cpath fill='%23FFFFFF' d='m7 10 5 5 5-5z'/%3E%3C/svg%3E\");    //content: '\u25BE';\n    //content: url('data:image/svg+xml,<svg class=\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard\" aria-hidden=\"true\" viewBox=\"0 0 24 24\" data-testid=\"ArrowDropDownIcon\"><path d=\"m7 10 5 5 5-5z\"/></svg>');\n    \n    width: 24px;\n    height: 24px;\n    float: right;\n    margin: 0 9px 0 0;\n  }\n  ");
   });
 };
 var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
@@ -45503,7 +45502,7 @@ function select_MultipleSelectPlaceholder(_ref4) {
     , {
       renderValue: function renderValue(selected) {
         return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
-          children: selected === null || selected === void 0 ? void 0 : selected.name
+          children: selected === null || selected === void 0 ? void 0 : selected.value
         });
       },
       defaultValue: defaultValue,
@@ -50781,10 +50780,14 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
         variant: "standard",
         sx: {
           "& .MuiSelect-select.MuiInputBase-input ": {
-            minHeight: "1em"
+            minHeight: "1em",
+            maxWidth: "90%"
           },
           "& .MuiSelect-select.MuiInputBase-input span": {
             marginLeft: "12px"
+          },
+          "& .MuiInputBase-root.MuiInput-root ": {
+            paddingRight: "9px"
           },
           ".MuiSelect-nativeInput": {
             height: "0px",
@@ -50794,7 +50797,8 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
             border: "0px !important"
           },
           "& .MuiSvgIcon-root": {
-            color: "rgb(255, 255, 255)"
+            color: "rgb(255, 255, 255)",
+            margin: "0 9px 0 0"
           }
         },
         multiple: true,

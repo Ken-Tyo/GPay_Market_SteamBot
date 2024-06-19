@@ -69,6 +69,8 @@ const CreateStyledButton = (width) =>
       content: url("data:image/svg+xml,<svg class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-1utq5rl' focusable='false' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'><path d='M7 10l5 5 5-5z'></path></svg>");
       width: 24px;
       height: 24px;
+      margin: 0 9px 0 0;
+      transform: rotate(180deg);
     }
   }
 
@@ -80,6 +82,7 @@ const CreateStyledButton = (width) =>
     width: 24px;
     height: 24px;
     float: right;
+    margin: 0 9px 0 0;
   }
   `
   );
@@ -193,7 +196,9 @@ export default function MultipleSelectPlaceholder({
     <div className={css.wrapper} style={{ width: width }}>
       <CustomSelect
         //renderValue={(e) => <span>{e}</span>}
-        renderValue={(selected) => <span>{selected?.name}</span>}
+        renderValue={(selected) => {
+          return <span>{selected?.value}</span>;
+        }}
         defaultValue={defaultValue}
         onChange={handleChange}
       >

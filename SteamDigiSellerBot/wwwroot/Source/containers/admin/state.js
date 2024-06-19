@@ -199,7 +199,6 @@ export const apiFetchItems = async (filter) => {
   if (filter == null) {
     filterDTO = { IsFilterOn: false };
   } else {
-    debugger;
     const currencies = state.get().currencies.map((c) => {
       return {
         id: c.steamId,
