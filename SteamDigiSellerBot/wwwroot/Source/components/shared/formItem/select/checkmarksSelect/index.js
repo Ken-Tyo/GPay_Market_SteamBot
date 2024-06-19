@@ -164,13 +164,13 @@ const bara = (width, height) => {
     fontSize: "14px",
     lineHeight: "14px",
     boxSizing: "border-box",
-    padding: "6px 6px 6px 6px",
+    padding: "6px",
     marginTop: "10px",
     marginLeft: "0px",
     //position: ' relative',
     //z-index: ' -100',
     width: `226px`,
-    height: `155px`,
+    maxHeight: `155px`,
     borderRadius: "15px",
     //border-radius: ' 0px 0px 15px 15px',
     overflow: "auto",
@@ -193,6 +193,34 @@ const bara = (width, height) => {
     color: "#B3B3B3",
     fontSize: "14px",
     lineHeight: "14px",
+    "&:last-of-type": {
+      borderBottom: "none",
+    },
+
+    [`&.${optionUnstyledClasses.selected}`]: {
+      backgroundColor: "none",
+      color: "#FFFFFF",
+    },
+
+    [`&.${optionUnstyledClasses.highlighted}`]: {
+      backgroundcolor: "none",
+      color: "#FFFFFF",
+    },
+
+    [`&.${optionUnstyledClasses.highlighted}.${optionUnstyledClasses.selected}`]:
+      {
+        backgroundColor: "none",
+        color: "#FFFFFF",
+      },
+
+    [`&.${optionUnstyledClasses.disabled}`]: {
+      color: grey[400],
+    },
+
+    [`&:hover:not(.${optionUnstyledClasses.disabled})`]: {
+      backgroundColor: "none",
+      color: "#FFFFFF",
+    },
   };
 };
 
@@ -248,11 +276,11 @@ const slots = {
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-  MenuListProps: { sx: { padding: "6px 0px" } },
+  MenuListProps: { sx: { padding: "0px 0px" } },
   PaperProps: {
     sx: bara(undefined, undefined),
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      maxHeight: 155,
     },
   },
 };
@@ -268,7 +296,7 @@ const MultipleSelectCheckmarks = ({ options, onChange, value }) => {
           sx={{
             "& .MuiSelect-select.MuiInputBase-input ": { minHeight: "1em" },
             "& .MuiSelect-select.MuiInputBase-input span": {
-              marginLeft: "9px",
+              marginLeft: "12px",
             },
             ".MuiSelect-nativeInput": {
               height: "0px",
@@ -300,7 +328,35 @@ const MultipleSelectCheckmarks = ({ options, onChange, value }) => {
               value={obj}
             >
               <ListItemText
-                sx={{ paddingLeft: "15px" }}
+                sx={{
+                  paddingLeft: "15px",
+                  "& div": {
+                    [`&.${optionUnstyledClasses.selected}`]: {
+                      backgroundColor: "none",
+                      color: "#FFFFFF",
+                    },
+
+                    [`&.${optionUnstyledClasses.highlighted}`]: {
+                      backgroundcolor: "none",
+                      color: "#FFFFFF",
+                    },
+
+                    [`&.${optionUnstyledClasses.highlighted}.${optionUnstyledClasses.selected}`]:
+                      {
+                        backgroundColor: "none",
+                        color: "#FFFFFF",
+                      },
+
+                    [`&.${optionUnstyledClasses.disabled}`]: {
+                      color: grey[400],
+                    },
+
+                    [`&:hover:not(.${optionUnstyledClasses.disabled})`]: {
+                      backgroundColor: "none",
+                      color: "#FFFFFF",
+                    },
+                  },
+                }}
                 style={{ color: obj.color || "#B3B3B3" }}
                 primary={<div>{obj.name}</div>}
               />

@@ -210,6 +210,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 defaultValue={item.hierarchyParams_compareSign}
                 onChange={handleChange("hierarchyParams_compareSign")}
                 width={68}
+                height={"min-content"}
               />
 
               <TextBox

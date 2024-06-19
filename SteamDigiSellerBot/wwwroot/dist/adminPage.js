@@ -45457,7 +45457,7 @@ var shared_select_grey = {
 var select_CreateStyledButton = function CreateStyledButton(width) {
   return esm_styled("button")(function (_ref) {
     var theme = _ref.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 15px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n  }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 0 0 0 15px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      //content: '\u25B4';//url(../../../../../icons/pen.svg);\n      content: url(\"data:image/svg+xml,<svg class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-1utq5rl' focusable='false' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'><path d='M7 10l5 5 5-5z'></path></svg>\");\n      width: 24px;\n      height: 24px;\n    }\n  }\n\n  &::after {\n    content: ' ';\n    background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard' aria-hidden='true' viewBox='0 0 24 24' data-testid='ArrowDropDownIcon'%3E%3Cpath fill='%23FFFFFF' d='m7 10 5 5 5-5z'/%3E%3C/svg%3E\");    //content: '\u25BE';\n    //content: url('data:image/svg+xml,<svg class=\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard\" aria-hidden=\"true\" viewBox=\"0 0 24 24\" data-testid=\"ArrowDropDownIcon\"><path d=\"m7 10 5 5 5-5z\"/></svg>');\n    \n    width: 24px;\n    height: 24px;\n    float: right;\n  }\n  ");
   });
 };
 var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
@@ -45468,15 +45468,8 @@ var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
 };
 var select_StyledOption = esm_styled(Option_Option)(function (_ref3) {
   var theme = _ref3.theme;
-  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n\n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === "dark" ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
+  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n  \n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === "dark" ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
 });
-
-// const StyledPopper = styled(Popper)(
-//   ({ theme }) => `
-//     z-index: 1;
-//   `
-// );
-
 var select_StyledPopper = esm_styled(Popper_Popper)(select_templateObject || (select_templateObject = select_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
 function select_MultipleSelectPlaceholder(_ref4) {
   var options = _ref4.options,
@@ -45505,15 +45498,19 @@ function select_MultipleSelectPlaceholder(_ref4) {
     style: {
       width: width
     },
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(CustomSelect
+    //renderValue={(e) => <span>{e}</span>}
+    , {
+      renderValue: function renderValue(selected) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+          children: selected === null || selected === void 0 ? void 0 : selected.name
+        });
+      },
       defaultValue: defaultValue,
       onChange: handleChange,
       children: (options || []).map(function (i) {
         return /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
           value: i.name,
-          style: {
-            color: i.color || "#B3B3B3"
-          },
           children: i.name
         }, i.name);
       })
@@ -50694,18 +50691,19 @@ var checkmarksSelect_CreateStyledListbox = function CreateStyledListbox(width, h
   });
 };
 var bara = function bara(width, height) {
-  return checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty({
+  var _ref3;
+  return _ref3 = {
     fontFamily: "Igra Sans",
     fontSize: "14px",
     lineHeight: "14px",
     boxSizing: "border-box",
-    padding: "6px 6px 6px 6px",
+    padding: "6px",
     marginTop: "10px",
     marginLeft: "0px",
     //position: ' relative',
     //z-index: ' -100',
     width: "226px",
-    height: "155px",
+    maxHeight: "155px",
     borderRadius: "15px",
     //border-radius: ' 0px 0px 15px 15px',
     overflow: "auto",
@@ -50723,7 +50721,23 @@ var bara = function bara(width, height) {
       borderRadius: "9999px",
       backgroundColor: "#83409b"
     }
-  }, "fontFamily", "Igra Sans"), "cursor", "pointer"), "color", "#B3B3B3"), "fontSize", "14px"), "lineHeight", "14px");
+  }, checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(_ref3, "fontFamily", "Igra Sans"), "cursor", "pointer"), "color", "#B3B3B3"), "fontSize", "14px"), "lineHeight", "14px"), "&:last-of-type", {
+    borderBottom: "none"
+  }), "&.".concat(Option_optionClasses.selected), {
+    backgroundColor: "none",
+    color: "#FFFFFF"
+  }), "&.".concat(Option_optionClasses.highlighted), {
+    backgroundcolor: "none",
+    color: "#FFFFFF"
+  }), "&.".concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected), {
+    backgroundColor: "none",
+    color: "#FFFFFF"
+  }), "&.".concat(Option_optionClasses.disabled), {
+    color: checkmarksSelect_grey[400]
+  }), checkmarksSelect_defineProperty(_ref3, "&:hover:not(.".concat(Option_optionClasses.disabled, ")"), {
+    backgroundColor: "none",
+    color: "#FFFFFF"
+  });
 };
 var checkmarksSelect_StyledOption = esm_styled(Option_Option)(function (_ref4) {
   var theme = _ref4.theme;
@@ -50740,13 +50754,13 @@ var ITEM_PADDING_TOP = 8;
 var MenuProps = {
   MenuListProps: {
     sx: {
-      padding: "6px 0px"
+      padding: "0px 0px"
     }
   },
   PaperProps: {
     sx: bara(undefined, undefined),
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+      maxHeight: 155
     }
   }
 };
@@ -50770,7 +50784,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
             minHeight: "1em"
           },
           "& .MuiSelect-select.MuiInputBase-input span": {
-            marginLeft: "9px"
+            marginLeft: "12px"
           },
           ".MuiSelect-nativeInput": {
             height: "0px",
@@ -50814,7 +50828,22 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
             value: obj,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
               sx: {
-                paddingLeft: "15px"
+                paddingLeft: "15px",
+                "& div": checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty(checkmarksSelect_defineProperty({}, "&.".concat(Option_optionClasses.selected), {
+                  backgroundColor: "none",
+                  color: "#FFFFFF"
+                }), "&.".concat(Option_optionClasses.highlighted), {
+                  backgroundcolor: "none",
+                  color: "#FFFFFF"
+                }), "&.".concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected), {
+                  backgroundColor: "none",
+                  color: "#FFFFFF"
+                }), "&.".concat(Option_optionClasses.disabled), {
+                  color: checkmarksSelect_grey[400]
+                }), "&:hover:not(.".concat(Option_optionClasses.disabled, ")"), {
+                  backgroundColor: "none",
+                  color: "#FFFFFF"
+                })
               },
               style: {
                 color: obj.color || "#B3B3B3"
@@ -51164,7 +51193,8 @@ var ModalFilter = function ModalFilter(_ref) {
               options: signOptions,
               defaultValue: item.hierarchyParams_compareSign,
               onChange: handleChange("hierarchyParams_compareSign"),
-              width: 68
+              width: 68,
+              height: "min-content"
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
               onChange: handleChange("hierarchyParams_percentDiff"),
               defaultValue: item.hierarchyParams_percentDiff,
