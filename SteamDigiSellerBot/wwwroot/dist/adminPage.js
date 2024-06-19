@@ -45510,6 +45510,9 @@ function select_MultipleSelectPlaceholder(_ref4) {
       children: (options || []).map(function (i) {
         return /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
           value: i.name,
+          style: {
+            color: i.color || "#B3B3B3"
+          },
           children: i.name
         }, i.name);
       })
