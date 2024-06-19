@@ -19,11 +19,10 @@ const TextBox = ({
   return (
     <div className={css.wrapper} style={{ width: wrapperWidth }}>
       <div className={css.inputControl} style={{ width: inputControlWidth }}>
-        <div className={css.inputArea}>
+        <div className={css.inputArea} style={{ width: width }}>
           <input
             type={type}
             value={defaultValue}
-            style={{ width: width }}
             onChange={onChangeText}
             //Защита от изменения прокрутки значения, есть type=numeric
             onFocus={(e) =>

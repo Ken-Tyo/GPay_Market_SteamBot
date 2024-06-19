@@ -45324,12 +45324,12 @@ var textbox2_TextBox = function TextBox(_ref) {
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: textbox2_styles.inputArea,
+        style: {
+          width: width
+        },
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
           type: type,
           value: defaultValue,
-          style: {
-            width: width
-          },
           onChange: onChangeText
           //Защита от изменения прокрутки значения, есть type=numeric
           ,
@@ -51133,7 +51133,7 @@ var ModalFilter = function ModalFilter(_ref) {
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: modalProductsFilter_styles.doubleControl,
             style: {
-              gridGap: "10px"
+              gridGap: "9px"
             },
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
               options: currencies,
@@ -51144,15 +51144,13 @@ var ModalFilter = function ModalFilter(_ref) {
               options: signOptions,
               defaultValue: item.hierarchyParams_compareSign,
               onChange: handleChange("hierarchyParams_compareSign"),
-              width: 68,
-              style: {
-                padding: "10px 0"
-              }
+              width: 68
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
               onChange: handleChange("hierarchyParams_percentDiff"),
               defaultValue: item.hierarchyParams_percentDiff,
               width: 92,
-              type: "number"
+              type: "number",
+              cymbol: "%"
             })]
           })
         })]

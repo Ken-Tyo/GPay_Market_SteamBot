@@ -213,7 +213,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           <div className={css.name}>Параметры:</div>
 
           <div className={css.wrapper}>
-            <div className={css.doubleControl} style={{ gridGap: "10px" }}>
+            <div className={css.doubleControl} style={{ gridGap: "9px" }}>
               <Select
                 options={currencies}
                 defaultValue={item.hierarchyParams_targetSteamCurrencyId}
@@ -225,7 +225,6 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 defaultValue={item.hierarchyParams_compareSign}
                 onChange={handleChange("hierarchyParams_compareSign")}
                 width={68}
-                style={{ padding: "10px 0" }}
               />
 
               <TextBox
@@ -233,6 +232,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 defaultValue={item.hierarchyParams_percentDiff}
                 width={92}
                 type="number"
+                cymbol={"%"}
               />
             </div>
           </div>

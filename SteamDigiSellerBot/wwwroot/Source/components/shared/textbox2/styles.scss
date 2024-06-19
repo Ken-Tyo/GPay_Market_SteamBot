@@ -9,12 +9,12 @@
 
     .inputControl {
         height: 51px;
-        //width: 100%;
+        width: 100%;
 
         .inputArea {
             display: flex;
             height: 100%;
-            width: 100%;
+            //width: 100%;
 
             //background-color: transparent;
             border-radius: 15px;
@@ -22,7 +22,7 @@
 
             input {
                 height: 100%;
-                //width: 85%;
+                width: 85%;
 
                 font-size: 14px;
                 line-height: 14px;
@@ -45,12 +45,12 @@
 
             .cymbol {
                 height: 100%;
-                //width: 15%;
+                width: 15%;
 
                 font-size: 16px;
                 line-height: 16px;
                 color: $white-3;
-                //padding-left: 4px;
+                padding-right: 18px;
 
                 display: flex;
                 justify-content: left;
