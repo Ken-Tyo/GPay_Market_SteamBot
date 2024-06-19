@@ -94,6 +94,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                 gamePricesCurrHashSet = new HashSet<int>(gamePricesCurr);
             }
 
+            productName = productName.ToLower();
+
             //HashSet<string> digiSellerIds = null;
             //if (digiSellerId != null)
             //{
@@ -107,19 +109,6 @@ namespace SteamDigiSellerBot.Database.Repositories
             //        digiSellerIds = new HashSet<string>(new[] { noWhitespace });
             //    }
             //}
-
-            Expression<Func<Item,bool>> compareThirdPartyPrice = null;
-            if(thirdPartyPriceType.HasValue && thirdPartyPriceValue.HasValue)
-            {
-                if(thirdPartyPriceType.Value == true)
-                {
-                    compareThirdPartyPrice = (Item item) => item.FixedDigiSellerPrice == thirdPartyPriceValue;
-                }
-                else
-                {
-                    compareThirdPartyPrice = (Item item) => item.SteamPercent == thirdPartyPriceValue;
-                }
-            }
 
             Func<bool> hierarchyParamsIsValid = () =>
 
@@ -140,7 +129,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .ThenBy(x => x.AppId)
                 .Where((item) =>
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
-                    && (string.IsNullOrWhiteSpace(productName) || item.Name.Contains(productName))
+                    && (string.IsNullOrWhiteSpace(productName) || item.Name.ToLower().Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId));
