@@ -192,14 +192,48 @@ export const setActiveMenuLink = (name) => {
     };
   });
 };
-
+const isNullOrEmpty = (target) => target != null && target != "";
 export const apiFetchItems = async (filter) => {
-  //debugger;
+  let filterDTO = structuredClone(filter);
   let requestData = { method: "POST" };
   if (filter == null) {
-    filter = { IsFilterOn: false };
+    filterDTO = { IsFilterOn: false };
+  } else {
+    debugger;
+    const currencies = state.get().currencies.map((c) => {
+      return {
+        id: c.steamId,
+        name: c.code,
+      };
+    });
+    const regions = state.get().steamRegions.map((c) => {
+      return {
+        id: c.id,
+        name: c.name,
+      };
+    });
+    const regionVal = (
+      regions.find((c) => c.name === filterDTO.steamCountryCodeId) || {}
+    ).id;
+
+    if (isNullOrEmpty(filterDTO.hierarchyParams_baseSteamCurrencyId)) {
+      filterDTO.hierarchyParams_baseSteamCurrencyId = currencies.find(
+        (c) => c.name === filterDTO.hierarchyParams_baseSteamCurrencyId
+      ).id;
+    }
+    if (isNullOrEmpty(filterDTO.hierarchyParams_targetSteamCurrencyId)) {
+      filterDTO.hierarchyParams_targetSteamCurrencyId = currencies.find(
+        (c) => c.name === filterDTO.hierarchyParams_targetSteamCurrencyId
+      ).id;
+    }
+
+    if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
+      filterDTO.steamCountryCodeId = regionVal;
+    }
+    filterDTO.IsFilterOn = true;
   }
-  requestData.body = mapToFormData(filter);
+
+  requestData.body = mapToFormData(filterDTO);
   let res = await fetch("/items/list", requestData);
   setItems(await res.json());
 };

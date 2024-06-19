@@ -125,21 +125,6 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   };
   const isNullOrEmpty = (target) => target != null && target != "";
   const handleOnSave = (transferObject) => {
-    if (isNullOrEmpty(transferObject.hierarchyParams_baseSteamCurrencyId)) {
-      transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(
-        (c) => c.name === transferObject.hierarchyParams_baseSteamCurrencyId
-      ).id;
-    }
-    if (isNullOrEmpty(transferObject.hierarchyParams_targetSteamCurrencyId)) {
-      transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(
-        (c) => c.name === transferObject.hierarchyParams_targetSteamCurrencyId
-      ).id;
-    }
-
-    if (isNullOrEmpty(transferObject.steamCountryCodeId)) {
-      transferObject.steamCountryCodeId = regionVal;
-    }
-    transferObject.IsFilterOn = true;
     onSave(transferObject);
   };
 
@@ -167,7 +152,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         <FormItemText
           name={"Название товара:"}
           onChange={handleChange("productName")}
-          value={item.itemName}
+          value={item.productName}
         />
         <div className={css.formItem}>
           <div className={css.name}>Регион получения:</div>

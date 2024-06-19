@@ -26619,33 +26619,67 @@ var setActiveMenuLink = function setActiveMenuLink(name) {
     });
   });
 };
+var isNullOrEmpty = function isNullOrEmpty(target) {
+  return target != null && target != "";
+};
 var apiFetchItems = /*#__PURE__*/function () {
   var _ref6 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee6(filter) {
-    var requestData, res;
+    var filterDTO, requestData, currencies, regions, regionVal, res;
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          //debugger;
+          filterDTO = structuredClone(filter);
           requestData = {
             method: "POST"
           };
           if (filter == null) {
-            filter = {
+            filterDTO = {
               IsFilterOn: false
             };
+          } else {
+            debugger;
+            currencies = state.get().currencies.map(function (c) {
+              return {
+                id: c.steamId,
+                name: c.code
+              };
+            });
+            regions = state.get().steamRegions.map(function (c) {
+              return {
+                id: c.id,
+                name: c.name
+              };
+            });
+            regionVal = (regions.find(function (c) {
+              return c.name === filterDTO.steamCountryCodeId;
+            }) || {}).id;
+            if (isNullOrEmpty(filterDTO.hierarchyParams_baseSteamCurrencyId)) {
+              filterDTO.hierarchyParams_baseSteamCurrencyId = currencies.find(function (c) {
+                return c.name === filterDTO.hierarchyParams_baseSteamCurrencyId;
+              }).id;
+            }
+            if (isNullOrEmpty(filterDTO.hierarchyParams_targetSteamCurrencyId)) {
+              filterDTO.hierarchyParams_targetSteamCurrencyId = currencies.find(function (c) {
+                return c.name === filterDTO.hierarchyParams_targetSteamCurrencyId;
+              }).id;
+            }
+            if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
+              filterDTO.steamCountryCodeId = regionVal;
+            }
+            filterDTO.IsFilterOn = true;
           }
-          requestData.body = mapToFormData(filter);
-          _context6.next = 5;
+          requestData.body = mapToFormData(filterDTO);
+          _context6.next = 6;
           return fetch("/items/list", requestData);
-        case 5:
+        case 6:
           res = _context6.sent;
           _context6.t0 = setItems;
-          _context6.next = 9;
+          _context6.next = 10;
           return res.json();
-        case 9:
+        case 10:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 11:
+        case 12:
         case "end":
           return _context6.stop();
       }
@@ -45423,7 +45457,7 @@ var shared_select_grey = {
 var select_CreateStyledButton = function CreateStyledButton(width) {
   return esm_styled("button")(function (_ref) {
     var theme = _ref.theme;
-    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 12px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n  }\n  ");
+    return "\n  font-family: 'Igra Sans';\n  font-size: 14px;\n  line-height: 14px;\n  box-sizing: border-box;\n  width: ".concat(width || 226, "px;\n  height: 51px;\n  padding: 15px;\n  border-radius: 15px;\n  text-align: left;\n  background: #512068;\n  color: #FFFFFF;\n  border: none;\n  //z-index: 2;\n  //position: relative;\n\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 120ms;\n\n  &.").concat(Select_selectClasses.focusVisible, " {\n    border-color: ").concat(shared_select_blue[400], ";\n    outline: 3px solid ").concat(theme.palette.mode === "dark" ? shared_select_blue[500] : shared_select_blue[200], ";\n  }\n\n  &.").concat(Select_selectClasses.expanded, " {\n    &::after {\n      content: '\u25B4';//url(../../../../../icons/pen.svg);\n      // content: url(\"data:image/svg+xml,<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n      // <path d=\"M15.9077 2.87207C15.8161 2.7408 15.6687 2.65967 15.5086 2.65283L5.58367 2.22502C5.2989 2.21256 5.06093 2.43241 5.04876 2.71585C5.03666 2.99918 5.25615 3.23858 5.53955 3.25075L14.7926 3.64963L12.9732 9.3261H4.87696L3.41425 1.36173C3.3821 1.18718 3.26226 1.04156 3.09697 0.976713L0.701303 0.0355518C0.437269 -0.0678201 0.139327 0.0618692 0.0356332 0.32558C-0.0678819 0.589435 0.0617716 0.887556 0.325662 0.99125L2.4558 1.82807L3.94432 9.93222C3.98919 10.1758 4.20152 10.3528 4.44933 10.3528H4.69625L4.13241 11.919C4.08522 12.0501 4.10466 12.1958 4.18498 12.3098C4.26518 12.4238 4.39562 12.4916 4.53487 12.4916H4.93035C4.68529 12.7644 4.53487 13.1235 4.53487 13.5184C4.53487 14.3676 5.22589 15.0585 6.07496 15.0585C6.92403 15.0585 7.61505 14.3676 7.61505 13.5184C7.61505 13.1235 7.46463 12.7644 7.21961 12.4916H10.5774C10.3322 12.7644 10.1818 13.1235 10.1818 13.5184C10.1818 14.3676 10.8727 15.0585 11.7219 15.0585C12.5712 15.0585 13.262 14.3676 13.262 13.5184C13.262 13.1235 13.1116 12.7644 12.8666 12.4916H13.3476C13.5839 12.4916 13.7754 12.3001 13.7754 12.0639C13.7754 11.8275 13.5839 11.6361 13.3476 11.6361H5.14357L5.60554 10.3527H13.3476C13.5708 10.3527 13.7683 10.2084 13.8363 9.99603L15.9754 3.32226C16.0245 3.16994 15.9993 3.0034 15.9077 2.87207ZM6.075 14.203C5.69749 14.203 5.39049 13.8961 5.39049 13.5186C5.39049 13.1411 5.69749 12.834 6.075 12.834C6.4525 12.834 6.75946 13.1411 6.75946 13.5186C6.75946 13.8961 6.4525 14.203 6.075 14.203ZM11.7219 14.203C11.3444 14.203 11.0375 13.8961 11.0375 13.5186C11.0375 13.1411 11.3444 12.834 11.7219 12.834C12.0994 12.834 12.4064 13.1411 12.4064 13.5186C12.4064 13.8961 12.0994 14.203 11.7219 14.203Z\" fill=\"#B3B3B3\"/>\n      // </svg>\");\n      // width: 16px;\n      // height: 16px;\n    }\n  }\n\n  &::after {\n    content: '\u25BE';\n    float: right;\n  }\n  ");
   });
 };
 var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
@@ -45478,7 +45512,7 @@ function select_MultipleSelectPlaceholder(_ref4) {
         return /*#__PURE__*/(0,jsx_runtime.jsx)(select_StyledOption, {
           value: i.name,
           style: {
-            color: i.color || '#B3B3B3'
+            color: i.color || "#B3B3B3"
           },
           children: i.name
         }, i.name);
@@ -50736,7 +50770,7 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
             minHeight: "1em"
           },
           "& .MuiSelect-select.MuiInputBase-input span": {
-            marginLeft: "15px"
+            marginLeft: "9px"
           },
           ".MuiSelect-nativeInput": {
             height: "0px",
@@ -51041,20 +51075,6 @@ var ModalFilter = function ModalFilter(_ref) {
     return target != null && target != "";
   };
   var handleOnSave = function handleOnSave(transferObject) {
-    if (isNullOrEmpty(transferObject.hierarchyParams_baseSteamCurrencyId)) {
-      transferObject.hierarchyParams_baseSteamCurrencyId = currencies.find(function (c) {
-        return c.name === transferObject.hierarchyParams_baseSteamCurrencyId;
-      }).id;
-    }
-    if (isNullOrEmpty(transferObject.hierarchyParams_targetSteamCurrencyId)) {
-      transferObject.hierarchyParams_targetSteamCurrencyId = currencies.find(function (c) {
-        return c.name === transferObject.hierarchyParams_targetSteamCurrencyId;
-      }).id;
-    }
-    if (isNullOrEmpty(transferObject.steamCountryCodeId)) {
-      transferObject.steamCountryCodeId = regionVal;
-    }
-    transferObject.IsFilterOn = true;
     onSave(transferObject);
   };
   var regionVal = (regions.find(function (c) {
@@ -51075,7 +51095,7 @@ var ModalFilter = function ModalFilter(_ref) {
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(formItem_text, {
         name: "Название товара:",
         onChange: handleChange("productName"),
-        value: item.itemName
+        value: item.productName
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalProductsFilter_styles.formItem,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {

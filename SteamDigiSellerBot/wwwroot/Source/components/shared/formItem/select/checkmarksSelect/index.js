@@ -268,7 +268,7 @@ const MultipleSelectCheckmarks = ({ options, onChange, value }) => {
           sx={{
             "& .MuiSelect-select.MuiInputBase-input ": { minHeight: "1em" },
             "& .MuiSelect-select.MuiInputBase-input span": {
-              marginLeft: "15px",
+              marginLeft: "9px",
             },
             ".MuiSelect-nativeInput": {
               height: "0px",

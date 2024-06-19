@@ -40,7 +40,7 @@ const CreateStyledButton = (width) =>
   box-sizing: border-box;
   width: ${width || 226}px;
   height: 51px;
-  padding: 12px;
+  padding: 15px;
   border-radius: 15px;
   text-align: left;
   background: #512068;
@@ -191,7 +191,11 @@ export default function MultipleSelectPlaceholder({
     <div className={css.wrapper} style={{ width: width }}>
       <CustomSelect defaultValue={defaultValue} onChange={handleChange}>
         {(options || []).map((i) => (
-          <StyledOption key={i.name} value={i.name} style={{ color: i.color || '#B3B3B3' }}>
+          <StyledOption
+            key={i.name}
+            value={i.name}
+            style={{ color: i.color || "#B3B3B3" }}
+          >
             {i.name}
           </StyledOption>
         ))}

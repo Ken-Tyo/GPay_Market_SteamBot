@@ -93,8 +93,11 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 gamePricesCurrHashSet = new HashSet<int>(gamePricesCurr);
             }
-
-            productName = productName.ToLower();
+            if (!string.IsNullOrWhiteSpace(productName))
+            {
+                productName = productName.ToLower();
+            }
+            
 
             //HashSet<string> digiSellerIds = null;
             //if (digiSellerId != null)
