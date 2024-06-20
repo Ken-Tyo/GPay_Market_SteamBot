@@ -51195,23 +51195,25 @@ var ModalFilter = function ModalFilter(_ref) {
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: modalProductsFilter_styles.doubleControl,
             style: {
-              gridGap: "9px"
+              gridGap: "10px"
             },
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
               options: currencies,
               defaultValue: item.hierarchyParams_targetSteamCurrencyId,
               onChange: handleChange("hierarchyParams_targetSteamCurrencyId"),
-              width: 124
+              width: 109
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
               options: signOptions,
               defaultValue: item.hierarchyParams_compareSign,
               onChange: handleChange("hierarchyParams_compareSign"),
-              width: 68,
+              width: 62,
               height: "min-content"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              children: "\u0434\u043E"
             }), /*#__PURE__*/(0,jsx_runtime.jsx)(textbox2, {
               onChange: handleChange("hierarchyParams_percentDiff"),
               defaultValue: item.hierarchyParams_percentDiff,
-              width: 92,
+              width: 80,
               inputmode: "numeric",
               cymbol: "%",
               pattern: "[^,\\d]"

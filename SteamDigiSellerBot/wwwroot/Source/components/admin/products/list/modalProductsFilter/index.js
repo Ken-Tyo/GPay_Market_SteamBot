@@ -200,25 +200,25 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           <div className={css.name}>Параметры:</div>
 
           <div className={css.wrapper}>
-            <div className={css.doubleControl} style={{ gridGap: "9px" }}>
+            <div className={css.doubleControl} style={{ gridGap: "10px" }}>
               <Select
                 options={currencies}
                 defaultValue={item.hierarchyParams_targetSteamCurrencyId}
                 onChange={handleChange("hierarchyParams_targetSteamCurrencyId")}
-                width={124}
+                width={109}
               />
               <Select
                 options={signOptions}
                 defaultValue={item.hierarchyParams_compareSign}
                 onChange={handleChange("hierarchyParams_compareSign")}
-                width={68}
+                width={62}
                 height={"min-content"}
               />
-
+              <div>до</div>
               <TextBox
                 onChange={handleChange("hierarchyParams_percentDiff")}
                 defaultValue={item.hierarchyParams_percentDiff}
-                width={92}
+                width={80}
                 inputmode="numeric"
                 cymbol={"%"}
                 pattern={"[^,\\d]"}
