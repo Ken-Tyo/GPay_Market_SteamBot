@@ -107,13 +107,15 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
         return;
       }
     } else if (prop === "hierarchyParams_percentDiff") {
-      var isValid = !Number.isNaN(val);
-      if (!isValid) {
+      debugger;
+      var isValid = digiSellerIdsIsNotValid.test(val);
+      if (isValid) {
+        setItem({ ...item, [prop]: item[prop] });
         return;
       }
     } else if (prop === "thirdPartyPriceValue") {
       var isValid = !Number.isNaN(val);
-      if (!isValid) {
+      if (isValid) {
         return;
       }
     } else if (prop === "thirdPartyPriceType") {
@@ -217,8 +219,9 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                 onChange={handleChange("hierarchyParams_percentDiff")}
                 defaultValue={item.hierarchyParams_percentDiff}
                 width={92}
-                type="number"
+                inputmode="numeric"
                 cymbol={"%"}
+                pattern={"[^,\\d]"}
               />
             </div>
           </div>
@@ -279,7 +282,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
                     onChange={handleChange("thirdPartyPriceValue")}
                     defaultValue={item.thirdPartyPriceValue}
                     width={233}
-                    type="number"
+                    inputmode="numeric"
                   />
                   <Select
                     options={digiPriceSetType}

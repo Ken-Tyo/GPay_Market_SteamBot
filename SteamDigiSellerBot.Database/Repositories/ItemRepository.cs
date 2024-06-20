@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System;
 using SteamDigiSellerBot.Utilities;
 using Castle.Core.Internal;
+using System.Text.RegularExpressions;
 
 namespace SteamDigiSellerBot.Database.Repositories
 {
@@ -40,10 +41,13 @@ namespace SteamDigiSellerBot.Database.Repositories
     public class ItemRepository : BaseRepositoryEx<Item>, IItemRepository
     {
         private IDbContextFactory<DatabaseContext> dbContextFactory;
-        public ItemRepository(IDbContextFactory<DatabaseContext> dbContextFactory)
+        private readonly ICurrencyDataRepository currencyDataRepository;
+
+        public ItemRepository(IDbContextFactory<DatabaseContext> dbContextFactory, ICurrencyDataRepository currencyDataRepository)
             : base(dbContextFactory)
         {
             this.dbContextFactory = dbContextFactory;
+            this.currencyDataRepository = currencyDataRepository;
         }
 
         public async Task<List<Item>> GetSortedItems()
@@ -150,7 +154,9 @@ namespace SteamDigiSellerBot.Database.Repositories
                     sortedQuery = sortedQuery.Where(item => item.SteamPercent == thirdPartyPriceValue);
                 }
             }
-
+            var currencies = await currencyDataRepository.GetCurrencyDictionary();
+            var rub = currencies[5];
+            
             if (!string.IsNullOrWhiteSpace(digiSellerId)) {
                 var noWhitespace = digiSellerId.RemoveWhitespaces();
                 //if (digiSellerId.Contains(","))
@@ -180,23 +186,35 @@ namespace SteamDigiSellerBot.Database.Repositories
                 else
                 {
                     finalResult = new List<Item>();
-                    Func<decimal, int, bool> compareFunc = hierarchyParams_compareSign switch
+                    Func<decimal, decimal, bool> compareFunc = hierarchyParams_compareSign switch
                     {
                         ">=" => MoreOrEqual,
                         "=<" => LessOrEqual,
                         "<>" => MoreOrLessEqual,
                         _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
                     };
+
+                    decimal targetDiff = hierarchyParams_compareSign switch
+                    {
+                        ">=" => Math.Abs(hierarchyParams_percentDiff.Value),
+                        "=<" => -Math.Abs(hierarchyParams_percentDiff.Value),
+                        "<>" => Math.Abs(hierarchyParams_percentDiff.Value),
+                        _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+                    };
                     foreach (var e in result)
                     {
-                        var targetPrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId)?.CurrentSteamPrice;
-                        var basePrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)?.CurrentSteamPrice;
+                        var targetGamePrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId);
+                        var baseGamePrice = e.GamePrices?.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId);
 
-                        if (targetPrice.HasValue && basePrice.HasValue)
+                        if ((targetGamePrice?.CurrentSteamPrice).HasValue && (baseGamePrice?.CurrentSteamPrice).HasValue)
                         {
-                            var diffPrice = (((targetPrice / basePrice) * 100) - 100);
+                            //Конвертирование в рубль
+                            var targetRubPrice = ExchangeHelper.Convert(targetGamePrice.CurrentSteamPrice, currencies[targetGamePrice.SteamCurrencyId], rub);
+                            var baseRubPrice = ExchangeHelper.Convert(baseGamePrice.CurrentSteamPrice, currencies[baseGamePrice.SteamCurrencyId], rub);
+
+                            var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
                             debugResult.Add(diffPrice);
-                            if (compareFunc(diffPrice.Value, hierarchyParams_percentDiff.Value))
+                            if (compareFunc(diffPrice, targetDiff))
                             {
                                 finalResult.Add(e);
                             }
@@ -212,12 +230,14 @@ namespace SteamDigiSellerBot.Database.Repositories
             return await Task.FromResult((finalResult, finalResult.Count));
         }
 
-        private bool MoreOrEqual(decimal calc, int target) => calc >= target;
-        private bool LessOrEqual(decimal calc, int target) => calc <= target;
-        private bool MoreOrLessEqual(decimal calc, int target) {
+        private bool MoreOrEqual(decimal calc, decimal target) => 
+            (0 <= calc) && (calc <= target);
+        private bool LessOrEqual(decimal calc, decimal target) => 
+            (target <= calc) && (calc <= 0);
+        private bool MoreOrLessEqual(decimal calc, decimal target) {
             var absCalc = Math.Abs(calc);
             var absTarget = Math.Abs(target);
-            return MoreOrEqual(absCalc, absTarget) || LessOrEqual(-absCalc, -absTarget);
+            return MoreOrEqual(absCalc, absTarget) || LessOrEqual(absCalc, -absTarget);
         }
 
 

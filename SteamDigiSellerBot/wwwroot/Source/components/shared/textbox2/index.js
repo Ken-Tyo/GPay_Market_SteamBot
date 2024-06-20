@@ -7,9 +7,10 @@ const TextBox = ({
   defaultValue,
   cymbol,
   width = "302px",
-  type = "text",
+  inputmode = "text",
   wrapperWidth = "100%",
   inputControlWidth = "100%",
+  pattern = "",
 }) => {
   const onChangeText = (event) => {
     let val = event.target.value;
@@ -21,7 +22,9 @@ const TextBox = ({
       <div className={css.inputControl} style={{ width: inputControlWidth }}>
         <div className={css.inputArea} style={{ width: width }}>
           <input
-            type={type}
+            type={"text"}
+            inputmode={inputmode}
+            pattern={pattern}
             value={defaultValue}
             onChange={onChangeText}
             //Защита от изменения прокрутки значения, есть type=numeric

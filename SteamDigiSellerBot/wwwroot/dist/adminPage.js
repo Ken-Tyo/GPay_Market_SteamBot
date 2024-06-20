@@ -45335,12 +45335,14 @@ var textbox2_TextBox = function TextBox(_ref) {
     cymbol = _ref.cymbol,
     _ref$width = _ref.width,
     width = _ref$width === void 0 ? "302px" : _ref$width,
-    _ref$type = _ref.type,
-    type = _ref$type === void 0 ? "text" : _ref$type,
+    _ref$inputmode = _ref.inputmode,
+    inputmode = _ref$inputmode === void 0 ? "text" : _ref$inputmode,
     _ref$wrapperWidth = _ref.wrapperWidth,
     wrapperWidth = _ref$wrapperWidth === void 0 ? "100%" : _ref$wrapperWidth,
     _ref$inputControlWidt = _ref.inputControlWidth,
-    inputControlWidth = _ref$inputControlWidt === void 0 ? "100%" : _ref$inputControlWidt;
+    inputControlWidth = _ref$inputControlWidt === void 0 ? "100%" : _ref$inputControlWidt,
+    _ref$pattern = _ref.pattern,
+    pattern = _ref$pattern === void 0 ? "" : _ref$pattern;
   var onChangeText = function onChangeText(event) {
     var val = event.target.value;
     if (onChange) onChange(val);
@@ -45361,7 +45363,9 @@ var textbox2_TextBox = function TextBox(_ref) {
           width: width
         },
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-          type: type,
+          type: "text",
+          inputmode: inputmode,
+          pattern: pattern,
           value: defaultValue,
           onChange: onChangeText
           //Защита от изменения прокрутки значения, есть type=numeric
@@ -51090,13 +51094,15 @@ var ModalFilter = function ModalFilter(_ref) {
           return;
         }
       } else if (prop === "hierarchyParams_percentDiff") {
-        var isValid = !Number.isNaN(val);
-        if (!isValid) {
+        debugger;
+        var isValid = digiSellerIdsIsNotValid.test(val);
+        if (isValid) {
+          setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, item[prop])));
           return;
         }
       } else if (prop === "thirdPartyPriceValue") {
         var isValid = !Number.isNaN(val);
-        if (!isValid) {
+        if (isValid) {
           return;
         }
       } else if (prop === "thirdPartyPriceType") {
@@ -51206,8 +51212,9 @@ var ModalFilter = function ModalFilter(_ref) {
               onChange: handleChange("hierarchyParams_percentDiff"),
               defaultValue: item.hierarchyParams_percentDiff,
               width: 92,
-              type: "number",
-              cymbol: "%"
+              inputmode: "numeric",
+              cymbol: "%",
+              pattern: "[^,\\d]"
             })]
           })
         })]
@@ -51286,7 +51293,7 @@ var ModalFilter = function ModalFilter(_ref) {
                   onChange: handleChange("thirdPartyPriceValue"),
                   defaultValue: item.thirdPartyPriceValue,
                   width: 233,
-                  type: "number"
+                  inputmode: "numeric"
                 }), /*#__PURE__*/(0,jsx_runtime.jsx)(select_MultipleSelectPlaceholder, {
                   options: digiPriceSetType,
                   defaultValue: thirdPartyPriceTypeVal,
