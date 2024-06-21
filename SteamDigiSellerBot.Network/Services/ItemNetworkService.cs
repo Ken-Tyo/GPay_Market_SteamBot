@@ -228,7 +228,7 @@ namespace SteamDigiSellerBot.Network.Services
                             }
 
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
-                                finalPrice / item.CurrentDigiSellerPrice < 0.1M)
+                                finalPrice / item.CurrentDigiSellerPrice < 0.09M)
                             {
                                 _logger.LogWarning(
                                     $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%");
