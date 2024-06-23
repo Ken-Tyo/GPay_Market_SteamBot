@@ -140,26 +140,38 @@ const StyledOption = styled(OptionUnstyled)(
 
   &.${optionUnstyledClasses.selected} {
     background-color: none;
-    color: #FFFFFF;
+    
+    span {
+      color: color-mix(in srgb, currentColor, white) !important;
+    }
   }
 
   &.${optionUnstyledClasses.highlighted} {
     background-color: none;
-    color: #FFFFFF;
+    span {
+      color: color-mix(in srgb, currentColor, white) !important;
+    }
+
   }
 
   &.${optionUnstyledClasses.highlighted}.${optionUnstyledClasses.selected} {
     background-color: none;
-    color: #FFFFFF;
+    span {
+      color: color-mix(in srgb, currentColor, white) !important;
+    }
   }
 
   &.${optionUnstyledClasses.disabled} {
-    color: ${theme.palette.mode === "dark" ? grey[700] : grey[400]};
+
+    color: ${theme.palette.mode === "dark" ? grey[700] : grey[400]} !important;
   }
 
   &:hover:not(.${optionUnstyledClasses.disabled}) {
     background-color: none;
-    color: #FFFFFF;
+    span {
+      color: color-mix(in srgb, currentColor, white) !important;
+    }
+
   }
   `
 );
@@ -167,7 +179,7 @@ const StyledOption = styled(OptionUnstyled)(
 const StyledPopper = styled(PopperUnstyled)`
   z-index: 1400;
 `;
-
+//color-mix(in srgb, #34c9eb 20%, white);
 export default function MultipleSelectPlaceholder({
   options,
   multiple,
@@ -208,7 +220,7 @@ export default function MultipleSelectPlaceholder({
             value={i.name}
             style={{ color: i.color || "#B3B3B3" }}
           >
-            {i.name}
+            <span>{i.name}</span>
           </StyledOption>
         ))}
       </CustomSelect>

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import moment from 'moment';
-import CheckBox from './listCheckBox';
-import Section from '../../section';
-import IconButton from '../../../shared/iconButton';
-import Button from '../../../shared/button';
-import Switch from '../../../shared/switch';
-import css from './styles.scss';
-import trash from '../../../../icons/trash.svg';
-import pen from '../../../../icons/pen.svg';
-import addItem from '../../../../icons/additem.svg';
-import warning from '../../../../icons/warning.svg';
-import infinity from '../../../../icons/infinity.svg'
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import CheckBox from "./listCheckBox";
+import Section from "../../section";
+import IconButton from "../../../shared/iconButton";
+import Button from "../../../shared/button";
+import Switch from "../../../shared/switch";
+import css from "./styles.scss";
+import trash from "../../../../icons/trash.svg";
+import pen from "../../../../icons/pen.svg";
+import addItem from "../../../../icons/additem.svg";
+import warning from "../../../../icons/warning.svg";
+import infinity from "../../../../icons/infinity.svg";
 import {
   state,
   apiGetItem,
@@ -25,14 +25,15 @@ import {
   setSelectedItem,
   setSelectedItems,
   setStateProp,
-} from '../../../../containers/admin/state';
-import ConfirmDialog from '../../../shared/modalConfirm';
-import EditItemModal from './modalEdit';
-import BulkPercentEdit from './modalBulkPercentEdit';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import List from '../../../shared/list';
-import { itemsMode } from '../../../../containers/admin/common';
+} from "../../../../containers/admin/state";
+import ConfirmDialog from "../../../shared/modalConfirm";
+import EditItemModal from "./modalEdit";
+import BulkPercentEdit from "./modalBulkPercentEdit";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import List from "../../../shared/list";
+import { itemsMode } from "../../../../containers/admin/common";
+import { CircularProgress } from "@mui/material";
 const products = () => {
   const {
     items,
@@ -42,22 +43,23 @@ const products = () => {
     selectedItem,
     selectedItems,
     currencies,
+    itemsResponse,
+    productsFilter,
+    changeItemBulkResponse,
   } = state.use();
-
-
 
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
   //const [editItem, setEditItem] = useState(null);
-  const [errParsePriceText, setErrParsePriceText] = useState('');
+  const [errParsePriceText, setErrParsePriceText] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
   const massChangeButStyle = {
-    width: '200px',
-    height: '49px',
-    backgroundColor: '#8A44AB',
-    fontSize: '15px',
+    width: "200px",
+    height: "49px",
+    backgroundColor: "#8A44AB",
+    fontSize: "15px",
   };
   const INFINTITY_DATE = "9999-12-31T23:59:59.999999";
   const currencyDict = {};
@@ -66,14 +68,14 @@ const products = () => {
   });
 
   const headers = {
-    checkbox: '',
-    game: 'Игра',
+    checkbox: "",
+    game: "Игра",
     product: (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <div>Товар</div>
         <img
           src={addItem}
-          style={{ marginLeft: '10px', cursor: 'pointer' }}
+          style={{ marginLeft: "10px", cursor: "pointer" }}
           onClick={async () => {
             await setSelectedItem({ steamCurrencyId: 5 });
             toggleEditItemModal(true);
@@ -81,44 +83,48 @@ const products = () => {
         />
       </div>
     ),
-    price: 'Цена',
-    lastRegion: '',
-    discount: '',
-    options: 'Опции',
-    active: '',
+    price: "Цена",
+    lastRegion: "",
+    discount: "",
+    options: "Опции",
+    active: "",
   };
-
+  console.log("itemsLoading " + itemsLoading);
   return (
     <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
         data={[...items]}
         isLoading={itemsLoading}
-        loadingText={'Происходит обновление цен'}
+        loadingText={() => {
+          if (changeItemBulkResponse.loading) {
+            return "Происходит обновление цен";
+          }
+          return "Подгружаем товары";
+        }}
         itemRenderer={(i) => {
-          let priceColor = '#D4D4D4';
+          let priceColor = "#D4D4D4";
           if (i.currentDigiSellerPrice > i.currentSteamPriceRub)
-            priceColor = '#EDBE16';
+            priceColor = "#EDBE16";
           else if (i.currentDigiSellerPrice < i.currentSteamPriceRub)
-            priceColor = '#13E428';
+            priceColor = "#13E428";
 
-          let activeRow = '';
+          let activeRow = "";
           if (selectedItems.indexOf(i.id) !== -1) activeRow = css.active;
 
-          let discountEndTime = '';
+          let discountEndTime = "";
           let discountEndTimeExpired = !i.isDiscount;
           if (i.isDiscount) {
-            if(i.discountEndTime == INFINTITY_DATE){
-                discountEndTime = "∞";
-            }
-            else{
+            if (i.discountEndTime == INFINTITY_DATE) {
+              discountEndTime = "∞";
+            } else {
               var offset = new Date().getTimezoneOffset();
 
-              let det = moment(i.discountEndTime).add(-1 * offset, 'minutes');
+              let det = moment(i.discountEndTime).add(-1 * offset, "minutes");
               let last = moment.duration(det.diff(moment()));
               let hoursToShowCountDown = 24;
               if (last.asHours() > hoursToShowCountDown) {
-                discountEndTime = 'до ' + det.format('DD.MM');
+                discountEndTime = "до " + det.format("DD.MM");
               } else if (
                 last.asHours() > 0 &&
                 last.asHours() <= hoursToShowCountDown
@@ -126,16 +132,16 @@ const products = () => {
                 discountEndTime = `${last
                   .hours()
                   .toFixed(0)
-                  .padStart(2, '0')}ч. ${(last.minutes() % 60)
+                  .padStart(2, "0")}ч. ${(last.minutes() % 60)
                   .toFixed(0)
-                  .padStart(2, '0')}м.`;
+                  .padStart(2, "0")}м.`;
               } else {
                 discountEndTimeExpired = true;
               }
             }
           }
 
-          let steamPriceColor = discountEndTimeExpired ? '#D4D4D4' : '#CCCF1C';
+          let steamPriceColor = discountEndTimeExpired ? "#D4D4D4" : "#CCCF1C";
 
           const getDiffPriceInPercent = () => {
             if (i.currentSteamPriceRub === 0) return 0;
@@ -175,18 +181,24 @@ const products = () => {
                   <div className={css.game}>
                     <div>{i.appId}</div>
                     <div>
-                      ({i.subId}){' '}
+                      ({i.subId}){" "}
                       {i.isDlc && <span className={css.dlc}>DLC</span>}
                     </div>
                   </div>
                 </div>
               </td>
               <td>
-                <div className={css.cell} style={{ justifyContent: 'start' }}>
+                <div className={css.cell} style={{ justifyContent: "start" }}>
                   <div className={css.product}>
                     {/* <div>Полное название товара Digiseller</div> */}
-                    <div><span style={i.name === "Error"?{color : "#A12C2C"}:{}}>{i.name}</span></div>
-                    <div>{i.digiSellerIds && i.digiSellerIds.join(',')}</div>
+                    <div>
+                      <span
+                        style={i.name === "Error" ? { color: "#A12C2C" } : {}}
+                      >
+                        {i.name}
+                      </span>
+                    </div>
+                    <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
                   </div>
                 </div>
               </td>
@@ -196,19 +208,19 @@ const products = () => {
                     {!i.isPriceParseError && (
                       <div className={css.items}>
                         <div
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: "pointer" }}
                           onClick={async () => {
                             let item = await apiGetItem(i.id);
                             setSelectedItem(item);
-                            setStateProp('itemsMode', itemsMode[2]);
+                            setStateProp("itemsMode", itemsMode[2]);
                           }}
                         >
                           <span style={{ color: priceColor }}>
                             {i.currentDigiSellerPrice.toFixed(0)} rub
-                          </span>{' '}
-                          |{' '}
+                          </span>{" "}
+                          |{" "}
                           <span>
-                            {i.currentSteamPrice}{' '}
+                            {i.currentSteamPrice}{" "}
                             {currencyDict[i.steamCurrencyId].steamSymbol}
                           </span>
                         </div>
@@ -222,22 +234,22 @@ const products = () => {
                         <div className={css.errMes}>
                           <div>Ошибка</div>
                           <Typography
-                            aria-owns={open ? 'mouse-over-popover' : undefined}
+                            aria-owns={open ? "mouse-over-popover" : undefined}
                             aria-haspopup="true"
                             onMouseEnter={(event) => {
                               setAnchorEl(event.currentTarget);
-                              if(i.currentSteamPriceRub < 0){
+                              if (i.currentSteamPriceRub < 0) {
                                 setErrParsePriceText(
-                                  'Возможно проблема связана с парсингом цены и валютой.'
-                                )
+                                  "Возможно проблема связана с парсингом цены и валютой."
+                                );
                                 return;
                               }
                               i.isBundle
                                 ? setErrParsePriceText(
-                                    'Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно'
+                                    "Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно"
                                   )
                                 : setErrParsePriceText(
-                                    'Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены'
+                                    "Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены"
                                   );
                             }}
                             onMouseLeave={() => {
@@ -248,7 +260,7 @@ const products = () => {
                           </Typography>
                         </div>
                         <div className={css.errState}>
-                          95% - <span style={{ color: '#A12C2C' }}>ОШИБКА</span>
+                          95% - <span style={{ color: "#A12C2C" }}>ОШИБКА</span>
                         </div>
                       </div>
                     )}
@@ -270,13 +282,19 @@ const products = () => {
                     <div className={css.discount}>
                       <Section
                         className={css.badge}
-                        bgcolor={'#A9AC26'}
+                        bgcolor={"#A9AC26"}
                         height={39}
                         width={116}
                       >
                         <div className={css.text}>-{i.discountPercent}%</div>
                       </Section>
-                      <div className={css.date}>{discountEndTime == "∞"?<img src={infinity}/>:discountEndTime}</div>
+                      <div className={css.date}>
+                        {discountEndTime == "∞" ? (
+                          <img src={infinity} />
+                        ) : (
+                          discountEndTime
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -308,7 +326,7 @@ const products = () => {
               <td>
                 <div className={css.cell}>
                   <div className={css.buttons}>
-                    <div style={{ marginLeft: '30px', marginRight: '15px' }}>
+                    <div style={{ marginLeft: "30px", marginRight: "15px" }}>
                       <Switch
                         value={i.active}
                         onChange={() => {
@@ -327,8 +345,8 @@ const products = () => {
       <div
         className={
           css.massChangeMenu +
-          ' ' +
-          (selectedItems.length > 0 ? css.active : '')
+          " " +
+          (selectedItems.length > 0 ? css.active : "")
         }
       >
         <div className={css.title}>Выделено: {selectedItems.length}</div>
@@ -337,8 +355,8 @@ const products = () => {
             <Button
               text={
                 selectedItems.length === items.length
-                  ? 'Снять выделения'
-                  : 'Выделить все'
+                  ? "Снять выделения"
+                  : "Выделить все"
               }
               style={massChangeButStyle}
               onClick={() => {
@@ -352,7 +370,7 @@ const products = () => {
           </div>
           <div className={css.btnWrapper}>
             <Button
-              text={'Вкл/выкл группу'}
+              text={"Вкл/выкл группу"}
               style={massChangeButStyle}
               onClick={() => {
                 apiSetItemActiveStatus(selectedItems);
@@ -361,7 +379,7 @@ const products = () => {
           </div>
           <div className={css.btnWrapper}>
             <Button
-              text={'Массовая смена цен'}
+              text={"Массовая смена цен"}
               style={massChangeButStyle}
               onClick={() => {
                 toggleBulkEditPercentModal(true);
@@ -370,7 +388,7 @@ const products = () => {
           </div>
           <div className={css.btnWrapper}>
             <Button
-              text={'Удалить все'}
+              text={"Удалить все"}
               style={massChangeButStyle}
               onClick={() => {
                 setOpenMassDelConfirm(true);
@@ -393,7 +411,7 @@ const products = () => {
         }}
       />
       <ConfirmDialog
-        title={'Подтвердите удаление'}
+        title={"Подтвердите удаление"}
         content={`Вы действительно хотите удалить ${selectedItems.length} выделенных позиций?`}
         isOpen={openMassDelConfirm}
         onConfirm={{
@@ -410,7 +428,7 @@ const products = () => {
         }}
       />
       <ConfirmDialog
-        title={'Подтвердите удаление'}
+        title={"Подтвердите удаление"}
         content={selectedItem && selectedItem.name}
         isOpen={openDelConfirm}
         onConfirm={{
@@ -442,17 +460,17 @@ const products = () => {
       <Popover
         id={`mouse-over-popover`}
         sx={{
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
         open={open}
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: "bottom",
+          horizontal: "left",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
         onClose={() => {
           setAnchorEl(null);
@@ -461,15 +479,15 @@ const products = () => {
       >
         <Typography
           sx={{
-            width: '327px',
+            width: "327px",
             //height: '50px',
-            color: '#D4D4D4',
-            backgroundColor: '#43294B',
+            color: "#D4D4D4",
+            backgroundColor: "#43294B",
 
-            padding: '14px 21px 13px 18px',
-            fontSize: '16px',
-            lineHeight: '20px',
-            borderRadius: 'none',
+            padding: "14px 21px 13px 18px",
+            fontSize: "16px",
+            lineHeight: "20px",
+            borderRadius: "none",
           }}
         >
           <div>{errParsePriceText}</div>

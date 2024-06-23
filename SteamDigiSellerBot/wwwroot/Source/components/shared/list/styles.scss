@@ -2,7 +2,7 @@
 
 .wrapper {
     position: relative;
-
+    
     table {
         text-align: left;
         position: relative;
@@ -69,7 +69,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-
+        min-height: 600px;
         height: 100%;
         background-color: $purple-4;
         display: flex;

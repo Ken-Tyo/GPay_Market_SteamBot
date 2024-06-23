@@ -26363,6 +26363,10 @@ var state = es_entity({
   activeMenuLink: "",
   newUniqueCodes: [],
   items: [],
+  itemsResponse: {
+    loading: false,
+    errors: []
+  },
   gameSessions: [],
   gameSessionsTotal: 0,
   gameSessionsFilter: {
@@ -26409,8 +26413,11 @@ var state = es_entity({
     errors: []
   },
   itemsMode: common_itemsMode[1],
-  itemsLoading: false,
+  itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
+  changeItemBulkResponse: {
+    loading: false
+  },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
   loadProxiesModalIsOpen: false,
@@ -26628,6 +26635,7 @@ var apiFetchItems = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
+          setItemsLoading(true);
           filterDTO = structuredClone(filter);
           requestData = {
             method: "POST"
@@ -26668,17 +26676,18 @@ var apiFetchItems = /*#__PURE__*/function () {
             filterDTO.IsFilterOn = true;
           }
           requestData.body = mapToFormData(filterDTO);
-          _context6.next = 6;
+          _context6.next = 7;
           return fetch("/items/list", requestData);
-        case 6:
+        case 7:
           res = _context6.sent;
+          setItemsLoading(false);
           _context6.t0 = setItems;
-          _context6.next = 10;
+          _context6.next = 12;
           return res.json();
-        case 10:
+        case 12:
           _context6.t1 = _context6.sent;
           (0, _context6.t0)(_context6.t1);
-        case 12:
+        case 14:
         case "end":
           return _context6.stop();
       }
@@ -27638,7 +27647,10 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
       while (1) switch (_context39.prev = _context39.next) {
         case 0:
           setItemsLoading(true);
-          _context39.next = 3;
+          setStateProp("changeItemBulkResponse", {
+            loading: true
+          });
+          _context39.next = 4;
           return fetch("/items/bulk/change", {
             method: "POST",
             body: mapToFormData({
@@ -27646,13 +27658,14 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
               Ids: Ids
             })
           });
-        case 3:
+        case 4:
           res = _context39.sent;
-          _context39.next = 6;
+          setStateProp("changeItemBulkResponse", {
+            loading: false
+          });
+          _context39.next = 8;
           return apiFetchItems();
-        case 6:
-          setItemsLoading(false);
-        case 7:
+        case 8:
         case "end":
           return _context39.stop();
       }
@@ -42366,30 +42379,32 @@ var list = function list(_ref) {
   var headerIdx = 0;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_list_styles.wrapper,
-    style: {
-      overflow: isLoading ? 'hidden' : 'inherit'
-    },
-    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("table", {
-      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("thead", {
-        children: /*#__PURE__*/(0,jsx_runtime.jsx)("tr", {
-          "class": "head",
-          children: headers === null || headers === void 0 ? void 0 : headers.map(function (h) {
-            var positionCss = '';
-            if (headerIdx === 0) positionCss = shared_list_styles.first;else if (headerIdx === headers.length - 1) positionCss = shared_list_styles.last;
-            headerIdx++;
-            return /*#__PURE__*/(0,jsx_runtime.jsx)("th", {
-              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                className: positionCss,
-                children: h
-              })
-            });
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      style: {
+        overflow: isLoading ? "hidden" : "inherit"
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("table", {
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("thead", {
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("tr", {
+            "class": "head",
+            children: headers === null || headers === void 0 ? void 0 : headers.map(function (h) {
+              var positionCss = "";
+              if (headerIdx === 0) positionCss = shared_list_styles.first;else if (headerIdx === headers.length - 1) positionCss = shared_list_styles.last;
+              headerIdx++;
+              return /*#__PURE__*/(0,jsx_runtime.jsx)("th", {
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: positionCss,
+                  children: h
+                })
+              });
+            })
           })
-        })
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)("tbody", {
-        children: data === null || data === void 0 ? void 0 : data.map(function (i) {
-          return itemRenderer(i);
-        })
-      })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("tbody", {
+          children: data === null || data === void 0 ? void 0 : data.map(function (i) {
+            return itemRenderer(i);
+          })
+        })]
+      })
     }), isLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: shared_list_styles.dump,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -42397,12 +42412,14 @@ var list = function list(_ref) {
         children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
           color: "inherit",
           sx: {
-            height: '99px !important',
-            width: '99px !important'
+            height: "99px !important",
+            width: "99px !important"
           }
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        children: loadingText
+        children:
+        //Так сделано, чтобы была возможность при изменении внешних значений мог рассчитываться текст
+        loadingText()
       })]
     })]
   });
@@ -42445,6 +42462,7 @@ function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var products = function products() {
   var _state$use = state.use(),
     items = _state$use.items,
@@ -42453,7 +42471,10 @@ var products = function products() {
     editItemModalIsOpen = _state$use.editItemModalIsOpen,
     selectedItem = _state$use.selectedItem,
     selectedItems = _state$use.selectedItems,
-    currencies = _state$use.currencies;
+    currencies = _state$use.currencies,
+    itemsResponse = _state$use.itemsResponse,
+    productsFilter = _state$use.productsFilter,
+    changeItemBulkResponse = _state$use.changeItemBulkResponse;
   var _useState = (0,react.useState)(false),
     _useState2 = list_slicedToArray(_useState, 2),
     openDelConfirm = _useState2[0],
@@ -42463,7 +42484,7 @@ var products = function products() {
     openMassDelConfirm = _useState4[0],
     setOpenMassDelConfirm = _useState4[1];
   //const [editItem, setEditItem] = useState(null);
-  var _useState5 = (0,react.useState)(''),
+  var _useState5 = (0,react.useState)(""),
     _useState6 = list_slicedToArray(_useState5, 2),
     errParsePriceText = _useState6[0],
     setErrParsePriceText = _useState6[1];
@@ -42473,10 +42494,10 @@ var products = function products() {
     setAnchorEl = _React$useState2[1];
   var open = Boolean(anchorEl);
   var massChangeButStyle = {
-    width: '200px',
-    height: '49px',
-    backgroundColor: '#8A44AB',
-    fontSize: '15px'
+    width: "200px",
+    height: "49px",
+    backgroundColor: "#8A44AB",
+    fontSize: "15px"
   };
   var INFINTITY_DATE = "9999-12-31T23:59:59.999999";
   var currencyDict = {};
@@ -42484,20 +42505,20 @@ var products = function products() {
     currencyDict[c.steamId] = c;
   });
   var headers = {
-    checkbox: '',
-    game: 'Игра',
+    checkbox: "",
+    game: "Игра",
     product: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       style: {
-        display: 'flex',
-        alignItems: 'center'
+        display: "flex",
+        alignItems: "center"
       },
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         children: "\u0422\u043E\u0432\u0430\u0440"
       }), /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
         src: additem_namespaceObject,
         style: {
-          marginLeft: '10px',
-          cursor: 'pointer'
+          marginLeft: "10px",
+          cursor: "pointer"
         },
         onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee() {
           return list_regeneratorRuntime().wrap(function _callee$(_context) {
@@ -42517,44 +42538,50 @@ var products = function products() {
         }))
       })]
     }),
-    price: 'Цена',
-    lastRegion: '',
-    discount: '',
-    options: 'Опции',
-    active: ''
+    price: "Цена",
+    lastRegion: "",
+    discount: "",
+    options: "Опции",
+    active: ""
   };
+  console.log("itemsLoading " + itemsLoading);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(items),
       isLoading: itemsLoading,
-      loadingText: 'Происходит обновление цен',
+      loadingText: function loadingText() {
+        if (changeItemBulkResponse.loading) {
+          return "Происходит обновление цен";
+        }
+        return "Подгружаем товары";
+      },
       itemRenderer: function itemRenderer(i) {
-        var priceColor = '#D4D4D4';
-        if (i.currentDigiSellerPrice > i.currentSteamPriceRub) priceColor = '#EDBE16';else if (i.currentDigiSellerPrice < i.currentSteamPriceRub) priceColor = '#13E428';
-        var activeRow = '';
+        var priceColor = "#D4D4D4";
+        if (i.currentDigiSellerPrice > i.currentSteamPriceRub) priceColor = "#EDBE16";else if (i.currentDigiSellerPrice < i.currentSteamPriceRub) priceColor = "#13E428";
+        var activeRow = "";
         if (selectedItems.indexOf(i.id) !== -1) activeRow = list_styles.active;
-        var discountEndTime = '';
+        var discountEndTime = "";
         var discountEndTimeExpired = !i.isDiscount;
         if (i.isDiscount) {
           if (i.discountEndTime == INFINTITY_DATE) {
             discountEndTime = "∞";
           } else {
             var offset = new Date().getTimezoneOffset();
-            var det = moment_default()(i.discountEndTime).add(-1 * offset, 'minutes');
+            var det = moment_default()(i.discountEndTime).add(-1 * offset, "minutes");
             var last = moment_default().duration(det.diff(moment_default()()));
             var hoursToShowCountDown = 24;
             if (last.asHours() > hoursToShowCountDown) {
-              discountEndTime = 'до ' + det.format('DD.MM');
+              discountEndTime = "до " + det.format("DD.MM");
             } else if (last.asHours() > 0 && last.asHours() <= hoursToShowCountDown) {
-              discountEndTime = "".concat(last.hours().toFixed(0).padStart(2, '0'), "\u0447. ").concat((last.minutes() % 60).toFixed(0).padStart(2, '0'), "\u043C.");
+              discountEndTime = "".concat(last.hours().toFixed(0).padStart(2, "0"), "\u0447. ").concat((last.minutes() % 60).toFixed(0).padStart(2, "0"), "\u043C.");
             } else {
               discountEndTimeExpired = true;
             }
           }
         }
-        var steamPriceColor = discountEndTimeExpired ? '#D4D4D4' : '#CCCF1C';
+        var steamPriceColor = discountEndTimeExpired ? "#D4D4D4" : "#CCCF1C";
         var getDiffPriceInPercent = function getDiffPriceInPercent() {
           if (i.currentSteamPriceRub === 0) return 0;
           return (i.currentDigiSellerPrice * 100 / i.currentSteamPriceRub).toFixed(0);
@@ -42592,7 +42619,7 @@ var products = function products() {
                 children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                   children: i.appId
                 }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                  children: ["(", i.subId, ")", ' ', i.isDlc && /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                  children: ["(", i.subId, ")", " ", i.isDlc && /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
                     className: list_styles.dlc,
                     children: "DLC"
                   })]
@@ -42603,7 +42630,7 @@ var products = function products() {
             children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: list_styles.cell,
               style: {
-                justifyContent: 'start'
+                justifyContent: "start"
               },
               children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
                 className: list_styles.product,
@@ -42615,7 +42642,7 @@ var products = function products() {
                     children: i.name
                   })
                 }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  children: i.digiSellerIds && i.digiSellerIds.join(',')
+                  children: i.digiSellerIds && i.digiSellerIds.join(",")
                 })]
               })
             })
@@ -42628,7 +42655,7 @@ var products = function products() {
                   className: list_styles.items,
                   children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
                     style: {
-                      cursor: 'pointer'
+                      cursor: "pointer"
                     },
                     onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee2() {
                       var item;
@@ -42640,7 +42667,7 @@ var products = function products() {
                           case 2:
                             item = _context2.sent;
                             setSelectedItem(item);
-                            setStateProp('itemsMode', common_itemsMode[2]);
+                            setStateProp("itemsMode", common_itemsMode[2]);
                           case 5:
                           case "end":
                             return _context2.stop();
@@ -42652,8 +42679,8 @@ var products = function products() {
                         color: priceColor
                       },
                       children: [i.currentDigiSellerPrice.toFixed(0), " rub"]
-                    }), ' ', "|", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
-                      children: [i.currentSteamPrice, ' ', currencyDict[i.steamCurrencyId].steamSymbol]
+                    }), " ", "|", " ", /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                      children: [i.currentSteamPrice, " ", currencyDict[i.steamCurrencyId].steamSymbol]
                     })]
                   }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                     style: {
@@ -42668,15 +42695,15 @@ var products = function products() {
                     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                       children: "\u041E\u0448\u0438\u0431\u043A\u0430"
                     }), /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, {
-                      "aria-owns": open ? 'mouse-over-popover' : undefined,
+                      "aria-owns": open ? "mouse-over-popover" : undefined,
                       "aria-haspopup": "true",
                       onMouseEnter: function onMouseEnter(event) {
                         setAnchorEl(event.currentTarget);
                         if (i.currentSteamPriceRub < 0) {
-                          setErrParsePriceText('Возможно проблема связана с парсингом цены и валютой.');
+                          setErrParsePriceText("Возможно проблема связана с парсингом цены и валютой.");
                           return;
                         }
-                        i.isBundle ? setErrParsePriceText('Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно') : setErrParsePriceText('Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены');
+                        i.isBundle ? setErrParsePriceText("Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно") : setErrParsePriceText("Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены");
                       },
                       onMouseLeave: function onMouseLeave() {
                         setAnchorEl(null);
@@ -42689,7 +42716,7 @@ var products = function products() {
                     className: list_styles.errState,
                     children: ["95% - ", /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
                       style: {
-                        color: '#A12C2C'
+                        color: "#A12C2C"
                       },
                       children: "\u041E\u0428\u0418\u0411\u041A\u0410"
                     })]
@@ -42712,7 +42739,7 @@ var products = function products() {
                 className: list_styles.discount,
                 children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
                   className: list_styles.badge,
-                  bgcolor: '#A9AC26',
+                  bgcolor: "#A9AC26",
                   height: 39,
                   width: 116,
                   children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
@@ -42770,8 +42797,8 @@ var products = function products() {
                 className: list_styles.buttons,
                 children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                   style: {
-                    marginLeft: '30px',
-                    marginRight: '15px'
+                    marginLeft: "30px",
+                    marginRight: "15px"
                   },
                   children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
                     value: i.active,
@@ -42786,7 +42813,7 @@ var products = function products() {
         }, i.id);
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: list_styles.massChangeMenu + ' ' + (selectedItems.length > 0 ? list_styles.active : ''),
+      className: list_styles.massChangeMenu + " " + (selectedItems.length > 0 ? list_styles.active : ""),
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: list_styles.title,
         children: ["\u0412\u044B\u0434\u0435\u043B\u0435\u043D\u043E: ", selectedItems.length]
@@ -42795,7 +42822,7 @@ var products = function products() {
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: list_styles.btnWrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-            text: selectedItems.length === items.length ? 'Снять выделения' : 'Выделить все',
+            text: selectedItems.length === items.length ? "Снять выделения" : "Выделить все",
             style: massChangeButStyle,
             onClick: function onClick() {
               if (selectedItems.length === items.length) {
@@ -42810,7 +42837,7 @@ var products = function products() {
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: list_styles.btnWrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-            text: 'Вкл/выкл группу',
+            text: "Вкл/выкл группу",
             style: massChangeButStyle,
             onClick: function onClick() {
               apiSetItemActiveStatus(selectedItems);
@@ -42819,7 +42846,7 @@ var products = function products() {
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: list_styles.btnWrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-            text: 'Массовая смена цен',
+            text: "Массовая смена цен",
             style: massChangeButStyle,
             onClick: function onClick() {
               toggleBulkEditPercentModal(true);
@@ -42828,7 +42855,7 @@ var products = function products() {
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: list_styles.btnWrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-            text: 'Удалить все',
+            text: "Удалить все",
             style: massChangeButStyle,
             onClick: function onClick() {
               setOpenMassDelConfirm(true);
@@ -42847,7 +42874,7 @@ var products = function products() {
         if (newItem.id) apiChangeItem(newItem);else apiCreateItem(newItem);
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
-      title: 'Подтвердите удаление',
+      title: "Подтвердите удаление",
       content: "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C ".concat(selectedItems.length, " \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0445 \u043F\u043E\u0437\u0438\u0446\u0438\u0439?"),
       isOpen: openMassDelConfirm,
       onConfirm: {
@@ -42863,7 +42890,7 @@ var products = function products() {
         }
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
-      title: 'Подтвердите удаление',
+      title: "Подтвердите удаление",
       content: selectedItem && selectedItem.name,
       isOpen: openDelConfirm,
       onConfirm: {
@@ -42892,17 +42919,17 @@ var products = function products() {
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(Popover_Popover, {
       id: "mouse-over-popover",
       sx: {
-        pointerEvents: 'none'
+        pointerEvents: "none"
       },
       open: open,
       anchorEl: anchorEl,
       anchorOrigin: {
-        vertical: 'bottom',
-        horizontal: 'left'
+        vertical: "bottom",
+        horizontal: "left"
       },
       transformOrigin: {
-        vertical: 'top',
-        horizontal: 'left'
+        vertical: "top",
+        horizontal: "left"
       },
       onClose: function onClose() {
         setAnchorEl(null);
@@ -42910,14 +42937,14 @@ var products = function products() {
       disableRestoreFocus: true,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, {
         sx: {
-          width: '327px',
+          width: "327px",
           //height: '50px',
-          color: '#D4D4D4',
-          backgroundColor: '#43294B',
-          padding: '14px 21px 13px 18px',
-          fontSize: '16px',
-          lineHeight: '20px',
-          borderRadius: 'none'
+          color: "#D4D4D4",
+          backgroundColor: "#43294B",
+          padding: "14px 21px 13px 18px",
+          fontSize: "16px",
+          lineHeight: "20px",
+          borderRadius: "none"
         },
         children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           children: errParsePriceText
@@ -45471,9 +45498,10 @@ var select_CreateStyledListbox = function CreateStyledListbox(width, height) {
 };
 var select_StyledOption = esm_styled(Option_Option)(function (_ref3) {
   var theme = _ref3.theme;
-  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n  \n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    color: #FFFFFF;\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n    color: ").concat(theme.palette.mode === "dark" ? shared_select_grey[700] : shared_select_grey[400], ";\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    color: #FFFFFF;\n  }\n  ");
+  return "\n  font-family: 'Igra Sans';\n  list-style: none;\n  padding: 8px;\n  border-radius: 8px;\n  cursor: pointer;\n  color: #B3B3B3;\n  font-size: 14px;\n  line-height: 14px;\n  \n  &:last-of-type {\n    border-bottom: none;\n  }\n\n  &.".concat(Option_optionClasses.selected, " {\n    background-color: none;\n    \n    span {\n      color: color-mix(in srgb, currentColor, white) !important;\n    }\n  }\n\n  &.").concat(Option_optionClasses.highlighted, " {\n    background-color: none;\n    span {\n      color: color-mix(in srgb, currentColor, white) !important;\n    }\n\n  }\n\n  &.").concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected, " {\n    background-color: none;\n    span {\n      color: color-mix(in srgb, currentColor, white) !important;\n    }\n  }\n\n  &.").concat(Option_optionClasses.disabled, " {\n\n    color: ").concat(theme.palette.mode === "dark" ? shared_select_grey[700] : shared_select_grey[400], " !important;\n  }\n\n  &:hover:not(.").concat(Option_optionClasses.disabled, ") {\n    background-color: none;\n    span {\n      color: color-mix(in srgb, currentColor, white) !important;\n    }\n\n  }\n  ");
 });
 var select_StyledPopper = esm_styled(Popper_Popper)(select_templateObject || (select_templateObject = select_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
+//color-mix(in srgb, #34c9eb 20%, white);
 function select_MultipleSelectPlaceholder(_ref4) {
   var options = _ref4.options,
     multiple = _ref4.multiple,
@@ -45517,7 +45545,9 @@ function select_MultipleSelectPlaceholder(_ref4) {
           style: {
             color: i.color || "#B3B3B3"
           },
-          children: i.name
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: i.name
+          })
         }, i.name);
       })
     }), hint && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {

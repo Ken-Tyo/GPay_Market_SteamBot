@@ -8,6 +8,7 @@ export const state = entity({
   activeMenuLink: "",
   newUniqueCodes: [],
   items: [],
+  itemsResponse: { loading: false, errors: [] },
   gameSessions: [],
   gameSessionsTotal: 0,
   gameSessionsFilter: {
@@ -42,8 +43,9 @@ export const state = entity({
   editOrderResponse: { loading: false, errors: [] },
   saveBotRegionSetResponse: { loading: false, errors: [] },
   itemsMode: iMode[1],
-  itemsLoading: false,
+  itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
+  changeItemBulkResponse: { loading: false },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
   loadProxiesModalIsOpen: false,
@@ -194,6 +196,7 @@ export const setActiveMenuLink = (name) => {
 };
 const isNullOrEmpty = (target) => target != null && target != "";
 export const apiFetchItems = async (filter) => {
+  setItemsLoading(true);
   let filterDTO = structuredClone(filter);
   let requestData = { method: "POST" };
   if (filter == null) {
@@ -234,6 +237,7 @@ export const apiFetchItems = async (filter) => {
 
   requestData.body = mapToFormData(filterDTO);
   let res = await fetch("/items/list", requestData);
+  setItemsLoading(false);
   setItems(await res.json());
 };
 
@@ -650,6 +654,7 @@ export const toggleOrderCreationInfoModal = async (isOpen) => {
 
 export const apiChangeItemBulk = async (SteamPercent, Ids) => {
   setItemsLoading(true);
+  setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/change`, {
     method: "POST",
     body: mapToFormData({
@@ -657,9 +662,8 @@ export const apiChangeItemBulk = async (SteamPercent, Ids) => {
       Ids,
     }),
   });
-
+  setStateProp("changeItemBulkResponse", { loading: false });
   await apiFetchItems();
-  setItemsLoading(false);
 };
 
 export const apiChangeDigisellerData = async (data) => {
