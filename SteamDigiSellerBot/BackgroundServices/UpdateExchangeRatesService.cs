@@ -37,7 +37,7 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 var id = Guid.NewGuid();
-                _logger.LogError($"{nameof(UpdateExchangeRatesService)} ExecuteAsync Marker:{id} Start");
+                //_logger.LogError($"{nameof(UpdateExchangeRatesService)} ExecuteAsync Marker:{id} Start");
 
                 _logger.LogInformation("Exchange rates update started");
                 GC.Collect();
@@ -62,7 +62,7 @@ namespace SteamDigiSellerBot.Services
                     continue;
                 }
 
-                _logger.LogError($"{nameof(UpdateExchangeRatesService)} ExecuteAsync Marker:{id} Finish");
+                //_logger.LogError($"{nameof(UpdateExchangeRatesService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromHours(1));
             }
         }

@@ -59,7 +59,7 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 var id = Guid.NewGuid();
-                _logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Start");
+                //_logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Start");
 
                 startCount++;
                 GC.Collect();
@@ -188,7 +188,7 @@ namespace SteamDigiSellerBot.Services
                     }
                 }
 
-                _logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Finish");
+                //_logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromHours(1));
             }
         }
@@ -212,7 +212,7 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 var id = Guid.NewGuid();
-                _logger.LogError($"{nameof(UpdateBotsService)} UpdateBotState Marker:{id} Start");
+                //_logger.LogError($"{nameof(UpdateBotsService)} UpdateBotState Marker:{id} Start");
 
                 GC.Collect();
                 await using var db = _botRepository.GetContext();
@@ -235,7 +235,7 @@ namespace SteamDigiSellerBot.Services
                     }
                 }
 
-                _logger.LogError($"{nameof(UpdateBotsService)} UpdateBotState Marker:{id} Finish");
+                //_logger.LogError($"{nameof(UpdateBotsService)} UpdateBotState Marker:{id} Finish");
 
                 await Task.Delay(TimeSpan.FromMinutes(1));
             }
