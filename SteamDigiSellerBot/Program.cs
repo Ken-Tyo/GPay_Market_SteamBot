@@ -18,8 +18,8 @@ namespace SteamDigiSellerBot
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Debug)
                 //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 //.Enrich.FromLogContext()
                 .WriteTo.Console()
@@ -30,7 +30,7 @@ namespace SteamDigiSellerBot
                    //retainedFileCountLimit: 2,
                    rollOnFileSizeLimit: true,
                    shared: true,
-                   flushToDiskInterval: TimeSpan.FromSeconds(1),
+                   flushToDiskInterval: TimeSpan.FromSeconds(30),
                    restrictedToMinimumLevel: LogEventLevel.Information)
                 .WriteTo.File(
                    System.IO.Path.Combine("Logs", "warn.txt"),
@@ -39,7 +39,7 @@ namespace SteamDigiSellerBot
                    //retainedFileCountLimit: 2,
                    rollOnFileSizeLimit: true,
                    shared: true,
-                   flushToDiskInterval: TimeSpan.FromSeconds(1),
+                   flushToDiskInterval: TimeSpan.FromSeconds(6),
                    restrictedToMinimumLevel: LogEventLevel.Warning)
                 .WriteTo.File(
                    System.IO.Path.Combine("Logs", "error.txt"),
@@ -50,6 +50,15 @@ namespace SteamDigiSellerBot
                    shared: true,
                    flushToDiskInterval: TimeSpan.FromSeconds(1),
                    restrictedToMinimumLevel: LogEventLevel.Error)
+                .WriteTo.File(
+                    System.IO.Path.Combine("Logs", "debug.txt"),
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: 30 * 1024 * 1024,
+                    //retainedFileCountLimit: 2,
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(120),
+                    restrictedToMinimumLevel: LogEventLevel.Debug)
                 .CreateLogger();
 
             try
