@@ -40,7 +40,7 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 var id = Guid.NewGuid();
-                _logger.LogError($"{nameof(ItemMonitoringService)} ExecuteAsync Marker:{id} Start");
+                //_logger.LogError($"{nameof(ItemMonitoringService)} ExecuteAsync Marker:{id} Start");
 
                 GC.Collect();
                 try
@@ -76,7 +76,7 @@ namespace SteamDigiSellerBot.Services
                     _logger.LogError(default(EventId), ex, $"Monitoring Error Marker:{id}");
                 }
                 
-                _logger.LogError($"{nameof(ItemMonitoringService)} ExecuteAsync Marker:{id} Finish");
+                //_logger.LogError($"{nameof(ItemMonitoringService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromMinutes(6));
             }
         }
@@ -106,7 +106,7 @@ namespace SteamDigiSellerBot.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 var id = Guid.NewGuid();
-                _logger.LogError($"{nameof(DiscountMonitoringService)} ExecuteAsync Marker:{id} Start");
+                //_logger.LogError($"{nameof(DiscountMonitoringService)} ExecuteAsync Marker:{id} Start");
                 GC.Collect();
                 try
                 {
@@ -132,7 +132,7 @@ namespace SteamDigiSellerBot.Services
                     _logger.LogError(default(EventId), ex, $"{nameof(DiscountMonitoringService)} Error Marker:{id}");
                 }
 
-                _logger.LogError($"{nameof(DiscountMonitoringService)} ExecuteAsync Marker:{id} Finish");
+                //_logger.LogError($"{nameof(DiscountMonitoringService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromMinutes(3), stoppingToken);
             }
         }

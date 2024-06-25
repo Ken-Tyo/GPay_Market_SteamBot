@@ -16,7 +16,7 @@
   },
   "orderState": {
     "title": "Order state",
-    "steamUrlInfo1": "1. You can enter a quick invite link or a friend code to your Steam account, in which case the deal will go faster. You can find her in the Steam tabs: \"Friends\" > \"Add as Friend\"",
+    "steamUrlInfo1": "1. You can enter a quick invite link or a friend code to your Steam account, in which case the deal will go faster. You can find it in the Steam tabs: \"Friends\" > \"Add as Friend\"",
     "steamUrlInfo2": "2. You can enter a link to your Steam profile, for this you need to open your profile, right-click on the free field in the profile, then click \"copy link address\" in the drop-down list",
     "inputPlaceholder": "Link entered",
     "inputAcceptBut": "Сonfirm",
