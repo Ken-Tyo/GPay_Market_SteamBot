@@ -61,7 +61,6 @@ export const state = entity({
   botDetailsModalIsOpen: false,
   orderCreationInfoIsOpen: false,
   wsconn: null,
-  justText: true,
 });
 
 export const initAdmin = async () => {
