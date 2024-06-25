@@ -26432,7 +26432,8 @@ var state = es_entity({
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
   orderCreationInfoIsOpen: false,
-  wsconn: null
+  wsconn: null,
+  justText: true
 });
 var initAdmin = /*#__PURE__*/function () {
   var _ref = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee2() {
