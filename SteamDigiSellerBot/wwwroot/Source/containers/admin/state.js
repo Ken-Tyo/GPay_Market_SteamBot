@@ -98,11 +98,6 @@ export const initAdmin = async () => {
 
     await connection.start();
   }
-
-  // .then(() => {})
-  // .catch((err) => {
-  //   console.log(err);
-  // });
 };
 
 export const initBotsPage = async () => {
