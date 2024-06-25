@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import css from "./styles.scss";
 
-const list = ({ data, headers, itemRenderer, isLoading, loadingText }) => {
+const list = ({
+  data,
+  headers,
+  itemRenderer,
+  isLoading,
+  loadingText,
+  itemsRenderer = null,
+}) => {
   let headerIdx = 0;
 
   return (
@@ -27,9 +34,11 @@ const list = ({ data, headers, itemRenderer, isLoading, loadingText }) => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((i) => {
-              return itemRenderer(i);
-            })}
+            {itemsRenderer != null
+              ? itemsRenderer(itemRenderer, data)
+              : data?.map((i) => {
+                  return itemRenderer(i);
+                })}
 
             {/* {isLoading && (
               <tr>

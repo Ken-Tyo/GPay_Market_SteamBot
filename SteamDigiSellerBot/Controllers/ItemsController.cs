@@ -68,6 +68,7 @@ namespace SteamDigiSellerBot.Controllers
         [Route("items/list")]
         public async Task<IActionResult> GetItems([MaybeNull] ProductsFilter productsFilter)
         {
+            //await Task.Delay(TimeSpan.FromSeconds(3));
             List<Item> items;
             if(productsFilter.IsFilterOn)
             {

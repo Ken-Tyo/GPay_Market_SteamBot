@@ -50,11 +50,11 @@ const products = () => {
 
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
-  //const [editItem, setEditItem] = useState(null);
+  //const [itemsMounting, setItemsMounting] = useState(false);
   const [errParsePriceText, setErrParsePriceText] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
+  let itemsMounting = false;
   const massChangeButStyle = {
     width: "200px",
     height: "49px",
@@ -96,12 +96,20 @@ const products = () => {
       <List
         headers={Object.values(headers)}
         data={[...items]}
-        isLoading={itemsLoading}
+        isLoading={itemsLoading && itemsMounting}
         loadingText={() => {
           if (changeItemBulkResponse.loading) {
             return "Происходит обновление цен";
           }
           return "Подгружаем товары";
+        }}
+        itemsRenderer={(itemRenderer, data) => {
+          itemsMounting = true;
+          console.log("itemsMounting " + itemsMounting);
+          var result = data?.map((e) => itemRenderer(e));
+          itemsMounting = false;
+          console.log("itemsMounting " + itemsMounting);
+          return result;
         }}
         itemRenderer={(i) => {
           let priceColor = "#D4D4D4";
