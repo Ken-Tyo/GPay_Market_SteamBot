@@ -50,15 +50,15 @@ namespace SteamDigiSellerBot
                    shared: true,
                    flushToDiskInterval: TimeSpan.FromSeconds(1),
                    restrictedToMinimumLevel: LogEventLevel.Error)
-                .WriteTo.File(
-                    System.IO.Path.Combine("Logs", "debug.txt"),
-                    rollingInterval: RollingInterval.Day,
-                    fileSizeLimitBytes: 30 * 1024 * 1024,
-                    //retainedFileCountLimit: 2,
-                    rollOnFileSizeLimit: true,
-                    shared: true,
-                    flushToDiskInterval: TimeSpan.FromSeconds(120),
-                    restrictedToMinimumLevel: LogEventLevel.Debug)
+                //.WriteTo.File(
+                //    System.IO.Path.Combine("Logs", "debug.txt"),
+                //    rollingInterval: RollingInterval.Day,
+                //    fileSizeLimitBytes: 30 * 1024 * 1024,
+                //    //retainedFileCountLimit: 2,
+                //    rollOnFileSizeLimit: true,
+                //    shared: true,
+                //    flushToDiskInterval: TimeSpan.FromSeconds(120),
+                //    restrictedToMinimumLevel: LogEventLevel.Debug)
                 .CreateLogger();
 
             try
