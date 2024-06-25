@@ -68,7 +68,6 @@ namespace SteamDigiSellerBot.Controllers
         [Route("items/list")]
         public async Task<IActionResult> GetItems([MaybeNull] ProductsFilter productsFilter)
         {
-
             List<Item> items;
             if(productsFilter.IsFilterOn)
             {

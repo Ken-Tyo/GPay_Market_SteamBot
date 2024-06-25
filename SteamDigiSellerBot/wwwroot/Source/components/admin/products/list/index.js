@@ -52,6 +52,7 @@ const products = () => {
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
   //const [editItem, setEditItem] = useState(null);
   const [errParsePriceText, setErrParsePriceText] = useState("");
+  const [listIsMounted, setListIsMounted] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -90,18 +91,20 @@ const products = () => {
     active: "",
   };
   console.log("itemsLoading " + itemsLoading);
+
   return (
     <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
         data={[...items]}
-        isLoading={itemsLoading}
+        isLoading={itemsLoading && !listIsMounted}
         loadingText={() => {
           if (changeItemBulkResponse.loading) {
             return "Происходит обновление цен";
           }
           return "Подгружаем товары";
         }}
+        componentDidMount={setListIsMounted}
         itemRenderer={(i) => {
           let priceColor = "#D4D4D4";
           if (i.currentDigiSellerPrice > i.currentSteamPriceRub)

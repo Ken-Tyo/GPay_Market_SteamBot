@@ -2,9 +2,19 @@ import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import css from "./styles.scss";
 
-const list = ({ data, headers, itemRenderer, isLoading, loadingText }) => {
+const list = ({
+  data,
+  headers,
+  itemRenderer,
+  isLoading,
+  loadingText,
+  componentDidMount,
+}) => {
   let headerIdx = 0;
-
+  useEffect(() => {
+    componentDidMount(true);
+    return componentDidMount(false);
+  });
   return (
     <div className={css.wrapper}>
       <div style={{ overflow: isLoading ? "hidden" : "inherit" }}>
