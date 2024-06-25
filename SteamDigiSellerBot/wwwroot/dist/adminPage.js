@@ -42375,13 +42375,8 @@ var list = function list(_ref) {
     headers = _ref.headers,
     itemRenderer = _ref.itemRenderer,
     isLoading = _ref.isLoading,
-    loadingText = _ref.loadingText,
-    componentDidMount = _ref.componentDidMount;
+    loadingText = _ref.loadingText;
   var headerIdx = 0;
-  (0,react.useEffect)(function () {
-    componentDidMount(true);
-    return componentDidMount(false);
-  });
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -42493,10 +42488,6 @@ var products = function products() {
     _useState6 = list_slicedToArray(_useState5, 2),
     errParsePriceText = _useState6[0],
     setErrParsePriceText = _useState6[1];
-  var _useState7 = (0,react.useState)(false),
-    _useState8 = list_slicedToArray(_useState7, 2),
-    listIsMounted = _useState8[0],
-    setListIsMounted = _useState8[1];
   var _React$useState = react.useState(null),
     _React$useState2 = list_slicedToArray(_React$useState, 2),
     anchorEl = _React$useState2[0],
@@ -42559,14 +42550,13 @@ var products = function products() {
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(items),
-      isLoading: itemsLoading && !listIsMounted,
+      isLoading: itemsLoading,
       loadingText: function loadingText() {
         if (changeItemBulkResponse.loading) {
           return "Происходит обновление цен";
         }
         return "Подгружаем товары";
       },
-      componentDidMount: setListIsMounted,
       itemRenderer: function itemRenderer(i) {
         var priceColor = "#D4D4D4";
         if (i.currentDigiSellerPrice > i.currentSteamPriceRub) priceColor = "#EDBE16";else if (i.currentDigiSellerPrice < i.currentSteamPriceRub) priceColor = "#13E428";
