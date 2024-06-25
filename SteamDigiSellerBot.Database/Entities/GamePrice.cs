@@ -25,5 +25,9 @@ namespace SteamDigiSellerBot.Database.Entities
 
             return ((OriginalSteamPrice - CurrentSteamPrice) * 100) / OriginalSteamPrice;
         }
+
+        // TODO: плохой признак, стоит поменять на bool поле просто
+        [NotMapped]
+        public bool IsPriceWithError { get => CurrentSteamPrice == 9999; }
     }
 }
