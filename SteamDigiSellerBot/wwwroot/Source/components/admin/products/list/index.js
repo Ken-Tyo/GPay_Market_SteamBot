@@ -88,9 +88,6 @@ const products = () => {
     options: "Опции",
     active: "",
   };
-  if (itemsLoading == true) {
-    setItemsMounting(true);
-  }
   return (
     <div className={css.wrapper}>
       <List

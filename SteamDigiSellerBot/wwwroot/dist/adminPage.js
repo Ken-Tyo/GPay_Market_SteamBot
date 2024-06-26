@@ -42603,9 +42603,6 @@ var products = function products() {
     options: "Опции",
     active: ""
   };
-  if (itemsLoading == true) {
-    setItemsMounting(true);
-  }
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
