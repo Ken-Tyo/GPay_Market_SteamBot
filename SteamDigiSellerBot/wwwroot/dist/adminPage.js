@@ -42560,15 +42560,14 @@ var products = function products() {
     options: "Опции",
     active: ""
   };
-  console.log("itemsLoading " + itemsLoading);
-  console.log("itemsMounting " + itemsMounting);
   (0,react.useEffect)(function () {
     if (items != null) {
       debugger;
       setItemsMounting(true);
       setTimeout(function () {
-        return setItemsMounting(false);
-      }, 10 * items.length);
+        setItemsMounting(false);
+        console.log("setItemsMounting");
+      }, 3 * items.length);
     }
   }, [items]);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {

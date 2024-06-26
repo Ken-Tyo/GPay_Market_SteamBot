@@ -88,13 +88,15 @@ const products = () => {
     options: "Опции",
     active: "",
   };
-  console.log("itemsLoading " + itemsLoading);
-  console.log("itemsMounting " + itemsMounting);
+
   useEffect(() => {
     if (items != null) {
       debugger;
       setItemsMounting(true);
-      setTimeout(() => setItemsMounting(false), 10 * items.length);
+      setTimeout(() => {
+        setItemsMounting(false);
+        console.log("setItemsMounting");
+      }, 3 * items.length);
     }
   }, [items]);
   return (
