@@ -67,8 +67,7 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost]
         [Route("items/list")]
         public async Task<IActionResult> GetItems([MaybeNull] ProductsFilter productsFilter)
-        {
-            //await Task.Delay(TimeSpan.FromSeconds(3));
+        {  
             List<Item> items;
             if(productsFilter.IsFilterOn)
             {
@@ -121,7 +120,7 @@ namespace SteamDigiSellerBot.Controllers
                 }
             }
             await _itemRepository.DeactivateItemAfterErrorAsync(items.Where(e => itemsForDeactivate.Contains(e.Id)).ToList());
-
+            //await Task.Delay(TimeSpan.FromSeconds(3));
             return Ok(itemsView);
         }
 

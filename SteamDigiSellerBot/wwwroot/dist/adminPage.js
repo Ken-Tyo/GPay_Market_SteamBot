@@ -42376,9 +42376,20 @@ var list = function list(_ref) {
     itemRenderer = _ref.itemRenderer,
     isLoading = _ref.isLoading,
     loadingText = _ref.loadingText,
-    _ref$itemsRenderer = _ref.itemsRenderer,
-    itemsRenderer = _ref$itemsRenderer === void 0 ? null : _ref$itemsRenderer;
+    _ref$componentDidMoun = _ref.componentDidMount,
+    componentDidMount = _ref$componentDidMoun === void 0 ? null : _ref$componentDidMoun;
   var headerIdx = 0;
+  (0,react.useEffect)(function () {
+    console.log("useEffect");
+    if (componentDidMount != null) {
+      componentDidMount(false);
+    }
+    return function () {
+      if (componentDidMount != null) {
+        componentDidMount(true);
+      }
+    };
+  }, [data]);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -42402,7 +42413,7 @@ var list = function list(_ref) {
             })
           })
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("tbody", {
-          children: itemsRenderer != null ? itemsRenderer(itemRenderer, data) : data === null || data === void 0 ? void 0 : data.map(function (i) {
+          children: data === null || data === void 0 ? void 0 : data.map(function (i) {
             return itemRenderer(i);
           })
         })]
@@ -42485,17 +42496,19 @@ var products = function products() {
     _useState4 = list_slicedToArray(_useState3, 2),
     openMassDelConfirm = _useState4[0],
     setOpenMassDelConfirm = _useState4[1];
-  //const [itemsMounting, setItemsMounting] = useState(false);
-  var _useState5 = (0,react.useState)(""),
+  var _useState5 = (0,react.useState)(true),
     _useState6 = list_slicedToArray(_useState5, 2),
-    errParsePriceText = _useState6[0],
-    setErrParsePriceText = _useState6[1];
+    itemsMounting = _useState6[0],
+    setItemsMounting = _useState6[1];
+  var _useState7 = (0,react.useState)(""),
+    _useState8 = list_slicedToArray(_useState7, 2),
+    errParsePriceText = _useState8[0],
+    setErrParsePriceText = _useState8[1];
   var _React$useState = react.useState(null),
     _React$useState2 = list_slicedToArray(_React$useState, 2),
     anchorEl = _React$useState2[0],
     setAnchorEl = _React$useState2[1];
   var open = Boolean(anchorEl);
-  var itemsMounting = false;
   var massChangeButStyle = {
     width: "200px",
     height: "49px",
@@ -42548,27 +42561,27 @@ var products = function products() {
     active: ""
   };
   console.log("itemsLoading " + itemsLoading);
+  console.log("itemsMounting " + itemsMounting);
+  (0,react.useEffect)(function () {
+    if (items != null) {
+      debugger;
+      setItemsMounting(true);
+      setTimeout(function () {
+        return setItemsMounting(false);
+      }, 10 * items.length);
+    }
+  }, [items]);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(items),
-      isLoading: itemsLoading && itemsMounting,
+      isLoading: itemsLoading || itemsMounting,
       loadingText: function loadingText() {
         if (changeItemBulkResponse.loading) {
           return "Происходит обновление цен";
         }
         return "Подгружаем товары";
-      },
-      itemsRenderer: function itemsRenderer(itemRenderer, data) {
-        itemsMounting = true;
-        console.log("itemsMounting " + itemsMounting);
-        var result = data === null || data === void 0 ? void 0 : data.map(function (e) {
-          return itemRenderer(e);
-        });
-        itemsMounting = false;
-        console.log("itemsMounting " + itemsMounting);
-        return result;
       },
       itemRenderer: function itemRenderer(i) {
         var priceColor = "#D4D4D4";

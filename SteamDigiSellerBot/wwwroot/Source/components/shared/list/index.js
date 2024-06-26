@@ -8,10 +8,20 @@ const list = ({
   itemRenderer,
   isLoading,
   loadingText,
-  itemsRenderer = null,
+  componentDidMount = null,
 }) => {
   let headerIdx = 0;
-
+  useEffect(() => {
+    console.log("useEffect");
+    if (componentDidMount != null) {
+      componentDidMount(false);
+    }
+    return () => {
+      if (componentDidMount != null) {
+        componentDidMount(true);
+      }
+    };
+  }, [data]);
   return (
     <div className={css.wrapper}>
       <div style={{ overflow: isLoading ? "hidden" : "inherit" }}>
@@ -33,32 +43,7 @@ const list = ({
               })}
             </tr>
           </thead>
-          <tbody>
-            {itemsRenderer != null
-              ? itemsRenderer(itemRenderer, data)
-              : data?.map((i) => {
-                  return itemRenderer(i);
-                })}
-
-            {/* {isLoading && (
-              <tr>
-                <td colSpan={headers.length}>
-                  <div className={css.dump}>
-                    <div className={css.loader}>
-                      <CircularProgress
-                        color="inherit"
-                        sx={{
-                          height: '99px !important',
-                          width: '99px !important',
-                        }}
-                      />
-                    </div>
-                    <div>{loadingText}</div>
-                  </div>
-                </td>
-              </tr>
-            )} */}
-          </tbody>
+          <tbody>{data?.map((i) => itemRenderer(i))}</tbody>
         </table>
       </div>
 
