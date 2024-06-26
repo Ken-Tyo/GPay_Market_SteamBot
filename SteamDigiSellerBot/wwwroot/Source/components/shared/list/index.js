@@ -2,6 +2,31 @@ import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import css from "./styles.scss";
 
+class InList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { date: new Date() };
+    this.callOnRender = this.callOnRender.bind(this);
+  }
+  callOnRender(value) {
+    console.log("onRender " + value);
+    if (this.props.onRender != null) {
+      this.props.onRender(value);
+    }
+  }
+
+  componentDidMount() {
+    this.callOnRender(false);
+  }
+
+  componentWillUnmount() {}
+
+  render() {
+    return (
+      <tbody>{this.props.data?.map((i) => this.props.itemRenderer(i))}</tbody>
+    );
+  }
+}
 const list = ({
   data,
   headers,
@@ -11,17 +36,6 @@ const list = ({
   componentDidMount = null,
 }) => {
   let headerIdx = 0;
-  useEffect(() => {
-    console.log("useEffect");
-    if (componentDidMount != null) {
-      componentDidMount(false);
-    }
-    return () => {
-      if (componentDidMount != null) {
-        componentDidMount(true);
-      }
-    };
-  }, [data]);
   return (
     <div className={css.wrapper}>
       <div style={{ overflow: isLoading ? "hidden" : "inherit" }}>
@@ -43,7 +57,13 @@ const list = ({
               })}
             </tr>
           </thead>
-          <tbody>{data?.map((i) => itemRenderer(i))}</tbody>
+          {
+            <InList
+              data={data}
+              onRender={componentDidMount}
+              itemRenderer={itemRenderer}
+            />
+          }
         </table>
       </div>
 

@@ -88,23 +88,18 @@ const products = () => {
     options: "Опции",
     active: "",
   };
-
-  useEffect(() => {
-    if (items != null) {
-      debugger;
-      setItemsMounting(true);
-      setTimeout(() => {
-        setItemsMounting(false);
-        console.log("setItemsMounting");
-      }, 3 * items.length);
-    }
-  }, [items]);
+  if (itemsLoading == true) {
+    setItemsMounting(true);
+  }
   return (
     <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
         data={[...items]}
         isLoading={itemsLoading || itemsMounting}
+        componentDidMount={(isMounting) => {
+          setItemsMounting(isMounting);
+        }}
         loadingText={() => {
           if (changeItemBulkResponse.loading) {
             return "Происходит обновление цен";
