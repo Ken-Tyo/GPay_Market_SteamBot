@@ -1221,19 +1221,19 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 try
                 {
-                    readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
-                    if (readyState != GameReadyToSendStatus.ready)
-                    {
-                        sendStatus = SendGameStatus.otherError;
-                        if (readyState == GameReadyToSendStatus.botsAreBusy)
-                        {
-                            sendStatus = SendGameStatus.botsAreBusy;
-                            //gs.Bot = null;
-                            //await _gameSessionRepository.EditAsync(gs);
-                        }
+                    //readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
+                    //if (readyState != GameReadyToSendStatus.ready)
+                    //{
+                    //    sendStatus = SendGameStatus.otherError;
+                    //    if (readyState == GameReadyToSendStatus.botsAreBusy)
+                    //    {
+                    //        sendStatus = SendGameStatus.botsAreBusy;
+                    //        //gs.Bot = null;
+                    //        //await _gameSessionRepository.EditAsync(gs);
+                    //    }
 
-                        return (sendStatus, readyState);
-                    }
+                    //    return (sendStatus, readyState);
+                    //}
 
                     var sendRes = await sbot.SendGameProto(
                         uint.Parse(gs.Item.AppId),
