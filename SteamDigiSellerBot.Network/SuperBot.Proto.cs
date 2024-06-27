@@ -300,7 +300,7 @@ namespace SteamDigiSellerBot.Network
                 }
                 finally
                 {
-                    BusyState.Release();
+      
                 }
 
             //return new SendGameResponse()
