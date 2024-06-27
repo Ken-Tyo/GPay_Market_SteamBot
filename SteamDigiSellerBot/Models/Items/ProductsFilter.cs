@@ -24,7 +24,7 @@ namespace SteamDigiSellerBot.Models.Items
 
         public string hierarchyParams_compareSign { get; set; }
 
-        public int? hierarchyParams_percentDiff { get; set; }
+        public decimal? hierarchyParams_percentDiff { get; set; }
 
         public bool? hierarchyParams_isActiveHierarchyOn { get; set; }
 

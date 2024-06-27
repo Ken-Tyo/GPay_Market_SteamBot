@@ -32,7 +32,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? hierarchyParams_targetSteamCurrencyId,
             int? hierarchyParams_baseSteamCurrencyId,
             string hierarchyParams_compareSign,
-            int? hierarchyParams_percentDiff,
+            decimal? hierarchyParams_percentDiff,
             bool? hierarchyParams_isActiveHierarchyOn,
             bool? thirdPartyPriceType,
             int? thirdPartyPriceValue);
@@ -78,7 +78,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? hierarchyParams_targetSteamCurrencyId,
             int? hierarchyParams_baseSteamCurrencyId,
             string hierarchyParams_compareSign,
-            int? hierarchyParams_percentDiff,
+            decimal? hierarchyParams_percentDiff,
             bool? hierarchyParams_isActiveHierarchyOn,
             bool? thirdPartyPriceType,
             int? thirdPartyPriceValue)
@@ -174,61 +174,123 @@ namespace SteamDigiSellerBot.Database.Repositories
             List<Item> finalResult;
             try
             {
-                List<decimal?> debugResult = new List<decimal?>();
+                List<(decimal?, bool)> debugResult = new List<(decimal?, bool)>();
                 if (!hierarchyParamsIsValid())
                 {
                     finalResult = await sortedQuery.ToListAsync();
                 }
                 else
                 {
-                    var res = sortedQuery
-                                .Select(e => 
-                                    new { 
+                    finalResult = new List<Item>();
+                    if (hierarchyParams_isActiveHierarchyOn == true)
+                    {
+                        var res = sortedQuery
+                                .Select(e =>
+                                    new
+                                    {
                                         Item = e,
                                         targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
-                                        baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)})
+                                        baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)
+                                    })
                                 .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
                                 .ToList();
 
-                    finalResult = new List<Item>();
-                    Func<decimal, decimal, bool> compareFunc = hierarchyParams_compareSign switch
-                    {
-                        ">=" => MoreOrEqual,
-                        "=<" => LessOrEqual,
-                        "<>" => MoreOrLessEqual,
-                        _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
-                    };
 
-                    decimal targetDiff = hierarchyParams_compareSign switch
-                    {
-                        ">=" => Math.Abs(hierarchyParams_percentDiff.Value),
-                        "=<" => -Math.Abs(hierarchyParams_percentDiff.Value),
-                        "<>" => Math.Abs(hierarchyParams_percentDiff.Value),
-                        _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
-                    };
-                    foreach (var e in res)
-                    {
-                        var targetGamePrice = e.targetGamePrice;
-                        var baseGamePrice = e.baseGamePrice;
-
-                        if ((targetGamePrice?.CurrentSteamPrice).HasValue && (baseGamePrice?.CurrentSteamPrice).HasValue)
+                        Func<decimal, decimal, bool> compareFunc = hierarchyParams_compareSign switch
                         {
-                            if (targetGamePrice.IsPriceWithError || baseGamePrice.IsPriceWithError)
-                            {
-                                continue;
-                            }
-                            //Конвертирование в рубль
-                            var targetRubPrice = ExchangeHelper.Convert(targetGamePrice.CurrentSteamPrice, currencies[targetGamePrice.SteamCurrencyId], rub);
-                            var baseRubPrice = ExchangeHelper.Convert(baseGamePrice.CurrentSteamPrice, currencies[baseGamePrice.SteamCurrencyId], rub);
+                            ">=" => MoreOrEqual,
+                            "=<" => LessOrEqual,
+                            "<>" => MoreOrLessEqual,
+                            _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+                        };
 
-                            
-                            var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
-                            debugResult.Add(diffPrice);
-                            if (compareFunc(diffPrice, targetDiff))
+                        decimal targetDiff = hierarchyParams_compareSign switch
+                        {
+                            ">=" => Math.Abs(hierarchyParams_percentDiff.Value),
+                            "=<" => -Math.Abs(hierarchyParams_percentDiff.Value),
+                            "<>" => Math.Abs(hierarchyParams_percentDiff.Value),
+                            _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+                        };
+                        foreach (var e in res)
+                        {
+                            var targetGamePrice = e.targetGamePrice;
+                            var baseGamePrice = e.baseGamePrice;
+
+                            if ((targetGamePrice?.CurrentSteamPrice).HasValue && (baseGamePrice?.CurrentSteamPrice).HasValue)
                             {
-                                finalResult.Add(e.Item);
+                                if (targetGamePrice.IsPriceWithError || baseGamePrice.IsPriceWithError)
+                                {
+                                    continue;
+                                }
+                                //Конвертирование в рубль
+                                var targetRubPrice = ExchangeHelper.Convert(targetGamePrice.CurrentSteamPrice, currencies[targetGamePrice.SteamCurrencyId], rub);
+                                var baseRubPrice = ExchangeHelper.Convert(baseGamePrice.CurrentSteamPrice, currencies[baseGamePrice.SteamCurrencyId], rub);
+
+
+                                var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
+                                debugResult.Add((diffPrice, baseGamePrice.IsPriority));
+                                if (compareFunc(diffPrice, targetDiff))
+                                {
+                                    finalResult.Add(e.Item);
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+
+                        var res = sortedQuery
+                                .Select(e =>
+                                    new
+                                    {
+                                        Item = e,
+                                        targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
+                                        baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId && e.IsPriority == false)
+                                    })
+                                .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                                .ToList();
+
+
+                        Func<decimal, decimal, bool> compareFunc = hierarchyParams_compareSign switch
+                        {
+                            ">=" => MoreOrEqual,
+                            "=<" => LessOrEqual,
+                            "<>" => MoreOrLessEqual,
+                            _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+                        };
+
+                        decimal targetDiff = hierarchyParams_compareSign switch
+                        {
+                            ">=" => Math.Abs(hierarchyParams_percentDiff.Value),
+                            "=<" => -Math.Abs(hierarchyParams_percentDiff.Value),
+                            "<>" => Math.Abs(hierarchyParams_percentDiff.Value),
+                            _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
+                        };
+                        foreach (var e in res)
+                        {
+                            var targetGamePrice = e.targetGamePrice;
+                            var baseGamePrice = e.baseGamePrice;
+
+                            if ((targetGamePrice?.CurrentSteamPrice).HasValue && (baseGamePrice?.CurrentSteamPrice).HasValue)
+                            {
+                                if (targetGamePrice.IsPriceWithError || baseGamePrice.IsPriceWithError)
+                                {
+                                    continue;
+                                }
+                                //Конвертирование в рубль
+                                var targetRubPrice = ExchangeHelper.Convert(targetGamePrice.CurrentSteamPrice, currencies[targetGamePrice.SteamCurrencyId], rub);
+                                var baseRubPrice = ExchangeHelper.Convert(baseGamePrice.CurrentSteamPrice, currencies[baseGamePrice.SteamCurrencyId], rub);
+
+
+                                var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
+                                debugResult.Add((diffPrice, baseGamePrice.IsPriority));
+                                if (compareFunc(diffPrice, targetDiff))
+                                {
+                                    finalResult.Add(e.Item);
+                                }
+                            }
+                        }
+
                     }
                 }
             }
