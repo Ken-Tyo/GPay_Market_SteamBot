@@ -52,8 +52,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                     int delayCounter = 0;
                     foreach (var gs in sess)
                     {
-                        //tasks.Add(Task.Factory.StartNew(async () =>
-                        //{
+                        tasks.Add(Task.Factory.StartNew(async () =>
+                        {
                             try
                             {
                                 //if (!q.ContainsKey(gs.Id))
@@ -80,26 +80,23 @@ namespace SteamDigiSellerBot.Services.Implementation
                                     }
                                 );
 
-                                //!!!!!!!!!!!!!!!!
-                                //РАСКОМЕНТИТЬ, КАК ТОЛЬКО ПОЧИНИТЬСЯ ОТПРАВКА
-                                return;
                             }
                             catch (Exception ex)
                             {
                                 _logger.LogError(ex, $"SendGameGSQ GS ID {gs.Id}");
                             }
-                        //}));
-                        //delayCounter++;
-                        //if (delayCounter % 10 == 0)
-                        //    await Task.Delay(TimeSpan.FromMinutes(1));
+                        }));
+                        delayCounter++;
+                        if (delayCounter % 10 == 0)
+                            await Task.Delay(TimeSpan.FromMinutes(1));
                     }
 
-                    //await Task.Delay(1000);
-                    //await Task.WhenAll(tasks.ToArray());
+                    await Task.Delay(1000);
+                    await Task.WhenAll(tasks.ToArray());
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    _logger.LogError(ex, $"SendGameGSQ");
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
