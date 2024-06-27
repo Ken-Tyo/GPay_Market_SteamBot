@@ -1,32 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import css from "./styles.scss";
+import { ViewportList } from "react-viewport-list";
 
-class InList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { date: new Date() };
-    this.callOnRender = this.callOnRender.bind(this);
-  }
-  callOnRender(value) {
-    console.log("onRender " + value);
-    if (this.props.onRender != null) {
-      this.props.onRender(value);
-    }
-  }
-
-  componentDidMount() {
-    this.callOnRender(false);
-  }
-
-  componentWillUnmount() {}
-
-  render() {
-    return (
-      <tbody>{this.props.data?.map((i) => this.props.itemRenderer(i))}</tbody>
-    );
-  }
-}
 const list = ({
   data,
   headers,
@@ -36,37 +12,9 @@ const list = ({
   componentDidMount = null,
 }) => {
   let headerIdx = 0;
+  const ref = useRef(null);
   return (
     <div className={css.wrapper}>
-      <div style={{ overflow: isLoading ? "hidden" : "inherit" }}>
-        <table>
-          <thead>
-            <tr class="head">
-              {headers?.map((h) => {
-                let positionCss = "";
-                if (headerIdx === 0) positionCss = css.first;
-                else if (headerIdx === headers.length - 1)
-                  positionCss = css.last;
-
-                headerIdx++;
-                return (
-                  <th>
-                    <div className={positionCss}>{h}</div>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          {
-            <InList
-              data={data}
-              onRender={componentDidMount}
-              itemRenderer={itemRenderer}
-            />
-          }
-        </table>
-      </div>
-
       {isLoading && (
         <div className={css.dump}>
           <div className={css.loader}>
@@ -86,6 +34,41 @@ const list = ({
           </div>
         </div>
       )}
+      <div style={{ overflow: isLoading ? "hidden" : "inherit" }}>
+        <table>
+          <thead>
+            <tr class="head">
+              {headers?.map((h) => {
+                let positionCss = "";
+                if (headerIdx === 0) positionCss = css.first;
+                else if (headerIdx === headers.length - 1)
+                  positionCss = css.last;
+
+                headerIdx++;
+                return (
+                  <th>
+                    <div className={positionCss}>{h}</div>
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+
+          <tbody className="scroll-container" ref={ref}>
+            {
+              <ViewportList
+                viewportRef={ref}
+                items={data}
+                itemMinSize={40}
+                margin={8}
+                overscan={15}
+              >
+                {(i) => itemRenderer(i)}
+              </ViewportList>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

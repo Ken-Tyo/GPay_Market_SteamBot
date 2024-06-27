@@ -25233,6 +25233,540 @@ if (true) {
 
 /***/ }),
 
+/***/ 7808:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+var __webpack_unused_export__;
+
+__webpack_unused_export__ = ({ value: true });
+exports.h = void 0;
+const jsx_runtime_1 = __webpack_require__(4848);
+const react_1 = __webpack_require__(6540);
+const IS_SSR = typeof window === 'undefined';
+const IS_TOUCH_DEVICE = !IS_SSR &&
+    (() => {
+        try {
+            return 'ontouchstart' in window || navigator.maxTouchPoints;
+        }
+        catch (_a) {
+            return false;
+        }
+    })();
+const IS_OVERFLOW_ANCHOR_SUPPORTED = !IS_SSR &&
+    (() => {
+        try {
+            return window.CSS.supports('overflow-anchor: auto');
+        }
+        catch (_a) {
+            return false;
+        }
+    })();
+const SHOULD_DELAY_SCROLL = IS_TOUCH_DEVICE && !IS_OVERFLOW_ANCHOR_SUPPORTED;
+const PROP_NAME_FOR_Y_AXIS = {
+    top: 'top',
+    bottom: 'bottom',
+    clientHeight: 'clientHeight',
+    scrollHeight: 'scrollHeight',
+    scrollTop: 'scrollTop',
+    overflowY: 'overflowY',
+    height: 'height',
+    minHeight: 'minHeight',
+    maxHeight: 'maxHeight',
+    marginTop: 'marginTop',
+};
+const PROP_NAME_FOR_X_AXIS = {
+    top: 'left',
+    bottom: 'right',
+    scrollHeight: 'scrollWidth',
+    clientHeight: 'clientWidth',
+    scrollTop: 'scrollLeft',
+    overflowY: 'overflowX',
+    minHeight: 'minWidth',
+    height: 'width',
+    maxHeight: 'maxWidth',
+    marginTop: 'marginLeft',
+};
+const normalizeValue = (min, value, max = Infinity) => Math.max(Math.min(value, max), min);
+const getDiff = (value1, value2, step) => Math.ceil(Math.abs(value1 - value2) / step);
+const useIsomorphicLayoutEffect = IS_SSR ? react_1.useEffect : react_1.useLayoutEffect;
+const generateArray = (from, to, generate) => {
+    const array = [];
+    for (let index = from; index < to; index++) {
+        array.push(generate(index));
+    }
+    return array;
+};
+const findElement = ({ fromElement, toElement, fromIndex, asc = true, compare, }) => {
+    let index = fromIndex;
+    let element = fromElement;
+    while (element && element !== toElement) {
+        if (compare(element, index)) {
+            return [element, index];
+        }
+        if (asc) {
+            index++;
+            element = element.nextSibling;
+        }
+        else {
+            index--;
+            element = element.previousSibling;
+        }
+    }
+    return [null, -1];
+};
+const SCROLLABLE_REGEXP = /auto|scroll/gi;
+const findNearestScrollableElement = (propName, node) => {
+    if (!node || node === document.body || node === document.documentElement) {
+        return document.documentElement;
+    }
+    const style = window.getComputedStyle(node);
+    if (SCROLLABLE_REGEXP.test(style[propName.overflowY]) || SCROLLABLE_REGEXP.test(style.overflow)) {
+        return node;
+    }
+    return findNearestScrollableElement(propName, node.parentNode);
+};
+const getStyle = (propName, size, marginTop = 0) => ({
+    padding: 0,
+    margin: 0,
+    border: 'none',
+    visibility: 'hidden',
+    overflowAnchor: 'none',
+    [propName.minHeight]: size,
+    [propName.height]: size,
+    [propName.maxHeight]: size,
+    [propName.marginTop]: marginTop,
+});
+const ViewportListInner = ({ items = [], count, children, viewportRef, itemSize = 0, itemMargin = -1, overscan = 1, axis = 'y', initialIndex = -1, initialAlignToTop = true, initialOffset = 0, initialDelay = -1, initialPrerender = 0, onViewportIndexesChange, overflowAnchor = 'auto', withCache = true, scrollThreshold = 0, renderSpacer = ({ ref, style }) => (0, jsx_runtime_1.jsx)("div", { ref: ref, style: style }), indexesShift = 0, getItemBoundingClientRect = (element) => element.getBoundingClientRect(), }, ref) => {
+    const propName = axis === 'y' ? PROP_NAME_FOR_Y_AXIS : PROP_NAME_FOR_X_AXIS;
+    const withCount = typeof count === 'number';
+    const maxIndex = (withCount ? count : items.length) - 1;
+    const [[estimatedItemHeight, estimatedItemMargin], setItemDimensions] = (0, react_1.useState)(() => [
+        normalizeValue(0, itemSize),
+        normalizeValue(-1, itemMargin),
+    ]);
+    const itemHeightWithMargin = normalizeValue(0, estimatedItemHeight + estimatedItemMargin);
+    const overscanSize = normalizeValue(0, Math.ceil(overscan * itemHeightWithMargin));
+    const [indexes, setIndexes] = (0, react_1.useState)([initialIndex - initialPrerender, initialIndex + initialPrerender]);
+    const anchorElementRef = (0, react_1.useRef)(null);
+    const anchorIndexRef = (0, react_1.useRef)(-1);
+    const topSpacerRef = (0, react_1.useRef)(null);
+    const bottomSpacerRef = (0, react_1.useRef)(null);
+    const ignoreOverflowAnchorRef = (0, react_1.useRef)(false);
+    const lastIndexesShiftRef = (0, react_1.useRef)(indexesShift);
+    const cacheRef = (0, react_1.useRef)([]);
+    const scrollToIndexOptionsRef = (0, react_1.useRef)(initialIndex >= 0
+        ? {
+            index: initialIndex,
+            alignToTop: initialAlignToTop,
+            offset: initialOffset,
+            delay: initialDelay,
+            prerender: initialPrerender,
+        }
+        : null);
+    const scrollToIndexTimeoutIdRef = (0, react_1.useRef)(null);
+    const marginTopRef = (0, react_1.useRef)(0);
+    const viewportIndexesRef = (0, react_1.useRef)([-1, -1]);
+    const scrollTopRef = (0, react_1.useRef)(null);
+    const [startIndex, endIndex] = (0, react_1.useMemo)(() => {
+        indexes[0] = normalizeValue(0, indexes[0], maxIndex);
+        indexes[1] = normalizeValue(indexes[0], indexes[1], maxIndex);
+        const shift = indexesShift - lastIndexesShiftRef.current;
+        lastIndexesShiftRef.current = indexesShift;
+        const topSpacer = topSpacerRef.current;
+        if (topSpacer && shift) {
+            indexes[0] = normalizeValue(0, indexes[0] + shift, maxIndex);
+            indexes[1] = normalizeValue(indexes[0], indexes[1] + shift, maxIndex);
+            anchorElementRef.current = topSpacer.nextSibling;
+            anchorIndexRef.current = indexes[0];
+            ignoreOverflowAnchorRef.current = true;
+        }
+        return indexes;
+    }, [indexesShift, indexes, maxIndex]);
+    const topSpacerStyle = (0, react_1.useMemo)(() => getStyle(propName, (withCache ? cacheRef.current : [])
+        .slice(0, startIndex)
+        .reduce((sum, next) => sum + (next - estimatedItemHeight), startIndex * itemHeightWithMargin), marginTopRef.current), [propName, withCache, startIndex, itemHeightWithMargin, estimatedItemHeight]);
+    const bottomSpacerStyle = (0, react_1.useMemo)(() => getStyle(propName, (withCache ? cacheRef.current : [])
+        .slice(endIndex + 1, maxIndex + 1)
+        .reduce((sum, next) => sum + (next - estimatedItemHeight), itemHeightWithMargin * (maxIndex - endIndex))), [propName, withCache, endIndex, maxIndex, itemHeightWithMargin, estimatedItemHeight]);
+    const getViewport = (0, react_1.useMemo)(() => {
+        let autoViewport = null;
+        return () => {
+            if (viewportRef) {
+                if (viewportRef.current === document.body) {
+                    return document.documentElement;
+                }
+                return viewportRef.current;
+            }
+            if (autoViewport && autoViewport.isConnected) {
+                return autoViewport;
+            }
+            const topSpacer = topSpacerRef.current;
+            if (!topSpacer) {
+                return null;
+            }
+            autoViewport = findNearestScrollableElement(propName, topSpacer.parentNode);
+            return autoViewport;
+        };
+    }, [propName, viewportRef]);
+    const mainFrameRef = (0, react_1.useRef)(() => { });
+    const getScrollPositionRef = (0, react_1.useRef)(() => ({ index: -1, offset: 0 }));
+    useIsomorphicLayoutEffect(() => {
+        mainFrameRef.current = () => {
+            const viewport = getViewport();
+            const topSpacer = topSpacerRef.current;
+            const bottomSpacer = bottomSpacerRef.current;
+            if (!viewport || !topSpacer || !bottomSpacer) {
+                return;
+            }
+            const topElement = topSpacer.nextSibling;
+            const bottomElement = bottomSpacer.previousSibling;
+            const viewportRect = viewport.getBoundingClientRect();
+            const topSpacerRect = topSpacer.getBoundingClientRect();
+            const bottomSpacerRect = bottomSpacer.getBoundingClientRect();
+            const limits = {
+                [propName.top]: viewport === document.documentElement ? 0 : viewportRect[propName.top],
+                [propName.bottom]: viewport === document.documentElement
+                    ? document.documentElement[propName.clientHeight]
+                    : viewportRect[propName.bottom],
+            };
+            const limitsWithOverscanSize = {
+                [propName.top]: limits[propName.top] - overscanSize,
+                [propName.bottom]: limits[propName.bottom] + overscanSize,
+            };
+            if ((marginTopRef.current < 0 &&
+                topSpacerRect[propName.top] - marginTopRef.current >= limitsWithOverscanSize[propName.top]) ||
+                (marginTopRef.current > 0 && topSpacerRect[propName.top] >= limitsWithOverscanSize[propName.top]) ||
+                (marginTopRef.current && scrollToIndexOptionsRef.current)) {
+                topSpacer.style[propName.marginTop] = '0px';
+                viewport.style[propName.overflowY] = 'hidden';
+                viewport[propName.scrollTop] += -marginTopRef.current;
+                viewport.style[propName.overflowY] = '';
+                marginTopRef.current = 0;
+                return;
+            }
+            if (estimatedItemHeight === 0 || estimatedItemMargin === -1) {
+                let itemsHeightSum = 0;
+                findElement({
+                    fromElement: topElement,
+                    toElement: bottomSpacer,
+                    fromIndex: startIndex,
+                    compare: (element) => {
+                        itemsHeightSum += getItemBoundingClientRect(element)[propName.height];
+                        return false;
+                    },
+                });
+                if (!itemsHeightSum) {
+                    return;
+                }
+                const renderedItemsCount = endIndex - startIndex + 1;
+                const nextItemHeight = estimatedItemHeight === 0 ? Math.ceil(itemsHeightSum / renderedItemsCount) : estimatedItemHeight;
+                const nextItemMargin = estimatedItemMargin === -1
+                    ? Math.ceil((bottomSpacerRect[propName.top] - topSpacerRect[propName.bottom] - itemsHeightSum) /
+                        renderedItemsCount)
+                    : estimatedItemMargin;
+                setItemDimensions([nextItemHeight, nextItemMargin]);
+                return;
+            }
+            if (scrollToIndexTimeoutIdRef.current) {
+                return;
+            }
+            if (scrollToIndexOptionsRef.current) {
+                const targetIndex = normalizeValue(0, scrollToIndexOptionsRef.current.index, maxIndex);
+                if (targetIndex < startIndex || targetIndex > endIndex) {
+                    setIndexes([
+                        targetIndex - scrollToIndexOptionsRef.current.prerender,
+                        targetIndex + scrollToIndexOptionsRef.current.prerender,
+                    ]);
+                    return;
+                }
+                const [targetElement] = findElement({
+                    fromElement: topElement,
+                    toElement: bottomSpacer,
+                    fromIndex: startIndex,
+                    compare: (_, index) => index === targetIndex,
+                });
+                if (!targetElement) {
+                    return;
+                }
+                const { alignToTop, offset, delay } = scrollToIndexOptionsRef.current;
+                scrollToIndexOptionsRef.current = null;
+                const scrollToElement = () => {
+                    const elementRect = getItemBoundingClientRect(targetElement);
+                    const shift = alignToTop
+                        ? elementRect[propName.top] - limits[propName.top] + offset
+                        : elementRect[propName.bottom] -
+                            limits[propName.top] -
+                            viewport[propName.clientHeight] +
+                            offset;
+                    viewport[propName.scrollTop] += shift;
+                    scrollToIndexTimeoutIdRef.current = null;
+                };
+                const scrollToElementDelay = delay < 0 && SHOULD_DELAY_SCROLL ? 30 : delay;
+                if (scrollToElementDelay > 0) {
+                    scrollToIndexTimeoutIdRef.current = setTimeout(scrollToElement, scrollToElementDelay);
+                    return;
+                }
+                scrollToElement();
+                return;
+            }
+            if (scrollTopRef.current === null) {
+                scrollTopRef.current = viewport.scrollTop;
+            }
+            else if (scrollTopRef.current !== viewport.scrollTop) {
+                const diff = Math.abs(viewport.scrollTop - scrollTopRef.current);
+                scrollTopRef.current = viewport.scrollTop;
+                if (scrollThreshold > 0 && diff > scrollThreshold) {
+                    return;
+                }
+            }
+            const topSecondElement = topElement === bottomSpacer ? bottomSpacer : topElement.nextSibling;
+            const bottomSecondElement = bottomElement === topSpacer ? topSpacer : bottomElement.previousSibling;
+            const averageSize = Math.ceil((bottomSpacerRect[propName.top] - topSpacerRect[propName.bottom]) / (endIndex + 1 - startIndex));
+            const isAllAboveTop = topSpacerRect[propName.bottom] > limitsWithOverscanSize[propName.bottom];
+            const isAllBelowBottom = bottomSpacerRect[propName.top] < limitsWithOverscanSize[propName.top];
+            const isTopBelowTop = !isAllAboveTop &&
+                !isAllBelowBottom &&
+                topSpacerRect[propName.bottom] > limitsWithOverscanSize[propName.top];
+            const isBottomAboveBottom = !isAllAboveTop &&
+                !isAllBelowBottom &&
+                bottomSpacerRect[propName.top] < limitsWithOverscanSize[propName.bottom];
+            const isBottomSecondAboveTop = !isAllAboveTop &&
+                !isAllBelowBottom &&
+                (bottomSecondElement === topSpacer ? topSpacerRect : getItemBoundingClientRect(bottomSecondElement))[propName.bottom] > limitsWithOverscanSize[propName.bottom];
+            const isTopSecondAboveTop = !isAllAboveTop &&
+                !isAllBelowBottom &&
+                (topSecondElement === bottomSpacer ? bottomSpacerRect : getItemBoundingClientRect(topSecondElement))[propName.top] < limitsWithOverscanSize[propName.top];
+            let nextStartIndex = startIndex;
+            let nextEndIndex = endIndex;
+            if (isAllAboveTop) {
+                nextStartIndex -= getDiff(topSpacerRect[propName.bottom], limitsWithOverscanSize[propName.top], averageSize);
+                nextEndIndex -= getDiff(bottomSpacerRect[propName.top], limitsWithOverscanSize[propName.bottom], averageSize);
+            }
+            if (isAllBelowBottom) {
+                nextEndIndex += getDiff(bottomSpacerRect[propName.top], limitsWithOverscanSize[propName.bottom], averageSize);
+                nextStartIndex += getDiff(topSpacerRect[propName.bottom], limitsWithOverscanSize[propName.top], averageSize);
+            }
+            if (isTopBelowTop) {
+                nextStartIndex -= getDiff(topSpacerRect[propName.bottom], limitsWithOverscanSize[propName.top], averageSize);
+            }
+            if (isBottomAboveBottom) {
+                nextEndIndex += getDiff(bottomSpacerRect[propName.top], limitsWithOverscanSize[propName.bottom], averageSize);
+            }
+            if (isBottomSecondAboveTop) {
+                const [, index] = findElement({
+                    fromElement: bottomElement,
+                    toElement: topSpacer,
+                    fromIndex: endIndex,
+                    asc: false,
+                    compare: (element) => getItemBoundingClientRect(element)[propName.bottom] <= limitsWithOverscanSize[propName.bottom],
+                });
+                if (index !== -1) {
+                    nextEndIndex = index + 1;
+                }
+            }
+            if (isTopSecondAboveTop) {
+                const [, index] = findElement({
+                    fromElement: topElement,
+                    toElement: bottomSpacer,
+                    fromIndex: startIndex,
+                    compare: (element) => getItemBoundingClientRect(element)[propName.top] >= limitsWithOverscanSize[propName.top],
+                });
+                if (index !== -1) {
+                    nextStartIndex = index - 1;
+                }
+            }
+            if (onViewportIndexesChange) {
+                let [, startViewportIndex] = findElement({
+                    fromElement: topElement,
+                    toElement: bottomSpacer,
+                    fromIndex: startIndex,
+                    compare: (element) => getItemBoundingClientRect(element)[propName.bottom] > limits[propName.top],
+                });
+                if (startViewportIndex === -1) {
+                    startViewportIndex = startIndex;
+                }
+                let [, endViewportIndex] = findElement({
+                    fromElement: bottomElement,
+                    toElement: topSpacer,
+                    fromIndex: endIndex,
+                    asc: false,
+                    compare: (element) => getItemBoundingClientRect(element)[propName.top] < limits[propName.bottom],
+                });
+                if (endViewportIndex === -1) {
+                    endViewportIndex = endIndex;
+                }
+                if (startViewportIndex !== viewportIndexesRef.current[0] ||
+                    endViewportIndex !== viewportIndexesRef.current[1]) {
+                    viewportIndexesRef.current = [startViewportIndex, endViewportIndex];
+                    onViewportIndexesChange(viewportIndexesRef.current);
+                }
+            }
+            nextStartIndex = normalizeValue(0, nextStartIndex, maxIndex);
+            nextEndIndex = normalizeValue(nextStartIndex, nextEndIndex, maxIndex);
+            if (nextStartIndex === startIndex && nextEndIndex === endIndex) {
+                return;
+            }
+            if (nextStartIndex !== startIndex) {
+                if (startIndex >= nextStartIndex) {
+                    anchorElementRef.current = topElement;
+                    anchorIndexRef.current = startIndex;
+                }
+                else {
+                    const [anchorElement, anchorElementIndex] = findElement({
+                        fromElement: topElement,
+                        toElement: bottomSpacer,
+                        fromIndex: startIndex,
+                        compare: (element, index) => {
+                            if (index === nextStartIndex) {
+                                return true;
+                            }
+                            const elementRect = getItemBoundingClientRect(element);
+                            if (elementRect[propName.height] !== estimatedItemHeight) {
+                                cacheRef.current[index] = elementRect[propName.height];
+                            }
+                            return false;
+                        },
+                    });
+                    if (anchorElement) {
+                        anchorElementRef.current = anchorElement;
+                        anchorIndexRef.current = anchorElementIndex;
+                    }
+                    else {
+                        anchorElementRef.current = bottomElement;
+                        anchorIndexRef.current = endIndex;
+                    }
+                }
+            }
+            setIndexes([nextStartIndex, nextEndIndex]);
+        };
+        getScrollPositionRef.current = () => {
+            const viewport = getViewport();
+            const topSpacer = topSpacerRef.current;
+            const bottomSpacer = bottomSpacerRef.current;
+            let scrollIndex = -1;
+            let scrollOffset = 0;
+            if (!viewport || !topSpacer || !bottomSpacer) {
+                return { index: scrollIndex, offset: scrollOffset };
+            }
+            const topElement = topSpacer.nextSibling;
+            const viewportRect = viewport.getBoundingClientRect();
+            const limits = {
+                [propName.top]: viewport === document.documentElement ? 0 : viewportRect[propName.top],
+                [propName.bottom]: viewport === document.documentElement
+                    ? document.documentElement[propName.clientHeight]
+                    : viewportRect[propName.bottom],
+            };
+            findElement({
+                fromElement: topElement,
+                toElement: bottomSpacer,
+                fromIndex: startIndex,
+                compare: (element, index) => {
+                    const rect = getItemBoundingClientRect(element);
+                    scrollIndex = index;
+                    scrollOffset = limits[propName.top] - rect[propName.top];
+                    return rect[propName.bottom] > limits[propName.top];
+                },
+            });
+            return { index: scrollIndex, offset: scrollOffset };
+        };
+    });
+    let anchorHeightOnRender;
+    if (anchorElementRef.current && getViewport() && topSpacerRef.current) {
+        anchorHeightOnRender =
+            getItemBoundingClientRect(anchorElementRef.current)[propName.top] -
+                (getViewport() === document.documentElement ? 0 : getViewport().getBoundingClientRect()[propName.top]);
+    }
+    useIsomorphicLayoutEffect(() => {
+        anchorElementRef.current = null;
+        const anchorIndex = anchorIndexRef.current;
+        const ignoreOverflowAnchor = ignoreOverflowAnchorRef.current;
+        anchorIndexRef.current = -1;
+        ignoreOverflowAnchorRef.current = false;
+        const viewport = getViewport();
+        const topSpacer = topSpacerRef.current;
+        const bottomSpacer = bottomSpacerRef.current;
+        if (anchorIndex === -1 ||
+            !viewport ||
+            !topSpacer ||
+            !bottomSpacer ||
+            anchorHeightOnRender === undefined ||
+            (IS_OVERFLOW_ANCHOR_SUPPORTED && overflowAnchor !== 'none' && !ignoreOverflowAnchor)) {
+            return;
+        }
+        let top = null;
+        if (anchorIndex >= startIndex && anchorIndex <= endIndex) {
+            const [anchorElement] = findElement({
+                fromElement: topSpacer.nextSibling,
+                toElement: bottomSpacer,
+                fromIndex: startIndex,
+                compare: (_, index) => index === anchorIndex,
+            });
+            if (anchorElement) {
+                top = getItemBoundingClientRect(anchorElement)[propName.top];
+            }
+        }
+        else {
+            if (anchorIndex < startIndex) {
+                top =
+                    topSpacer.getBoundingClientRect()[propName.top] +
+                        (withCache ? cacheRef.current : [])
+                            .slice(0, anchorIndex)
+                            .reduce((sum, next) => sum + (next - estimatedItemHeight), anchorIndex * itemHeightWithMargin);
+            }
+            else if (anchorIndex <= maxIndex) {
+                top =
+                    bottomSpacer.getBoundingClientRect()[propName.top] +
+                        (withCache ? cacheRef.current : [])
+                            .slice(endIndex + 1, anchorIndex)
+                            .reduce((sum, next) => sum + (next - estimatedItemHeight), itemHeightWithMargin * (anchorIndex - 1 - endIndex));
+            }
+        }
+        if (top === null) {
+            return;
+        }
+        const offset = top -
+            (viewport === document.documentElement ? 0 : viewport.getBoundingClientRect()[propName.top]) -
+            anchorHeightOnRender;
+        if (!offset) {
+            return;
+        }
+        if (IS_TOUCH_DEVICE) {
+            marginTopRef.current -= offset;
+            topSpacer.style[propName.marginTop] = `${marginTopRef.current}px`;
+            return;
+        }
+        viewport[propName.scrollTop] += offset;
+    }, [startIndex]);
+    useIsomorphicLayoutEffect(() => {
+        let frameId;
+        const frame = () => {
+            frameId = requestAnimationFrame(frame);
+            mainFrameRef.current();
+        };
+        frame();
+        return () => {
+            cancelAnimationFrame(frameId);
+            if (scrollToIndexTimeoutIdRef.current) {
+                clearTimeout(scrollToIndexTimeoutIdRef.current);
+            }
+        };
+    }, []);
+    (0, react_1.useImperativeHandle)(ref, () => ({
+        scrollToIndex: ({ index = -1, alignToTop = true, offset = 0, delay = -1, prerender = 0 }) => {
+            scrollToIndexOptionsRef.current = { index, alignToTop, offset, delay, prerender };
+            mainFrameRef.current();
+        },
+        getScrollPosition: () => getScrollPositionRef.current(),
+    }), []);
+    return ((0, jsx_runtime_1.jsxs)(react_1.Fragment, { children: [renderSpacer({ ref: topSpacerRef, style: topSpacerStyle, type: 'top' }), (!!count || !!items.length) &&
+                generateArray(startIndex, endIndex + 1, withCount ? children : (index) => children(items[index], index, items)), renderSpacer({ ref: bottomSpacerRef, style: bottomSpacerStyle, type: 'bottom' })] }));
+};
+exports.h = (0, react_1.forwardRef)(ViewportListInner);
+
+
+/***/ }),
+
 /***/ 1020:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -26552,6 +27086,7 @@ var setStateProp = function setStateProp(name, val) {
   });
 };
 var setItems = function setItems(items) {
+  //items = Array(400).fill(items[0]);
   state.set(function (value) {
     return state_objectSpread(state_objectSpread({}, value), {}, {
       items: items
@@ -42364,66 +42899,15 @@ const Popover = /*#__PURE__*/react.forwardRef(function Popover(inProps, ref) {
 /* harmony default export */ const Popover_Popover = (Popover);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/list/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const shared_list_styles = ({"wrapper":"styles__wrapper--djmkm","first":"styles__first--xq8J8","last":"styles__last--Btesb","dump":"styles__dump--fwFCs","loader":"styles__loader--JLfNF"});
+/* harmony default export */ const shared_list_styles = ({"wrapper":"styles__wrapper--djmkm","first":"styles__first--xq8J8","last":"styles__last--Btesb","dump":"styles__dump--fwFCs","loader":"styles__loader--JLfNF","list":"styles__list--SGu1u"});
+// EXTERNAL MODULE: ./node_modules/react-viewport-list/lib/index.js
+var lib = __webpack_require__(7808);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/list/index.js
-function list_typeof(o) { "@babel/helpers - typeof"; return list_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, list_typeof(o); }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, list_toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function list_toPropertyKey(t) { var i = list_toPrimitive(t, "string"); return "symbol" == list_typeof(i) ? i : i + ""; }
-function list_toPrimitive(t, r) { if ("object" != list_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != list_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(self, call) { if (call && (list_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) list_setPrototypeOf(subClass, superClass); }
-function list_setPrototypeOf(o, p) { list_setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return list_setPrototypeOf(o, p); }
 
 
 
 
-var InList = /*#__PURE__*/function (_React$Component) {
-  function InList(props) {
-    var _this;
-    _classCallCheck(this, InList);
-    _this = _callSuper(this, InList, [props]);
-    _this.state = {
-      date: new Date()
-    };
-    _this.callOnRender = _this.callOnRender.bind(_this);
-    return _this;
-  }
-  _inherits(InList, _React$Component);
-  return _createClass(InList, [{
-    key: "callOnRender",
-    value: function callOnRender(value) {
-      console.log("onRender " + value);
-      if (this.props.onRender != null) {
-        this.props.onRender(value);
-      }
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.callOnRender(false);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {}
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props$data,
-        _this2 = this;
-      return /*#__PURE__*/(0,jsx_runtime.jsx)("tbody", {
-        children: (_this$props$data = this.props.data) === null || _this$props$data === void 0 ? void 0 : _this$props$data.map(function (i) {
-          return _this2.props.itemRenderer(i);
-        })
-      });
-    }
-  }]);
-}(react.Component);
+
 var list = function list(_ref) {
   var data = _ref.data,
     headers = _ref.headers,
@@ -42433,9 +42917,26 @@ var list = function list(_ref) {
     _ref$componentDidMoun = _ref.componentDidMount,
     componentDidMount = _ref$componentDidMoun === void 0 ? null : _ref$componentDidMoun;
   var headerIdx = 0;
+  var ref = (0,react.useRef)(null);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: shared_list_styles.wrapper,
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: [isLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: shared_list_styles.dump,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: shared_list_styles.loader,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
+          color: "inherit",
+          sx: {
+            height: "99px !important",
+            width: "99px !important"
+          }
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children:
+        //Так сделано, чтобы была возможность при изменении внешних значений мог рассчитываться текст
+        loadingText()
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       style: {
         overflow: isLoading ? "hidden" : "inherit"
       },
@@ -42455,39 +42956,32 @@ var list = function list(_ref) {
               });
             })
           })
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(InList, {
-          data: data,
-          onRender: componentDidMount,
-          itemRenderer: itemRenderer
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("tbody", {
+          className: "scroll-container",
+          ref: ref,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(lib/* ViewportList */.h, {
+            viewportRef: ref,
+            items: data,
+            itemMinSize: 40,
+            margin: 8,
+            overscan: 15,
+            children: function children(i) {
+              return itemRenderer(i);
+            }
+          })
         })]
       })
-    }), isLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: shared_list_styles.dump,
-      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: shared_list_styles.loader,
-        children: /*#__PURE__*/(0,jsx_runtime.jsx)(CircularProgress_CircularProgress, {
-          color: "inherit",
-          sx: {
-            height: "99px !important",
-            width: "99px !important"
-          }
-        })
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        children:
-        //Так сделано, чтобы была возможность при изменении внешних значений мог рассчитываться текст
-        loadingText()
-      })]
     })]
   });
 };
 /* harmony default export */ const shared_list = (list);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/index.js
-function products_list_typeof(o) { "@babel/helpers - typeof"; return products_list_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, products_list_typeof(o); }
+function list_typeof(o) { "@babel/helpers - typeof"; return list_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, list_typeof(o); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || list_unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return list_arrayLikeToArray(arr); }
-function list_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ list_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == products_list_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(products_list_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function list_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ list_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == list_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(list_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function list_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function list_slicedToArray(arr, i) { return list_arrayWithHoles(arr) || list_iterableToArrayLimit(arr, i) || list_unsupportedIterableToArray(arr, i) || list_nonIterableRest(); }
@@ -42539,14 +43033,10 @@ var products = function products() {
     _useState4 = list_slicedToArray(_useState3, 2),
     openMassDelConfirm = _useState4[0],
     setOpenMassDelConfirm = _useState4[1];
-  var _useState5 = (0,react.useState)(true),
+  var _useState5 = (0,react.useState)(""),
     _useState6 = list_slicedToArray(_useState5, 2),
-    itemsMounting = _useState6[0],
-    setItemsMounting = _useState6[1];
-  var _useState7 = (0,react.useState)(""),
-    _useState8 = list_slicedToArray(_useState7, 2),
-    errParsePriceText = _useState8[0],
-    setErrParsePriceText = _useState8[1];
+    errParsePriceText = _useState6[0],
+    setErrParsePriceText = _useState6[1];
   var _React$useState = react.useState(null),
     _React$useState2 = list_slicedToArray(_React$useState, 2),
     anchorEl = _React$useState2[0],
@@ -42564,7 +43054,12 @@ var products = function products() {
     currencyDict[c.steamId] = c;
   });
   var headers = {
-    checkbox: "",
+    checkbox: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      style: {
+        maxWidth: "86px",
+        minWidth: "86px"
+      }
+    }),
     game: "Игра",
     product: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       style: {
@@ -42603,15 +43098,13 @@ var products = function products() {
     options: "Опции",
     active: ""
   };
+  console.log(itemsLoading);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(items),
-      isLoading: itemsLoading || itemsMounting,
-      componentDidMount: function componentDidMount(isMounting) {
-        setItemsMounting(isMounting);
-      },
+      isLoading: itemsLoading,
       loadingText: function loadingText() {
         if (changeItemBulkResponse.loading) {
           return "Происходит обновление цен";
@@ -45845,7 +46338,7 @@ if (false) {}
 
 /* harmony default export */ const utils_useIsFocusVisible = (useIsFocusVisible);
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
-function assertThisInitialized_assertThisInitialized(self) {
+function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   }
@@ -46037,7 +46530,7 @@ var TransitionGroup = /*#__PURE__*/function (_React$Component) {
 
     _this = _React$Component.call(this, props, context) || this;
 
-    var handleExited = _this.handleExited.bind(assertThisInitialized_assertThisInitialized(_this)); // Initial children should all be entering, dependent on appear
+    var handleExited = _this.handleExited.bind(_assertThisInitialized(_this)); // Initial children should all be entering, dependent on appear
 
 
     _this.state = {
@@ -60337,9 +60830,9 @@ function proxies_list_typeof(o) { "@babel/helpers - typeof"; return proxies_list
 function proxies_list_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ proxies_list_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == proxies_list_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(proxies_list_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function proxies_list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function proxies_list_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { proxies_list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { proxies_list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function list_defineProperty(obj, key, value) { key = proxies_list_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function proxies_list_toPropertyKey(t) { var i = proxies_list_toPrimitive(t, "string"); return "symbol" == proxies_list_typeof(i) ? i : i + ""; }
-function proxies_list_toPrimitive(t, r) { if ("object" != proxies_list_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != proxies_list_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function list_defineProperty(obj, key, value) { key = list_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function list_toPropertyKey(t) { var i = list_toPrimitive(t, "string"); return "symbol" == proxies_list_typeof(i) ? i : i + ""; }
+function list_toPrimitive(t, r) { if ("object" != proxies_list_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != proxies_list_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 

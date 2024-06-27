@@ -120,7 +120,7 @@ namespace SteamDigiSellerBot.Controllers
                 }
             }
             await _itemRepository.DeactivateItemAfterErrorAsync(items.Where(e => itemsForDeactivate.Contains(e.Id)).ToList());
-            //await Task.Delay(TimeSpan.FromSeconds(3));
+            //await Task.Delay(TimeSpan.FromSeconds(10));
             return Ok(itemsView);
         }
 

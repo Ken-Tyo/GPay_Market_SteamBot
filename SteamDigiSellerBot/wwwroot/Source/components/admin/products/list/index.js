@@ -50,7 +50,7 @@ const products = () => {
 
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
-  const [itemsMounting, setItemsMounting] = useState(true);
+
   const [errParsePriceText, setErrParsePriceText] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -67,7 +67,7 @@ const products = () => {
   });
 
   const headers = {
-    checkbox: "",
+    checkbox: <div style={{ maxWidth: "86px", minWidth: "86px" }}></div>,
     game: "Игра",
     product: (
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -88,15 +88,13 @@ const products = () => {
     options: "Опции",
     active: "",
   };
+  console.log(itemsLoading);
   return (
     <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
         data={[...items]}
-        isLoading={itemsLoading || itemsMounting}
-        componentDidMount={(isMounting) => {
-          setItemsMounting(isMounting);
-        }}
+        isLoading={itemsLoading}
         loadingText={() => {
           if (changeItemBulkResponse.loading) {
             return "Происходит обновление цен";

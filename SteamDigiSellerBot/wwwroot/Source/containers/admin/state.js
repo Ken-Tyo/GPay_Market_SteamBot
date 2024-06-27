@@ -128,6 +128,7 @@ export const setStateProp = (name, val) => {
 };
 
 export const setItems = (items) => {
+  //items = Array(400).fill(items[0]);
   state.set((value) => {
     return {
       ...value,
