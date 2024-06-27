@@ -18,8 +18,8 @@ namespace SteamDigiSellerBot
         public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Debug)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Debug)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
                 //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 //.Enrich.FromLogContext()
                 .WriteTo.Console()

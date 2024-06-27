@@ -1658,7 +1658,7 @@ namespace SteamDigiSellerBot.Network
         };
 
 
-        private Semaphore BusyState = new Semaphore(1, 1);
+        public Semaphore BusyState = new Semaphore(1, 1);
 
         public async Task<SendGameResponse> SendGame(
             string appId, string subId, bool isBundle, string gifteeAccountId, string receiverName, string comment,

@@ -36,7 +36,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             await Task.Factory.StartNew(loop);
         }
 
-        private async void loop()
+        private async Task loop()
         {
             while (true)
             {
