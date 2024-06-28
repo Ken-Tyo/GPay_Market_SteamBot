@@ -375,6 +375,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var botBalances = filterRes.Select(b =>
             {
                 var balance = b.Balance;
+                
                 if (b.SteamCurrencyId.Value != 5)
                 {
                     balance = ExchangeHelper.Convert(b.Balance, currDict[b.SteamCurrencyId.Value], currDict[5]);
@@ -487,7 +488,14 @@ namespace SteamDigiSellerBot.Services.Implementation
                                             .ToList();
 
                 _logger.LogInformation(
-                    $"GS ID {gs.Id} after filter by VAC - {JsonConvert.SerializeObject(vacFilteredBots.Select(b => new { id = b.Id, name = b.UserName }))}");
+                    $"GS ID {gs.Id} after filter by VAC - {JsonConvert.SerializeObject(vacFilteredBots.Select(b => new { id = b.Id, name = b.UserName, balance= b.Balance }))}");
+                var withoutCurrency = vacFilteredBots.Where(x => x.SteamCurrencyId == null).ToList();
+                if (withoutCurrency.Count > 0)
+                {
+                    _logger.LogError($"GS ID {gs.Id} боты без валюты -{JsonConvert.SerializeObject(withoutCurrency.Select(b => new { id = b.Id, name = b.UserName, balance = b.Balance }))} ");
+                    withoutCurrency.ForEach(x => vacFilteredBots.Remove(x));
+                }
+
 
                 if (vacFilteredBots.Count == 0)
                     continue;
@@ -495,6 +503,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 /*
                 * берем ботов у которых достаточно средств
                 */
+                
+
+
                 var botBalances = await GetBotBalancesInRubDict(vacFilteredBots);
                 botBalances = botBalances
                     .Where(p => p.Value.balance >= gs.Item.CurrentDigiSellerPrice)
