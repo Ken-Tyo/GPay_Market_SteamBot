@@ -1233,7 +1233,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 try
                 {
                     var check = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
-                    if (check.StatusId is not GameSessionStatusEnum.Received)
+                    if (check.StatusId is GameSessionStatusEnum.Received)
                         throw new Exception("Сброс отправки");
 
 
