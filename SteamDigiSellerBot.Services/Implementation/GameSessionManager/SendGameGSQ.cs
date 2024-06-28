@@ -46,14 +46,16 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 18).Result;
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.SendGame);
-
-                    _logger.LogInformation($"SendGameGSQ GS ID {sess.Select(x=> x.Id.ToString()).Aggregate((a,b)=>a+","+b)}");
+                    if (sess.Count > 0)
+                        _logger.LogInformation(
+                            $"SendGameGSQ GS ID {sess.Select(x => x.Id.ToString()).Aggregate((a, b) => a + "," + b)}");
                     var tasks = new List<Task>();
                     int delayCounter = 0;
-                    foreach (var gs in sess)
-                    {
-                        //tasks.Add(Task.Factory.StartNew(async () =>
-                        //{
+                    Parallel.ForEach(sess, gs =>
+                            //foreach (var gs in sess)
+                        {
+                            //tasks.Add(Task.Factory.StartNew(async () =>
+                            //{
                             try
                             {
                                 //if (!q.ContainsKey(gs.Id))
@@ -70,7 +72,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                                 }
 
 
-                                var (sendRes, readyState) = await gss.SendGame(gs.Id);
+                                var (sendRes, readyState) = gss.SendGame(gs.Id).GetAwaiter().GetResult();
                                 SendToManager(sendRes == SendGameStatus.sended
                                     ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
                                     : new SendFailed
@@ -85,11 +87,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                             {
                                 _logger.LogError(ex, $"SendGameGSQ GS ID {gs.Id}");
                             }
-                        //}));
-                        //delayCounter++;
-                        //if (delayCounter % 10 == 0)
-                        //    await Task.Delay(TimeSpan.FromMinutes(1));
-                    }
+                            //}));
+                            //delayCounter++;
+                            //if (delayCounter % 10 == 0)
+                            //    await Task.Delay(TimeSpan.FromMinutes(1));
+                        }
+                    );
 
                     //await Task.Delay(1000);
                     //await Task.WhenAll(tasks.ToArray());
