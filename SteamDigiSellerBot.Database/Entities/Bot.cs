@@ -167,7 +167,11 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             Attempt_SetArray();
             SendGameAttemptsCount = SendGameAttemptsArray.Count;
-            SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+
+            //Заглушка отмены обновления
+            //SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+            SendGameAttemptsCountDaily = 0;
+
             return SendGameAttemptsCount;
         }
         public int Attempt_Add(DateTimeOffset tryTime, bool daily)
@@ -178,7 +182,12 @@ namespace SteamDigiSellerBot.Database.Entities
                 SendGameAttemptsArrayDaily.Add(tryTime);
             //SendGameAttemptsArray= System.Text.Json.JsonSerializer.Serialize(Attempts);
             SendGameAttemptsCount=SendGameAttemptsArray.Count;
-            SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+
+
+            //SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+            SendGameAttemptsCountDaily = 0;
+
+
             return SendGameAttemptsCount;
         }
         public void Attempt_Reset()
