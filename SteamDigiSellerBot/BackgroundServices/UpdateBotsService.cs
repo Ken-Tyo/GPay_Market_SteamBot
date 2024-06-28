@@ -197,7 +197,7 @@ namespace SteamDigiSellerBot.Services
         {
             var deadline = bot.TempLimitDeadline.ToUniversalTime();
             var now = DateTimeOffset.UtcNow.ToUniversalTime();
-            if (now > deadline && bot.Attempt_Count()<= 8 && bot.SendGameAttemptsCountDaily<30)
+            if (now > deadline && bot.Attempt_Count()<= 8 && bot.SendGameAttemptsCountDaily<50)
             {
                 //bot.State = BotState.active;
                 return true;

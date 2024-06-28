@@ -1270,7 +1270,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             gs.Bot.State = BotState.tempLimit;
                         }
 
-                        if (gs.Bot.SendGameAttemptsCountDaily > 30)
+                        if (gs.Bot.SendGameAttemptsCountDaily >= 50)
                         {
                             gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArrayDaily.Min().AddDays(1);
                             gs.Bot.State = BotState.tempLimit;

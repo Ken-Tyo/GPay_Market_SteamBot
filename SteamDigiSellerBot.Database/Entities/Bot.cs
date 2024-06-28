@@ -169,8 +169,8 @@ namespace SteamDigiSellerBot.Database.Entities
             SendGameAttemptsCount = SendGameAttemptsArray.Count;
 
             //Заглушка отмены обновления
-            //SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
-            SendGameAttemptsCountDaily = 0;
+            SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+            //SendGameAttemptsCountDaily = 0;
 
             return SendGameAttemptsCount;
         }
@@ -184,8 +184,8 @@ namespace SteamDigiSellerBot.Database.Entities
             SendGameAttemptsCount=SendGameAttemptsArray.Count;
 
 
-            //SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
-            SendGameAttemptsCountDaily = 0;
+            SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+            //SendGameAttemptsCountDaily = 0;
 
 
             return SendGameAttemptsCount;
