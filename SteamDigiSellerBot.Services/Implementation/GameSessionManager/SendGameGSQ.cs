@@ -47,13 +47,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                         //.ListAsync(gs => gs.StatusId == 18).Result;
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.SendGame);
 
-
+                    _logger.LogInformation($"SendGameGSQ GS ID {sess.Select(x=> x.Id.ToString()).Aggregate((a,b)=>a+","+b)}");
                     var tasks = new List<Task>();
                     int delayCounter = 0;
                     foreach (var gs in sess)
                     {
-                        tasks.Add(Task.Factory.StartNew(async () =>
-                        {
+                        //tasks.Add(Task.Factory.StartNew(async () =>
+                        //{
                             try
                             {
                                 //if (!q.ContainsKey(gs.Id))
@@ -85,14 +85,14 @@ namespace SteamDigiSellerBot.Services.Implementation
                             {
                                 _logger.LogError(ex, $"SendGameGSQ GS ID {gs.Id}");
                             }
-                        }));
-                        delayCounter++;
-                        if (delayCounter % 10 == 0)
-                            await Task.Delay(TimeSpan.FromMinutes(1));
+                        //}));
+                        //delayCounter++;
+                        //if (delayCounter % 10 == 0)
+                        //    await Task.Delay(TimeSpan.FromMinutes(1));
                     }
 
-                    await Task.Delay(1000);
-                    await Task.WhenAll(tasks.ToArray());
+                    //await Task.Delay(1000);
+                    //await Task.WhenAll(tasks.ToArray());
                 }
                 catch (Exception ex)
                 {
