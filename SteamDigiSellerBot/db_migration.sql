@@ -233,3 +233,7 @@ ALTER TABLE "Items" ADD "CurrentDigiSellerPriceNeedAttention" boolean default fa
 
 05.05 
 ALTER TABLE "GameSessions" ADD BotSwitchList JSON null;
+
+28.06
+ALTER TABLE "Bots" add "SendGameAttemptsCountDaily" numeric not null DEFAULT 0;
+alter table "Bots" ADD "SendGameAttemptsArrayDaily" JSON null;

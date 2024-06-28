@@ -1253,7 +1253,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var now = timeForTest ?? DateTimeOffset.UtcNow.ToUniversalTime();
 
                     //обновляем состояние бота
-                    var attemptsCount = gs.Bot.Attempt_Add(now);
+                    var attemptsCount = gs.Bot.Attempt_Add(now, sendRes.result == SendeGameResult.sended);
                     if (sendRes.initTranRes != null && sendRes.initTranRes.purchaseresultdetail == 53)
                     {
                         //ошибка стима
@@ -1267,6 +1267,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                         if (attemptsCount >= 10)
                         {
                             gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
+                            gs.Bot.State = BotState.tempLimit;
+                        }
+
+                        if (gs.Bot.SendGameAttemptsCountDaily > 30)
+                        {
+                            gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArrayDaily.Min().AddDays(1);
                             gs.Bot.State = BotState.tempLimit;
                         }
                     }

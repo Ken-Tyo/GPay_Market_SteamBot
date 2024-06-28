@@ -103,6 +103,8 @@ namespace SteamDigiSellerBot.Controllers
                 bot.TempLimitDeadline = oldBot.TempLimitDeadline;
                 bot.SendGameAttemptsCount = oldBot.Attempt_Count();
                 bot.SendGameAttemptsArray = oldBot.SendGameAttemptsArray;
+                bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
+                bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
             }
 
             if (ModelState.ErrorCount > 0)
