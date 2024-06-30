@@ -62,10 +62,10 @@ namespace SteamDigiSellerBot.Controllers
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
             });
 
-            var groups = bots.GroupBy(b => b.Region ?? "").ToDictionary((g) => g.Key, g => g.Count());
-            groups[""] = 0;
-
-            return Ok(bots.OrderByDescending(b => groups[b.Region ?? ""]));
+            return Ok(bots
+                .OrderByDescending(b => b.Region)
+                .ThenByDescending(b => b.Balance)
+                .ThenBy(b => b.UserName));
         }
 
         [HttpPost, Route("bots/add"), ValidationActionFilter]
@@ -103,6 +103,8 @@ namespace SteamDigiSellerBot.Controllers
                 bot.TempLimitDeadline = oldBot.TempLimitDeadline;
                 bot.SendGameAttemptsCount = oldBot.Attempt_Count();
                 bot.SendGameAttemptsArray = oldBot.SendGameAttemptsArray;
+                bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
+                bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
             }
 
             if (ModelState.ErrorCount > 0)

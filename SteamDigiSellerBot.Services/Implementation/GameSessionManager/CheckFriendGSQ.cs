@@ -42,8 +42,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //берем сессии где ожидается принятия заявки в друзья
                     //var sess = gsr.ListAsync(gs => gs.StatusId == 6).Result;
                     var sess = await gsr.GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.CheckFriend);
-
-                    foreach (var gs in sess)
+                    if (sess.Count > 0)
+                        _logger.LogInformation(
+                            $"CheckFriendGSQ GS ID {sess.Select(x => x.Id.ToString()).Aggregate((a, b) => a + "," + b)}");
+                    Parallel.ForEach(sess, gs =>
                     {
                         try
                         {
@@ -52,39 +54,41 @@ namespace SteamDigiSellerBot.Services.Implementation
                             //    SendToManager(new Untracked { gsId = gs.Id });
                             //    continue;
                             //}
-                            if (new GameSessionStatusEnum[] {GameSessionStatusEnum.Done, GameSessionStatusEnum.Closed }.Contains(gs.StatusId))
+                            if (new GameSessionStatusEnum[] { GameSessionStatusEnum.Done, GameSessionStatusEnum.Closed }
+                                .Contains(gs.StatusId))
                             {
                                 SendToManager(new ToFixStage { gsId = gs.Id });
-                                continue;
+                                return;
                             }
 
-                            var res = await gss.CheckFriendAddedStatus(gs.Id);
+                            var res = gss.CheckFriendAddedStatus(gs.Id).GetAwaiter().GetResult();
                             switch (res)
                             {
                                 case CheckFriendAddedResult.onCheck:
-                                    continue;
+                                    return;
 
                                 case CheckFriendAddedResult.botIsNotOk:
                                 case CheckFriendAddedResult.errParseUserPage:
                                 case CheckFriendAddedResult.cannotAcceptIngoingFriendRequest:
                                 case CheckFriendAddedResult.unknowErr:
-                                    SendToManager(new FailCheckFriendAdded { gsId = gs.Id, CheckFriendAddedResult = res });
-                                    continue;
+                                    SendToManager(new FailCheckFriendAdded
+                                        { gsId = gs.Id, CheckFriendAddedResult = res });
+                                    return;
                                 case CheckFriendAddedResult.rejected:
                                     SendToManager(new Rejected { gsId = gs.Id });
-                                    continue;
+                                    return;
                                 case CheckFriendAddedResult.added:
                                     SendToManager(new Added { gsId = gs.Id });
-                                    continue;
+                                    return;
                                 default:
-                                    continue;
+                                    return;
                             }
                         }
                         catch (Exception ex)
                         {
                             _logger.LogError(ex, $"CheckFriendGSQ GS ID {gs.Id}");
                         }
-                    }
+                    });
                 }
                 catch (Exception ex)
                 {

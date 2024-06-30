@@ -182,8 +182,7 @@ namespace SteamDigiSellerBot.Network
             string countryCode)
         {
 
-            if (BusyState.WaitOne())
-            {
+       
                 try
                 {
                     var sessionId = await GetSessiondId();
@@ -301,16 +300,15 @@ namespace SteamDigiSellerBot.Network
                 }
                 finally
                 {
-                    BusyState.Release();
+      
                 }
-            }
 
-            return new SendGameResponse()
-            {
-                errMessage = "Не удалось дождаться очереди отправки",
-                result = SendeGameResult.error,
-                ChangeBot = true
-            };
+            //return new SendGameResponse()
+            //{
+            //    errMessage = "Не удалось дождаться очереди отправки",
+            //    result = SendeGameResult.error,
+            //    ChangeBot = true
+            //};
         }
 
     }

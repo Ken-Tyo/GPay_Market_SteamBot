@@ -42,39 +42,46 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //берем сессии где ожидается подтвреждение аккаунта или в очереди и пришло время автоотправки
                     var sess = await gsr
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.AddToFriend);
+                    if (sess.Count > 0)
+                        _logger.LogInformation(
+                            $"AddFriendGSQ GS ID {sess.Select(x => x.Id.ToString()).Aggregate((a, b) => a + "," + b)}");
                     //.ListAsync(gs => 
                     //        gs.StatusId == 19 
                     //        || (gs.StatusId == 16 && gs.AutoSendInvitationTime == null)).Result;
 
-                    foreach (var gs in sess)
+                    Parallel.ForEach(sess, gs =>
                     {
-                        try
                         {
-                            if (new GameSessionStatusEnum[] { GameSessionStatusEnum.Done, GameSessionStatusEnum.Closed }.Contains(gs.StatusId))
+                            try
                             {
-                                SendToManager(new ToFixStage { gsId = gs.Id });
-                                continue;
+                                if (new GameSessionStatusEnum[]
+                                        { GameSessionStatusEnum.Done, GameSessionStatusEnum.Closed }
+                                    .Contains(gs.StatusId))
+                                {
+                                    SendToManager(new ToFixStage { gsId = gs.Id });
+                                    return;
+                                }
+
+                                if (!q.ContainsKey(gs.Id))
+                                    return;
+
+                                var addRes = gss.AddToFriend(gs.Id).GetAwaiter().GetResult();
+                                BaseMes res = null;
+                                if (addRes == AddToFriendStatus.added)
+                                    res = new Done { gsId = gs.Id };
+                                else if (addRes == AddToFriendStatus.friendExists)
+                                    res = new Omitted { gsId = gs.Id, AddToFriendStatus = addRes };
+                                else
+                                    res = new FailAddToFriend { gsId = gs.Id, AddToFriendStatus = addRes };
+
+                                SendToManager(res);
                             }
-
-                            if (!q.ContainsKey(gs.Id))
-                                continue;
-
-                            var addRes = await gss.AddToFriend(gs.Id);
-                            BaseMes res = null;
-                            if (addRes == AddToFriendStatus.added)
-                                res = new Done { gsId = gs.Id };
-                            else if (addRes == AddToFriendStatus.friendExists)
-                                res = new Omitted { gsId = gs.Id, AddToFriendStatus = addRes };
-                            else
-                                res = new FailAddToFriend { gsId = gs.Id, AddToFriendStatus = addRes };
-
-                            SendToManager(res);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError($"GS ID {gs.Id} {ex}");
-                        }
-                    }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError($"GS ID {gs.Id} {ex}");
+                            }
+                        };
+                    });
                 }
                 catch (Exception ex)
                 {

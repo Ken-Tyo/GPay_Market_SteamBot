@@ -375,6 +375,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var botBalances = filterRes.Select(b =>
             {
                 var balance = b.Balance;
+                
                 if (b.SteamCurrencyId.Value != 5)
                 {
                     balance = ExchangeHelper.Convert(b.Balance, currDict[b.SteamCurrencyId.Value], currDict[5]);
@@ -487,7 +488,14 @@ namespace SteamDigiSellerBot.Services.Implementation
                                             .ToList();
 
                 _logger.LogInformation(
-                    $"GS ID {gs.Id} after filter by VAC - {JsonConvert.SerializeObject(vacFilteredBots.Select(b => new { id = b.Id, name = b.UserName }))}");
+                    $"GS ID {gs.Id} after filter by VAC - {JsonConvert.SerializeObject(vacFilteredBots.Select(b => new { id = b.Id, name = b.UserName, balance= b.Balance }))}");
+                var withoutCurrency = vacFilteredBots.Where(x => x.SteamCurrencyId == null).ToList();
+                if (withoutCurrency.Count > 0)
+                {
+                    _logger.LogError($"GS ID {gs.Id} боты без валюты -{JsonConvert.SerializeObject(withoutCurrency.Select(b => new { id = b.Id, name = b.UserName, balance = b.Balance }))} ");
+                    withoutCurrency.ForEach(x => vacFilteredBots.Remove(x));
+                }
+
 
                 if (vacFilteredBots.Count == 0)
                     continue;
@@ -495,6 +503,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 /*
                 * берем ботов у которых достаточно средств
                 */
+                
+
+
                 var botBalances = await GetBotBalancesInRubDict(vacFilteredBots);
                 botBalances = botBalances
                     .Where(p => p.Value.balance >= gs.Item.CurrentDigiSellerPrice)
@@ -1217,72 +1228,90 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch ); //readyState
             }
 
-            var sendRes = await sbot.SendGameProto(
-                uint.Parse(gs.Item.AppId),
-                uint.Parse(gs.Item.SubId),
-                gs.Item.IsBundle,
-                gs.SteamProfileGifteeAccountID,
-                gs.SteamProfileName,
-                $"Спасибо, что обратились к нам! №{gs.Id}",
-                gs.Bot.Region);
-
-            _logger.LogInformation($"GS ID {gs.Id} send game steam res - {JsonConvert.SerializeObject(sendRes, Formatting.Indented)}");
-
-            var now = timeForTest ?? DateTimeOffset.UtcNow.ToUniversalTime();
-
-            //обновляем состояние бота
-            var attemptsCount= gs.Bot.Attempt_Add(now);
-            if (sendRes.initTranRes != null && sendRes.initTranRes.purchaseresultdetail == 53)
+            if (sbot.BusyState.WaitOne())
             {
-                //ошибка стима
-                //За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.
-                gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
-                //gs.Bot.Attempt_Reset();
-                gs.Bot.State = BotState.tempLimit;
-            }
-            else
-            {
-                if (attemptsCount >= 10)
+                try
                 {
-                    gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
-                    gs.Bot.State = BotState.tempLimit;
-                }
-            }
+                    var check = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
+                    if (check.StatusId is GameSessionStatusEnum.Received)
+                        throw new Exception("Сброс отправки");
 
-            GameSessionStatusLog.ValueJson valueJson = null;
-            if (sendRes.result == SendeGameResult.sended)
-            {
-                var region = await _steamCountryCodeRepository.GetByPredicateAsync(db, r => r.Code == gs.Bot.Region);
-                gs.Item.LastSendedRegion = region;
-                gs.SendRegion = region;
-                gs.StatusId = GameSessionStatusEnum.Received;//Игра получена
-                valueJson = new GameSessionStatusLog.ValueJson
-                {
-                    userNickname = gs.SteamProfileName,
-                    userProfileUrl = gs.SteamProfileUrl,
-                    botId = gs.Bot.Id,
-                    botName = gs.Bot.UserName
-                };
 
-                gs.ItemData = new GameSessionItem 
-                { 
-                    Price = gs.Item.CurrentDigiSellerPrice,
-                    SteamPercent = gs.Item.SteamPercent,
-                };
+                    var sendRes = await sbot.SendGameProto(
+                        uint.Parse(gs.Item.AppId),
+                        uint.Parse(gs.Item.SubId),
+                        gs.Item.IsBundle,
+                        gs.SteamProfileGifteeAccountID,
+                        gs.SteamProfileName,
+                        $"Спасибо, что обратились к нам! №{gs.Id}",
+                        gs.Bot.Region);
 
-                if (!string.IsNullOrEmpty(gs.DigiSellerDealId))
-                {
-                    var digiSellerDealId = gs.DigiSellerDealId;
-                    var aspNetUserId = gs.User.AspNetUser.Id;
 
-                    await Task.Factory.StartNew(() =>
+                    _logger.LogInformation(
+                        $"GS ID {gs.Id} send game steam res - {JsonConvert.SerializeObject(sendRes, Formatting.Indented)}");
+
+                    var now = timeForTest ?? DateTimeOffset.UtcNow.ToUniversalTime();
+
+                    //обновляем состояние бота
+                    var attemptsCount = gs.Bot.Attempt_Add(now, sendRes.result == SendeGameResult.sended);
+                    if (sendRes.initTranRes != null && sendRes.initTranRes.purchaseresultdetail == 53)
                     {
-                        _digiSellerNetworkService.SendOrderChatMessage(
-                            digiSellerDealId,
-                            "Спасибо за покупку нашего товара! Игра была успешно доставлена! Будем очень рады видеть Ваш положительный отзыв, его можно оставить в соседней вкладке, рядом с \"Переписка с продавцом\"!",
-                            aspNetUserId);
-                    });
-                }
+                        //ошибка стима
+                        //За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.
+                        gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
+                        //gs.Bot.Attempt_Reset();
+                        gs.Bot.State = BotState.tempLimit;
+                    }
+                    else
+                    {
+                        if (attemptsCount >= 10)
+                        {
+                            gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArray.Min().AddHours(1);
+                            gs.Bot.State = BotState.tempLimit;
+                        }
+
+                        if (gs.Bot.SendGameAttemptsCountDaily >= 50)
+                        {
+                            gs.Bot.TempLimitDeadline = gs.Bot.SendGameAttemptsArrayDaily.Min().AddDays(1);
+                            gs.Bot.State = BotState.tempLimit;
+                        }
+                    }
+
+                    GameSessionStatusLog.ValueJson valueJson = null;
+                    if (sendRes.result == SendeGameResult.sended)
+                    {
+                        var region =
+                            await _steamCountryCodeRepository.GetByPredicateAsync(db, r => r.Code == gs.Bot.Region);
+                        gs.Item.LastSendedRegion = region;
+                        gs.SendRegion = region;
+                        gs.StatusId = GameSessionStatusEnum.Received; //Игра получена
+                        valueJson = new GameSessionStatusLog.ValueJson
+                        {
+                            userNickname = gs.SteamProfileName,
+                            userProfileUrl = gs.SteamProfileUrl,
+                            botId = gs.Bot.Id,
+                            botName = gs.Bot.UserName
+                        };
+
+                        gs.ItemData = new GameSessionItem
+                        {
+                            Price = gs.Item.CurrentDigiSellerPrice,
+                            SteamPercent = gs.Item.SteamPercent,
+                        };
+
+                        if (!string.IsNullOrEmpty(gs.DigiSellerDealId))
+                        {
+                            var digiSellerDealId = gs.DigiSellerDealId;
+                            var aspNetUserId = gs.User.AspNetUser.Id;
+
+                            await Task.Factory.StartNew(() =>
+                            {
+                                _digiSellerNetworkService.SendOrderChatMessage(
+                                    digiSellerDealId,
+                                    "Спасибо за покупку нашего товара! Игра была успешно доставлена! Будем очень рады видеть Ваш положительный отзыв, его можно оставить в соседней вкладке, рядом с \"Переписка с продавцом\"!",
+                                    aspNetUserId);
+                            });
+                        }
 
 #if !DEBUG
                 (ProfileDataRes profileData, string err) =
@@ -1291,96 +1320,110 @@ namespace SteamDigiSellerBot.Services.Implementation
                 if (profileData != null)
                     await sbot.RemoveFromFriends(profileData);
 #endif
+                    }
+                    else if (sendRes.result == SendeGameResult.gameExists)
+                    {
+                        gs.StatusId = GameSessionStatusEnum.GameIsExists; //Уже есть этот продукт
+                    }
+                    else if (sendRes.result == SendeGameResult.error)
+                    {
+                        gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71
+                                      || sendRes.initTranRes?.purchaseresultdetail == 72
+                            ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
+                            : GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+
+                        var mes = "Не удалось отправить игру.";
+                        if (!string.IsNullOrEmpty(sendRes.errMessage))
+                            mes += $" Причина: {sendRes.errMessage}";
+                        mes += $" Код ошибки {sendRes.errCode}.";
+
+                        valueJson = new GameSessionStatusLog.ValueJson { message = mes };
+                    }
+
+                    var log = new GameSessionStatusLog
+                    {
+                        InsertDate = DateTimeOffset.UtcNow,
+                        StatusId = gs.StatusId,
+                        Value = valueJson
+                    };
+                    gs.GameSessionStatusLogs.Add(log);
+                    //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
+                    await _gameSessionRepository.EditAsync(db, gs);
+                    await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
+                    await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
+
+
+                    //обновляем состояние бота
+                    //(bool stateParsed, BotState state, DateTimeOffset tempLimitDeadline, int count) =
+                    //                sbot.GetBotState(gs.Bot);
+                    //if (stateParsed)
+                    //{
+                    //    gs.Bot.State = state;
+                    //    gs.Bot.TempLimitDeadline = tempLimitDeadline;
+                    //    gs.Bot.SendGameAttemptsCount = count;
+                    //}
+
+                    await Task.Delay(1000);
+
+                    //await Task.WhenAll(new List<Task>
+                    //{
+                    //    Task.Run(() =>
+                    //    {
+                    //обновляем баланс бота
+                    (bool balanceParsed, decimal balance) = await sbot.GetBotBalance();
+                    if (balanceParsed)
+                        gs.Bot.Balance = balance;
+                    //    }),
+                    //    Task.Run(() =>
+                    //    {
+                    //Обновляем лимит на сумму отправленных игр в валюте бота
+                    var currencyData = await _currencyDataService.GetCurrencyData();
+                    (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) =
+                        sbot.GetSendedGiftsSum(currencyData, gs.Bot.Region, gs.Bot.BotRegionSetting);
+                    if (sendedParseSuccess)
+                    {
+                        if (gs.Bot.SteamCurrencyId is null || gs.Bot.SteamCurrencyId != steamCurrencyId)
+                            gs.Bot.SteamCurrencyId = steamCurrencyId;
+
+                        gs.Bot.SendedGiftsSum = sendedGiftsSum;
+
+                        _logger.LogInformation(
+                            $"BOT {gs.Bot.Id} {gs.Bot.UserName} - GetSendedGiftsSum - {sendedGiftsSum}, {steamCurrencyId}");
+                    }
+
+                    (bool maxSendedSuccess, GetMaxSendedGiftsSumResult getMaxSendedRes) =
+                        sbot.GetMaxSendedGiftsSum(currencyData, gs.Bot);
+                    if (maxSendedSuccess)
+                    {
+                        gs.Bot.IsProblemRegion = getMaxSendedRes.IsProblemRegion;
+                        gs.Bot.HasProblemPurchase = getMaxSendedRes.HasProblemPurchase;
+                        gs.Bot.TotalPurchaseSumUSD = getMaxSendedRes.TotalPurchaseSumUSD;
+                        gs.Bot.MaxSendedGiftsSum = getMaxSendedRes.MaxSendedGiftsSum;
+                        gs.Bot.MaxSendedGiftsUpdateDate = getMaxSendedRes.MaxSendedGiftsUpdateDate;
+
+                        _logger.LogInformation(
+                            $"BOT {gs.Bot.Id} {gs.Bot.UserName} - GetMaxSendedGiftsSumResult - {JsonConvert.SerializeObject(getMaxSendedRes, Formatting.Indented)}");
+                    }
+                    //    })
+                    //});
+
+                    await _gameSessionRepository.EditAsync(db, gs);
+                    return (sendRes.result == SendeGameResult.sended
+                            ? SendGameStatus.sended
+                            : SendGameStatus.otherError,
+                        sendRes.ChangeBot ? GameReadyToSendStatus.botSwitch : readyState);
+                }
+                catch
+                {
+                    throw;
+                }
+                finally{
+
+                    sbot.BusyState.Release();
+                }
             }
-            else if (sendRes.result == SendeGameResult.gameExists)
-            {
-                gs.StatusId = GameSessionStatusEnum.GameIsExists;//Уже есть этот продукт
-            }
-            else if (sendRes.result == SendeGameResult.error)
-            {
-                gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71
-                           || sendRes.initTranRes?.purchaseresultdetail == 72
-                    ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
-                    : GameSessionStatusEnum.UnknownError;//Неизвестная ошибка
 
-                var mes = "Не удалось отправить игру.";
-                if (!string.IsNullOrEmpty(sendRes.errMessage))
-                    mes += $" Причина: {sendRes.errMessage}";
-                mes += $" Код ошибки {sendRes.errCode}.";
-
-                valueJson = new GameSessionStatusLog.ValueJson { message = mes };
-            }
-
-            var log = new GameSessionStatusLog
-            {
-                InsertDate = DateTimeOffset.UtcNow,
-                StatusId = gs.StatusId,
-                Value = valueJson
-            };
-            gs.GameSessionStatusLogs.Add(log);
-            //gs.Bot.SendGameAttempts.Add(new BotSendGameAttempts { Date = DateTimeOffset.UtcNow });
-            await _gameSessionRepository.EditAsync(db, gs);
-            await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
-            await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
-
-
-            //обновляем состояние бота
-            //(bool stateParsed, BotState state, DateTimeOffset tempLimitDeadline, int count) =
-            //                sbot.GetBotState(gs.Bot);
-            //if (stateParsed)
-            //{
-            //    gs.Bot.State = state;
-            //    gs.Bot.TempLimitDeadline = tempLimitDeadline;
-            //    gs.Bot.SendGameAttemptsCount = count;
-            //}
-
-            await Task.Delay(1000);
-
-            //await Task.WhenAll(new List<Task>
-            //{
-            //    Task.Run(() =>
-            //    {
-            //обновляем баланс бота
-            (bool balanceParsed, decimal balance) = await sbot.GetBotBalance();
-            if (balanceParsed)
-                gs.Bot.Balance = balance;
-            //    }),
-            //    Task.Run(() =>
-            //    {
-            //Обновляем лимит на сумму отправленных игр в валюте бота
-            var currencyData = await _currencyDataService.GetCurrencyData();
-            (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) =
-                                    sbot.GetSendedGiftsSum(currencyData, gs.Bot.Region, gs.Bot.BotRegionSetting);
-            if (sendedParseSuccess)
-            {
-                if (gs.Bot.SteamCurrencyId is null || gs.Bot.SteamCurrencyId != steamCurrencyId)
-                    gs.Bot.SteamCurrencyId = steamCurrencyId;
-
-                gs.Bot.SendedGiftsSum = sendedGiftsSum;
-
-                _logger.LogInformation($"BOT {gs.Bot.Id} {gs.Bot.UserName} - GetSendedGiftsSum - {sendedGiftsSum}, {steamCurrencyId}");
-            }
-
-            (bool maxSendedSuccess, GetMaxSendedGiftsSumResult getMaxSendedRes) =
-                                    sbot.GetMaxSendedGiftsSum(currencyData, gs.Bot);
-            if (maxSendedSuccess)
-            {
-                gs.Bot.IsProblemRegion = getMaxSendedRes.IsProblemRegion;
-                gs.Bot.HasProblemPurchase = getMaxSendedRes.HasProblemPurchase;
-                gs.Bot.TotalPurchaseSumUSD = getMaxSendedRes.TotalPurchaseSumUSD;
-                gs.Bot.MaxSendedGiftsSum = getMaxSendedRes.MaxSendedGiftsSum;
-                gs.Bot.MaxSendedGiftsUpdateDate = getMaxSendedRes.MaxSendedGiftsUpdateDate;
-
-                _logger.LogInformation($"BOT {gs.Bot.Id} {gs.Bot.UserName} - GetMaxSendedGiftsSumResult - {JsonConvert.SerializeObject(getMaxSendedRes, Formatting.Indented)}");
-            }
-            //    })
-            //});
-
-            await _gameSessionRepository.EditAsync(db, gs);
-            return (sendRes.result == SendeGameResult.sended
-                ? SendGameStatus.sended
-                : SendGameStatus.otherError,
-                 sendRes.ChangeBot ? GameReadyToSendStatus.botSwitch: readyState);
+            throw new Exception("Не удалось дождать очереди");
         }
 
         public async Task UpdateQueueInfo(GameSession gs, int position)

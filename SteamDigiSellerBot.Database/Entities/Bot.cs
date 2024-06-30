@@ -18,6 +18,7 @@ namespace SteamDigiSellerBot.Database.Entities
         public BotState? State { get; set; }
         public DateTimeOffset TempLimitDeadline { get; set; }
         public int SendGameAttemptsCount { get; set; }
+        public int SendGameAttemptsCountDaily { get; set; }
 
         public decimal Balance { get; set; }
 
@@ -135,6 +136,9 @@ namespace SteamDigiSellerBot.Database.Entities
         [Column(TypeName = "json")]
         public List<DateTimeOffset> SendGameAttemptsArray { get; set; }
 
+        [Column(TypeName = "json")]
+        public List<DateTimeOffset> SendGameAttemptsArrayDaily { get; set; }
+
         private void Attempt_SetArray()
         {
             //if (Attempts == null)
@@ -146,19 +150,44 @@ namespace SteamDigiSellerBot.Database.Entities
             //}
             SendGameAttemptsArray ??= new();
             SendGameAttemptsArray = SendGameAttemptsArray.Where(x => x >= DateTimeOffset.UtcNow.ToUniversalTime().AddHours(-1)).ToList();
+
+            if (SendGameAttemptsArrayDaily == null)
+            {
+                SendGameAttemptsArrayDaily ??= new();
+                if (SendGameAttemptsCountDaily > 0)
+                    for (int i = 0; i < SendGameAttemptsCountDaily; i++)
+                    {
+                        SendGameAttemptsArrayDaily.Add(DateTimeOffset.UtcNow.ToUniversalTime().AddHours(-12));
+                    }
+            }
+
+            SendGameAttemptsArrayDaily = SendGameAttemptsArray.Where(x => x >= DateTimeOffset.UtcNow.ToUniversalTime().AddDays(-1)).ToList();
         }
         public int Attempt_Count()
         {
             Attempt_SetArray();
             SendGameAttemptsCount = SendGameAttemptsArray.Count;
+
+            //Заглушка отмены обновления
+            //SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+            SendGameAttemptsCountDaily = 0;
+
             return SendGameAttemptsCount;
         }
-        public int Attempt_Add(DateTimeOffset tryTime)
+        public int Attempt_Add(DateTimeOffset tryTime, bool daily)
         {
             Attempt_SetArray();
             SendGameAttemptsArray.Add(tryTime);
+            if (daily)
+                SendGameAttemptsArrayDaily.Add(tryTime);
             //SendGameAttemptsArray= System.Text.Json.JsonSerializer.Serialize(Attempts);
             SendGameAttemptsCount=SendGameAttemptsArray.Count;
+
+
+            //SendGameAttemptsCountDaily = SendGameAttemptsArrayDaily.Count;
+            SendGameAttemptsCountDaily = 0;
+
+
             return SendGameAttemptsCount;
         }
         public void Attempt_Reset()
@@ -166,7 +195,11 @@ namespace SteamDigiSellerBot.Database.Entities
             SendGameAttemptsArray = new();
             //SendGameAttemptsArray = "[]";
             SendGameAttemptsCount = 0;
+
+            SendGameAttemptsArrayDaily = new();
+            SendGameAttemptsCountDaily = 0;
         }
+
 
         public class VacGame
         {
