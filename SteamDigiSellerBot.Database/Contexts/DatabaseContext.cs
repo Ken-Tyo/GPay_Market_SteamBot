@@ -37,9 +37,7 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<BotSendGameAttempts> BotSendGameAttempts { get; set; }
         public DbSet<GameSessionItem> GameSessionItems { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.EnableSensitiveDataLogging()
-                .EnableDetailedErrors();
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
         {
