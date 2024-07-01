@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Models;
 using System;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace SteamDigiSellerBot.Database.Contexts
 {
@@ -36,6 +37,9 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<BotSendGameAttempts> BotSendGameAttempts { get; set; }
         public DbSet<GameSessionItem> GameSessionItems { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
         {
