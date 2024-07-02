@@ -190,7 +190,9 @@ export const setActiveMenuLink = (name) => {
     };
   });
 };
+
 const isNullOrEmpty = (target) => target != null && target != "";
+
 export const apiFetchItems = async (filter) => {
   setItemsLoading(true);
   let filterDTO = structuredClone(filter);
@@ -261,6 +263,18 @@ export const apiSetItemPricePriority = async (gpId) => {
   let res = await fetch(`/items/price/${gpId}/priority`, { method: "POST" });
   console.log(res);
   return res;
+};
+
+export const sortByPrice = async (items, price) => {
+    return items.sort((a, b) => {
+        if (a[price] < b[price]) {
+            return -1;
+        }
+        if (a[price] > b[price]) {
+            return 1;
+        }
+        return 0;
+    });
 };
 
 export const apiFetchGameSessions = async (filter) => {
