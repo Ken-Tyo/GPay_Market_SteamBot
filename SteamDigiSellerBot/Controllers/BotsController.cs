@@ -62,8 +62,10 @@ namespace SteamDigiSellerBot.Controllers
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
             });
 
+            
             return Ok(bots
-                .OrderByDescending(b => b.Region)
+                .OrderByDescending(b => b.IsON)
+                .ThenBy(b => b.Region)
                 .ThenByDescending(b => b.Balance)
                 .ThenBy(b => b.UserName));
         }
