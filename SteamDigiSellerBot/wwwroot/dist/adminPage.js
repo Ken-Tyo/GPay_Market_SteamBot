@@ -26005,6 +26005,7 @@ var map = {
 	"./AU.svg": 1334,
 	"./BR.svg": 772,
 	"./CIS$.svg": 9709,
+	"./CL.svg": 3922,
 	"./CN.svg": 8119,
 	"./CO.svg": 8582,
 	"./EU.svg": 6850,
@@ -26077,6 +26078,14 @@ module.exports = __webpack_require__.p + "bcc82b02d812598618ea.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "f5b93a5daffcd9703f73.svg";
+
+/***/ }),
+
+/***/ 3922:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "189d5116cb6f28f119a4.svg";
 
 /***/ }),
 
@@ -58943,78 +58952,79 @@ var modalBotDetails = function modalBotDetails(_ref) {
 /* harmony default export */ const bots_modalBotDetails = (modalBotDetails);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/utils.js
 var stateColor = {
-  1: '#3C965A',
-  2: '#AD8D1D',
-  3: '#A09F9B',
-  4: '#CA2929'
+  1: "#3C965A",
+  2: "#AD8D1D",
+  3: "#A09F9B",
+  4: "#CA2929"
 };
 var currenciesSymbol = {
   RU: {
-    symbol: '₽',
-    flag: ''
+    symbol: "₽",
+    flag: ""
   },
   UA: {
-    symbol: '₴',
-    flag: ''
+    symbol: "₴",
+    flag: ""
   },
   KZ: {
-    symbol: '₸',
-    flag: ''
+    symbol: "₸",
+    flag: ""
   },
   US: {
-    symbol: '$',
-    flag: ''
+    symbol: "$",
+    flag: ""
   },
   TR: {
-    symbol: 'TL',
-    flag: ''
+    symbol: "TL",
+    flag: ""
   },
   EU: {
-    symbol: '€',
-    flag: ''
+    symbol: "€",
+    flag: ""
   },
   CN: {
-    symbol: '¥',
-    flag: ''
+    symbol: "¥",
+    flag: ""
   },
   VN: {
-    symbol: '₫',
-    flag: ''
+    symbol: "₫",
+    flag: ""
   },
   UY: {
-    symbol: '$U',
-    flag: ''
+    symbol: "$U",
+    flag: ""
   },
   KW: {
-    symbol: 'KWD',
-    flag: ''
+    symbol: "KWD",
+    flag: ""
   },
   BR: {
-    symbol: 'R$',
-    flag: ''
+    symbol: "R$",
+    flag: ""
   },
   NZ: {
-    symbol: 'NZ$',
-    flag: ''
+    symbol: "NZ$",
+    flag: ""
   },
   IN: {
-    symbol: 'Rs',
-    flag: ''
+    symbol: "Rs",
+    flag: ""
   },
   IL: {
-    symbol: 'ILS',
-    flag: ''
+    symbol: "ILS",
+    flag: ""
   }
 };
 
 //иконки взяты тут https://icon666.com/ru/search?q=%D0%9D%D0%BE%D0%B2%D0%B0%D1%8F+%D0%97%D0%B5%D0%BB%D0%B0%D0%BD%D0%B4%D0%B8%D1%8F
 var getFlagByRegionCode = function getFlagByRegionCode(code) {
-  if (!code) return '';
+  if (!code) return "";
   var result;
   try {
+    //result = require(`../../../icons/flags/CL.svg`);
     result = __webpack_require__(9642)("./".concat(code, ".svg"));
   } catch (_unused) {
-    console.error("\u0418\u043A\u043E\u043D\u043A\u0430 \u0434\u043B\u044F \u0441\u0442\u0440\u0430\u043D\u044B ".concat(code, ".svg \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430. \u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u043B\u0430\u0433"));
+    console.error("\u0418\u043A\u043E\u043D\u043A\u0430 \u0434\u043B\u044F \u0441\u0442\u0440\u0430\u043D\u044B ".concat(code, " \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430. \u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u043B\u0430\u0433"));
     result = __webpack_require__(1695);
   }
   return result;
