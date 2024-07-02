@@ -46,6 +46,9 @@
     "iSentInvitation": "I sent a friend request",
     "tryWithBot": "Repeat request from another bot"
   },
+  "invitationRefusedWithRemoteBot": {
+    "info": "Вам нужно либо запросить новую заявку от другого бота, либо вы можете по новой указать ссылку на аккаунт, куда необходимо доставить Ваш заказ."
+  },
   "gameExists": {
     "error": "Error",
     "info": "You already have this game/add-on on your Steam account. Specify another account that does not contain this product. If you have a free (temporary) version of the game, delete it {{- link}} and try again!",
