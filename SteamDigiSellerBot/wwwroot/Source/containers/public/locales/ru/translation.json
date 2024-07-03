@@ -47,7 +47,7 @@
         "tryWithBot": "Повторить заявку с другого бота"
     },
     "invitationRefusedWithRemoteBot": {
-        "info": "You need to either request a new request from another bot, or you can provide a new link to the account where your order needs to be delivered."
+        "info": "Вам нужно либо запросить новую заявку от другого бота, либо вы можете по новой указать ссылку на аккаунт, куда необходимо доставить Ваш заказ."
     },
     "gameExists": {
         "error": "Ошибка",
