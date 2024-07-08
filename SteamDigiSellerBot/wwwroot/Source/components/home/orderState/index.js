@@ -33,7 +33,6 @@ const OrderState = () => {
   const { t: tOrderState } = useTranslation('orderState');
   const { t: tActTimeExpires } = useTranslation('activationTimeExpires');
   const { t: tInvitationRefused } = useTranslation('invitationRefused');
-  const { t: tInvitationRefusedWithRemoteBot } = useTranslation('invitationRefusedWithRemoteBot');
   const { t: tGameExists } = useTranslation('gameExists');
   const { t: tGameSended } = useTranslation('gameSended');
   const { t: tGameSendInProgress } = useTranslation('gameSendInProgress');
@@ -60,8 +59,7 @@ const OrderState = () => {
   const showConfirmProfileUrl =
     gameSession && gameSession.statusId === 16 && gameSession.steamProfileUrl;
   const showIvitationSended = gameSession && gameSession.statusId === 6;
-  const showInvitationRefused = gameSession && gameSession.statusId === 4 && gameSession.botName;
-  const showInvitationRefusedWithRemoteBot = gameSession && gameSession.statusId === 4 && !gameSession.botName;
+  const showInvitationRefused = gameSession && gameSession.statusId === 4;
   const showGameAlreadyExists = gameSession && gameSession.statusId === 14;
   const showSendInProgress = gameSession && gameSession.statusId === 18;
   const showInQueue = gameSession && gameSession.statusId === 19;
@@ -76,7 +74,6 @@ const OrderState = () => {
   const uniquecode = searchParams.get('uniquecode') || '';
   return (
     <div className={css.wrapper}>
-      {checkCodeLoading && uniquecode && <CircularLoader color={'#571676'} />}
       {showEnterUniqueCode && (
         // <Area title={'Введите уникальный код заказа'} width={823}>
         <Area title={tCheckCode('title')}>
@@ -362,62 +359,6 @@ const OrderState = () => {
             {checkCodeLoading && <CircularLoader color={'#571676'} />}
           </div>
         </Area>
-      )}
-
-{showInvitationRefusedWithRemoteBot && (
-          <Area
-              title={`${tCommon('order')} #${gameSession.id} - ${tInvitationRefused(
-                  'error'
-              )}`}
-          >
-            <div className={css.ivitationRefused}>
-              {!checkCodeLoading && (
-                  <>
-                    <div className={css.hints}>
-                      <div className={css.hint}>
-                        {tInvitationRefused('youRefused')}
-                      </div>
-                      <div
-                          className={css.hint}
-                          dangerouslySetInnerHTML={{
-                            __html: tInvitationRefusedWithRemoteBot('info'),
-                          }}
-                      ></div>
-                    </div>
-
-                    <div className={css.accButtons}>
-                      <div className={css.line1}>
-                        <Button
-                            text={tOrderState('changeAccountBut')}
-                            className={css.but}
-                            onClick={() => {
-                              apiResetSteamAcc();
-                            }}
-                        />
-                      </div>
-                      {gameSession.isAnotherBotExists && (
-                          <div className={css.line1} style={{ marginTop: '32px' }}>
-                            <Button
-                                text={tInvitationRefused('tryWithBot')}
-                                className={css.but}
-                                style={{ width: '377px' }}
-                                onClick={() => {}}
-                            />
-                          </div>
-                      )}
-
-                      <div className={css.contactSellerWrapper}>
-                        <ContactTheSeller digisellerId={gameSession.digisellerId} />
-                      </div>
-                    </div>
-
-                    <Dlc isDlc={isDlc} />
-                    <Timer endTime={discountEndDate} />
-                  </>
-              )}
-              {checkCodeLoading && <CircularLoader color={'#571676'} />}
-            </div>
-          </Area>
       )}
 
       {showGameAlreadyExists && (

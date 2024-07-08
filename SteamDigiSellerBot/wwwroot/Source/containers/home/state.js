@@ -129,7 +129,6 @@ const checkCodeCommon = async (uniquecode, seller_id, captcha) => {
 };
 
 export const apiCheckCode = async (uniquecode, seller_id, captcha) => {
-  setStateProp('checkCodeLoading', true);
   let res = await fetch(`/home/checkCode`, {
     method: 'POST',
     body: mapToFormData({
@@ -138,7 +137,7 @@ export const apiCheckCode = async (uniquecode, seller_id, captcha) => {
       captcha: captcha,
     }),
   });
-  setStateProp('checkCodeLoading', false);
+
   //console.log(res);
   return res;
 };
