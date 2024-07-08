@@ -28,6 +28,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Services.Implementation;
+using Microsoft.AspNetCore.Authentication;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -406,6 +407,17 @@ namespace SteamDigiSellerBot.Controllers
                 req.IsRobotCheck = isRobotCheck;
                 return View(req);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            string redirectUrl = $"/{nameof(HomeController).GetControllerName()}/Login";
+
+            await HttpContext.SignOutAsync();
+            await _signInManager.SignOutAsync();
+
+            return Redirect(redirectUrl);
         }
 
         [HttpPost]
