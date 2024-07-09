@@ -94,18 +94,18 @@ namespace SteamDigiSellerBot.Utilities
         {
             return europianCodes.Contains(code);
         }
-        private static readonly string[] europianCodes = new string[] { "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
+        private static readonly string[] europianCodes = new string[] { "EU", "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
                     "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI",
                     "SK", "FI", "SE"};
-        private static readonly string[] cisDollarCodes = new string[] { "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY" };
+        private static readonly string[] cisDollarCodes = new string[] { "CIS", "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY",  };
 
-        private static readonly string[] sAsiaDollarCodes = new string[] { "BD", "BT", "NP", "PK", "LK" };
+        private static readonly string[] sAsiaDollarCodes = new string[] { "SAsia" , "BD", "BT", "NP", "PK", "LK" };
 
-        //mena
-        private static readonly string[] menaDollarCodes = new string[] { "BH", "EG", "IQ", "JO", "LB", "OM", "PS", "TR", "YE", "DZ", "BO", "MA", "TN", "SS" };
+        //mena TRY
+        private static readonly string[] menaDollarCodes = new string[] { "TRY", "BH", "EG", "IQ", "JO", "LB", "OM", "PS", "TR", "YE", "DZ", "BO", "MA", "TN", "SS" };
 
         //latam
-        private static readonly string[] latanDollarCodes = new string[] { "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
+        private static readonly string[] latanDollarCodes = new string[] { "ARS", "BZ", "SV", "GT", "HN", "NI", "PA", "AR", "BO", "EC", "GY", "PY", "SR", "VE" };
 
 
         /// <summary>
