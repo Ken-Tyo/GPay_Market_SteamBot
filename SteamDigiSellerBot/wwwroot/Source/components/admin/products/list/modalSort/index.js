@@ -1,11 +1,12 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
 import sortItem from "../../../../../icons/sort.svg";
+import css from './styles.scss';
 
 const ToggleSort = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleRef = useRef(null);
 
-    const handleSort = () => {
+    const togglesortPriceModal = () => {
         setIsOpen(!isOpen);
     };
 
@@ -24,19 +25,11 @@ const ToggleSort = () => {
 
     return (
         <div ref={toggleRef} style={{ position: 'relative', display: 'inline-block' }}>
-            <div onClick={handleSort} style={{ cursor: 'pointer' }}>
+            <div onClick={togglesortPriceModal} style={{ cursor: 'pointer' }}>
                 <img src={sortItem} style={{ marginLeft: "10px", cursor: "pointer" }} />
             </div>
             {isOpen && (
-                <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: '0',
-                    backgroundColor: 'white',
-                    border: '1px solid black',
-                    padding: '10px',
-                    zIndex: '1000'
-                }}>
+                <div className={css.sortPriceDropDown}>
                     <p>Percents</p>
                     <p>Numbers</p>
                 </div>

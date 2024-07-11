@@ -42404,6 +42404,9 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref2) {
 /* harmony default export */ const modalBulkPercentEdit = (ModalBulkPercentEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/sort.svg
 const sort_namespaceObject = __webpack_require__.p + "4f79e53b8b75a873f823.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalSort/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const modalSort_styles = ({"sortPriceDropDown":"styles__sortPriceDropDown--yHMvJ","sortPriceDropDownItem":"styles__sortPriceDropDownItem--CJNbJ"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalSort/index.js
 function modalSort_slicedToArray(arr, i) { return modalSort_arrayWithHoles(arr) || modalSort_iterableToArrayLimit(arr, i) || modalSort_unsupportedIterableToArray(arr, i) || modalSort_nonIterableRest(); }
 function modalSort_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -42414,13 +42417,14 @@ function modalSort_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var ToggleSort = function ToggleSort() {
   var _useState = (0,react.useState)(false),
     _useState2 = modalSort_slicedToArray(_useState, 2),
     isOpen = _useState2[0],
     setIsOpen = _useState2[1];
   var toggleRef = (0,react.useRef)(null);
-  var handleSort = function handleSort() {
+  var togglesortPriceModal = function togglesortPriceModal() {
     setIsOpen(!isOpen);
   };
   var handleClickOutside = function handleClickOutside(event) {
@@ -42441,7 +42445,7 @@ var ToggleSort = function ToggleSort() {
       display: 'inline-block'
     },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      onClick: handleSort,
+      onClick: togglesortPriceModal,
       style: {
         cursor: 'pointer'
       },
@@ -42453,15 +42457,7 @@ var ToggleSort = function ToggleSort() {
         }
       })
     }), isOpen && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      style: {
-        position: 'absolute',
-        top: '100%',
-        left: '0',
-        backgroundColor: 'white',
-        border: '1px solid black',
-        padding: '10px',
-        zIndex: '1000'
-      },
+      className: modalSort_styles.sortPriceDropDown,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("p", {
         children: "Percents"
       }), /*#__PURE__*/(0,jsx_runtime.jsx)("p", {
