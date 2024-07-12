@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import moment from "moment";
 import CheckBox from "./listCheckBox";
 import Section from "../../section";
@@ -49,6 +49,10 @@ const products = () => {
     changeItemBulkResponse,
   } = state.use();
 
+  const [sortedItems, setSortedItems] = useState([...items]);
+  const [sortOrder, setSortOrder] = useState(null);
+  const prntRef = useRef(null);
+
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
 
@@ -66,6 +70,39 @@ const products = () => {
   currencies.map((c) => {
     currencyDict[c.steamId] = c;
   });
+
+    const handleSort = (order, type) => {
+        let sorted = [...items];
+
+        if (type === "price") {
+            sorted.sort((a, b) => {
+                if (order === "asc") {
+                    return a.currentDigiSellerPrice - b.currentDigiSellerPrice;
+                } else {
+                    return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
+                }
+            });
+        } else if (type === 'percent') {
+            sorted.sort((a, b) => {
+                if (order === "asc") {
+                    return a.discountPercent - b.discountPercent;
+                } else {
+                    return b.discountPercent - a.discountPercent;
+                }
+            });
+        } else {
+            sorted.sort((a, b) => {
+                return a.id - b.id;
+            });
+        };
+        setSortedItems(sorted);
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    };
+
+    useEffect(() => {
+        handleSort('asc', 'id');
+        }, [items]);
+
 
   const headers = {
     checkbox: <div style={{ maxWidth: "86px", minWidth: "86px" }}></div>,
@@ -86,7 +123,7 @@ const products = () => {
     price: (
         <div style={{ display: "flex", alignItems: "center" }}>
             <div>Цена</div>
-            <ToggleSort />
+            <ToggleSort orderSort={sortOrder} parentRef={prntRef} onSort={handleSort} />
         </div>
     ),
     lastRegion: "",
@@ -94,12 +131,13 @@ const products = () => {
     options: "Опции",
     active: "",
   };
+
   console.log(itemsLoading);
   return (
     <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
-        data={[...items]}
+        data={[...sortedItems]}
         isLoading={itemsLoading}
         loadingText={() => {
           if (changeItemBulkResponse.loading) {
