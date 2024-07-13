@@ -71,23 +71,51 @@ const products = () => {
     currencyDict[c.steamId] = c;
   });
 
-    const handleSort = (order, type) => {
+    const handleSort = (type) => {
         let sorted = [...items];
 
         if (type === "price") {
             sorted.sort((a, b) => {
-                if (order === "asc") {
+                if (sortOrder === "asc") {
+                    if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
+                        return a.fixedDigiSellerPrice - b.fixedDigiSellerPrice;
+                    } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
+                        return 1;
+                    } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
+                        return -1;
+                    }
                     return a.currentDigiSellerPrice - b.currentDigiSellerPrice;
                 } else {
+                    if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
+                        return b.fixedDigiSellerPrice - a.fixedDigiSellerPrice;
+                    } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
+                        return -1;
+                    } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
+                        return 1;
+                    }
                     return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
                 }
             });
         } else if (type === 'percent') {
             sorted.sort((a, b) => {
-                if (order === "asc") {
-                    return a.discountPercent - b.discountPercent;
+                if (sortOrder === "asc") {
+                    if (a.isFixedPrice && b.isFixedPrice) {
+                        return a.currentDigiSellerPrice / a.currentSteamPriceRub - b.currentDigiSellerPrice / b.currentSteamPriceRub;
+                    } else if (a.isFixedPrice && !b.isFixedPrice) {
+                        return 1;
+                    } else if (!a.isFixedPrice && b.isFixedPrice) {
+                        return -1;
+                    }
+                    return a.steamPercent - b.steamPercent
                 } else {
-                    return b.discountPercent - a.discountPercent;
+                    if (a.isFixedPrice && b.isFixedPrice) {
+                        return b.currentDigiSellerPrice / b.currentSteamPriceRub - a.currentDigiSellerPrice / a.currentSteamPriceRub;
+                    } else if (a.isFixedPrice && !b.isFixedPrice) {
+                        return -1;
+                    } else if (!a.isFixedPrice && b.isFixedPrice) {
+                        return 1;
+                    }
+                    return b.steamPercent - a.steamPercent
                 }
             });
         } else {
@@ -100,7 +128,7 @@ const products = () => {
     };
 
     useEffect(() => {
-        handleSort('asc', 'id');
+        handleSort('id');
         }, [items]);
 
 
@@ -123,7 +151,7 @@ const products = () => {
     price: (
         <div style={{ display: "flex", alignItems: "center" }}>
             <div>Цена</div>
-            <ToggleSort orderSort={sortOrder} parentRef={prntRef} onSort={handleSort} />
+            <ToggleSort parentRef={prntRef} onSort={handleSort} />
         </div>
     ),
     lastRegion: "",

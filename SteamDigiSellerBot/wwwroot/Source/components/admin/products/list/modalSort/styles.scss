@@ -1,10 +1,12 @@
 .sortPriceDropDown {
     all: unset; /* Reset all inherited styles */
-    min-width: 85px;
-    right: -100px;
-    top: 20px;
-    border-radius: 15px;
-    background-color: #632c7d !important;
+    min-width: 150px !important;
+    height: 65px !important;
+    right: -150px;
+    top: 40px;
+    font-weight: 400 !important;
+    border-radius: 0px 15px 15px;
+    background-color: #311F43 !important;
     color: #ffffff;
     position: absolute;
     display: block !important;
@@ -12,9 +14,9 @@
     transition: 0.3s ease-in-out;
 
     .sortPriceDropDownItem {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         padding-left: 10px;
-        color: #ffffff;
+        color: #cccccc;
         font-size: 14px;
         line-height: 8px;
 

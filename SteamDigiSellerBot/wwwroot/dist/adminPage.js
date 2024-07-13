@@ -42419,8 +42419,7 @@ function modalSort_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var ToggleSort = function ToggleSort(_ref) {
-  var sortOrder = _ref.sortOrder,
-    parentRef = _ref.parentRef,
+  var parentRef = _ref.parentRef,
     onSort = _ref.onSort;
   var _useState = (0,react.useState)(false),
     _useState2 = modalSort_slicedToArray(_useState, 2),
@@ -42464,15 +42463,15 @@ var ToggleSort = function ToggleSort(_ref) {
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("p", {
         className: modalSort_styles.sortPriceDropDownItem,
         onClick: function onClick() {
-          return onSort(sortOrder, 'Percents');
+          return onSort('percent');
         },
-        children: "Percents"
+        children: "\u041F\u043E \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u0430\u043C"
       }), /*#__PURE__*/(0,jsx_runtime.jsx)("p", {
         className: modalSort_styles.sortPriceDropDownItem,
         onClick: function onClick() {
-          return onSort(sortOrder, 'price');
+          return onSort('price');
         },
-        children: "Numbers"
+        children: "\u041F\u043E \u0441\u0443\u043C\u043C\u0435 \u0447\u0438\u0441\u0435\u043B"
       })]
     })]
   });
@@ -43172,22 +43171,50 @@ var products = function products() {
   currencies.map(function (c) {
     currencyDict[c.steamId] = c;
   });
-  var handleSort = function handleSort(order, type) {
+  var handleSort = function handleSort(type) {
     var sorted = _toConsumableArray(items);
     if (type === "price") {
       sorted.sort(function (a, b) {
-        if (order === "asc") {
+        if (sortOrder === "asc") {
+          if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
+            return a.fixedDigiSellerPrice - b.fixedDigiSellerPrice;
+          } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
+            return 1;
+          } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
+            return -1;
+          }
           return a.currentDigiSellerPrice - b.currentDigiSellerPrice;
         } else {
+          if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
+            return b.fixedDigiSellerPrice - a.fixedDigiSellerPrice;
+          } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
+            return -1;
+          } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
+            return 1;
+          }
           return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
         }
       });
     } else if (type === 'percent') {
       sorted.sort(function (a, b) {
-        if (order === "asc") {
-          return a.discountPercent - b.discountPercent;
+        if (sortOrder === "asc") {
+          if (a.isFixedPrice && b.isFixedPrice) {
+            return a.currentDigiSellerPrice / a.currentSteamPriceRub - b.currentDigiSellerPrice / b.currentSteamPriceRub;
+          } else if (a.isFixedPrice && !b.isFixedPrice) {
+            return 1;
+          } else if (!a.isFixedPrice && b.isFixedPrice) {
+            return -1;
+          }
+          return a.steamPercent - b.steamPercent;
         } else {
-          return b.discountPercent - a.discountPercent;
+          if (a.isFixedPrice && b.isFixedPrice) {
+            return b.currentDigiSellerPrice / b.currentSteamPriceRub - a.currentDigiSellerPrice / a.currentSteamPriceRub;
+          } else if (a.isFixedPrice && !b.isFixedPrice) {
+            return -1;
+          } else if (!a.isFixedPrice && b.isFixedPrice) {
+            return 1;
+          }
+          return b.steamPercent - a.steamPercent;
         }
       });
     } else {
@@ -43200,7 +43227,7 @@ var products = function products() {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
   (0,react.useEffect)(function () {
-    handleSort('asc', 'id');
+    handleSort('id');
   }, [items]);
   var headers = {
     checkbox: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -43249,7 +43276,6 @@ var products = function products() {
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         children: "\u0426\u0435\u043D\u0430"
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalSort, {
-        orderSort: sortOrder,
         parentRef: prntRef,
         onSort: handleSort
       })]
