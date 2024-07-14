@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import moment from "moment";
 import CheckBox from "./listCheckBox";
 import Section from "../../section";
@@ -49,6 +49,10 @@ const products = () => {
     changeItemBulkResponse,
   } = state.use();
 
+  const [sortedItems, setSortedItems] = useState([...items]);
+  const [sortOrder, setSortOrder] = useState(null);
+  const prntRef = useRef(null);
+
   const [openDelConfirm, setOpenDelConfirm] = useState(false);
   const [openMassDelConfirm, setOpenMassDelConfirm] = useState(false);
 
@@ -66,6 +70,67 @@ const products = () => {
   currencies.map((c) => {
     currencyDict[c.steamId] = c;
   });
+
+    const handleSort = (type) => {
+        let sorted = [...items];
+
+        if (type === "price") {
+            sorted.sort((a, b) => {
+                if (sortOrder === "asc") {
+                    if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
+                        return a.fixedDigiSellerPrice - b.fixedDigiSellerPrice;
+                    } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
+                        return 1;
+                    } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
+                        return -1;
+                    }
+                    return a.currentDigiSellerPrice - b.currentDigiSellerPrice;
+                } else {
+                    if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
+                        return b.fixedDigiSellerPrice - a.fixedDigiSellerPrice;
+                    } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
+                        return -1;
+                    } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
+                        return 1;
+                    }
+                    return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
+                }
+            });
+        } else if (type === 'percent') {
+            sorted.sort((a, b) => {
+                if (sortOrder === "asc") {
+                    if (a.isFixedPrice && b.isFixedPrice) {
+                        return a.currentDigiSellerPrice / a.currentSteamPriceRub - b.currentDigiSellerPrice / b.currentSteamPriceRub;
+                    } else if (a.isFixedPrice && !b.isFixedPrice) {
+                        return 1;
+                    } else if (!a.isFixedPrice && b.isFixedPrice) {
+                        return -1;
+                    }
+                    return a.steamPercent - b.steamPercent
+                } else {
+                    if (a.isFixedPrice && b.isFixedPrice) {
+                        return b.currentDigiSellerPrice / b.currentSteamPriceRub - a.currentDigiSellerPrice / a.currentSteamPriceRub;
+                    } else if (a.isFixedPrice && !b.isFixedPrice) {
+                        return -1;
+                    } else if (!a.isFixedPrice && b.isFixedPrice) {
+                        return 1;
+                    }
+                    return b.steamPercent - a.steamPercent
+                }
+            });
+        } else {
+            sorted.sort((a, b) => {
+                return a.id - b.id;
+            });
+        };
+        setSortedItems(sorted);
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    };
+
+    useEffect(() => {
+        handleSort('id');
+        }, [items]);
+
 
   const headers = {
     checkbox: <div style={{ maxWidth: "86px", minWidth: "86px" }}></div>,
@@ -86,7 +151,7 @@ const products = () => {
     price: (
         <div style={{ display: "flex", alignItems: "center" }}>
             <div>Цена</div>
-            <ToggleSort />
+            <ToggleSort parentRef={prntRef} onSort={handleSort} />
         </div>
     ),
     lastRegion: "",
@@ -94,12 +159,13 @@ const products = () => {
     options: "Опции",
     active: "",
   };
+
   console.log(itemsLoading);
   return (
     <div className={css.wrapper}>
       <List
         headers={Object.values(headers)}
-        data={[...items]}
+        data={[...sortedItems]}
         isLoading={itemsLoading}
         loadingText={() => {
           if (changeItemBulkResponse.loading) {

@@ -2,7 +2,7 @@
 import sortItem from "../../../../../icons/sort.svg";
 import css from './styles.scss';
 
-const ToggleSort = () => {
+const ToggleSort = ({parentRef, onSort}) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleRef = useRef(null);
 
@@ -30,8 +30,8 @@ const ToggleSort = () => {
             </div>
             {isOpen && (
                 <div className={css.sortPriceDropDown}>
-                    <p>Percents</p>
-                    <p>Numbers</p>
+                    <p className={css.sortPriceDropDownItem} onClick={() => onSort('percent')}>По процентам</p>
+                    <p className={css.sortPriceDropDownItem} onClick={() => onSort('price')}>По сумме чисел</p>
                 </div>
             )}
         </div>
