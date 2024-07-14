@@ -45431,7 +45431,7 @@ var OrderState = function OrderState() {
               className: orderState_styles.hint,
               dangerouslySetInnerHTML: {
                 __html: tOrderState('requestSentInfo', {
-                  botName: "<a href=\"".concat(gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
+                  botName: "<a href=\"".concat(gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botUsername, "</a>")
                 })
               }
             })]
@@ -45479,7 +45479,7 @@ var OrderState = function OrderState() {
               className: orderState_styles.hint,
               dangerouslySetInnerHTML: {
                 __html: tInvitationRefused('info', {
-                  botName: "<a href=\"".concat(gameSession.botInvitationUrl || gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
+                  botName: "<a href=\"".concat(gameSession.botInvitationUrl || gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botUsername, "</a>")
                 })
               }
             })]
@@ -46332,7 +46332,7 @@ var TextSwitch = function TextSwitch(_ref) {
 };
 /* harmony default export */ const textSwitch = (TextSwitch);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/telegram.svg
-const telegram_namespaceObject = __webpack_require__.p + "9d34d05b55b99aefb6b6.svg";
+const telegram_namespaceObject = __webpack_require__.p + "264b47bc44f131d9bc99.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/footer/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const footer_styles = ({"footer":"styles__footer--u9Kb5","telegram":"styles__telegram--fiM8y"});

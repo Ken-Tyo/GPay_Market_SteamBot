@@ -264,7 +264,7 @@ const OrderState = () => {
                       __html: tOrderState('requestSentInfo', {
                         botName: `<a href="${gameSession.botProfileUrl}" 
                                      style="color: #8615BC; text-decoration: none; " 
-                                     target="_blank" >${gameSession.botName}</a>`,
+                                     target="_blank" >${gameSession.botUsername}</a>`,
                       }),
                     }}
                   ></div>
@@ -319,7 +319,7 @@ const OrderState = () => {
                         }" 
                                      style="color: #8615BC; text-decoration: none; " 
                                      target="_blank" >${
-                                       gameSession.botName
+                                       gameSession.botUsername
                                      }</a>`,
                       }),
                     }}

@@ -27,6 +27,7 @@ namespace SteamDigiSellerBot.Models.Home
         public int Id { get; set; }
         public string ItemName { get; set; }
         public string BotName { get; set; }
+        public string BotUsername { get; set; }
         public string BotProfileUrl { get; set; }
         public string BotInvitationUrl { get; set; }
         public int StatusId { get; set; }

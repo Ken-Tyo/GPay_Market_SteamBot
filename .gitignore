@@ -364,6 +364,7 @@ FodyWeavers.xsd
 
 
 /SteamDigiSellerBot/wwwroot/.idea
+/SteamDigiSellerBot/.idea
 appsettings*.json
 /SteamDigiSellerBot/wwwroot/Source/.vscode
 /SteamDigiSellerBot/package-lock.json
