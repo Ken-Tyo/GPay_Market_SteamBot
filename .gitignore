@@ -363,6 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 
+/SteamDigiSellerBot/wwwroot/.idea
 appsettings*.json
 /SteamDigiSellerBot/wwwroot/Source/.vscode
 /SteamDigiSellerBot/package-lock.json

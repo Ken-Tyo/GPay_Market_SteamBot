@@ -46,15 +46,6 @@ body,
 
         display: flex;
         flex-direction: column;
-
-        .footer {
-            display: flex;
-            justify-content: end;
-            flex: 0 1 auto;
-            padding-right: 87px;
-            padding-top: 30px;
-            padding-bottom: 40px;
-        }
     }
 
     @media screen and (max-width: 500px) {
@@ -69,13 +60,6 @@ body,
             left: 0;
             right: 0;
             opacity: 0.5;
-        }
-
-        .wrapperBackground {
-            .footer {
-                justify-content: center;
-                padding-right: 0;
-            }
         }
     }
 }
