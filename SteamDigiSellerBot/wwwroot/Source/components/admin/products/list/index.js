@@ -29,6 +29,7 @@ import {
 import ConfirmDialog from "../../../shared/modalConfirm";
 import EditItemModal from "./modalEdit";
 import BulkPercentEdit from "./modalBulkPercentEdit";
+import ToggleSort from "./modalSort/index";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import List from "../../../shared/list";
@@ -82,7 +83,12 @@ const products = () => {
         />
       </div>
     ),
-    price: "Цена",
+    price: (
+        <div style={{ display: "flex", alignItems: "center" }}>
+            <div>Цена</div>
+            <ToggleSort />
+        </div>
+    ),
     lastRegion: "",
     discount: "",
     options: "Опции",

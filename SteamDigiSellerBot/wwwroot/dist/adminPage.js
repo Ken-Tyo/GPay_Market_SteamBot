@@ -27346,13 +27346,37 @@ var apiSetItemPricePriority = /*#__PURE__*/function () {
     return _ref10.apply(this, arguments);
   };
 }();
-var apiFetchGameSessions = /*#__PURE__*/function () {
-  var _ref11 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee11(filter) {
-    var res, json;
+var sortByPrice = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
+  var _ref11 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee11(items, price) {
     return state_regeneratorRuntime().wrap(function _callee11$(_context11) {
       while (1) switch (_context11.prev = _context11.next) {
         case 0:
-          _context11.next = 2;
+          return _context11.abrupt("return", items.sort(function (a, b) {
+            if (a[price] < b[price]) {
+              return -1;
+            }
+            if (a[price] > b[price]) {
+              return 1;
+            }
+            return 0;
+          }));
+        case 1:
+        case "end":
+          return _context11.stop();
+      }
+    }, _callee11);
+  }));
+  return function sortByPrice(_x13, _x14) {
+    return _ref11.apply(this, arguments);
+  };
+}()));
+var apiFetchGameSessions = /*#__PURE__*/function () {
+  var _ref12 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee12(filter) {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee12$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
           return fetch("/gamesessions/list", {
             method: "POST",
             body: mapToFormData({
@@ -27368,143 +27392,117 @@ var apiFetchGameSessions = /*#__PURE__*/function () {
             })
           });
         case 2:
-          res = _context11.sent;
-          _context11.next = 5;
+          res = _context12.sent;
+          _context12.next = 5;
           return res.json();
         case 5:
-          json = _context11.sent;
+          json = _context12.sent;
           setStateProp("gameSessions", json.list);
           setStateProp("gameSessionsTotal", json.total);
         case 8:
-        case "end":
-          return _context11.stop();
-      }
-    }, _callee11);
-  }));
-  return function apiFetchGameSessions(_x13) {
-    return _ref11.apply(this, arguments);
-  };
-}();
-var apiFetchGameSessionsWithCurrentFilter = /*#__PURE__*/function () {
-  var _ref12 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee12() {
-    var filter;
-    return state_regeneratorRuntime().wrap(function _callee12$(_context12) {
-      while (1) switch (_context12.prev = _context12.next) {
-        case 0:
-          filter = state.get().gameSessionsFilter;
-          _context12.next = 3;
-          return apiFetchGameSessions(filter);
-        case 3:
         case "end":
           return _context12.stop();
       }
     }, _callee12);
   }));
-  return function apiFetchGameSessionsWithCurrentFilter() {
+  return function apiFetchGameSessions(_x15) {
     return _ref12.apply(this, arguments);
   };
 }();
-var apiFetchGameSession = /*#__PURE__*/function () {
-  var _ref13 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee13(gsId) {
-    var res, json;
+var apiFetchGameSessionsWithCurrentFilter = /*#__PURE__*/function () {
+  var _ref13 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee13() {
+    var filter;
     return state_regeneratorRuntime().wrap(function _callee13$(_context13) {
       while (1) switch (_context13.prev = _context13.next) {
         case 0:
-          _context13.next = 2;
-          return fetch("/gamesessions/".concat(gsId));
-        case 2:
-          res = _context13.sent;
-          if (!res.ok) {
-            _context13.next = 8;
-            break;
-          }
-          _context13.next = 6;
-          return res.json();
-        case 6:
-          json = _context13.sent;
-          return _context13.abrupt("return", json);
-        case 8:
-          return _context13.abrupt("return", null);
-        case 9:
+          filter = state.get().gameSessionsFilter;
+          _context13.next = 3;
+          return apiFetchGameSessions(filter);
+        case 3:
         case "end":
           return _context13.stop();
       }
     }, _callee13);
   }));
-  return function apiFetchGameSession(_x14) {
+  return function apiFetchGameSessionsWithCurrentFilter() {
     return _ref13.apply(this, arguments);
   };
 }();
-var apiFetchGameSessStatuses = /*#__PURE__*/function () {
-  var _ref14 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee14() {
-    var gameSessionsStatuses, res;
+var apiFetchGameSession = /*#__PURE__*/function () {
+  var _ref14 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee14(gsId) {
+    var res, json;
     return state_regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
-          gameSessionsStatuses = state.get().gameSessionsStatuses;
-          if (!(gameSessionsStatuses && Object.keys(gameSessionsStatuses).length > 0)) {
-            _context14.next = 3;
+          _context14.next = 2;
+          return fetch("/gamesessions/".concat(gsId));
+        case 2:
+          res = _context14.sent;
+          if (!res.ok) {
+            _context14.next = 8;
             break;
           }
-          return _context14.abrupt("return");
-        case 3:
-          _context14.next = 5;
-          return fetch("/gamesessions/statuses");
-        case 5:
-          res = _context14.sent;
-          _context14.t0 = setStateProp;
-          _context14.next = 9;
+          _context14.next = 6;
           return res.json();
+        case 6:
+          json = _context14.sent;
+          return _context14.abrupt("return", json);
+        case 8:
+          return _context14.abrupt("return", null);
         case 9:
-          _context14.t1 = _context14.sent;
-          (0, _context14.t0)("gameSessionsStatuses", _context14.t1);
-        case 11:
         case "end":
           return _context14.stop();
       }
     }, _callee14);
   }));
-  return function apiFetchGameSessStatuses() {
+  return function apiFetchGameSession(_x16) {
     return _ref14.apply(this, arguments);
   };
 }();
-var apiFetchBots = /*#__PURE__*/function () {
+var apiFetchGameSessStatuses = /*#__PURE__*/function () {
   var _ref15 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee15() {
-    var res;
+    var gameSessionsStatuses, res;
     return state_regeneratorRuntime().wrap(function _callee15$(_context15) {
       while (1) switch (_context15.prev = _context15.next) {
         case 0:
-          _context15.next = 2;
-          return fetch("/bots/list");
-        case 2:
+          gameSessionsStatuses = state.get().gameSessionsStatuses;
+          if (!(gameSessionsStatuses && Object.keys(gameSessionsStatuses).length > 0)) {
+            _context15.next = 3;
+            break;
+          }
+          return _context15.abrupt("return");
+        case 3:
+          _context15.next = 5;
+          return fetch("/gamesessions/statuses");
+        case 5:
           res = _context15.sent;
-          _context15.t0 = setBots;
-          _context15.next = 6;
+          _context15.t0 = setStateProp;
+          _context15.next = 9;
           return res.json();
-        case 6:
+        case 9:
           _context15.t1 = _context15.sent;
-          (0, _context15.t0)(_context15.t1);
-        case 8:
+          (0, _context15.t0)("gameSessionsStatuses", _context15.t1);
+        case 11:
         case "end":
           return _context15.stop();
       }
     }, _callee15);
   }));
-  return function apiFetchBots() {
+  return function apiFetchGameSessStatuses() {
     return _ref15.apply(this, arguments);
   };
 }();
-var apiFetchProxies = /*#__PURE__*/function () {
+var apiFetchBots = /*#__PURE__*/function () {
   var _ref16 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee16() {
     var res;
     return state_regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
           _context16.next = 2;
-          return fetch("/proxy/list");
+          return fetch("/bots/list");
         case 2:
           res = _context16.sent;
-          _context16.t0 = setProxies;
+          _context16.t0 = setBots;
           _context16.next = 6;
           return res.json();
         case 6:
@@ -27516,49 +27514,75 @@ var apiFetchProxies = /*#__PURE__*/function () {
       }
     }, _callee16);
   }));
-  return function apiFetchProxies() {
+  return function apiFetchBots() {
     return _ref16.apply(this, arguments);
   };
 }();
-var apiSetItemActiveStatus = /*#__PURE__*/function () {
-  var _ref17 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee17(ids) {
-    var idParam, res;
+var apiFetchProxies = /*#__PURE__*/function () {
+  var _ref17 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee17() {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee17$(_context17) {
       while (1) switch (_context17.prev = _context17.next) {
+        case 0:
+          _context17.next = 2;
+          return fetch("/proxy/list");
+        case 2:
+          res = _context17.sent;
+          _context17.t0 = setProxies;
+          _context17.next = 6;
+          return res.json();
+        case 6:
+          _context17.t1 = _context17.sent;
+          (0, _context17.t0)(_context17.t1);
+        case 8:
+        case "end":
+          return _context17.stop();
+      }
+    }, _callee17);
+  }));
+  return function apiFetchProxies() {
+    return _ref17.apply(this, arguments);
+  };
+}();
+var apiSetItemActiveStatus = /*#__PURE__*/function () {
+  var _ref18 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee18(ids) {
+    var idParam, res;
+    return state_regeneratorRuntime().wrap(function _callee18$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
           idParam = "";
           if (ids && ids.length > 0) {
             idParam = ids.join(",");
           }
           if (!ids || ids.length > 1) setItemsLoading(true);
-          _context17.next = 5;
+          _context18.next = 5;
           return fetch("/items/SetActive?ids=".concat(idParam));
         case 5:
-          res = _context17.sent;
-          _context17.next = 8;
+          res = _context18.sent;
+          _context18.next = 8;
           return apiFetchItems();
         case 8:
           if (!ids || ids.length > 1) setItemsLoading(false);
         case 9:
         case "end":
-          return _context17.stop();
+          return _context18.stop();
       }
-    }, _callee17);
+    }, _callee18);
   }));
-  return function apiSetItemActiveStatus(_x15) {
-    return _ref17.apply(this, arguments);
+  return function apiSetItemActiveStatus(_x17) {
+    return _ref18.apply(this, arguments);
   };
 }();
 var apiDeleteItem = /*#__PURE__*/function () {
-  var _ref18 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee18(id) {
+  var _ref19 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee19(id) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee18$(_context18) {
-      while (1) switch (_context18.prev = _context18.next) {
+    return state_regeneratorRuntime().wrap(function _callee19$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
         case 0:
-          _context18.next = 2;
+          _context19.next = 2;
           return fetch("/items/Delete?id=".concat(id));
         case 2:
-          res = _context18.sent;
+          res = _context19.sent;
           if (res.ok) {
             state.set(function (value) {
               return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -27570,21 +27594,21 @@ var apiDeleteItem = /*#__PURE__*/function () {
           }
         case 4:
         case "end":
-          return _context18.stop();
+          return _context19.stop();
       }
-    }, _callee18);
+    }, _callee19);
   }));
-  return function apiDeleteItem(_x16) {
-    return _ref18.apply(this, arguments);
+  return function apiDeleteItem(_x18) {
+    return _ref19.apply(this, arguments);
   };
 }();
 var apiBulkDeleteItem = /*#__PURE__*/function () {
-  var _ref19 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee19(Ids) {
+  var _ref20 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee20(Ids) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee19$(_context19) {
-      while (1) switch (_context19.prev = _context19.next) {
+    return state_regeneratorRuntime().wrap(function _callee20$(_context20) {
+      while (1) switch (_context20.prev = _context20.next) {
         case 0:
-          _context19.next = 2;
+          _context20.next = 2;
           return fetch("/items/bulk/delete", {
             method: "POST",
             body: mapToFormData({
@@ -27592,31 +27616,31 @@ var apiBulkDeleteItem = /*#__PURE__*/function () {
             })
           });
         case 2:
-          res = _context19.sent;
-          _context19.next = 5;
+          res = _context20.sent;
+          _context20.next = 5;
           return apiFetchItems();
         case 5:
-          return _context19.abrupt("return", res.ok);
+          return _context20.abrupt("return", res.ok);
         case 6:
         case "end":
-          return _context19.stop();
+          return _context20.stop();
       }
-    }, _callee19);
+    }, _callee20);
   }));
-  return function apiBulkDeleteItem(_x17) {
-    return _ref19.apply(this, arguments);
+  return function apiBulkDeleteItem(_x19) {
+    return _ref20.apply(this, arguments);
   };
 }();
 var apiDeleteProxy = /*#__PURE__*/function () {
-  var _ref20 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee20(id) {
+  var _ref21 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee21(id) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee20$(_context20) {
-      while (1) switch (_context20.prev = _context20.next) {
+    return state_regeneratorRuntime().wrap(function _callee21$(_context21) {
+      while (1) switch (_context21.prev = _context21.next) {
         case 0:
-          _context20.next = 2;
+          _context21.next = 2;
           return fetch("/proxy/delete?id=".concat(id));
         case 2:
-          res = _context20.sent;
+          res = _context21.sent;
           if (res.ok) {
             state.set(function (value) {
               return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -27628,24 +27652,24 @@ var apiDeleteProxy = /*#__PURE__*/function () {
           }
         case 4:
         case "end":
-          return _context20.stop();
+          return _context21.stop();
       }
-    }, _callee20);
+    }, _callee21);
   }));
-  return function apiDeleteProxy(_x18) {
-    return _ref20.apply(this, arguments);
+  return function apiDeleteProxy(_x20) {
+    return _ref21.apply(this, arguments);
   };
 }();
 var apiDeleteProxyAll = /*#__PURE__*/function () {
-  var _ref21 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee21(id) {
+  var _ref22 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee22(id) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee21$(_context21) {
-      while (1) switch (_context21.prev = _context21.next) {
+    return state_regeneratorRuntime().wrap(function _callee22$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
         case 0:
-          _context21.next = 2;
+          _context22.next = 2;
           return fetch("/proxy/delete/all");
         case 2:
-          res = _context21.sent;
+          res = _context22.sent;
           if (res.ok) {
             state.set(function (value) {
               return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -27655,113 +27679,113 @@ var apiDeleteProxyAll = /*#__PURE__*/function () {
           }
         case 4:
         case "end":
-          return _context21.stop();
+          return _context22.stop();
       }
-    }, _callee21);
+    }, _callee22);
   }));
-  return function apiDeleteProxyAll(_x19) {
-    return _ref21.apply(this, arguments);
+  return function apiDeleteProxyAll(_x21) {
+    return _ref22.apply(this, arguments);
   };
 }();
 var apiLoadNewProxy = /*#__PURE__*/function () {
-  var _ref22 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee22(data) {
+  var _ref23 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee23(data) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee22$(_context22) {
-      while (1) switch (_context22.prev = _context22.next) {
+    return state_regeneratorRuntime().wrap(function _callee23$(_context23) {
+      while (1) switch (_context23.prev = _context23.next) {
         case 0:
-          _context22.next = 2;
+          _context23.next = 2;
           return fetch("/proxy/load", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 2:
-          res = _context22.sent;
+          res = _context23.sent;
           if (res.ok) {
-            _context22.next = 5;
+            _context23.next = 5;
             break;
           }
-          return _context22.abrupt("return");
+          return _context23.abrupt("return");
         case 5:
           toggleLoadProxiesModal(false);
-          _context22.next = 8;
+          _context23.next = 8;
           return apiFetchProxies();
         case 8:
-        case "end":
-          return _context22.stop();
-      }
-    }, _callee22);
-  }));
-  return function apiLoadNewProxy(_x20) {
-    return _ref22.apply(this, arguments);
-  };
-}();
-var apiEditBot = /*#__PURE__*/function () {
-  var _ref23 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee23(item) {
-    var res, errors;
-    return state_regeneratorRuntime().wrap(function _callee23$(_context23) {
-      while (1) switch (_context23.prev = _context23.next) {
-        case 0:
-          setStateProp("editBotResponse", {
-            loading: true,
-            errors: []
-          });
-          _context23.next = 3;
-          return fetch("/bots/add", {
-            method: "POST",
-            body: mapToFormData(item)
-          });
-        case 3:
-          res = _context23.sent;
-          errors = [];
-          if (!res.ok) {
-            _context23.next = 11;
-            break;
-          }
-          toggleEditBotModal(false);
-          _context23.next = 9;
-          return apiFetchBots();
-        case 9:
-          _context23.next = 18;
-          break;
-        case 11:
-          if (!(res.status === 500)) {
-            _context23.next = 15;
-            break;
-          }
-          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context23.next = 18;
-          break;
-        case 15:
-          _context23.next = 17;
-          return res.json();
-        case 17:
-          errors = _context23.sent.errors;
-        case 18:
-          setStateProp("editBotResponse", {
-            loading: false,
-            errors: errors
-          });
-          return _context23.abrupt("return", res.ok);
-        case 20:
         case "end":
           return _context23.stop();
       }
     }, _callee23);
   }));
-  return function apiEditBot(_x21) {
+  return function apiLoadNewProxy(_x22) {
     return _ref23.apply(this, arguments);
   };
 }();
-var apiDeleteBot = /*#__PURE__*/function () {
-  var _ref24 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee24(id) {
-    var res;
+var apiEditBot = /*#__PURE__*/function () {
+  var _ref24 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee24(item) {
+    var res, errors;
     return state_regeneratorRuntime().wrap(function _callee24$(_context24) {
       while (1) switch (_context24.prev = _context24.next) {
         case 0:
-          _context24.next = 2;
+          setStateProp("editBotResponse", {
+            loading: true,
+            errors: []
+          });
+          _context24.next = 3;
+          return fetch("/bots/add", {
+            method: "POST",
+            body: mapToFormData(item)
+          });
+        case 3:
+          res = _context24.sent;
+          errors = [];
+          if (!res.ok) {
+            _context24.next = 11;
+            break;
+          }
+          toggleEditBotModal(false);
+          _context24.next = 9;
+          return apiFetchBots();
+        case 9:
+          _context24.next = 18;
+          break;
+        case 11:
+          if (!(res.status === 500)) {
+            _context24.next = 15;
+            break;
+          }
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
+          _context24.next = 18;
+          break;
+        case 15:
+          _context24.next = 17;
+          return res.json();
+        case 17:
+          errors = _context24.sent.errors;
+        case 18:
+          setStateProp("editBotResponse", {
+            loading: false,
+            errors: errors
+          });
+          return _context24.abrupt("return", res.ok);
+        case 20:
+        case "end":
+          return _context24.stop();
+      }
+    }, _callee24);
+  }));
+  return function apiEditBot(_x23) {
+    return _ref24.apply(this, arguments);
+  };
+}();
+var apiDeleteBot = /*#__PURE__*/function () {
+  var _ref25 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee25(id) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee25$(_context25) {
+      while (1) switch (_context25.prev = _context25.next) {
+        case 0:
+          _context25.next = 2;
           return fetch("/bots/Delete?id=".concat(id));
         case 2:
-          res = _context24.sent;
+          res = _context25.sent;
           if (res.ok) {
             state.set(function (value) {
               return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -27773,21 +27797,21 @@ var apiDeleteBot = /*#__PURE__*/function () {
           }
         case 4:
         case "end":
-          return _context24.stop();
+          return _context25.stop();
       }
-    }, _callee24);
+    }, _callee25);
   }));
-  return function apiDeleteBot(_x22) {
-    return _ref24.apply(this, arguments);
+  return function apiDeleteBot(_x24) {
+    return _ref25.apply(this, arguments);
   };
 }();
 var apiBotSetIsOn = /*#__PURE__*/function () {
-  var _ref25 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee25(id, isOn) {
+  var _ref26 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee26(id, isOn) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee25$(_context25) {
-      while (1) switch (_context25.prev = _context25.next) {
+    return state_regeneratorRuntime().wrap(function _callee26$(_context26) {
+      while (1) switch (_context26.prev = _context26.next) {
         case 0:
-          _context25.next = 2;
+          _context26.next = 2;
           return fetch("/bots/setison", {
             method: "POST",
             body: mapToFormData({
@@ -27796,113 +27820,75 @@ var apiBotSetIsOn = /*#__PURE__*/function () {
             })
           });
         case 2:
-          res = _context25.sent;
-        case 3:
-        case "end":
-          return _context25.stop();
-      }
-    }, _callee25);
-  }));
-  return function apiBotSetIsOn(_x23, _x24) {
-    return _ref25.apply(this, arguments);
-  };
-}();
-var apiSaveBotRegionSettings = /*#__PURE__*/function () {
-  var _ref26 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee26(item) {
-    var res, errors;
-    return state_regeneratorRuntime().wrap(function _callee26$(_context26) {
-      while (1) switch (_context26.prev = _context26.next) {
-        case 0:
-          setStateProp("saveBotRegionSetResponse", {
-            loading: true,
-            errors: []
-          });
-          _context26.next = 3;
-          return fetch("/bots/regionsettings", {
-            method: "POST",
-            body: mapToFormData(item)
-          });
-        case 3:
           res = _context26.sent;
-          errors = [];
-          if (!res.ok) {
-            _context26.next = 11;
-            break;
-          }
-          toggleEditBotRegionSetModal(false);
-          _context26.next = 9;
-          return apiFetchBots();
-        case 9:
-          _context26.next = 18;
-          break;
-        case 11:
-          if (!(res.status === 500)) {
-            _context26.next = 15;
-            break;
-          }
-          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context26.next = 18;
-          break;
-        case 15:
-          _context26.next = 17;
-          return res.json();
-        case 17:
-          errors = _context26.sent.errors;
-        case 18:
-          setStateProp("saveBotRegionSetResponse", {
-            loading: false,
-            errors: errors
-          });
-          return _context26.abrupt("return", res.ok);
-        case 20:
+        case 3:
         case "end":
           return _context26.stop();
       }
     }, _callee26);
   }));
-  return function apiSaveBotRegionSettings(_x25) {
+  return function apiBotSetIsOn(_x25, _x26) {
     return _ref26.apply(this, arguments);
   };
 }();
-var apiChangeItem = /*#__PURE__*/function () {
+var apiSaveBotRegionSettings = /*#__PURE__*/function () {
   var _ref27 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee27(item) {
-    var res;
+    var res, errors;
     return state_regeneratorRuntime().wrap(function _callee27$(_context27) {
       while (1) switch (_context27.prev = _context27.next) {
         case 0:
-          setItemsLoading(true);
-          toggleEditItemModal(false);
-          _context27.next = 4;
-          return fetch("/items/edit/".concat(item.id), {
+          setStateProp("saveBotRegionSetResponse", {
+            loading: true,
+            errors: []
+          });
+          _context27.next = 3;
+          return fetch("/bots/regionsettings", {
             method: "POST",
             body: mapToFormData(item)
           });
-        case 4:
+        case 3:
           res = _context27.sent;
+          errors = [];
           if (!res.ok) {
-            _context27.next = 10;
+            _context27.next = 11;
             break;
           }
-          _context27.next = 8;
-          return apiFetchItems();
-        case 8:
-          _context27.next = 11;
+          toggleEditBotRegionSetModal(false);
+          _context27.next = 9;
+          return apiFetchBots();
+        case 9:
+          _context27.next = 18;
           break;
-        case 10:
-          toggleEditItemModal(true);
         case 11:
-          setItemsLoading(false);
-        case 12:
+          if (!(res.status === 500)) {
+            _context27.next = 15;
+            break;
+          }
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
+          _context27.next = 18;
+          break;
+        case 15:
+          _context27.next = 17;
+          return res.json();
+        case 17:
+          errors = _context27.sent.errors;
+        case 18:
+          setStateProp("saveBotRegionSetResponse", {
+            loading: false,
+            errors: errors
+          });
+          return _context27.abrupt("return", res.ok);
+        case 20:
         case "end":
           return _context27.stop();
       }
     }, _callee27);
   }));
-  return function apiChangeItem(_x26) {
+  return function apiSaveBotRegionSettings(_x27) {
     return _ref27.apply(this, arguments);
   };
 }();
-var apiCreateItem = /*#__PURE__*/function () {
+var apiChangeItem = /*#__PURE__*/function () {
   var _ref28 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee28(item) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee28$(_context28) {
@@ -27911,7 +27897,7 @@ var apiCreateItem = /*#__PURE__*/function () {
           setItemsLoading(true);
           toggleEditItemModal(false);
           _context28.next = 4;
-          return fetch("/items/add", {
+          return fetch("/items/edit/".concat(item.id), {
             method: "POST",
             body: mapToFormData(item)
           });
@@ -27936,8 +27922,46 @@ var apiCreateItem = /*#__PURE__*/function () {
       }
     }, _callee28);
   }));
-  return function apiCreateItem(_x27) {
+  return function apiChangeItem(_x28) {
     return _ref28.apply(this, arguments);
+  };
+}();
+var apiCreateItem = /*#__PURE__*/function () {
+  var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(item) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee29$(_context29) {
+      while (1) switch (_context29.prev = _context29.next) {
+        case 0:
+          setItemsLoading(true);
+          toggleEditItemModal(false);
+          _context29.next = 4;
+          return fetch("/items/add", {
+            method: "POST",
+            body: mapToFormData(item)
+          });
+        case 4:
+          res = _context29.sent;
+          if (!res.ok) {
+            _context29.next = 10;
+            break;
+          }
+          _context29.next = 8;
+          return apiFetchItems();
+        case 8:
+          _context29.next = 11;
+          break;
+        case 10:
+          toggleEditItemModal(true);
+        case 11:
+          setItemsLoading(false);
+        case 12:
+        case "end":
+          return _context29.stop();
+      }
+    }, _callee29);
+  }));
+  return function apiCreateItem(_x29) {
+    return _ref29.apply(this, arguments);
   };
 }();
 var setItemsLoading = function setItemsLoading(isOn) {
@@ -27968,33 +27992,6 @@ var toggleViewStatusHistoryModal = function toggleViewStatusHistoryModal(isOpen)
   setStateProp("statusHistoryModalIsOpen", isOpen);
 };
 var toggleDigisellerEditModal = /*#__PURE__*/function () {
-  var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee29$(_context29) {
-      while (1) switch (_context29.prev = _context29.next) {
-        case 0:
-          if (!(isOpen === true)) {
-            _context29.next = 3;
-            break;
-          }
-          _context29.next = 3;
-          return apiGetCurrentUser();
-        case 3:
-          state.set(function (value) {
-            return state_objectSpread(state_objectSpread({}, value), {}, {
-              digisellerEditModalIsOpen: isOpen
-            });
-          });
-        case 4:
-        case "end":
-          return _context29.stop();
-      }
-    }, _callee29);
-  }));
-  return function toggleDigisellerEditModal(_x28) {
-    return _ref29.apply(this, arguments);
-  };
-}();
-var toggleExchangeRatesModal = /*#__PURE__*/function () {
   var _ref30 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee30(isOpen) {
     return state_regeneratorRuntime().wrap(function _callee30$(_context30) {
       while (1) switch (_context30.prev = _context30.next) {
@@ -28004,6 +28001,33 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
             break;
           }
           _context30.next = 3;
+          return apiGetCurrentUser();
+        case 3:
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              digisellerEditModalIsOpen: isOpen
+            });
+          });
+        case 4:
+        case "end":
+          return _context30.stop();
+      }
+    }, _callee30);
+  }));
+  return function toggleDigisellerEditModal(_x30) {
+    return _ref30.apply(this, arguments);
+  };
+}();
+var toggleExchangeRatesModal = /*#__PURE__*/function () {
+  var _ref31 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee31(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee31$(_context31) {
+      while (1) switch (_context31.prev = _context31.next) {
+        case 0:
+          if (!(isOpen === true)) {
+            _context31.next = 3;
+            break;
+          }
+          _context31.next = 3;
           return apiGetExchageRates();
         case 3:
           state.set(function (value) {
@@ -28013,21 +28037,21 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
           });
         case 4:
         case "end":
-          return _context30.stop();
+          return _context31.stop();
       }
-    }, _callee30);
+    }, _callee31);
   }));
-  return function toggleExchangeRatesModal(_x29) {
-    return _ref30.apply(this, arguments);
+  return function toggleExchangeRatesModal(_x31) {
+    return _ref31.apply(this, arguments);
   };
 }();
 var toggleBotDetailsModal = function toggleBotDetailsModal(isOpen) {
   setStateProp("botDetailsModalIsOpen", isOpen);
 };
 var toggleChangePasswordModal = /*#__PURE__*/function () {
-  var _ref31 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee31(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee31$(_context31) {
-      while (1) switch (_context31.prev = _context31.next) {
+  var _ref32 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee32(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee32$(_context32) {
+      while (1) switch (_context32.prev = _context32.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28036,18 +28060,18 @@ var toggleChangePasswordModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context31.stop();
+          return _context32.stop();
       }
-    }, _callee31);
+    }, _callee32);
   }));
-  return function toggleChangePasswordModal(_x30) {
-    return _ref31.apply(this, arguments);
+  return function toggleChangePasswordModal(_x32) {
+    return _ref32.apply(this, arguments);
   };
 }();
 var toggleEditBotModal = /*#__PURE__*/function () {
-  var _ref32 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee32(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee32$(_context32) {
-      while (1) switch (_context32.prev = _context32.next) {
+  var _ref33 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee33(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee33$(_context33) {
+      while (1) switch (_context33.prev = _context33.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28056,18 +28080,18 @@ var toggleEditBotModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context32.stop();
+          return _context33.stop();
       }
-    }, _callee32);
+    }, _callee33);
   }));
-  return function toggleEditBotModal(_x31) {
-    return _ref32.apply(this, arguments);
+  return function toggleEditBotModal(_x33) {
+    return _ref33.apply(this, arguments);
   };
 }();
 var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
-  var _ref33 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee33(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee33$(_context33) {
-      while (1) switch (_context33.prev = _context33.next) {
+  var _ref34 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee34(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee34$(_context34) {
+      while (1) switch (_context34.prev = _context34.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28076,18 +28100,18 @@ var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context33.stop();
+          return _context34.stop();
       }
-    }, _callee33);
+    }, _callee34);
   }));
-  return function toggleEditBotRegionSetModal(_x32) {
-    return _ref33.apply(this, arguments);
+  return function toggleEditBotRegionSetModal(_x34) {
+    return _ref34.apply(this, arguments);
   };
 }();
 var toggleEditOrderModal = /*#__PURE__*/function () {
-  var _ref34 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee34(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee34$(_context34) {
-      while (1) switch (_context34.prev = _context34.next) {
+  var _ref35 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee35(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee35$(_context35) {
+      while (1) switch (_context35.prev = _context35.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28096,18 +28120,18 @@ var toggleEditOrderModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context34.stop();
+          return _context35.stop();
       }
-    }, _callee34);
+    }, _callee35);
   }));
-  return function toggleEditOrderModal(_x33) {
-    return _ref34.apply(this, arguments);
+  return function toggleEditOrderModal(_x35) {
+    return _ref35.apply(this, arguments);
   };
 }();
 var toggleFilterOrdersModal = /*#__PURE__*/function () {
-  var _ref35 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee35(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee35$(_context35) {
-      while (1) switch (_context35.prev = _context35.next) {
+  var _ref36 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee36(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee36$(_context36) {
+      while (1) switch (_context36.prev = _context36.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28116,18 +28140,18 @@ var toggleFilterOrdersModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context35.stop();
+          return _context36.stop();
       }
-    }, _callee35);
+    }, _callee36);
   }));
-  return function toggleFilterOrdersModal(_x34) {
-    return _ref35.apply(this, arguments);
+  return function toggleFilterOrdersModal(_x36) {
+    return _ref36.apply(this, arguments);
   };
 }();
 var toggleFilterProductsModal = /*#__PURE__*/function () {
-  var _ref36 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee36(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee36$(_context36) {
-      while (1) switch (_context36.prev = _context36.next) {
+  var _ref37 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee37(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee37$(_context37) {
+      while (1) switch (_context37.prev = _context37.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28136,18 +28160,18 @@ var toggleFilterProductsModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context36.stop();
+          return _context37.stop();
       }
-    }, _callee36);
+    }, _callee37);
   }));
-  return function toggleFilterProductsModal(_x35) {
-    return _ref36.apply(this, arguments);
+  return function toggleFilterProductsModal(_x37) {
+    return _ref37.apply(this, arguments);
   };
 }();
 var toggleEditItemModal = /*#__PURE__*/function () {
-  var _ref37 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee37(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee37$(_context37) {
-      while (1) switch (_context37.prev = _context37.next) {
+  var _ref38 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee38(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee38$(_context38) {
+      while (1) switch (_context38.prev = _context38.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28156,18 +28180,18 @@ var toggleEditItemModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context37.stop();
+          return _context38.stop();
       }
-    }, _callee37);
+    }, _callee38);
   }));
-  return function toggleEditItemModal(_x36) {
-    return _ref37.apply(this, arguments);
+  return function toggleEditItemModal(_x38) {
+    return _ref38.apply(this, arguments);
   };
 }();
 var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
-  var _ref38 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee38(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee38$(_context38) {
-      while (1) switch (_context38.prev = _context38.next) {
+  var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
+      while (1) switch (_context39.prev = _context39.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28176,25 +28200,25 @@ var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context38.stop();
+          return _context39.stop();
       }
-    }, _callee38);
+    }, _callee39);
   }));
-  return function toggleOrderCreationInfoModal(_x37) {
-    return _ref38.apply(this, arguments);
+  return function toggleOrderCreationInfoModal(_x39) {
+    return _ref39.apply(this, arguments);
   };
 }();
 var apiChangeItemBulk = /*#__PURE__*/function () {
-  var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(SteamPercent, Ids) {
+  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(SteamPercent, Ids) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
-      while (1) switch (_context39.prev = _context39.next) {
+    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
+      while (1) switch (_context40.prev = _context40.next) {
         case 0:
           setItemsLoading(true);
           setStateProp("changeItemBulkResponse", {
             loading: true
           });
-          _context39.next = 4;
+          _context40.next = 4;
           return fetch("/items/bulk/change", {
             method: "POST",
             body: mapToFormData({
@@ -28203,106 +28227,77 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context39.sent;
+          res = _context40.sent;
           setStateProp("changeItemBulkResponse", {
             loading: false
           });
-          _context39.next = 8;
+          _context40.next = 8;
           return apiFetchItems();
         case 8:
-        case "end":
-          return _context39.stop();
-      }
-    }, _callee39);
-  }));
-  return function apiChangeItemBulk(_x38, _x39) {
-    return _ref39.apply(this, arguments);
-  };
-}();
-var apiChangeDigisellerData = /*#__PURE__*/function () {
-  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(data) {
-    var res;
-    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
-      while (1) switch (_context40.prev = _context40.next) {
-        case 0:
-          _context40.next = 2;
-          return fetch("/user/edit/digiseller", {
-            method: "POST",
-            body: mapToFormData(data)
-          });
-        case 2:
-          res = _context40.sent;
-        case 3:
         case "end":
           return _context40.stop();
       }
     }, _callee40);
   }));
-  return function apiChangeDigisellerData(_x40) {
+  return function apiChangeItemBulk(_x40, _x41) {
     return _ref40.apply(this, arguments);
   };
 }();
-var apiChangeUserPassword = /*#__PURE__*/function () {
+var apiChangeDigisellerData = /*#__PURE__*/function () {
   var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(data) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
       while (1) switch (_context41.prev = _context41.next) {
         case 0:
           _context41.next = 2;
-          return fetch("/user/password", {
+          return fetch("/user/edit/digiseller", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 2:
           res = _context41.sent;
-          toggleChangePasswordModal(!res.ok);
-        case 4:
+        case 3:
         case "end":
           return _context41.stop();
       }
     }, _callee41);
   }));
-  return function apiChangeUserPassword(_x41) {
+  return function apiChangeDigisellerData(_x42) {
     return _ref41.apply(this, arguments);
   };
 }();
-var apiGetCurrentUser = /*#__PURE__*/function () {
-  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42() {
-    var res, data;
+var apiChangeUserPassword = /*#__PURE__*/function () {
+  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(data) {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
       while (1) switch (_context42.prev = _context42.next) {
         case 0:
           _context42.next = 2;
-          return fetch("/user");
+          return fetch("/user/password", {
+            method: "POST",
+            body: mapToFormData(data)
+          });
         case 2:
           res = _context42.sent;
-          _context42.next = 5;
-          return res.json();
-        case 5:
-          data = _context42.sent;
-          state.set(function (value) {
-            return state_objectSpread(state_objectSpread({}, value), {}, {
-              user: data
-            });
-          });
-        case 7:
+          toggleChangePasswordModal(!res.ok);
+        case 4:
         case "end":
           return _context42.stop();
       }
     }, _callee42);
   }));
-  return function apiGetCurrentUser() {
+  return function apiChangeUserPassword(_x43) {
     return _ref42.apply(this, arguments);
   };
 }();
-var apiGetExchageRates = /*#__PURE__*/function () {
+var apiGetCurrentUser = /*#__PURE__*/function () {
   var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43() {
     var res, data;
     return state_regeneratorRuntime().wrap(function _callee43$(_context43) {
       while (1) switch (_context43.prev = _context43.next) {
         case 0:
           _context43.next = 2;
-          return fetch("/exchangerates/list");
+          return fetch("/user");
         case 2:
           res = _context43.sent;
           _context43.next = 5;
@@ -28311,7 +28306,7 @@ var apiGetExchageRates = /*#__PURE__*/function () {
           data = _context43.sent;
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
-              exchageRates: data
+              user: data
             });
           });
         case 7:
@@ -28320,14 +28315,43 @@ var apiGetExchageRates = /*#__PURE__*/function () {
       }
     }, _callee43);
   }));
-  return function apiGetExchageRates() {
+  return function apiGetCurrentUser() {
     return _ref43.apply(this, arguments);
   };
 }();
-var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
-  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(data) {
+var apiGetExchageRates = /*#__PURE__*/function () {
+  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44() {
+    var res, data;
     return state_regeneratorRuntime().wrap(function _callee44$(_context44) {
       while (1) switch (_context44.prev = _context44.next) {
+        case 0:
+          _context44.next = 2;
+          return fetch("/exchangerates/list");
+        case 2:
+          res = _context44.sent;
+          _context44.next = 5;
+          return res.json();
+        case 5:
+          data = _context44.sent;
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              exchageRates: data
+            });
+          });
+        case 7:
+        case "end":
+          return _context44.stop();
+      }
+    }, _callee44);
+  }));
+  return function apiGetExchageRates() {
+    return _ref44.apply(this, arguments);
+  };
+}();
+var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
+  var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45(data) {
+    return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
+      while (1) switch (_context45.prev = _context45.next) {
         case 0:
           //let res = await
           fetch("/exchangerates/update", {
@@ -28339,35 +28363,35 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
           toggleExchangeRatesModal(false);
         case 2:
         case "end":
-          return _context44.stop();
+          return _context45.stop();
       }
-    }, _callee44);
+    }, _callee45);
   }));
-  return function apiUpdateExchangeDataManual(_x42) {
-    return _ref44.apply(this, arguments);
+  return function apiUpdateExchangeDataManual(_x44) {
+    return _ref45.apply(this, arguments);
   };
 }();
 var apiGetCurrencies = /*#__PURE__*/function () {
-  var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45() {
+  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46() {
     var currencies, res, data;
-    return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
-      while (1) switch (_context45.prev = _context45.next) {
+    return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
+      while (1) switch (_context46.prev = _context46.next) {
         case 0:
           currencies = state.get().currencies;
           if (!(currencies && currencies.length > 0)) {
-            _context45.next = 3;
+            _context46.next = 3;
             break;
           }
-          return _context45.abrupt("return");
+          return _context46.abrupt("return");
         case 3:
-          _context45.next = 5;
+          _context46.next = 5;
           return fetch("/exchangerates/list");
         case 5:
-          res = _context45.sent;
-          _context45.next = 8;
+          res = _context46.sent;
+          _context46.next = 8;
           return res.json();
         case 8:
-          data = _context45.sent;
+          data = _context46.sent;
           currencies = data.currencies.map(function (c) {
             return {
               code: c.code,
@@ -28382,112 +28406,85 @@ var apiGetCurrencies = /*#__PURE__*/function () {
           });
         case 11:
         case "end":
-          return _context45.stop();
-      }
-    }, _callee45);
-  }));
-  return function apiGetCurrencies() {
-    return _ref45.apply(this, arguments);
-  };
-}();
-var apiGetItem = /*#__PURE__*/function () {
-  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46(id) {
-    var res, data;
-    return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
-      while (1) switch (_context46.prev = _context46.next) {
-        case 0:
-          _context46.next = 2;
-          return fetch("/items/".concat(id, "/info"));
-        case 2:
-          res = _context46.sent;
-          _context46.next = 5;
-          return res.json();
-        case 5:
-          data = _context46.sent;
-          return _context46.abrupt("return", data);
-        case 7:
-        case "end":
           return _context46.stop();
       }
     }, _callee46);
   }));
-  return function apiGetItem(_x43) {
+  return function apiGetCurrencies() {
     return _ref46.apply(this, arguments);
   };
 }();
-var apiGetSteamRegions = /*#__PURE__*/function () {
-  var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47() {
-    var steamRegions, res, data;
+var apiGetItem = /*#__PURE__*/function () {
+  var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47(id) {
+    var res, data;
     return state_regeneratorRuntime().wrap(function _callee47$(_context47) {
       while (1) switch (_context47.prev = _context47.next) {
         case 0:
-          steamRegions = state.get().steamRegions;
-          if (!(steamRegions && steamRegions.length > 0)) {
-            _context47.next = 3;
-            break;
-          }
-          return _context47.abrupt("return");
-        case 3:
-          _context47.next = 5;
-          return fetch("/dict/regions");
-        case 5:
+          _context47.next = 2;
+          return fetch("/items/".concat(id, "/info"));
+        case 2:
           res = _context47.sent;
-          _context47.next = 8;
+          _context47.next = 5;
           return res.json();
-        case 8:
+        case 5:
           data = _context47.sent;
-          steamRegions = data;
-          setStateProp("steamRegions", steamRegions);
-        case 11:
+          return _context47.abrupt("return", data);
+        case 7:
         case "end":
           return _context47.stop();
       }
     }, _callee47);
   }));
-  return function apiGetSteamRegions() {
+  return function apiGetItem(_x45) {
     return _ref47.apply(this, arguments);
   };
 }();
-var apiSetGameSessionStatus = /*#__PURE__*/function () {
-  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48(gSesId, statusId) {
-    var _state$get3, gameSessionsFilter, res;
+var apiGetSteamRegions = /*#__PURE__*/function () {
+  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48() {
+    var steamRegions, res, data;
     return state_regeneratorRuntime().wrap(function _callee48$(_context48) {
       while (1) switch (_context48.prev = _context48.next) {
         case 0:
-          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
-          _context48.next = 3;
-          return fetch("/gamesessions/setstatus", {
-            method: "POST",
-            body: mapToFormData({
-              gameSessionId: gSesId,
-              statusId: statusId
-            })
-          });
+          steamRegions = state.get().steamRegions;
+          if (!(steamRegions && steamRegions.length > 0)) {
+            _context48.next = 3;
+            break;
+          }
+          return _context48.abrupt("return");
         case 3:
-          res = _context48.sent;
-          apiFetchGameSessions(gameSessionsFilter);
+          _context48.next = 5;
+          return fetch("/dict/regions");
         case 5:
+          res = _context48.sent;
+          _context48.next = 8;
+          return res.json();
+        case 8:
+          data = _context48.sent;
+          steamRegions = data;
+          setStateProp("steamRegions", steamRegions);
+        case 11:
         case "end":
           return _context48.stop();
       }
     }, _callee48);
   }));
-  return function apiSetGameSessionStatus(_x44, _x45) {
+  return function apiGetSteamRegions() {
     return _ref48.apply(this, arguments);
   };
 }();
-var apiResetGameSession = /*#__PURE__*/function () {
-  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(gSesId) {
-    var _state$get4, gameSessionsFilter, res;
+var apiSetGameSessionStatus = /*#__PURE__*/function () {
+  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(gSesId, statusId) {
+    var _state$get3, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee49$(_context49) {
       while (1) switch (_context49.prev = _context49.next) {
         case 0:
-          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
+          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
           _context49.next = 3;
-          return fetch("/gamesessions/reset", {
+          return fetch("/gamesessions/setstatus", {
             method: "POST",
             body: mapToFormData({
-              gameSessionId: gSesId
+              gameSessionId: gSesId,
+              statusId: statusId
             })
           });
         case 3:
@@ -28499,19 +28496,46 @@ var apiResetGameSession = /*#__PURE__*/function () {
       }
     }, _callee49);
   }));
-  return function apiResetGameSession(_x46) {
+  return function apiSetGameSessionStatus(_x46, _x47) {
     return _ref49.apply(this, arguments);
   };
 }();
-var apiAddCommentGameSession = /*#__PURE__*/function () {
-  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50(gSesId, comment) {
-    var _state$get5, gameSessionsFilter, res;
+var apiResetGameSession = /*#__PURE__*/function () {
+  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50(gSesId) {
+    var _state$get4, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
       while (1) switch (_context50.prev = _context50.next) {
         case 0:
+          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
+          _context50.next = 3;
+          return fetch("/gamesessions/reset", {
+            method: "POST",
+            body: mapToFormData({
+              gameSessionId: gSesId
+            })
+          });
+        case 3:
+          res = _context50.sent;
+          apiFetchGameSessions(gameSessionsFilter);
+        case 5:
+        case "end":
+          return _context50.stop();
+      }
+    }, _callee50);
+  }));
+  return function apiResetGameSession(_x48) {
+    return _ref50.apply(this, arguments);
+  };
+}();
+var apiAddCommentGameSession = /*#__PURE__*/function () {
+  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(gSesId, comment) {
+    var _state$get5, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee51$(_context51) {
+      while (1) switch (_context51.prev = _context51.next) {
+        case 0:
           _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
           toggleAddGameSesCommentModal(false);
-          _context50.next = 4;
+          _context51.next = 4;
           return fetch("/gamesessions/comment", {
             method: "POST",
             body: mapToFormData({
@@ -28520,117 +28544,117 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context50.sent;
+          res = _context51.sent;
           apiFetchGameSessions(gameSessionsFilter);
-        case 6:
-        case "end":
-          return _context50.stop();
-      }
-    }, _callee50);
-  }));
-  return function apiAddCommentGameSession(_x47, _x48) {
-    return _ref50.apply(this, arguments);
-  };
-}();
-var updateGameSessionsFilter = /*#__PURE__*/function () {
-  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(newData) {
-    var _state$get6, gameSessionsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee51$(_context51) {
-      while (1) switch (_context51.prev = _context51.next) {
-        case 0:
-          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("gameSessionsFilter", newFilter);
-          _context51.next = 6;
-          return apiFetchGameSessions(newFilter);
         case 6:
         case "end":
           return _context51.stop();
       }
     }, _callee51);
   }));
-  return function updateGameSessionsFilter(_x49) {
+  return function apiAddCommentGameSession(_x49, _x50) {
     return _ref51.apply(this, arguments);
   };
 }();
-var updateProductsFilter = /*#__PURE__*/function () {
+var updateGameSessionsFilter = /*#__PURE__*/function () {
   var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(newData) {
-    var _state$get7, productsFilter, newFilter;
+    var _state$get6, gameSessionsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
       while (1) switch (_context52.prev = _context52.next) {
         case 0:
-          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
           console.log("new f", newFilter);
-          setStateProp("productsFilter", newFilter);
+          setStateProp("gameSessionsFilter", newFilter);
           _context52.next = 6;
-          return apiFetchItems(newFilter);
+          return apiFetchGameSessions(newFilter);
         case 6:
         case "end":
           return _context52.stop();
       }
     }, _callee52);
   }));
-  return function updateProductsFilter(_x50) {
+  return function updateGameSessionsFilter(_x51) {
     return _ref52.apply(this, arguments);
   };
 }();
-var apiAddGameSession = /*#__PURE__*/function () {
-  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(data) {
-    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+var updateProductsFilter = /*#__PURE__*/function () {
+  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(newData) {
+    var _state$get7, productsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
       while (1) switch (_context53.prev = _context53.next) {
+        case 0:
+          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("productsFilter", newFilter);
+          _context53.next = 6;
+          return apiFetchItems(newFilter);
+        case 6:
+        case "end":
+          return _context53.stop();
+      }
+    }, _callee53);
+  }));
+  return function updateProductsFilter(_x52) {
+    return _ref53.apply(this, arguments);
+  };
+}();
+var apiAddGameSession = /*#__PURE__*/function () {
+  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(data) {
+    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+    return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
+      while (1) switch (_context54.prev = _context54.next) {
         case 0:
           setStateProp("editOrderResponse", {
             loading: true,
             errors: []
           });
-          _context53.next = 3;
+          _context54.next = 3;
           return fetch("/gamesession", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 3:
-          res = _context53.sent;
+          res = _context54.sent;
           errors = [];
           if (!res.ok) {
-            _context53.next = 12;
+            _context54.next = 12;
             break;
           }
           _state$get8 = state.get(), gameSessionsFilter = _state$get8.gameSessionsFilter;
-          _context53.next = 9;
+          _context54.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
           toggleEditOrderModal(false);
-          _context53.next = 19;
+          _context54.next = 19;
           break;
         case 12:
           if (!(res.status === 500)) {
-            _context53.next = 16;
+            _context54.next = 16;
             break;
           }
           errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context53.next = 19;
+          _context54.next = 19;
           break;
         case 16:
-          _context53.next = 18;
+          _context54.next = 18;
           return res.json();
         case 18:
-          errors = _context53.sent.errors;
+          errors = _context54.sent.errors;
         case 19:
           setStateProp("editOrderResponse", {
             loading: false,
             errors: errors
           });
           if (!res.ok) {
-            _context53.next = 27;
+            _context54.next = 27;
             break;
           }
-          _context53.next = 23;
+          _context54.next = 23;
           return res.json();
         case 23:
-          newUniqueCodes = _context53.sent;
+          newUniqueCodes = _context54.sent;
           console.log(newUniqueCodes);
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28640,12 +28664,12 @@ var apiAddGameSession = /*#__PURE__*/function () {
           toggleOrderCreationInfoModal(true);
         case 27:
         case "end":
-          return _context53.stop();
+          return _context54.stop();
       }
-    }, _callee53);
+    }, _callee54);
   }));
-  return function apiAddGameSession(_x51) {
-    return _ref53.apply(this, arguments);
+  return function apiAddGameSession(_x53) {
+    return _ref54.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -42378,6 +42402,71 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref2) {
   });
 };
 /* harmony default export */ const modalBulkPercentEdit = (ModalBulkPercentEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/sort.svg
+const sort_namespaceObject = __webpack_require__.p + "4f79e53b8b75a873f823.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalSort/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const modalSort_styles = ({"sortPriceDropDown":"styles__sortPriceDropDown--yHMvJ","sortPriceDropDownItem":"styles__sortPriceDropDownItem--CJNbJ"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalSort/index.js
+function modalSort_slicedToArray(arr, i) { return modalSort_arrayWithHoles(arr) || modalSort_iterableToArrayLimit(arr, i) || modalSort_unsupportedIterableToArray(arr, i) || modalSort_nonIterableRest(); }
+function modalSort_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalSort_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalSort_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalSort_arrayLikeToArray(o, minLen); }
+function modalSort_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalSort_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalSort_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+var ToggleSort = function ToggleSort() {
+  var _useState = (0,react.useState)(false),
+    _useState2 = modalSort_slicedToArray(_useState, 2),
+    isOpen = _useState2[0],
+    setIsOpen = _useState2[1];
+  var toggleRef = (0,react.useRef)(null);
+  var togglesortPriceModal = function togglesortPriceModal() {
+    setIsOpen(!isOpen);
+  };
+  var handleClickOutside = function handleClickOutside(event) {
+    if (toggleRef.current && !toggleRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+  (0,react.useEffect)(function () {
+    document.addEventListener('mousedown', handleClickOutside);
+    return function () {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    ref: toggleRef,
+    style: {
+      position: 'relative',
+      display: 'inline-block'
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      onClick: togglesortPriceModal,
+      style: {
+        cursor: 'pointer'
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+        src: sort_namespaceObject,
+        style: {
+          marginLeft: "10px",
+          cursor: "pointer"
+        }
+      })
+    }), isOpen && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalSort_styles.sortPriceDropDown,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("p", {
+        children: "Percents"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("p", {
+        children: "Numbers"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const modalSort = (ToggleSort);
 ;// CONCATENATED MODULE: ./node_modules/@mui/utils/debounce/debounce.js
 // Corresponds to 10 frames at 60 Hz.
 // A few bytes payload overhead when lodash/debounce is ~3 kB and debounce ~300 B.
@@ -43022,6 +43111,7 @@ function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var products = function products() {
   var _state$use = state.use(),
     items = _state$use.items,
@@ -43101,7 +43191,15 @@ var products = function products() {
         }))
       })]
     }),
-    price: "Цена",
+    price: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      style: {
+        display: "flex",
+        alignItems: "center"
+      },
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: "\u0426\u0435\u043D\u0430"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalSort, {})]
+    }),
     lastRegion: "",
     discount: "",
     options: "Опции",
