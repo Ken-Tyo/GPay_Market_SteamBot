@@ -2,10 +2,10 @@
 
 .wrapper {
     position: relative;
+    width: 96px;
+    height: 41px;
 
     .track {
-        width: 96px;
-        height: 41px;
         border-radius: 15px;
         border: 1px solid white;
         background-color: transparent;
@@ -57,9 +57,10 @@
     }
 
     @media screen and (max-width: 500px) {
+        width: 72px;
+        height: 31px;
+
         .track {
-            width: 72px;
-            height: 31px;
             border-radius: 11px;
 
             .thumb {
