@@ -70,6 +70,7 @@ namespace SteamDigiSellerBot.MappingProfiles
 
             CreateMap<GameSession, GameSessionInfo>()
                 .ForMember(t => t.ItemName, x => x.MapFrom(s => s.Item.Name))
+                .ForMember(t => t.BotUsername, x => x.MapFrom((gs, gsi) => gs.Bot?.UserName))
                 .ForMember(t => t.BotName, x => x.MapFrom((gs, gsi) => gs.Bot?.PersonName ?? gs.Bot?.UserName))
                 .ForMember(t => t.BotProfileUrl, x => x.MapFrom((gs, gsi) => 
                         gs.Bot !=null ? $"https://steamcommunity.com/profiles/{gs.Bot.SteamId}" : null))
