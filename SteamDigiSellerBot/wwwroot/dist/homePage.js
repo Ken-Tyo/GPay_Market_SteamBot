@@ -45431,7 +45431,7 @@ var OrderState = function OrderState() {
               className: orderState_styles.hint,
               dangerouslySetInnerHTML: {
                 __html: tOrderState('requestSentInfo', {
-                  botName: "<a href=\"".concat(gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botUsername, "</a>")
+                  botName: "<a href=\"".concat(gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
                 })
               }
             })]
@@ -45479,7 +45479,7 @@ var OrderState = function OrderState() {
               className: orderState_styles.hint,
               dangerouslySetInnerHTML: {
                 __html: tInvitationRefused('info', {
-                  botName: "<a href=\"".concat(gameSession.botInvitationUrl || gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botUsername, "</a>")
+                  botName: "<a href=\"".concat(gameSession.botInvitationUrl || gameSession.botProfileUrl, "\" \n                                     style=\"color: #8615BC; text-decoration: none; \" \n                                     target=\"_blank\" >").concat(gameSession.botName, "</a>")
                 })
               }
             })]
