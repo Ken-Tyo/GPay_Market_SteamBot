@@ -227,6 +227,11 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Создание заказа
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         [Authorize, HttpPost, Route("gamesession"), ValidationActionFilter]
         public async Task<IActionResult> Gamesession(CreateGameSessionRequest req)
         {
