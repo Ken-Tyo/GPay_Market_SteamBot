@@ -124,6 +124,11 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(itemsView);
         }
 
+        /// <summary>
+        /// Ценовая иерархия по заказу
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("items/{id}/info")]
         public async Task<IActionResult> GetItems(int id)

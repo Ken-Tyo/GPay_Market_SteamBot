@@ -443,14 +443,25 @@ namespace SteamDigiSellerBot.Services.Implementation
             var (maxFailUsingCount, prices) = GetSortedPriorityPrices(gs.Item);
             var currencies = await _currencyDataService.GetCurrencyDictionary();
             var steamCountries = await _steamCountryCodeRepository.GetByCurrencies();
+
+            var basePrice = prices.First();
+            var basePriceRub = await _currencyDataService
+                    .ConvertRUBto(basePrice.CurrentSteamPrice, basePrice.SteamCurrencyId);
+
             foreach (var price in prices)
             {
+                var p = await _currencyDataService.ConvertRUBto(price.CurrentSteamPrice, price.SteamCurrencyId);
+
+                var percentDiff = (Math.Abs(p - basePriceRub) * 100) / basePriceRub;
+
+                //  по АКТИВНОЙ иерархии регионы не будут браться если они выше ценовой основы товара на 8% или более
+                if (percentDiff >= 8)
+                    continue;
+
                 //берем код региона
                 var curr = currencies[price.SteamCurrencyId];
                 currCountryCode = curr.CountryCode;
                 var currCode = curr.Code;
-
-                currCountryName = steamCountries.First(cc => cc.Code == currCountryCode).Name;
 
                 var priceRegionFilteredBots = botFilterRes
                     .Where(b => SteamHelper.CurrencyCountryGroupFilter(b.Region, currCountryCode, currCode))
@@ -465,7 +476,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 /*
                  * нужны боты у которых разница в актуального и максимального лимита больше цены игры
                  */
-                var p = await _currencyDataService.ConvertRUBto(price.CurrentSteamPrice, price.SteamCurrencyId);
+                
                 //var diffs = await GetAllowedAmountSendGiftsInRubDict(priceRegionFilteredBots);
                 //var diffFilteredBots = priceRegionFilteredBots.Where(b => p < diffs[b.Id]).ToList();
                 var diffFilteredBots = priceRegionFilteredBots
@@ -528,6 +539,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (botIdFilter != null && botIdFilter.Count > 0)
                 res = res.Where(b => !botIdFilter.Contains(b.Id)).ToList();
+
+            currCountryName = steamCountries.First(cc => cc.Code == currCountryCode).Name;
 
             var filterParams = new BotFilterParams();
             filterParams.FailUsingCount = maxFailUsingCount;
