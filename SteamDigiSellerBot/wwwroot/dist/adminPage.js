@@ -42402,8 +42402,10 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref2) {
   });
 };
 /* harmony default export */ const modalBulkPercentEdit = (ModalBulkPercentEdit);
-;// CONCATENATED MODULE: ./wwwroot/Source/icons/sort.svg
-const sort_namespaceObject = __webpack_require__.p + "4f79e53b8b75a873f823.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/sortAsc.svg
+const sortAsc_namespaceObject = __webpack_require__.p + "4f79e53b8b75a873f823.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/sortDesc.svg
+const sortDesc_namespaceObject = __webpack_require__.p + "186d4fc1d1af4a5fbd92.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalSort/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalSort_styles = ({"sortPriceDropDown":"styles__sortPriceDropDown--yHMvJ","sortPriceDropDownItem":"styles__sortPriceDropDownItem--CJNbJ"});
@@ -42418,8 +42420,9 @@ function modalSort_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var ToggleSort = function ToggleSort(_ref) {
-  var parentRef = _ref.parentRef,
+  var orderSort = _ref.orderSort,
     onSort = _ref.onSort;
   var _useState = (0,react.useState)(false),
     _useState2 = modalSort_slicedToArray(_useState, 2),
@@ -42452,7 +42455,7 @@ var ToggleSort = function ToggleSort(_ref) {
         cursor: 'pointer'
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
-        src: sort_namespaceObject,
+        src: orderSort === 'asc' ? sortAsc_namespaceObject : sortDesc_namespaceObject,
         style: {
           marginLeft: "10px",
           cursor: "pointer"
@@ -43276,7 +43279,7 @@ var products = function products() {
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         children: "\u0426\u0435\u043D\u0430"
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalSort, {
-        parentRef: prntRef,
+        orderSort: sortOrder,
         onSort: handleSort
       })]
     }),

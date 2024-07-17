@@ -1,8 +1,9 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
-import sortItem from "../../../../../icons/sort.svg";
+import sortItemAsc from "../../../../../icons/sortAsc.svg";
+import sortItemDesc from "../../../../../icons/sortDesc.svg";
 import css from './styles.scss';
 
-const ToggleSort = ({parentRef, onSort}) => {
+const ToggleSort = ({orderSort, onSort}) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleRef = useRef(null);
 
@@ -26,7 +27,7 @@ const ToggleSort = ({parentRef, onSort}) => {
     return (
         <div ref={toggleRef} style={{ position: 'relative', display: 'inline-block' }}>
             <div onClick={togglesortPriceModal} style={{ cursor: 'pointer' }}>
-                <img src={sortItem} style={{ marginLeft: "10px", cursor: "pointer" }} />
+                <img src={orderSort === 'asc' ? sortItemAsc : sortItemDesc} style={{ marginLeft: "10px", cursor: "pointer" }} />
             </div>
             {isOpen && (
                 <div className={css.sortPriceDropDown}>
