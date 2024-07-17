@@ -45,7 +45,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IItemRepository _itemRepository;
 
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
-        //private readonly ISteamNetworkService _steamNetworkService;
+        private readonly ISteamNetworkService _steamNetworkService;
         private readonly IUserDBRepository _userDBRepository;
 
         private readonly IConfiguration _configuration;
@@ -72,6 +72,7 @@ namespace SteamDigiSellerBot.Controllers
             ISuperBotPool superBotPool,
             ICurrencyDataService currencyDataService,
             GameSessionManager gameSessionManager,
+            ISteamNetworkService steamNetworkService,
             DatabaseContext db)
         {
             _logger = logger;
@@ -85,7 +86,7 @@ namespace SteamDigiSellerBot.Controllers
             _itemRepository = itemRepository;
 
             _digiSellerNetworkService = digiSellerNetworkService;
-            //_steamNetworkService = steamNetworkService;
+            _steamNetworkService = steamNetworkService;
             _userDBRepository = userDBRepository;
             _configuration = configuration;
             _mapper = mapper;
@@ -170,6 +171,17 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
+            if (gsi.BotName == null && gsi.BotProfileUrl != null)
+            {
+                var result = await _steamNetworkService.ParseUserProfileData(gsi.BotProfileUrl, SteamContactType.profileUrl);
+                gsi.BotName = result.Item1.personaname;
+            }
+            
+            if (gsi.BotName == null)
+            {
+                gsi.BotName = gsi.BotUsername;
+            }
+
             _memoryCache.Set(checkCodeReqIpKey, 0, TimeSpan.FromDays(1));
             isRobotCheck = false;
 
