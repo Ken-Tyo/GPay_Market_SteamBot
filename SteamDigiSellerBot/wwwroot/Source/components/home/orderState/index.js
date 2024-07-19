@@ -843,7 +843,7 @@ const InputWithButton = ({ butName, onClick, placeholder, defaultValue }) => {
         value={text}
         onChange={(e) => {
           //setManualNumber(e.target.value);
-          setText(e.target.value);
+          setText(e.target.value.trim());
         }}
         placeholder={placeholder}
       />
