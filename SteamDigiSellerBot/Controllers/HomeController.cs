@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Services.Implementation;
 using Microsoft.AspNetCore.Authentication;
+using SteamDigiSellerBot.Utilities;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -111,7 +112,7 @@ namespace SteamDigiSellerBot.Controllers
             bool isCorrectCode = false;
             bool isRobotCheck = false;
 
-            string uniquecode = req?.Uniquecode;
+            string uniquecode = req?.Uniquecode?.RemoveWhitespaces();
             if (string.IsNullOrWhiteSpace(uniquecode))
             {
                 return Ok(new CheckCodeResponse { ErrorCode = CheckCodeError.codeIsEmpty });
