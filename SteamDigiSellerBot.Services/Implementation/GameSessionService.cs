@@ -1196,6 +1196,22 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null)
         {
+            if (gs.BlockOrder)
+            {
+                gs.StatusId = GameSessionStatusEnum.UnknownError;
+                var log = new GameSessionStatusLog
+                {
+                    InsertDate = DateTimeOffset.UtcNow,
+                    StatusId = gs.StatusId,
+                    Value = new ValueJson()
+                    {
+                        message="Попытка отправки заблокированного заказа"
+                    }
+                };
+                gs.GameSessionStatusLogs.Add(log);
+                await _gameSessionRepository.EditAsync(db, gs);
+                return (SendGameStatus.otherError, GameReadyToSendStatus.blockOrder);
+            }
             var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             SendGameStatus sendStatus;
             if (readyState != GameReadyToSendStatus.ready)

@@ -46,6 +46,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 18).Result;
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.SendGame);
+                    sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
                     await Task.Delay(TimeSpan.FromSeconds(1));
                     sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
                     if (sess.Count > 0)

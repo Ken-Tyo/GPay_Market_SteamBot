@@ -355,6 +355,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var gs = await _gsRepo.GetByIdAsync(db, gsId);
             gs.Stage = GameSessionStage.Done;
             gs.BlockOrder = true;
+            gs.StatusId = GameSessionStatusEnum.UnknownError;
             await _gsRepo.EditAsync(db, gs);
         }
 

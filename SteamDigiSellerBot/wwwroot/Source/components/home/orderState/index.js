@@ -319,27 +319,24 @@ const OrderState = () => {
                   <div
                     className={css.hint}
                     dangerouslySetInnerHTML={{
-                      __html: tOrderState('requestSentInfo', {
-                        botName: `<a href="${gameSession.botProfileUrl}" 
-                                     style="color: #8615BC; text-decoration: none; " 
-                                     target="_blank" >${gameSession.botName}</a>`,
-                      }),
+                        __html: tOrderState('requestInProcessing'),
                     }}
                   ></div>
                 </div>
 
                 <div className={css.accButtons}>
-                  <Button
-                    text={tOrderState('changeAccountBut')}
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      color: '#8615BC',
-                      border: '1px solid #571676',
-                    }}
-                    onClick={() => {
-                      apiResetSteamAcc();
-                    }}
-                  />
+                                  {!gameSession.blockOrder && (
+                                      <Button
+                                          text={tOrderState('changeAccountBut')}
+                                          style={{
+                                              backgroundColor: '#FFFFFF',
+                                              color: '#8615BC',
+                                              border: '1px solid #571676',
+                                          }}
+                                          onClick={() => {
+                                              apiResetSteamAcc();
+                                          }}
+                                      />)}
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <ContactTheSeller digisellerId={gameSession.digisellerId} />
                   </div>

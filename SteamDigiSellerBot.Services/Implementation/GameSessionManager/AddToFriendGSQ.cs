@@ -42,6 +42,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //берем сессии где ожидается подтвреждение аккаунта или в очереди и пришло время автоотправки
                     var sess = await gsr
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.AddToFriend);
+                    sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
                     await Task.Delay(TimeSpan.FromSeconds(1));
                     sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
                     if (sess.Count > 0)
