@@ -151,7 +151,7 @@ const products = () => {
     price: (
         <div style={{ display: "flex", alignItems: "center" }}>
             <div>Цена</div>
-            <ToggleSort parentRef={prntRef} onSort={handleSort} />
+            <ToggleSort orderSort={sortOrder} onSort={handleSort} />
         </div>
     ),
     lastRegion: "",

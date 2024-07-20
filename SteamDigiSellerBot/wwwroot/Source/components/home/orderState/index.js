@@ -580,6 +580,8 @@ const OrderState = () => {
                     />
                   </div>
                 </div>
+
+                <CheckEditionVersion />
               </>
             )}
             {checkCodeLoading && <CircularLoader color={'#571676'} />}
@@ -776,6 +778,24 @@ const ContactTheSeller = ({ digisellerId }) => {
   );
 };
 
+const CheckEditionVersion = () => {
+  const { t: tGameSended } = useTranslation('gameSended');
+
+  return (
+    <div className={css.checkEditionVersionWrapper}>
+      <div
+        className={css.checkEditionVersion}
+        onClick={() => {
+          window.open(`https://store.steampowered.com/account/licenses/`, '_blank');
+        }}
+      >
+        {tGameSended('checkEditionVersion')}
+      </div>
+      <div className={css.dash}></div>
+    </div>
+  );
+};
+
 const Area = ({ height, width, title, children, onClose }) => {
   return (
     <div style={{ height, width }} className={css.area}>
@@ -881,7 +901,7 @@ const InputWithButton = ({ butName, onClick, placeholder, defaultValue }) => {
         value={text}
         onChange={(e) => {
           //setManualNumber(e.target.value);
-          setText(e.target.value);
+          setText(e.target.value.trim());
         }}
         placeholder={placeholder}
       />

@@ -64,7 +64,8 @@
     "title": "A good buy",
     "info": "Thank you for shopping in our store! We would love to hear from you, please contact us again!",
     "homeBut": "Home",
-    "feedbackBut": "Leave feedback"
+    "feedbackBut": "Leave feedback",
+    "checkEditionVersion": "Check edition version"
   },
   "gameInQueue": {
     "queue": "Queue",
