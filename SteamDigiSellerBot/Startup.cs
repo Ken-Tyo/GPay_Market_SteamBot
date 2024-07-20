@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +12,11 @@ using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.Network;
 using SteamDigiSellerBot.Network.Services;
-using SteamDigiSellerBot.Services;
 using SteamDigiSellerBot.Services.Implementation;
+using SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities.Services;
+using SteamDigiSellerBot.Validators;
 
 namespace SteamDigiSellerBot
 {
@@ -45,6 +48,7 @@ namespace SteamDigiSellerBot
             services.AddTransient<ISteamCountryCodeRepository, SteamCountryCodeRepository>();
             services.AddTransient<IGameSessionStatusLogRepository, GameSessionStatusLogRepository>();
             services.AddTransient<IGamePriceRepository, GamePriceRepository>();
+            services.AddTransient<IItemBulkUpdateService, ItemBulkUpdateService>();
 
             services.AddSingleton<ICryptographyUtilityService, CryptographyUtilityService>();
 
@@ -79,6 +83,8 @@ namespace SteamDigiSellerBot
                 hubOptions.EnableDetailedErrors = true;
                 //hubOptions.KeepAliveInterval = System.TimeSpan.FromMinutes(1);
             });
+
+            AddValidators(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,5 +116,10 @@ namespace SteamDigiSellerBot
                 endpoints.MapHub<HomeHub>("/homehub");
             });
         }
+
+        private IServiceCollection AddValidators(IServiceCollection services) =>
+            services
+                .AddFluentValidationAutoValidation()
+                .AddValidatorsFromAssemblyContaining<BulkActionRequestValidator>();
     }
 }

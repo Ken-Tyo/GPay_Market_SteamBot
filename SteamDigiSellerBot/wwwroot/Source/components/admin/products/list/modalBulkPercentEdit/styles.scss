@@ -5,22 +5,45 @@
     font-size: 16px;
     line-height: 16px;
     padding: 27px 78px 0 92px;
-
     overflow-y: auto;
-    height: 619px;
+    height: 450px;
 
     &::-webkit-scrollbar {
         width: 0px;
     }
 
-    .formItem {
+    .contentItem {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 31px;
+        align-items: center;
 
         .name {
             padding-right: 27px;
         }
+
+        .operatorPercent {
+            display: flex;
+
+            .percent {
+                margin-left: 10px;
+            }
+
+            .operator {
+                div {
+                    button {
+                        padding: 16px;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+
+    .itemOr {
+        text-align: center;
+        margin: 20px 0;
+        opacity: 0.7;
+        font-size: 20px;
     }
 }
 

@@ -1,12 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SteamDigiSellerBot.Models.Items
 {
-    public class BulkActionRequest
+    public sealed class BulkActionRequest
     {
-        [Required(ErrorMessage = "Поле Процент от Steam является обязательным")]
-        public decimal SteamPercent { get; set; }
+        public decimal? SteamPercent { get; init; }
 
-        public int[] Ids { get; set; }
+        public IncreaseDecreaseOperatorEnum? IncreaseDecreaseOperator { get; init; }
+
+        public decimal? IncreaseDecreasePercent { get; init; }
+
+        public int[] Ids { get; init; }
     }
 }
