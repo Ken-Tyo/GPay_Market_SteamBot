@@ -45388,7 +45388,7 @@ var OrderState = function OrderState() {
               onClick: function onClick() {
                 apiConfirmSending(gameSession.uniqueCode);
               }
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+            }), !gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
               text: tOrderState('changeAccountBut'),
               style: {
                 backgroundColor: '#FFFFFF',
@@ -45438,7 +45438,7 @@ var OrderState = function OrderState() {
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: orderState_styles.accButtons,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+            children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
               text: tOrderState('changeAccountBut'),
               style: {
                 backgroundColor: '#FFFFFF',
@@ -45470,57 +45470,51 @@ var OrderState = function OrderState() {
       title: "",
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: orderState_styles.ivitationSended,
-        children: [!checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
-          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: orderState_styles.accImg,
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
-              src: gameSession.steamProfileAvatarUrl
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: orderState_styles.hints,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-              className: orderState_styles.hint,
-              children: [tOrderState('yourSteamName'), ":", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
-                style: {
-                  color: '#8615BC'
-                },
-                children: [gameSession.steamProfileName, "."]
-              }), /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), gameSession.steamProfileUrl]
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: orderState_styles.hint,
-              dangerouslySetInnerHTML: {
-                __html: tOrderState('requestInProcessing')
-              }
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: orderState_styles.accButtons,
-            children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
-              text: tOrderState('changeAccountBut'),
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.accImg,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+            src: gameSession.steamProfileAvatarUrl
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: orderState_styles.hints,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.hint,
+            children: [tOrderState('yourSteamName'), ":", ' ', /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
               style: {
-                backgroundColor: '#FFFFFF',
-                color: '#8615BC',
-                border: '1px solid #571676'
+                color: '#8615BC'
               },
-              onClick: function onClick() {
-                apiResetSteamAcc();
-              }
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              style: {
-                display: 'flex',
-                alignItems: 'center'
-              },
-              children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
-                digisellerId: gameSession.digisellerId
-              })
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
-            isDlc: isDlc
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(Timer, {
-            endTime: discountEndDate
+              children: [gameSession.steamProfileName, "."]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), gameSession.steamProfileUrl]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.hint,
+            dangerouslySetInnerHTML: {
+              __html: tOrderState('requestInProcessing')
+            }
           })]
-        }), checkCodeLoading && /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: orderState_styles.accButtons,
+          children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+            text: tOrderState('changeAccountBut'),
+            style: {
+              backgroundColor: '#FFFFFF',
+              color: '#8615BC',
+              border: '1px solid #571676'
+            },
+            onClick: function onClick() {
+              apiResetSteamAcc();
+            }
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            style: {
+              display: 'flex',
+              alignItems: 'center'
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+              digisellerId: gameSession.digisellerId
+            })
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
           color: '#571676'
-        })]
+        }), "}"]
       })
     }), showInvitationRefused && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
       title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tInvitationRefused('error')),
@@ -45544,11 +45538,12 @@ var OrderState = function OrderState() {
             className: orderState_styles.accButtons,
             children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: orderState_styles.line1,
-              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tOrderState('changeAccountBut'),
-                className: orderState_styles.but,
                 style: {
-                  marginRight: '25px'
+                  backgroundColor: '#FFFFFF',
+                  color: '#8615BC',
+                  border: '1px solid #571676'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45608,9 +45603,13 @@ var OrderState = function OrderState() {
             className: orderState_styles.accButtons,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.line1,
-              children: /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              children: !gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tOrderState('changeAccountBut'),
-                className: orderState_styles.but,
+                style: {
+                  backgroundColor: '#FFFFFF',
+                  color: '#8615BC',
+                  border: '1px solid #571676'
+                },
                 onClick: function onClick() {
                   apiResetSteamAcc();
                 }
@@ -45662,9 +45661,13 @@ var OrderState = function OrderState() {
             className: orderState_styles.accButtons,
             children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: orderState_styles.line1,
-              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tOrderState('changeAccountBut'),
-                className: orderState_styles.but,
+                style: {
+                  backgroundColor: '#FFFFFF',
+                  color: '#8615BC',
+                  border: '1px solid #571676'
+                },
                 onClick: function onClick() {
                   apiResetSteamAcc();
                 }
@@ -45812,9 +45815,13 @@ var OrderState = function OrderState() {
             className: orderState_styles.accButtons,
             children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: orderState_styles.line1,
-              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tOrderState('changeAccountBut'),
-                className: orderState_styles.but,
+                style: {
+                  backgroundColor: '#FFFFFF',
+                  color: '#8615BC',
+                  border: '1px solid #571676'
+                },
                 onClick: function onClick() {
                   apiResetSteamAcc();
                 }
@@ -45847,11 +45854,12 @@ var OrderState = function OrderState() {
             className: orderState_styles.accButtons,
             children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: orderState_styles.line1,
-              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tOrderState('changeAccountBut'),
-                className: orderState_styles.but,
                 style: {
-                  marginRight: '25px'
+                  backgroundColor: '#FFFFFF',
+                  color: '#8615BC',
+                  border: '1px solid #571676'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45897,11 +45905,12 @@ var OrderState = function OrderState() {
           className: orderState_styles.accButtons,
           children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: orderState_styles.line1,
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+            children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
               text: tOrderState('changeAccountBut'),
-              className: orderState_styles.but,
               style: {
-                marginRight: '25px'
+                backgroundColor: '#FFFFFF',
+                color: '#8615BC',
+                border: '1px solid #571676'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();

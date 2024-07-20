@@ -220,17 +220,18 @@ const OrderState = () => {
                       apiConfirmSending(gameSession.uniqueCode);
                     }}
                   />
-                  <Button
-                    text={tOrderState('changeAccountBut')}
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      color: '#8615BC',
-                      border: '1px solid #571676',
-                    }}
-                    onClick={() => {
-                      apiResetSteamAcc();
-                    }}
-                  />
+                                  {!gameSession.blockOrder && (
+                                      <Button
+                                          text={tOrderState('changeAccountBut')}
+                                          style={{
+                                              backgroundColor: '#FFFFFF',
+                                              color: '#8615BC',
+                                              border: '1px solid #571676',
+                                          }}
+                                          onClick={() => {
+                                              apiResetSteamAcc();
+                                          }}
+                                      />)}
                 </div>
 
                 <Dlc isDlc={isDlc} />
@@ -273,17 +274,18 @@ const OrderState = () => {
                 </div>
 
                 <div className={css.accButtons}>
-                  <Button
-                    text={tOrderState('changeAccountBut')}
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      color: '#8615BC',
-                      border: '1px solid #571676',
-                    }}
-                    onClick={() => {
-                      apiResetSteamAcc();
-                    }}
-                  />
+                                  {!gameSession.blockOrder && (
+                                      <Button
+                                          text={tOrderState('changeAccountBut')}
+                                          style={{
+                                              backgroundColor: '#FFFFFF',
+                                              color: '#8615BC',
+                                              border: '1px solid #571676',
+                                          }}
+                                          onClick={() => {
+                                              apiResetSteamAcc();
+                                          }}
+                                      />)}
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <ContactTheSeller digisellerId={gameSession.digisellerId} />
                   </div>
@@ -301,8 +303,6 @@ const OrderState = () => {
       {showWaiting && (
         <Area title="">
           <div className={css.ivitationSended}>
-            {!checkCodeLoading && (
-              <>
                 <div className={css.accImg}>
                   <img src={gameSession.steamProfileAvatarUrl} />
                 </div>
@@ -341,12 +341,7 @@ const OrderState = () => {
                     <ContactTheSeller digisellerId={gameSession.digisellerId} />
                   </div>
                 </div>
-
-                <Dlc isDlc={isDlc} />
-                <Timer endTime={discountEndDate} />
-              </>
-            )}
-            {checkCodeLoading && <CircularLoader color={'#571676'} />}
+             <CircularLoader color={'#571676'} />}
           </div>
         </Area>
           )}
@@ -383,14 +378,18 @@ const OrderState = () => {
 
                 <div className={css.accButtons}>
                   <div className={css.line1}>
-                    <Button
-                      text={tOrderState('changeAccountBut')}
-                      className={css.but}
-                      style={{ marginRight: '25px' }}
-                      onClick={() => {
-                        apiResetSteamAcc();
-                      }}
-                    />
+                                      {!gameSession.blockOrder && (
+                                          <Button
+                                              text={tOrderState('changeAccountBut')}
+                                              style={{
+                                                  backgroundColor: '#FFFFFF',
+                                                  color: '#8615BC',
+                                                  border: '1px solid #571676',
+                                              }}
+                                              onClick={() => {
+                                                  apiResetSteamAcc();
+                                              }}
+                                          />)}
                     <Button
                       text={tInvitationRefused('iSentInvitation')}
                       className={css.but}
@@ -447,13 +446,18 @@ const OrderState = () => {
 
                     <div className={css.accButtons}>
                       <div className={css.line1}>
-                        <Button
-                            text={tOrderState('changeAccountBut')}
-                            className={css.but}
-                            onClick={() => {
-                              apiResetSteamAcc();
-                            }}
-                        />
+                                      {!gameSession.blockOrder && (
+                                          <Button
+                                              text={tOrderState('changeAccountBut')}
+                                              style={{
+                                                  backgroundColor: '#FFFFFF',
+                                                  color: '#8615BC',
+                                                  border: '1px solid #571676',
+                                              }}
+                                              onClick={() => {
+                                                  apiResetSteamAcc();
+                                              }}
+                                          />)}
                       </div>
                       {gameSession.isAnotherBotExists && (
                           <div className={css.line1} style={{ marginTop: '32px' }}>
@@ -506,13 +510,18 @@ const OrderState = () => {
 
                 <div className={css.accButtons}>
                   <div className={css.line1}>
-                    <Button
-                      text={tOrderState('changeAccountBut')}
-                      className={css.but}
-                      onClick={() => {
-                        apiResetSteamAcc();
-                      }}
-                    />
+                                      {!gameSession.blockOrder && (
+                                          <Button
+                                              text={tOrderState('changeAccountBut')}
+                                              style={{
+                                                  backgroundColor: '#FFFFFF',
+                                                  color: '#8615BC',
+                                                  border: '1px solid #571676',
+                                              }}
+                                              onClick={() => {
+                                                  apiResetSteamAcc();
+                                              }}
+                                          />)}
                     {gameSession.canResendGame && (
                       <Button
                         text={tGameExists('repeatSendGame')}
@@ -644,13 +653,18 @@ const OrderState = () => {
 
               <div className={css.accButtons}>
                 <div className={css.line1}>
-                  <Button
-                    text={tOrderState('changeAccountBut')}
-                    className={css.but}
-                    onClick={() => {
-                      apiResetSteamAcc();
-                    }}
-                  />
+                                  {!gameSession.blockOrder && (
+                                      <Button
+                                          text={tOrderState('changeAccountBut')}
+                                          style={{
+                                              backgroundColor: '#FFFFFF',
+                                              color: '#8615BC',
+                                              border: '1px solid #571676',
+                                          }}
+                                          onClick={() => {
+                                              apiResetSteamAcc();
+                                          }}
+                                      />)}
 
                   <div className={css.contactSellerWrapper}>
                     <ContactTheSeller digisellerId={gameSession.digisellerId} />
@@ -680,14 +694,18 @@ const OrderState = () => {
 
                 <div className={css.accButtons}>
                   <div className={css.line1}>
-                    <Button
-                      text={tOrderState('changeAccountBut')}
-                      className={css.but}
-                      style={{ marginRight: '25px' }}
-                      onClick={() => {
-                        apiResetSteamAcc();
-                      }}
-                    />
+                                      {!gameSession.blockOrder && (
+                                          <Button
+                                              text={tOrderState('changeAccountBut')}
+                                              style={{
+                                                  backgroundColor: '#FFFFFF',
+                                                  color: '#8615BC',
+                                                  border: '1px solid #571676',
+                                              }}
+                                              onClick={() => {
+                                                  apiResetSteamAcc();
+                                              }}
+                                          />)}
 
                     <div
                       style={{
@@ -725,14 +743,18 @@ const OrderState = () => {
             <div className={css.text}>{tRegionError('info')}</div>
             <div className={css.accButtons}>
               <div className={css.line1}>
-                <Button
-                  text={tOrderState('changeAccountBut')}
-                  className={css.but}
-                  style={{ marginRight: '25px' }}
-                  onClick={() => {
-                    apiResetSteamAcc();
-                  }}
-                />
+                              {!gameSession.blockOrder && (
+                                  <Button
+                                      text={tOrderState('changeAccountBut')}
+                                      style={{
+                                          backgroundColor: '#FFFFFF',
+                                          color: '#8615BC',
+                                          border: '1px solid #571676',
+                                      }}
+                                      onClick={() => {
+                                          apiResetSteamAcc();
+                                      }}
+                                  />)}
 
                 <div className={css.contactBut}>
                   <ContactTheSeller digisellerId={gameSession.digisellerId} />

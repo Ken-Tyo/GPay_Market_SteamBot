@@ -58191,6 +58191,43 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
                     })]
                   })]
                 });
+              } else if (val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: status.description
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                      children: val.message
+                    }), val.userSteamContact && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043A\u043E\u043D\u0442\u0430\u043A\u0442 \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F:", ' ', val.userSteamContact]
+                    }), val.userProfileUrl && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F:", ' ', val.userProfileUrl]
+                    }), val.userNickname && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u041D\u0438\u043A\u043D\u0435\u0439\u043C:", ' ', val.userNickname]
+                    }), val.itemPrice && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u0421\u0442\u043E\u0438\u043C\u043E\u0441\u0442\u044C \u0442\u043E\u0432\u0430\u0440\u0430:", ' ', val.itemPrice]
+                    }), val.itemRegion && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u0420\u0435\u0433\u0438\u043E\u043D \u0442\u043E\u0432\u0430\u0440\u0430:", ' ', val.itemRegion]
+                    }), val.botName && val.botId && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u0411\u043E\u0442: ", createBotLink(val)]
+                    }), val.botRegionName && val.botRegionCode && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: ["\u0421\u0442\u0440\u0430\u043D\u0430 \u0431\u043E\u0442\u0430:", ' ', /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                        style: {
+                          color: '#d836e7'
+                        },
+                        children: val.botRegionName || val.botRegionCode
+                      })]
+                    }), val.botFilter && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                        children: "\u041A\u0440\u0438\u0442\u0435\u0440\u0438\u0438 \u0444\u0438\u043B\u044C\u0442\u0440\u0430\u0446\u0438\u0438:"
+                      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                        children: ["\u0440\u0435\u0433\u0438\u043E\u043D - ", val.botFilter.selectedRegion]
+                      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                        children: ["\u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0431\u043E\u0442\u0430 -", ' ', val.botFilter.withMaxBalance ? 'с большим балансом' : 'меньше всего попыток отправки игр по лимиту за час']
+                      })]
+                    })]
+                  })]
+                });
               } else {
                 return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                   children: status.description
