@@ -240,6 +240,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                     GSSCommon.SendGameGSQ.Remove(gsId);
                     if (res is SendFailed sf)
                     {
+                        if (sf.BlockOrder)
+                        {
+                            BlockOrder(gsId).GetAwaiter().GetResult();
+                        }    
                         if (sf.ReadyStatus == GameReadyToSendStatus.botsAreBusy)
                         {
                             var ur = UpdateStage(gsId, GameSessionStage.WaitToSend).GetAwaiter().GetResult();
@@ -344,6 +348,15 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
         }
 
+        public async Task BlockOrder(int gsId)
+        {
+            var _gsRepo = gsr;
+            await using var db = _gsRepo.GetContext();
+            var gs = await _gsRepo.GetByIdAsync(db, gsId);
+            gs.Stage = GameSessionStage.Done;
+            gs.BlockOrder = true;
+            await _gsRepo.EditAsync(db, gs);
+        }
 
         public async Task ChangeBotAndRetry(int gsId)
         {

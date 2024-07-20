@@ -71,7 +71,9 @@ const OrderState = () => {
   const showRegionError = gameSession && gameSession.statusId === 5;
   const showOrderClosed = gameSession && gameSession.statusId === 15;
   const showError =
-    gameSession && (gameSession.statusId === 17 || gameSession.statusId === 7);
+        gameSession && (gameSession.statusId === 17 || gameSession.statusId === 7);
+  const showWaiting =
+        gameSession && (gameSession.statusId === 20 || gameSession.statusId === 21);
 
   let [searchParams, setSearchParams] = useSearchParams();
   const uniquecode = searchParams.get('uniquecode') || '';
@@ -294,7 +296,63 @@ const OrderState = () => {
             {checkCodeLoading && <CircularLoader color={'#571676'} />}
           </div>
         </Area>
-      )}
+          )}
+
+      {showWaiting && (
+        <Area title="">
+          <div className={css.ivitationSended}>
+            {!checkCodeLoading && (
+              <>
+                <div className={css.accImg}>
+                  <img src={gameSession.steamProfileAvatarUrl} />
+                </div>
+
+                <div className={css.hints}>
+                  <div className={css.hint}>
+                    {tOrderState('yourSteamName')}:{' '}
+                    <span style={{ color: '#8615BC' }}>
+                      {gameSession.steamProfileName}.
+                    </span>
+                    <br />
+                    {gameSession.steamProfileUrl}
+                  </div>
+                  <div
+                    className={css.hint}
+                    dangerouslySetInnerHTML={{
+                      __html: tOrderState('requestSentInfo', {
+                        botName: `<a href="${gameSession.botProfileUrl}" 
+                                     style="color: #8615BC; text-decoration: none; " 
+                                     target="_blank" >${gameSession.botName}</a>`,
+                      }),
+                    }}
+                  ></div>
+                </div>
+
+                <div className={css.accButtons}>
+                  <Button
+                    text={tOrderState('changeAccountBut')}
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      color: '#8615BC',
+                      border: '1px solid #571676',
+                    }}
+                    onClick={() => {
+                      apiResetSteamAcc();
+                    }}
+                  />
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <ContactTheSeller digisellerId={gameSession.digisellerId} />
+                  </div>
+                </div>
+
+                <Dlc isDlc={isDlc} />
+                <Timer endTime={discountEndDate} />
+              </>
+            )}
+            {checkCodeLoading && <CircularLoader color={'#571676'} />}
+          </div>
+        </Area>
+          )}
 
       {showInvitationRefused && (
         <Area

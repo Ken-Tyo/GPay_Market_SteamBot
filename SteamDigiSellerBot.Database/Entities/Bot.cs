@@ -200,6 +200,9 @@ namespace SteamDigiSellerBot.Database.Entities
             SendGameAttemptsCountDaily = 0;
         }
 
+        [NotMapped]
+        public int HttpErrors { get; set; }
+
 
         public class VacGame
         {

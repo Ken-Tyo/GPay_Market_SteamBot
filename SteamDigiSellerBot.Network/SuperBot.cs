@@ -1592,30 +1592,44 @@ namespace SteamDigiSellerBot.Network
         public async Task<(FinalTranResponse,string)> FinalizeTransaction(
             string tranId, string sessionId, string beginCheckoutCart)
         {
-            var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
-            var formParams = new RequestParams
+            try
             {
-                ["transid"] = tranId,
-                ["CardCVV2"] = "",
-            };
+                var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
+                var formParams = new RequestParams
+                {
+                    ["transid"] = tranId,
+                    ["CardCVV2"] = "",
+                };
 
-            var finalTran = new Uri(finalTranUrl);
-            var reqMes = new HttpRequestMessage(HttpMethod.Post, finalTran);
-            reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
+                var finalTran = new Uri(finalTranUrl);
+                var reqMes = new HttpRequestMessage(HttpMethod.Post, finalTran);
+                reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
 
-            var cookies = new Dictionary<string, string>() {
+                var cookies = new Dictionary<string, string>() {
                 { "sessionid", sessionId },
                 { "shoppingCartGID", beginCheckoutCart },
                 { "wants_mature_content", "1" }
             };
-            using var client = GetDefaultHttpClientBy(finalTranUrl, out HttpClientHandler handler, cookies);
-            using var response = client.Send(reqMes);
-            var s = await response.Content.ReadAsStringAsync();
+                using var client = GetDefaultHttpClientBy(finalTranUrl, out HttpClientHandler handler, cookies);
+                using var response = client.Send(reqMes);
+                var s = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(s);
-            var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
-            
-            return (finalTranResp,s);
+                Console.WriteLine(s);
+                var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
+
+                return (finalTranResp, s);
+            }
+            catch (Exception e)
+            {
+                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}",e));
+            }
+        }
+
+        public class FinalTransactionException : Exception
+        {
+            public FinalTransactionException(string message, Exception innerException):base(message, innerException)
+            {
+            }
         }
 
         public async Task<bool> ForgetCart(string sessionId, string beginCheckoutCart)
@@ -1896,6 +1910,7 @@ namespace SteamDigiSellerBot.Network
         public FinalTranResponse finalizeTranRes;
         public bool IsCartForgot;
         public bool ChangeBot;
+        public bool BlockOrder;
     }
 
     public enum SendeGameResult

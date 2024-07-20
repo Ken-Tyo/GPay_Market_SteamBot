@@ -155,7 +155,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //Неизвестная ошибка - 7
             //Уже есть этот продукт - 19
             //Некорректный регион - 5
-            if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.RequestSent,
+            if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.RequestSent,
                     GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError,
                     GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.SwitchBot }.Contains(gs.StatusId))
                 return gs;
@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         /// <summary>
         /// This array contains the state numbers before the expiration time.
         /// </summary>
-        public static GameSessionStatusEnum[] BeforeExpStatuses = new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.SteamNetworkProblem, GameSessionStatusEnum.ProfileNoSet,
+        public static GameSessionStatusEnum[] BeforeExpStatuses = new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.SteamNetworkProblem, GameSessionStatusEnum.ProfileNoSet,
             GameSessionStatusEnum.BotLimit, GameSessionStatusEnum.GameRejected, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.RequestSent, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.IncorrectProfile
             , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue, GameSessionStatusEnum.SwitchBot };
 
@@ -1411,7 +1411,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                     return (sendRes.result == SendeGameResult.sended
                             ? SendGameStatus.sended
                             : SendGameStatus.otherError,
-                        sendRes.ChangeBot ? GameReadyToSendStatus.botSwitch : readyState);
+                            sendRes.BlockOrder ? GameReadyToSendStatus.blockOrder :
+                        (sendRes.ChangeBot ? GameReadyToSendStatus.botSwitch : readyState));
                 }
                 catch
                 {
@@ -1498,6 +1499,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         botsAreBusy,
         botNoLongerSuitable,
         botSwitch,
+        blockOrder,
         ready = 100
     }
 

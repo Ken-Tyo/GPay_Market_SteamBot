@@ -86,36 +86,36 @@ namespace SteamDigiSellerBot.Network
             var response = api.CallProtobufAsync<CCheckout_ValidateCart_Response>(
                 HttpMethod.Get, "ValidateCart",
                 args: PrepareProtobufArguments(new CCheckout_ValidateCart_Request()
-                    {
-                        data_request = new() {  include_basic_info = true, include_release = true},
-                        context = new() { country_code = country, steam_realm = 1}
-                        
-                    },
+                {
+                    data_request = new() { include_basic_info = true, include_release = true },
+                    context = new() { country_code = country, steam_realm = 1 }
+
+                },
                     accessToken)).Result;
             emptyCart = !response.cart_items.Any();
             return (response?.cart_items?.Count() == 1 && response.cart_items.Any(x => x.item_id.packageid == subId || x.item_id.bundleid == subId));
         }
 
-        public async Task<string> GetSessiondId(string url=null)
+        public async Task<string> GetSessiondId(string url = null)
         {
             HttpRequest request = _bot.SteamHttpRequest;
             var gameUrl = url ?? $"https://store.steampowered.com/app/413150";
             (string html, _, var handler) = await GetPageHtml(gameUrl);
-            
-            var langs= handler.CookieContainer.GetCookies(new Uri(gameUrl)).Where(x => x.Name == "Steam_Language" && x.Value!= "english").ToList();
+
+            var langs = handler.CookieContainer.GetCookies(new Uri(gameUrl)).Where(x => x.Name == "Steam_Language" && x.Value != "english").ToList();
             if (langs.Count == 1)
                 Language = langs.First().Value;
             return html.Substring("var g_sessionID = \"", "\"");
         }
 
-        public async Task<(AccountCartContents, ulong)> AddToCart_Proto(string userCountry, uint subId, bool isBundle = false, int reciverId = 0, string reciverName="Покупатель", string comment="")
+        public async Task<(AccountCartContents, ulong)> AddToCart_Proto(string userCountry, uint subId, bool isBundle = false, int reciverId = 0, string reciverName = "Покупатель", string comment = "")
         {
             var item = new CAccountCart_AddItemsToCart_Request()
             {
                 items = { new CAccountCart_AddItemsToCart_Request_ItemToAdd() {
                 flags = new AccountCartLineItemFlags() { is_gift = true },
-                
-                } } ,
+
+                } },
                 user_country = userCountry
             };
             if (isBundle)
@@ -125,7 +125,7 @@ namespace SteamDigiSellerBot.Network
             var api = _steamClient.Configuration.GetAsyncWebAPIInterface("IAccountCartService");
             var response = await api.CallProtobufAsync<CAccountCart_AddItemsToCart_Response>(
                 HttpMethod.Post, "AddItemsToCart", args: PrepareProtobufArguments(item, accessToken));
-            if (response.line_item_ids.FirstOrDefault()  == 0)
+            if (response.line_item_ids.FirstOrDefault() == 0)
                 return (null, 0);
             if (reciverId != 0)
             {
@@ -134,7 +134,7 @@ namespace SteamDigiSellerBot.Network
                     user_country = userCountry,
                     line_item_id = response.line_item_ids.First(),
                     flags = new AccountCartLineItemFlags() { is_gift = true },
-                    gift_info = new CartGiftInfo() { accountid_giftee = reciverId, gift_message = new() { gifteename = reciverName, message = comment, sentiment = "Счастливой игры" , signature = "GPay market" } }
+                    gift_info = new CartGiftInfo() { accountid_giftee = reciverId, gift_message = new() { gifteename = reciverName, message = comment, sentiment = "Счастливой игры", signature = "GPay market" } }
                 };
                 var response2 = await api.CallProtobufAsync<CAccountCart_ModifyLineItem_Response>(
                     HttpMethod.Post, "ModifyLineItem", args: PrepareProtobufArguments(m, accessToken));
@@ -150,7 +150,7 @@ namespace SteamDigiSellerBot.Network
         {
             CCheckout_GetFriendOwnershipForGifting_Request item = new();
             if (isBundle)
-                item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { bundleid= subId });
+                item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { bundleid = subId });
             else
                 item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { packageid = subId });
             var api = _steamClient.Configuration.GetAsyncWebAPIInterface("ICheckoutService");
@@ -182,21 +182,36 @@ namespace SteamDigiSellerBot.Network
             string countryCode)
         {
 
-       
+
+            try
+            {
+                var sessionId = await GetSessiondId();
+                var res = new SendGameResponse();
+
+                //добаляем в корзину
+                bool errorRepeat = false;
+            cartRepeat:
                 try
                 {
-                    var sessionId = await GetSessiondId();
-                    var res = new SendGameResponse();
+                    var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
+                        int.Parse(gifteeAccountId),
+                        receiverName, comment);
 
-                    //добаляем в корзину
-                    bool errorRepeat = false;
-                    cartRepeat:
-                    try
+                    if (ShoppingCart.Item1 == null)
                     {
-                        var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
+                        res.result = SendeGameResult.error;
+                        res.errMessage = "Не удалось добавить товар в корзину";
+                        res.ChangeBot = true;
+                        return res;
+                    }
+
+                    if (!CheckCart_Proto(countryCode, subId, out bool empty))
+                    {
+                        if (!empty)
+                            await DeleteCart(sessionId);
+                        ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
                             int.Parse(gifteeAccountId),
                             receiverName, comment);
-
                         if (ShoppingCart.Item1 == null)
                         {
                             res.result = SendeGameResult.error;
@@ -205,103 +220,99 @@ namespace SteamDigiSellerBot.Network
                             return res;
                         }
 
-                        if (!CheckCart_Proto(countryCode, subId, out bool empty))
+                        if (!CheckCart_Proto(countryCode, subId, out bool _))
                         {
-                            if (!empty)
-                                await DeleteCart(sessionId);
-                            ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
-                                int.Parse(gifteeAccountId),
-                                receiverName, comment);
-                            if (ShoppingCart.Item1 == null)
-                            {
-                                res.result = SendeGameResult.error;
-                                res.errMessage = "Не удалось добавить товар в корзину";
-                                res.ChangeBot = true;
-                                return res;
-                            }
-
-                            if (!CheckCart_Proto(countryCode, subId, out bool _))
-                            {
-                                res.result = SendeGameResult.error;
-                                res.errMessage = "Не удалось добавить товар в корзину";
-                                res.ChangeBot = true;
-                                return res;
-                            }
-                        }
-
-                        //res.gidShoppingCart = ;
-                        res.sessionId = sessionId;
-
-                        if (!string.IsNullOrEmpty(receiverName))
-                        {
-                            //проверяем что игры такой у пользователя нет
-                            var gameExists =
-                                await CheckoutFriendGift_Proto(subId, isBundle, int.Parse(gifteeAccountId));
-                            if (gameExists)
-                            {
-                                //проверка что это не исключение
-                                if (appId != 730 && appId != 302670)
-                                {
-                                    res.result = SendeGameResult.gameExists;
-                                    return res;
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (errorRepeat)
-                        {
-                            return new SendGameResponse()
-                            {
-                                errMessage = "Ошибка при работе с корзиной - " + ex.Message + "\n\n" + ex.StackTrace,
-                                result = SendeGameResult.error,
-                                ChangeBot = true
-                            };
-                        }
-                        else
-                        {
-                            errorRepeat = true;
-                            await Task.Delay(TimeSpan.FromSeconds(15));
-                            goto cartRepeat;
+                            res.result = SendeGameResult.error;
+                            res.errMessage = "Не удалось добавить товар в корзину";
+                            res.ChangeBot = true;
+                            return res;
                         }
                     }
 
-                    sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
-                    var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
-                        sessionId, res);
-                    return result;
-                }
-                catch (TaskCanceledException ex)
-                {
-                    return new SendGameResponse()
+                    //res.gidShoppingCart = ;
+                    res.sessionId = sessionId;
+
+                    if (!string.IsNullOrEmpty(receiverName))
                     {
-                        errMessage = "Отправка завершилась с ошибкой:  Ошибка подключения к Steam.\n" + ex.Message,
-                        result = SendeGameResult.error,
-                        ChangeBot = true
-                    };
+                        //проверяем что игры такой у пользователя нет
+                        var gameExists =
+                            await CheckoutFriendGift_Proto(subId, isBundle, int.Parse(gifteeAccountId));
+                        if (gameExists)
+                        {
+                            //проверка что это не исключение
+                            if (appId != 730 && appId != 302670)
+                            {
+                                res.result = SendeGameResult.gameExists;
+                                return res;
+                            }
+                        }
+                    }
                 }
-                catch (HttpRequestException ex)
+                catch (Exception ex)
                 {
-                    return new SendGameResponse()
+                    if (errorRepeat)
                     {
-                        errMessage = "Отправка завершилась с ошибкой:  Ошибка подключения к Steam.\n" + ex.Message,
-                        result = SendeGameResult.error,
-                        ChangeBot = true
-                    };
-                }
-                catch (Exception e)
-                {
-                    return new SendGameResponse()
+                        return new SendGameResponse()
+                        {
+                            errMessage = "Ошибка при работе с корзиной - " + ex.Message + "\n\n" + ex.StackTrace,
+                            result = SendeGameResult.error,
+                            ChangeBot = true
+                        };
+                    }
+                    else
                     {
-                        errMessage = "Отправка завершилась с ошибкой: " + e.Message + " \n\n" + e.StackTrace,
-                        result = SendeGameResult.error,
-                    };
+                        errorRepeat = true;
+                        await Task.Delay(TimeSpan.FromSeconds(15));
+                        goto cartRepeat;
+                    }
                 }
-                finally
+
+                sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
+                var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
+                    sessionId, res);
+                return result;
+            }
+            catch (TaskCanceledException ex)
+            {
+                return new SendGameResponse()
                 {
-      
-                }
+                    errMessage = "Отправка завершилась с ошибкой:  Ошибка подключения к Steam.\n" + ex.Message,
+                    result = SendeGameResult.error,
+                    ChangeBot = true
+                };
+            }
+            catch (HttpRequestException ex)
+            {
+                return new SendGameResponse()
+                {
+                    errMessage = "Отправка завершилась с ошибкой:  Ошибка подключения к Steam.\n" + ex.Message,
+                    result = SendeGameResult.error,
+                    ChangeBot = true
+                };
+            }
+            catch (FinalTransactionException e)
+            {
+                return new SendGameResponse()
+                {
+                    errMessage = e.Message,
+                    result = SendeGameResult.error,
+                    BlockOrder = true,
+                    ChangeBot = false
+                };
+            }
+            catch (Exception e)
+            {
+                return new SendGameResponse()
+                {
+                    errMessage = "Отправка завершилась с ошибкой: " + e.Message + " \n\n" + e.StackTrace,
+                    result = SendeGameResult.error,
+                };
+            }
+
+            finally
+            {
+
+            }
 
             //return new SendGameResponse()
             //{

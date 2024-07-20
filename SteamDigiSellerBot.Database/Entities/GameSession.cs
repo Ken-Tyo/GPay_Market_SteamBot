@@ -72,6 +72,8 @@ namespace SteamDigiSellerBot.Database.Entities
         [Column(TypeName = "json")]
         public List<int> BotSwitchList { get; set; } = new();
 
+        public bool BlockOrder { get; set; }
+
         public GameSession()
         {
             AddedDateTime = DateTimeOffset.UtcNow;
@@ -114,6 +116,7 @@ namespace SteamDigiSellerBot.Database.Entities
         BotNotFound=17,
         SendingGame=18,
         Queue=19,
-        SwitchBot=20
+        SwitchBot=20,
+        OrderConfirmed=21
     }
 }
