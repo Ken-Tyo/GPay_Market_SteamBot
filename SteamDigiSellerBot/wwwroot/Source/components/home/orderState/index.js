@@ -227,7 +227,7 @@ const OrderState = () => {
                                                 backgroundColor: '#FFFFFF',
                                                 color: '#8615BC',
                                                 border: '1px solid #571676',
-                                                marginRight: '0.5em'
+                                                marginRight: '1.5em'
                                             }}
                                             onClick={() => {
                                                 apiResetSteamAcc();
@@ -282,7 +282,7 @@ const OrderState = () => {
                                                 backgroundColor: '#FFFFFF',
                                                 color: '#8615BC',
                                                 border: '1px solid #571676',
-                                                marginRight: '0.5em'
+                                                marginRight: '1.5em'
                                             }}
                                             onClick={() => {
                                                 apiResetSteamAcc();
@@ -334,7 +334,7 @@ const OrderState = () => {
                                         backgroundColor: '#FFFFFF',
                                         color: '#8615BC',
                                         border: '1px solid #571676',
-                                        marginRight: '0.5em'
+                                        marginRight: '1.5em'
                                     }}
                                     onClick={() => {
                                         apiResetSteamAcc();
@@ -344,7 +344,7 @@ const OrderState = () => {
                                 <ContactTheSeller digisellerId={gameSession.digisellerId} />
                             </div>
                         </div>
-                        <div style="margin-top:1rem">
+                        <div style={{ marginTop: '1rem' }} >
                             <CircularLoader color={'#571676'} />
                         </div>
                     </div>
@@ -388,7 +388,7 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '0.5em'
+                                                    marginRight: '1.5em'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
@@ -457,7 +457,7 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '0.5em'
+                                                    marginRight: '1.5em'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
@@ -522,7 +522,7 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '0.5em'
+                                                    marginRight: '1.5em'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
@@ -665,7 +665,7 @@ const OrderState = () => {
                                                 backgroundColor: '#FFFFFF',
                                                 color: '#8615BC',
                                                 border: '1px solid #571676',
-                                                marginRight: '0.5em'
+                                                marginRight: '1.5em'
                                             }}
                                             onClick={() => {
                                                 apiResetSteamAcc();
@@ -707,7 +707,7 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '0.5em'
+                                                    marginRight: '1.5em'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
@@ -757,7 +757,7 @@ const OrderState = () => {
                                             backgroundColor: '#FFFFFF',
                                             color: '#8615BC',
                                             border: '1px solid #571676',
-                                            marginRight: '0.5em'
+                                            marginRight: '1.5em'
                                         }}
                                         onClick={() => {
                                             apiResetSteamAcc();

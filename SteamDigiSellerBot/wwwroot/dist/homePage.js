@@ -45394,7 +45394,7 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '0.5em'
+                marginRight: '1.5em'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
@@ -45445,7 +45445,7 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '0.5em'
+                marginRight: '1.5em'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
@@ -45501,7 +45501,7 @@ var OrderState = function OrderState() {
               backgroundColor: '#FFFFFF',
               color: '#8615BC',
               border: '1px solid #571676',
-              marginRight: '0.5em'
+              marginRight: '1.5em'
             },
             onClick: function onClick() {
               apiResetSteamAcc();
@@ -45516,7 +45516,9 @@ var OrderState = function OrderState() {
             })
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          style: "margin-top:1rem",
+          style: {
+            marginTop: '1rem'
+          },
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
             color: '#571676'
           })
@@ -45550,7 +45552,7 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '0.5em'
+                  marginRight: '1.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45616,7 +45618,7 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '0.5em'
+                  marginRight: '1.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45675,7 +45677,7 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '0.5em'
+                  marginRight: '1.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45830,7 +45832,7 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '0.5em'
+                  marginRight: '1.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45870,7 +45872,7 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '0.5em'
+                  marginRight: '1.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45922,7 +45924,7 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '0.5em'
+                marginRight: '1.5em'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
