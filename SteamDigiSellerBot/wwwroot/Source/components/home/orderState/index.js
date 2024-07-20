@@ -325,7 +325,9 @@ const OrderState = () => {
                                 }}
                             ></div>
                         </div>
-
+                        <div style={{ marginTop: '1.5rem', marginBottom: '3rem' }} >
+                            <CircularLoader color={'#571676'} />
+                        </div>
                         <div className={css.accButtons}>
                             {!gameSession.blockOrder && (
                                 <Button
@@ -344,9 +346,7 @@ const OrderState = () => {
                                 <ContactTheSeller digisellerId={gameSession.digisellerId} />
                             </div>
                         </div>
-                        <div style={{ marginTop: '1rem' }} >
-                            <CircularLoader color={'#571676'} />
-                        </div>
+
                     </div>
                 </Area>
             )}

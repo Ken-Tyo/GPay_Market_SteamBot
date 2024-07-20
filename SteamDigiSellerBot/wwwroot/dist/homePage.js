@@ -45493,6 +45493,14 @@ var OrderState = function OrderState() {
               __html: tOrderState('requestInProcessing')
             }
           })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: {
+            marginTop: '1.5rem',
+            marginBottom: '3rem'
+          },
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+            color: '#571676'
+          })
         }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
           className: orderState_styles.accButtons,
           children: [!gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
@@ -45515,13 +45523,6 @@ var OrderState = function OrderState() {
               digisellerId: gameSession.digisellerId
             })
           })]
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          style: {
-            marginTop: '1rem'
-          },
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
-            color: '#571676'
-          })
         })]
       })
     }), showInvitationRefused && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
