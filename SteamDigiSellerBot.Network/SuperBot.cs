@@ -1621,7 +1621,7 @@ namespace SteamDigiSellerBot.Network
             }
             catch (Exception e)
             {
-                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}",e));
+                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}",e);
             }
         }
 
