@@ -22,8 +22,6 @@ namespace SteamDigiSellerBot
 {
     public class Startup
     {
-        private static string ProjectNamespace => $"{nameof(SteamDigiSellerBot)}";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
