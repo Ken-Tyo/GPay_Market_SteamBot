@@ -45393,7 +45393,8 @@ var OrderState = function OrderState() {
               style: {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
-                border: '1px solid #571676'
+                border: '1px solid #571676',
+                marginRight: '0.5em'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
@@ -45443,7 +45444,8 @@ var OrderState = function OrderState() {
               style: {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
-                border: '1px solid #571676'
+                border: '1px solid #571676',
+                marginRight: '0.5em'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
@@ -45498,7 +45500,8 @@ var OrderState = function OrderState() {
             style: {
               backgroundColor: '#FFFFFF',
               color: '#8615BC',
-              border: '1px solid #571676'
+              border: '1px solid #571676',
+              marginRight: '0.5em'
             },
             onClick: function onClick() {
               apiResetSteamAcc();
@@ -45512,9 +45515,12 @@ var OrderState = function OrderState() {
               digisellerId: gameSession.digisellerId
             })
           })]
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
-          color: '#571676'
-        }), "}"]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          style: "margin-top:1rem",
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(circularLoader, {
+            color: '#571676'
+          })
+        })]
       })
     }), showInvitationRefused && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
       title: "".concat(tCommon('order'), " #").concat(gameSession.id, " - ").concat(tInvitationRefused('error')),
@@ -45543,7 +45549,8 @@ var OrderState = function OrderState() {
                 style: {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
-                  border: '1px solid #571676'
+                  border: '1px solid #571676',
+                  marginRight: '0.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45608,7 +45615,8 @@ var OrderState = function OrderState() {
                 style: {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
-                  border: '1px solid #571676'
+                  border: '1px solid #571676',
+                  marginRight: '0.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45666,7 +45674,8 @@ var OrderState = function OrderState() {
                 style: {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
-                  border: '1px solid #571676'
+                  border: '1px solid #571676',
+                  marginRight: '0.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45820,7 +45829,8 @@ var OrderState = function OrderState() {
                 style: {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
-                  border: '1px solid #571676'
+                  border: '1px solid #571676',
+                  marginRight: '0.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45859,7 +45869,8 @@ var OrderState = function OrderState() {
                 style: {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
-                  border: '1px solid #571676'
+                  border: '1px solid #571676',
+                  marginRight: '0.5em'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
@@ -45910,7 +45921,8 @@ var OrderState = function OrderState() {
               style: {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
-                border: '1px solid #571676'
+                border: '1px solid #571676',
+                marginRight: '0.5em'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
