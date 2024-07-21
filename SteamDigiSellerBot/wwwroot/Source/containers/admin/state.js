@@ -662,13 +662,15 @@ export const toggleOrderCreationInfoModal = async (isOpen) => {
   });
 };
 
-export const apiChangeItemBulk = async (SteamPercent, Ids) => {
+export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) => {
   setItemsLoading(true);
   setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/change`, {
     method: "POST",
     body: mapToFormData({
       SteamPercent,
+      IncreaseDecreaseOperator,
+      IncreaseDecreasePercent,
       Ids,
     }),
   });
