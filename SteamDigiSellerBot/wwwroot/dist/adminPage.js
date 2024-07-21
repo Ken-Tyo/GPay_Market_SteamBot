@@ -58098,9 +58098,19 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
     title: "\u041B\u043E\u0433 \u0437\u0430\u043A\u0430\u0437\u0430 #".concat(data === null || data === void 0 ? void 0 : data.id),
     width: 582,
     height: 783,
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: modalStatusHistory_styles.content,
-      children: hist && ((_Object$keys = Object.keys(hist)) === null || _Object$keys === void 0 ? void 0 : _Object$keys.map(function (gr) {
+      children: [(data === null || data === void 0 ? void 0 : data.blockOrder) && /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+        style: {
+          display: 'flex',
+          color: 'rgb(225, 63, 41)',
+          justifyContent: 'center',
+          fontWeight: 'bolder',
+          fontSize: 'larger',
+          marginBottom: '2rem'
+        },
+        children: "\u0417\u0430\u043A\u0430\u0437 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D"
+      }), hist && ((_Object$keys = Object.keys(hist)) === null || _Object$keys === void 0 ? void 0 : _Object$keys.map(function (gr) {
         var grTitle = moment_default()(gr).format('DD.MM.YYYY');
         return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
           className: modalStatusHistory_styles.logGroup,
@@ -58274,7 +58284,7 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
             });
           })]
         });
-      }))
+      }))]
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: modalStatusHistory_styles.actions,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {

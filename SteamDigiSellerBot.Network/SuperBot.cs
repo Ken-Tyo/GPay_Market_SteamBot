@@ -1592,8 +1592,7 @@ namespace SteamDigiSellerBot.Network
         public async Task<(FinalTranResponse,string)> FinalizeTransaction(
             string tranId, string sessionId, string beginCheckoutCart)
         {
-            try
-            {
+       
                 var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
                 var formParams = new RequestParams
                 {
@@ -1618,11 +1617,7 @@ namespace SteamDigiSellerBot.Network
                 var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
 
                 return (finalTranResp, s);
-            }
-            catch (Exception e)
-            {
-                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}",e);
-            }
+           
         }
 
         public class FinalTransactionException : Exception
@@ -1740,7 +1735,7 @@ namespace SteamDigiSellerBot.Network
                 if (mesDict.ContainsKey(initResp.purchaseresultdetail))
                     mes = mesDict[initResp.purchaseresultdetail];
 
-                
+
                 Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
 
                 if (initResp.purchaseresultdetail == 0 || initResp.purchaseresultdetail == 2 ||
@@ -1771,36 +1766,42 @@ namespace SteamDigiSellerBot.Network
                     return sendGame;
                 }
             }
-
-            var (finalTranRes, fI) = await FinalizeTransaction(
-                initResp.transid, initResp.sessionId, gidShoppingCart);
-            res.finalizeTranRes = finalTranRes;
-
-            if (finalTranRes.success != 22)
+            try
             {
-                if (mesDict.ContainsKey(finalTranRes.purchaseresultdetail))
-                    mes = mesDict[finalTranRes.purchaseresultdetail];
-                if (finalTranRes.purchaseresultdetail == 0 || finalTranRes.purchaseresultdetail == 2 ||
-                    finalTranRes.purchaseresultdetail == 53 || finalTranRes.purchaseresultdetail == 73)
-                    res.ChangeBot = true;
-                //Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
-                res.result = SendeGameResult.error;
-                res.errMessage = mes;
-                if (initResp.purchaseresultdetail == 0)
-                    res.errMessage += "\n\n" + fI;
-                res.errCode = finalTranRes.purchaseresultdetail;
+                var (finalTranRes, fI) = await FinalizeTransaction(
+                    initResp.transid, initResp.sessionId, gidShoppingCart);
+                res.finalizeTranRes = finalTranRes;
+
+                if (finalTranRes.success != 22)
                 {
-                    sendGame = res;
-                    return sendGame;
+                    if (mesDict.ContainsKey(finalTranRes.purchaseresultdetail))
+                        mes = mesDict[finalTranRes.purchaseresultdetail];
+                    if (finalTranRes.purchaseresultdetail == 0 || finalTranRes.purchaseresultdetail == 2 ||
+                        finalTranRes.purchaseresultdetail == 53 || finalTranRes.purchaseresultdetail == 73)
+                        res.ChangeBot = true;
+                    //Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
+                    res.result = SendeGameResult.error;
+                    res.errMessage = mes;
+                    if (initResp.purchaseresultdetail == 0)
+                        res.errMessage += "\n\n" + fI;
+                    res.errCode = finalTranRes.purchaseresultdetail;
+                    {
+                        sendGame = res;
+                        return sendGame;
+                    }
                 }
+
+                var forgerCartRes = await ForgetCart(sessionId, gidShoppingCart);
+                res.IsCartForgot = forgerCartRes;
+
+                res.result = SendeGameResult.sended;
+                sendGame = res;
+                return sendGame;
             }
-
-            var forgerCartRes = await ForgetCart(sessionId, gidShoppingCart);
-            res.IsCartForgot = forgerCartRes;
-
-            res.result = SendeGameResult.sended;
-            sendGame = res;
-            return sendGame;
+            catch (Exception e)
+            {
+                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}", e);
+            }
         }
 
         public async Task<string> CreateInvitatinoLink()

@@ -47,8 +47,17 @@ const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
       width={582}
       height={783}
     >
-      <div className={css.content}>
-        {hist &&
+            <div className={css.content}>
+                {data?.blockOrder && (
+                    <span style={{
+                        display: 'flex',
+                        color: 'rgb(225, 63, 41)',
+                        justifyContent: 'center',
+                        fontWeight: 'bolder',
+                        fontSize: 'larger',
+                        marginBottom: '2rem'
+                    }}>Заказ заблокирован</span>)}
+                {hist &&
           Object.keys(hist)?.map((gr) => {
             let grTitle = moment(gr).format('DD.MM.YYYY');
             return (

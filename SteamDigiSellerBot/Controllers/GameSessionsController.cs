@@ -172,10 +172,13 @@ namespace SteamDigiSellerBot.Controllers
             if (gs.Bot != null && gs.SteamContactValue != null)
             {
 #if !DEBUG
-                var sbot = _botPool.GetById(gs.Bot.Id);
-                (var pdata, string err) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
-                if (pdata != null && sbot.IsOk())
-                    await sbot.RemoveFromFriends(pdata);
+                _ = Task.Run(async () =>
+                {
+                    var sbot = _botPool.GetById(gs.Bot.Id);
+                    (var pdata, string err) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
+                    if (pdata != null && sbot.IsOk())
+                        await sbot.RemoveFromFriends(pdata);
+                }).ConfigureAwait(false);
 #endif
             }
 

@@ -20,6 +20,7 @@ namespace SteamDigiSellerBot.MappingProfiles
                 .ForMember(t => t.ItemPrice, x => x.MapFrom((s, t) => s.ItemData?.Price))
                 .ForMember(t => t.ItemSteamPercent, x => x.MapFrom((s, t) => s.ItemData?.SteamPercent))
                 .ForMember(t => t.BotName, x => x.MapFrom(s => s.Bot != null ? s.Bot.UserName : ""))
+                .ForMember(t=> t.BlockOrder, x=> x.MapFrom(s=> s.BlockOrder))
                 .ForMember(t => t.StatusHistory, x => x.MapFrom((gs, gsiv) =>
                 {
                     return gs.GameSessionStatusLogs
