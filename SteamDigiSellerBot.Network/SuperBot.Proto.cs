@@ -162,7 +162,7 @@ namespace SteamDigiSellerBot.Network
                 var response = await api.CallProtobufAsync<CUserAccount_GetWalletDetails_Response>(
                     HttpMethod.Post, "GetClientWalletDetails", args: PrepareProtobufArguments(item, accessToken));
                 
-                return (true, response.balance/100);
+                return (true, response.balance/100M);
             }
             catch (Exception ex)
             {
