@@ -149,7 +149,7 @@ namespace SteamDigiSellerBot.Network
             {
                 Task.Run(() =>
                 {
-                    (bool balanceFetched, decimal balance) = GetBotBalance().Result;
+                    (bool balanceFetched, decimal balance) = GetBotBalance_Proto().Result;
                     if (balanceFetched)
                         _bot.Balance = balance;
                 }),

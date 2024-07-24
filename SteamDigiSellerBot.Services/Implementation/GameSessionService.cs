@@ -1386,7 +1386,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //    Task.Run(() =>
                     //    {
                     //обновляем баланс бота
-                    (bool balanceParsed, decimal balance) = await sbot.GetBotBalance();
+                    (bool balanceParsed, decimal balance) = await sbot.GetBotBalance_Proto(_logger);
                     if (balanceParsed)
                         gs.Bot.Balance = balance;
                     //    }),

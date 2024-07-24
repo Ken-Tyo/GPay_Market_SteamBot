@@ -31,6 +31,7 @@ using xNet;
 using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
+using Microsoft.Extensions.Logging;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -146,7 +147,39 @@ namespace SteamDigiSellerBot.Network
             return (response.cart, response.line_item_ids.First());
         }
 
-        public async Task<bool> CheckoutFriendGift_Proto(uint subId, bool isBundle, int reciverId)
+        public async Task<(bool, decimal)> GetBotBalance_Proto(ILogger logger =null)
+        {
+            if (_bot.Result != EResult.OK)
+                return (false, 0);
+
+            try
+            {
+                var item=new CUserAccount_GetClientWalletDetails_Request()
+                {
+                    include_balance_in_usd = true
+                };
+                var api = _steamClient.Configuration.GetAsyncWebAPIInterface("IUserAccountService");
+                var response = await api.CallProtobufAsync<CUserAccount_GetWalletDetails_Response>(
+                    HttpMethod.Post, "GetClientWalletDetails", args: PrepareProtobufArguments(item, accessToken));
+                
+                return (true, response.balance/100);
+            }
+            catch (Exception ex)
+            {
+                if (logger != null)
+                {
+                    logger.LogError(ex,$"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                }
+                else
+                {
+                    Console.WriteLine($"{ex.Message} {ex.StackTrace}");
+                    Console.WriteLine($"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                }
+                return (false, 0);
+            }
+        }
+
+                public async Task<bool> CheckoutFriendGift_Proto(uint subId, bool isBundle, int reciverId)
         {
             CCheckout_GetFriendOwnershipForGifting_Request item = new();
             if (isBundle)

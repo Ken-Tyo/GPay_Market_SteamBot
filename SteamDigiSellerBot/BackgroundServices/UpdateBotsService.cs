@@ -98,7 +98,7 @@ namespace SteamDigiSellerBot.Services
                             }
                         }
 
-                        (bool balanceFetched, decimal balance) = await sb.GetBotBalance();
+                        (bool balanceFetched, decimal balance) = await sb.GetBotBalance_Proto(_logger);
                         if (balanceFetched)
                         {
                             bot.Balance = balance;
