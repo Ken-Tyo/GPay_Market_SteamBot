@@ -187,7 +187,7 @@ namespace SteamDigiSellerBot.Services
                         _logger.LogError(default(EventId), ex, $"Error while update bot: {bot.Id} {bot.UserName} , Marker:{id}");
                     }
                 }
-
+                _logger.LogInformation("Bot updates finished");
                 //_logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromHours(1));
             }
