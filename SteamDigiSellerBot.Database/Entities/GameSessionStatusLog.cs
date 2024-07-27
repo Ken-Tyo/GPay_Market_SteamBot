@@ -33,6 +33,7 @@ namespace SteamDigiSellerBot.Database.Entities
             public string botName { get; set; }
             public string botRegionName { get; set; }
             public string botRegionCode { get; set; }
+            public bool rejectedByUser { get; set; }
 
             public BotFilterParams botFilter { get; set; }
         }

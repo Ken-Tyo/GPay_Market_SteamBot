@@ -771,7 +771,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (isError)
             {
-                gs.StatusId = GameSessionStatusEnum.UnknownError;//неизвестная ошибка
+                gs.StatusId = valueJson.rejectedByUser ? GameSessionStatusEnum.RequestReject : GameSessionStatusEnum.UnknownError;
+                
                 valueJson = new GameSessionStatusLog.ValueJson
                 {
                     message = "Не удалось добавить пользователя в друзья",
@@ -841,6 +842,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                             _logger.LogError(
                                     $"GS ID {gs.Id} error while try add user with direct link - reponse\n {JsonConvert.SerializeObject(res)}");
                             isError = true;
+                            
+                            if (r.resRaw == "BadRequest")
+                                valueJson = new GameSessionStatusLog.ValueJson
+                                {
+                                    message = "Ошибка при добавлении пользователя в друзья - пользователь заблокировал добавление в друзья",
+                                    rejectedByUser = true
+                                };
                         }
 
                         break;
@@ -882,6 +890,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                                 _logger.LogError(
                                     $"GS ID {gs.Id} error while try add user with direct link - response\n {JsonConvert.SerializeObject(afr)}");
                                 isError = true;
+                                
+                                if (r.resRaw == "BadRequest")
+                                    valueJson = new GameSessionStatusLog.ValueJson
+                                    {
+                                        message = "Ошибка при добавлении пользователя в друзья - пользователь заблокировал добавление в друзья",
+                                        rejectedByUser = true
+                                    };
                             }
                         }
 
@@ -901,23 +916,23 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task<CheckFriendAddedResult> CheckFriendAddedStatus(GameSession gs)
         {
-            
-                GameSessionStatusLog log = null;
-                var updateGsStatus = new Func<GameSession, ValueJson, Task>(async (gs, v) =>
+            GameSessionStatusLog log = null;
+            var updateGsStatus = new Func<GameSession, ValueJson, Task>(async (gs, v) =>
+            {
+                log = new GameSessionStatusLog
                 {
-                    log = new GameSessionStatusLog
-                    {
-                        GameSessionId = gs.Id,
-                        StatusId = gs.StatusId,
-                        Value = v
-                    };
-                    await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
-                    await _gameSessionStatusLogRepository.AddAsync(log);
-                    await using var db = _userDBRepository.GetContext();
-                    var user = await _userDBRepository.GetByIdAsync(db, gs.UserId);
-                    await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
-                    await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
-                });
+                    GameSessionId = gs.Id,
+                    StatusId = gs.StatusId,
+                    Value = v
+                };
+                await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.StatusId);
+                await _gameSessionStatusLogRepository.AddAsync(log);
+                await using var db = _userDBRepository.GetContext();
+                var user = await _userDBRepository.GetByIdAsync(db, gs.UserId);
+                await _wsNotifSender.GameSessionChanged(user.AspNetUser.Id, gs.Id);
+                await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
+            });
+
             try
             {
                 var sbot = _botPool.GetById(gs.Bot.Id);
@@ -994,6 +1009,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 else if (res == false)
                 {
                     gs.StatusId = GameSessionStatusEnum.RequestReject; //Заявка отклонена
+
                     await updateGsStatus(gs, new ValueJson
                     {
                         botId = gs.Bot.Id,

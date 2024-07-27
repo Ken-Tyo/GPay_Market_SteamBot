@@ -135,6 +135,7 @@ namespace SteamDigiSellerBot.Controllers
                 {
                     if (botAuthOK)
                     {
+                        bot.Id = _botPool.GetIdForNewBot();
                         await superBot.SetBotCreationData(currencyData, vacCheckList);
                         await _steamBotRepository.AddAsync(db,bot);
                         _botPool.Add(bot);

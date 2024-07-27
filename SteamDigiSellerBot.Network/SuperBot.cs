@@ -1319,14 +1319,14 @@ namespace SteamDigiSellerBot.Network
                 var failRes = "";
                 try
                 {
-                    failRes = await response2.Content.ReadAsStringAsync();
+                    failRes = response2.StatusCode.ToString();
                 }
                 catch
                 {
 
                 }
 
-                return new InviteRes { success = 0, resRaw = failRes };
+                return new InviteRes { success = 0, resRaw = failRes};
             }
 
             var res = await response2.Content.ReadAsStringAsync();

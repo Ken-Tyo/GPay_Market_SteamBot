@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Repositories;
+using SteamDigiSellerBot.Network.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace SteamDigiSellerBot.Network
         bool Remove(Bot bot);
         bool Update(Bot bot);
         bool UpdateBotData(Bot bot);
+        int GetIdForNewBot();
         SuperBot GetById(int id);
         SuperBot GetRandom();
         SuperBot ReLogin(Bot b);
@@ -90,6 +92,21 @@ namespace SteamDigiSellerBot.Network
 
             return false;
         }   
+
+        public int GetIdForNewBot()
+        {
+            lock (sync)
+            {
+                var allBots = _botRepository.ListAsync().Result;
+
+                var id = 1;
+
+                while (allBots.Any(b => b.Id == id))
+                    id++;
+
+                return id;
+            }
+        }
 
         public SuperBot GetById(int id)
         {
