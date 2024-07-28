@@ -25,7 +25,8 @@
     "thisMyAccBut": "This is my account",
     "changeAccountBut": "Change account",
     "requestSent": "Friend request sent",
-    "requestSentInfo": "You have been sent a request to add friends on Steam. You need to accept our bot with the nickname {{botName}} as a friend. Then the purchased item will be sent to you."
+    "requestSentInfo": "You have been sent a request to add friends on Steam. You need to accept our bot with the nickname {{botName}} as a friend. Then the purchased item will be sent to you.",
+    "requestInProcessing": "Your order is being processed"
   },
   "dlc": {
     "info": "This product is an addition to the main game. Without the presence of the main game, you will not be able to activate the DLC"
@@ -64,7 +65,8 @@
     "title": "A good buy",
     "info": "Thank you for shopping in our store! We would love to hear from you, please contact us again!",
     "homeBut": "Home",
-    "feedbackBut": "Leave feedback"
+    "feedbackBut": "Leave feedback",
+    "checkEditionVersion": "Check edition version"
   },
   "gameInQueue": {
     "queue": "Queue",

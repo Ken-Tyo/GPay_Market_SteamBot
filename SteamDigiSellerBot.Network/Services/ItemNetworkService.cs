@@ -90,8 +90,9 @@ namespace SteamDigiSellerBot.Network.Services
             var proxyCount = await _steamProxyRepository.GetTotalCount();
 
             var skipNum = 0;
-            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/1.72M);
+            var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/1.5M);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
+            Random r = new Random();
             while (chunk.Count() > 0)
             {
                 var tasks = new List<Task>();
@@ -109,8 +110,9 @@ namespace SteamDigiSellerBot.Network.Services
                         }
                     }).Unwrap());
                     i++;
+                    await Task.Delay((int) (r.Next(0,1000) * (i*1.0/chunkSize)));
                     if (i % 10 == 0)
-                        await Task.Delay(1000);
+                        await Task.Delay((int)(r.Next(0, 10000) * (1-i * 1.0 / chunkSize)));
                 }
 
                 await Task.Delay(1000);

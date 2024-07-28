@@ -9,46 +9,55 @@ import moment from 'moment';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 
 const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
-  let hist = data?.statusHistory;
-  const { gameSessionsStatuses: statuses } = state.use();
-  const navigate = useNavigate();
+    let hist = data?.statusHistory;
+    const { gameSessionsStatuses: statuses } = state.use();
+    const navigate = useNavigate();
 
-  const createBotLink = (val) => {
+    const createBotLink = (val) => {
+        return (
+            <span
+                className={css.link}
+                onClick={() => {
+                    navigate('/admin/bots?id=' + val.botId);
+                    if (onCancel) onCancel();
+                }}
+            >
+                {val.botName}
+            </span>
+        );
+    };
+
+    const createUserLink = (val) => {
+        return (
+            <span
+                className={css.link}
+                onClick={() => {
+                    window.open(val.userProfileUrl, '_blank');
+                }}
+            >
+                {val.userNickname}
+            </span>
+        );
+    };
+
     return (
-      <span
-        className={css.link}
-        onClick={() => {
-          navigate('/admin/bots?id=' + val.botId);
-          if (onCancel) onCancel();
-        }}
-      >
-        {val.botName}
-      </span>
-    );
-  };
-
-  const createUserLink = (val) => {
-    return (
-      <span
-        className={css.link}
-        onClick={() => {
-          window.open(val.userProfileUrl, '_blank');
-        }}
-      >
-        {val.userNickname}
-      </span>
-    );
-  };
-
-  return (
     <ModalBase
       isOpen={isOpen}
       title={`Лог заказа #${data?.id}`}
       width={582}
       height={783}
     >
-      <div className={css.content}>
-        {hist &&
+            <div className={css.content}>
+                {data?.blockOrder && (
+                    <span style={{
+                        display: 'flex',
+                        color: 'rgb(225, 63, 41)',
+                        justifyContent: 'center',
+                        fontWeight: 'bolder',
+                        fontSize: 'larger',
+                        marginBottom: '2rem'
+                    }}>Заказ заблокирован</span>)}
+                {hist &&
           Object.keys(hist)?.map((gr) => {
             let grTitle = moment(gr).format('DD.MM.YYYY');
             return (
@@ -173,7 +182,70 @@ const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
                           </div>
                         </div>
                       );
-                    } else {
+                    }
+                    else if (val)
+                    {
+                        return (
+                            <><div>{status.description}</div>
+                                <div>
+                                <div>{val.message}</div>
+                                {val.userSteamContact && (
+                                    <div>
+                                        Указанный контакт для добавления:{' '}
+                                        {val.userSteamContact}
+                                    </div>
+                                )}
+                                {val.userProfileUrl && (
+                                    <div>
+                                        Полученный профиль пользователя:{' '}
+                                        {val.userProfileUrl}
+                                    </div>
+                                )}
+                                {val.userNickname && (
+                                    <div>
+                                        Никнейм:{' '}
+                                        {val.userNickname}
+                                    </div>
+                                )}
+                                {val.itemPrice && (
+                                    <div>
+                                        Стоимость товара:{' '}
+                                        {val.itemPrice}
+                                    </div>
+                                )}
+                                {val.itemRegion && (
+                                    <div>
+                                        Регион товара:{' '}
+                                        {val.itemRegion}
+                                    </div>
+                                )}
+                                {val.botName && val.botId && (
+                                    <div>Бот: {createBotLink(val)}</div>
+                                )}
+                                {val.botRegionName && val.botRegionCode && (
+                                    <div>
+                                        Страна бота:{' '}
+                                        <span style={{ color: '#d836e7' }}>
+                                            {val.botRegionName || val.botRegionCode}
+                                        </span>
+                                    </div>
+                                )}
+                                {val.botFilter && (
+                                    <div>
+                                        <div>Критерии фильтрации:</div>
+                                        <div>регион - {val.botFilter.selectedRegion}</div>
+                                        <div>
+                                            особенность бота -{' '}
+                                            {val.botFilter.withMaxBalance
+                                                ? 'с большим балансом'
+                                                : 'меньше всего попыток отправки игр по лимиту за час'}
+                                        </div>
+                                    </div>
+                                )}
+                            </div></>
+                        )
+                    }
+                    else {
                       return <div>{status.description}</div>;
                     }
                   };
@@ -224,7 +296,7 @@ const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
           style={{ backgroundColor: '#9A7AA9', marginLeft: '0px' }}
         />
       </div>
-    </ModalBase>
+    </ModalBase >
   );
 };
 

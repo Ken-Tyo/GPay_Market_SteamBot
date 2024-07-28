@@ -34,6 +34,7 @@ namespace SteamDigiSellerBot.Controllers
 
         private readonly IItemRepository _itemRepository;
         private readonly IGameSessionRepository _gameSessionRepository;
+        private readonly IGameSessionStatusLogRepository _gameSessionLogRepository;
         private readonly IGameSessionStatusRepository _gameSessionStatusRepository;
         private readonly IGameSessionService _gameSessionService;
         private readonly ISuperBotPool _botPool;
@@ -58,6 +59,7 @@ namespace SteamDigiSellerBot.Controllers
             IUserDBRepository userDBRepository,
             GameSessionManager gameSessionManager,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
+            IGameSessionStatusLogRepository gameSessionLogRepository,
             ISteamNetworkService steamNetworkService,
             ILogger<GameSessionsController> logger,
             DatabaseContext db)
@@ -72,6 +74,7 @@ namespace SteamDigiSellerBot.Controllers
             _wsNotifSender = wsNotificationSender;
             _userDBRepository = userDBRepository;
             _gameSessionManager = gameSessionManager;
+            _gameSessionLogRepository = gameSessionLogRepository;
             _botPool = botPool;
             _steamNetworkService = steamNetworkService;
             this.gameSessionStatusLogRepository = gameSessionStatusLogRepository;
@@ -169,10 +172,13 @@ namespace SteamDigiSellerBot.Controllers
             if (gs.Bot != null && gs.SteamContactValue != null)
             {
 #if !DEBUG
-                var sbot = _botPool.GetById(gs.Bot.Id);
-                (var pdata, string err) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
-                if (pdata != null && sbot.IsOk())
-                    await sbot.RemoveFromFriends(pdata);
+                _ = Task.Run(async () =>
+                {
+                    var sbot = _botPool.GetById(gs.Bot.Id);
+                    (var pdata, string err) = await _steamNetworkService.ParseUserProfileData(gs.SteamContactValue, gs.SteamContactType);
+                    if (pdata != null && sbot.IsOk())
+                        await sbot.RemoveFromFriends(pdata);
+                }).ConfigureAwait(false);
 #endif
             }
 
@@ -201,6 +207,7 @@ namespace SteamDigiSellerBot.Controllers
             gs.Stage = GameSessionStage.New;
             gs.SteamCountryCodeId = null;
             gs.GameSessionItemId = null;
+            gs.BlockOrder = false;
             gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
             {
                 InsertDate = DateTimeOffset.UtcNow,
@@ -290,7 +297,12 @@ namespace SteamDigiSellerBot.Controllers
                 ModelState.AddModelError("", "такой заказ не найден");
                 return this.CreateBadRequest();
             }
-            
+            if (gs.BlockOrder)
+            {
+                ModelState.AddModelError("", "Произошла ошибка в процессе обработки заказа, свяжитесь с продавцом");
+                return this.CreateBadRequest();
+            }
+
             var opt = new Option { Value = req.SteamContact };
             await _gameSessionService.SetSteamContact(db, gs, opt);
 
@@ -316,8 +328,21 @@ namespace SteamDigiSellerBot.Controllers
                 return BadRequest();
 
             gs.Stage = GameSessionStage.AddToFriend;
+            gs.StatusId = GameSessionStatusEnum.OrderConfirmed;
             gs.AutoSendInvitationTime = null;
             await _gameSessionRepository.EditAsync(db, gs);
+            var log = new GameSessionStatusLog
+            {
+                GameSessionId = gs.Id,
+                InsertDate = DateTimeOffset.UtcNow,
+                StatusId = gs.StatusId,
+                Value=new ValueJson()
+                {
+                    userProfileUrl = gs.SteamProfileUrl,
+                    userNickname= gs.SteamProfileName
+                }
+            };
+            await _gameSessionLogRepository.AddAsync(db, log);
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
 

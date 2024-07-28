@@ -97,9 +97,8 @@
                 .hint {
                     margin-bottom: 20px;
 
-                    &:last-child() {
+                    &:last-child {
                         margin-bottom: 40px;
-
                     }
                 }
             }
@@ -339,12 +338,18 @@
             }
         }
 
-        .contactWrapper {
+        .checkEditionVersionWrapper {
+            margin-top: 40px;
+        }
+
+        .contactWrapper,
+        .checkEditionVersionWrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
 
-            .contact {
+            .contact,
+            .checkEditionVersion {
                 color: rgba(23, 22, 24, 0.7);
                 font-size: 16px;
                 line-height: 19px;
@@ -401,6 +406,12 @@
                 .hints {
                     font-size: 14px;
                     width: auto;
+
+                    .hint {
+                        &:last-child {
+                            margin-bottom: 20px;
+                        }
+                    }
                 }
             }
 
@@ -526,8 +537,14 @@
                 font-size: 10px;
             }
 
-            .contactWrapper {
-                .contact {
+            .checkEditionVersionWrapper {
+                margin-top: 20px;
+            }
+
+            .contactWrapper,
+            .checkEditionVersionWrapper {
+                .contact,
+                .checkEditionVersion {
                     font-size: 12px;
                     line-height: 14px;
                     margin-bottom: 2px;

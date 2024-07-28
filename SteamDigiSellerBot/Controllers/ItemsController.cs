@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using User = SteamDigiSellerBot.Database.Models.User;
 using SteamDigiSellerBot.Database.Contexts;
 using System.Diagnostics.CodeAnalysis;
+using SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService;
+using System.Threading;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -38,6 +40,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ILogger<ItemsController> _logger;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly DatabaseContext db;
+        private readonly IItemBulkUpdateService _itemBulkUpdateService;
 
         public ItemsController(
             IItemRepository itemRepository, 
@@ -48,7 +51,8 @@ namespace SteamDigiSellerBot.Controllers
             IBotRepository botRepository,
             ILogger<ItemsController> logger,
             IDigiSellerNetworkService digiSellerNetwork,
-            DatabaseContext db)
+            DatabaseContext db,
+            IItemBulkUpdateService itemBulkUpdateService)
         {
             _itemRepository = itemRepository;
             _digiSellerNetworkService = digiSellerNetwork;
@@ -60,6 +64,8 @@ namespace SteamDigiSellerBot.Controllers
             _botRepository = botRepository;
             _userManager = userManager;
             this.db = db;
+
+            _itemBulkUpdateService = itemBulkUpdateService ?? throw new ArgumentNullException(nameof(itemBulkUpdateService));
 
             _logger = logger;
         }
@@ -282,22 +288,17 @@ namespace SteamDigiSellerBot.Controllers
         }
 
         [HttpPost, Route("items/bulk/change"), ValidationActionFilter]
-        public async Task<IActionResult> BulkChangeAction(BulkActionRequest request)
+        public async Task<IActionResult> BulkChangeAction(BulkActionRequest request, CancellationToken cancellationToken)
         {
-            HashSet<int> idHashSet = request.Ids?.ToHashSet() ?? new HashSet<int>();
-            List<Item> items = await _itemRepository
-                .ListAsync(db, i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsFixedPrice && !i.IsDeleted);
-
-            foreach (Item item in items)
-            {
-                item.SteamPercent = request.SteamPercent;
-                await _itemRepository.UpdateFieldAsync(db, item, i => i.SteamPercent);
-            }
-
             User user = await _userManager.GetUserAsync(User);
-
-            await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(
-                items, user.Id);
+            await _itemBulkUpdateService.UpdateAsync(
+                new ItemBulkUpdateCommand(
+                    request.SteamPercent,
+                    request.IncreaseDecreaseOperator,
+                    request.IncreaseDecreasePercent,
+                    request.Ids,
+                    user),
+                cancellationToken);
 
             return Ok();
         }

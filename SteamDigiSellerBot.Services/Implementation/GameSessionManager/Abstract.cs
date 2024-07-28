@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using SteamDigiSellerBot.Database.Entities;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot.Services.Implementation
 {
@@ -18,6 +20,9 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public Dictionary<int, GsState> Q => q;
 
+        public HashSet<int> ProcessOnAdd { get; set; } = new();
+
+
         public GameSessionQueue(BaseGameSessionManager manager)
         {
             this.manager = manager;
@@ -29,7 +34,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             manager.Send(obj, this);
         }
 
-        public void Add(int gsId)
+        public virtual void Add(int gsId)
         {
             q[gsId] = new GsState
             {

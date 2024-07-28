@@ -46,52 +46,25 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var sess = await gsr
                         //.ListAsync(gs => gs.StatusId == 18).Result;
                         .GetGameSessionForPipline(gs => gs.Stage == Database.Entities.GameSessionStage.SendGame);
+                    sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
                     if (sess.Count > 0)
                         _logger.LogInformation(
                             $"SendGameGSQ GS ID {sess.Select(x => x.Id.ToString()).Aggregate((a, b) => a + "," + b)}");
                     var tasks = new List<Task>();
                     int delayCounter = 0;
                     Parallel.ForEach(sess, gs =>
-                            //foreach (var gs in sess)
-                        {
-                            //tasks.Add(Task.Factory.StartNew(async () =>
-                            //{
-                            try
-                            {
-                                //if (!q.ContainsKey(gs.Id))
-                                //{
-                                //    SendToManager(new Untracked { gsId = gs.Id });
-                                //    continue;
-                                //}
-                                if (new GameSessionStatusEnum[]
-                                        { GameSessionStatusEnum.IncorrectProfile, GameSessionStatusEnum.BotNotFound }
-                                    .Contains(gs.StatusId))
-                                {
-                                    SendToManager(new ToFixStage { gsId = gs.Id });
-                                    return;
-                                }
-
-
-                                var (sendRes, readyState) = gss.SendGame(gs.Id).GetAwaiter().GetResult();
-                                SendToManager(sendRes == SendGameStatus.sended
-                                    ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
-                                    : new SendFailed
-                                    {
-                                        gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState,
-                                        ChangeBot = readyState == GameReadyToSendStatus.botSwitch
-                                    }
-                                );
-
-                            }
-                            catch (Exception ex)
-                            {
-                                _logger.LogError(ex, $"SendGameGSQ GS ID {gs.Id}");
-                            }
-                            //}));
-                            //delayCounter++;
-                            //if (delayCounter % 10 == 0)
-                            //    await Task.Delay(TimeSpan.FromMinutes(1));
-                        }
+                    //foreach (var gs in sess)
+                    {
+                        //tasks.Add(Task.Factory.StartNew(async () =>
+                        //{
+                        MainMethod(gs);
+                        //}));
+                        //delayCounter++;
+                        //if (delayCounter % 10 == 0)
+                        //    await Task.Delay(TimeSpan.FromMinutes(1));
+                    }
                     );
 
                     //await Task.Delay(1000);
@@ -102,8 +75,73 @@ namespace SteamDigiSellerBot.Services.Implementation
                     _logger.LogError(ex, $"SendGameGSQ");
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(10));
             }
+        }
+
+        private void MainMethod(GameSession gs)
+        {
+            try
+            {
+                //if (!q.ContainsKey(gs.Id))
+                //{
+                //    SendToManager(new Untracked { gsId = gs.Id });
+                //    continue;
+                //}
+                if (new GameSessionStatusEnum[]
+                        { GameSessionStatusEnum.IncorrectProfile, GameSessionStatusEnum.BotNotFound }
+                    .Contains(gs.StatusId))
+                {
+                    SendToManager(new ToFixStage { gsId = gs.Id });
+                    return;
+                }
+
+
+                var (sendRes, readyState) = gss.SendGame(gs.Id).GetAwaiter().GetResult();
+                SendToManager(sendRes == SendGameStatus.sended
+                    ? new Sended { gsId = gs.Id, SendStatus = sendRes, ReadyStatus = readyState }
+                    : new SendFailed
+                    {
+                        gsId = gs.Id,
+                        SendStatus = sendRes,
+                        ReadyStatus = readyState,
+                        ChangeBot = readyState == GameReadyToSendStatus.botSwitch,
+                        BlockOrder = readyState == GameReadyToSendStatus.blockOrder
+                    }
+                );
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"SendGameGSQ GS ID {gs.Id}");
+            }
+        }
+
+        public override void Add(int gsId)
+        {
+            base.Add(gsId);
+            if (ProcessOnAdd.Contains(gsId))
+                return;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+
+                    ProcessOnAdd.Add(gsId);
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    var gs = await gsr.GetByIdAsync(gsId);
+                    if (gs != null && gs.Stage == GameSessionStage.SendGame)
+                    {
+                        _logger.LogInformation($"SendGameGSQ GS ID on add {gs.Id}");
+                        MainMethod(gs);
+                    }
+                }
+                finally
+                {
+                    if (ProcessOnAdd.Contains(gsId))
+                        ProcessOnAdd.Remove(gsId);
+                }
+            });
         }
     }
 }

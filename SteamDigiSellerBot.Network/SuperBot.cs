@@ -149,7 +149,7 @@ namespace SteamDigiSellerBot.Network
             {
                 Task.Run(() =>
                 {
-                    (bool balanceFetched, decimal balance) = GetBotBalance().Result;
+                    (bool balanceFetched, decimal balance) = GetBotBalance_Proto().Result;
                     if (balanceFetched)
                         _bot.Balance = balance;
                 }),
@@ -1592,30 +1592,39 @@ namespace SteamDigiSellerBot.Network
         public async Task<(FinalTranResponse,string)> FinalizeTransaction(
             string tranId, string sessionId, string beginCheckoutCart)
         {
-            var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
-            var formParams = new RequestParams
-            {
-                ["transid"] = tranId,
-                ["CardCVV2"] = "",
-            };
+       
+                var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
+                var formParams = new RequestParams
+                {
+                    ["transid"] = tranId,
+                    ["CardCVV2"] = "",
+                };
 
-            var finalTran = new Uri(finalTranUrl);
-            var reqMes = new HttpRequestMessage(HttpMethod.Post, finalTran);
-            reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
+                var finalTran = new Uri(finalTranUrl);
+                var reqMes = new HttpRequestMessage(HttpMethod.Post, finalTran);
+                reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
 
-            var cookies = new Dictionary<string, string>() {
+                var cookies = new Dictionary<string, string>() {
                 { "sessionid", sessionId },
                 { "shoppingCartGID", beginCheckoutCart },
                 { "wants_mature_content", "1" }
             };
-            using var client = GetDefaultHttpClientBy(finalTranUrl, out HttpClientHandler handler, cookies);
-            using var response = client.Send(reqMes);
-            var s = await response.Content.ReadAsStringAsync();
+                using var client = GetDefaultHttpClientBy(finalTranUrl, out HttpClientHandler handler, cookies);
+                using var response = client.Send(reqMes);
+                var s = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(s);
-            var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
-            
-            return (finalTranResp,s);
+                Console.WriteLine(s);
+                var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
+
+                return (finalTranResp, s);
+           
+        }
+
+        public class FinalTransactionException : Exception
+        {
+            public FinalTransactionException(string message, Exception innerException):base(message, innerException)
+            {
+            }
         }
 
         public async Task<bool> ForgetCart(string sessionId, string beginCheckoutCart)
@@ -1726,7 +1735,7 @@ namespace SteamDigiSellerBot.Network
                 if (mesDict.ContainsKey(initResp.purchaseresultdetail))
                     mes = mesDict[initResp.purchaseresultdetail];
 
-                
+
                 Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
 
                 if (initResp.purchaseresultdetail == 0 || initResp.purchaseresultdetail == 2 ||
@@ -1757,36 +1766,42 @@ namespace SteamDigiSellerBot.Network
                     return sendGame;
                 }
             }
-
-            var (finalTranRes, fI) = await FinalizeTransaction(
-                initResp.transid, initResp.sessionId, gidShoppingCart);
-            res.finalizeTranRes = finalTranRes;
-
-            if (finalTranRes.success != 22)
+            try
             {
-                if (mesDict.ContainsKey(finalTranRes.purchaseresultdetail))
-                    mes = mesDict[finalTranRes.purchaseresultdetail];
-                if (finalTranRes.purchaseresultdetail == 0 || finalTranRes.purchaseresultdetail == 2 ||
-                    finalTranRes.purchaseresultdetail == 53 || finalTranRes.purchaseresultdetail == 73)
-                    res.ChangeBot = true;
-                //Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
-                res.result = SendeGameResult.error;
-                res.errMessage = mes;
-                if (initResp.purchaseresultdetail == 0)
-                    res.errMessage += "\n\n" + fI;
-                res.errCode = finalTranRes.purchaseresultdetail;
+                var (finalTranRes, fI) = await FinalizeTransaction(
+                    initResp.transid, initResp.sessionId, gidShoppingCart);
+                res.finalizeTranRes = finalTranRes;
+
+                if (finalTranRes.success != 22)
                 {
-                    sendGame = res;
-                    return sendGame;
+                    if (mesDict.ContainsKey(finalTranRes.purchaseresultdetail))
+                        mes = mesDict[finalTranRes.purchaseresultdetail];
+                    if (finalTranRes.purchaseresultdetail == 0 || finalTranRes.purchaseresultdetail == 2 ||
+                        finalTranRes.purchaseresultdetail == 53 || finalTranRes.purchaseresultdetail == 73)
+                        res.ChangeBot = true;
+                    //Console.WriteLine($"BOT {_bot.UserName} - send game error: {mes}");
+                    res.result = SendeGameResult.error;
+                    res.errMessage = mes;
+                    if (initResp.purchaseresultdetail == 0)
+                        res.errMessage += "\n\n" + fI;
+                    res.errCode = finalTranRes.purchaseresultdetail;
+                    {
+                        sendGame = res;
+                        return sendGame;
+                    }
                 }
+
+                var forgerCartRes = await ForgetCart(sessionId, gidShoppingCart);
+                res.IsCartForgot = forgerCartRes;
+
+                res.result = SendeGameResult.sended;
+                sendGame = res;
+                return sendGame;
             }
-
-            var forgerCartRes = await ForgetCart(sessionId, gidShoppingCart);
-            res.IsCartForgot = forgerCartRes;
-
-            res.result = SendeGameResult.sended;
-            sendGame = res;
-            return sendGame;
+            catch (Exception e)
+            {
+                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}", e);
+            }
         }
 
         public async Task<string> CreateInvitatinoLink()
@@ -1896,6 +1911,7 @@ namespace SteamDigiSellerBot.Network
         public FinalTranResponse finalizeTranRes;
         public bool IsCartForgot;
         public bool ChangeBot;
+        public bool BlockOrder;
     }
 
     public enum SendeGameResult

@@ -522,9 +522,9 @@ const products = () => {
         onCancel={() => {
           toggleBulkEditPercentModal(false);
         }}
-        onSave={(val) => {
+        onSave={(val, increaseDecreaseOperator, increaseDecreaseVal) => {
           toggleBulkEditPercentModal(false);
-          apiChangeItemBulk(val, selectedItems);
+          apiChangeItemBulk(val, increaseDecreaseOperator.id, increaseDecreaseVal, selectedItems);
         }}
       />
 

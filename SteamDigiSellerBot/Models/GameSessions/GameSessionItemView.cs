@@ -20,7 +20,7 @@ namespace SteamDigiSellerBot.Models.GameSessions
         public decimal? ItemSteamPercent { get; set; }
 
         public string BotName { get; set; }
-
+        public bool BlockOrder { get; set; }
         public int StatusId { get; set; }
         public GameSessionStatus Status { get; set; }
 

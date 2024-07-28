@@ -157,5 +157,6 @@ namespace SteamDigiSellerBot.Services.Implementation
     public class SendFailed: Sended 
     {
         public bool ChangeBot { get; set; }
+        public bool BlockOrder { get; set; }
     }
 }

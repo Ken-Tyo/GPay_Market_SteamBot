@@ -1,6 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>SteamDigiSellerBot.Services</AssemblyName>
+    <RootNamespace>SteamDigiSellerBot.Services</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
@@ -17,4 +19,9 @@
     <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>SteamDigiSellerBot.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>
