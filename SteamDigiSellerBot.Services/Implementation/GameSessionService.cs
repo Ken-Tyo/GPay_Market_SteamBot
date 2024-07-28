@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SteamDigiSellerBot.Database;
@@ -40,6 +41,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly IGameSessionStatusLogRepository _gameSessionStatusLogRepository;
         private readonly ILogger<GameSessionService> _logger;
+        private readonly IConfiguration _configuration;
         private GameSessionCommon _gameSessionManager { get; set; }
 
         public GameSessionService(
@@ -54,7 +56,8 @@ namespace SteamDigiSellerBot.Services.Implementation
             IUserDBRepository userDBRepository,
             IDigiSellerNetworkService digiSellerNetworkService,
             IGameSessionStatusLogRepository gameSessionStatusLogRepository,
-            ILogger<GameSessionService> logger)
+            ILogger<GameSessionService> logger,
+            IConfiguration configuration)
         {
             _steamNetworkService = steamNetworkService;
             _gameSessionRepository = gameSessionRepository;
@@ -68,6 +71,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             _digiSellerNetworkService = digiSellerNetworkService;
             this._gameSessionStatusLogRepository = gameSessionStatusLogRepository;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
@@ -292,10 +296,15 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public (int, List<GamePrice>) GetSortedPriorityPrices(Item item)
         {
+            // по АКТИВНОЙ иерархии регионы не будут браться если они выше ценовой основы товара на 8% или более
+            var percentsToCompareInHierarchy = Convert.ToInt32(_configuration.GetSection("percentsForBotsInHierarchy").Value);
+
             var maxFailUsingCount = 3;
             var priorityPrices = item.GamePrices
                 .Where(gp => gp.IsPriority && gp.FailUsingCount < maxFailUsingCount)
                 .ToList();
+
+            var basePrice = item.GetPrice();
 
             //если выбрано 1 или более приортетных цен
             if (priorityPrices.Count() > 0)
@@ -316,20 +325,44 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 item.GamePrices.RemoveAll(item => forDelete.Contains(item.Id));
                 priorityPrices.RemoveAll(item => forDelete.Contains(item.Id));
+
                 //берем ту где цена меньше всего
                 var prices = priorityPrices
                     .OrderBy(gp => priceInRub[gp.Id])
                     .ToList();
 
+                List<int> forNotDelete = new List<int>();
+                GamePrice prevPrice = prices.First();
+                decimal currentPrecentsDiffToBasePrice = 0;// текущая разница в процентах между текущей ценой и базовой
+
+                foreach (var nextPrice in prices)
+                {
+                    if (priceInRub[nextPrice.Id] != 0)
+                    {
+                        currentPrecentsDiffToBasePrice +=
+                            Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
+                    }
+
+                    if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
+                    {
+                        break;
+                    }
+
+                    forNotDelete.Add(nextPrice.Id);
+
+                    prevPrice = nextPrice;
+                }
+
+                prices.RemoveAll(item => !forNotDelete.Contains(item.Id));
+
                 //базовую цену в конец
-                prices.Add(item.GetPrice());
+                prices.Add(basePrice);
 
                 return (maxFailUsingCount, prices);
             }
             else
             {
                 //только базовая цена
-                var basePrice = item.GetPrice();
                 var list = new List<GamePrice>();
                 if (basePrice != null)
                     list.Add(basePrice);
