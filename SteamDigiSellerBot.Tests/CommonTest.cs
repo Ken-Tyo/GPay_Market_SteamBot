@@ -1,6 +1,7 @@
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -48,6 +49,7 @@ namespace SteamDigiSellerBot.Tests
         private Mock<ICurrencyDataRepository> cdrMock;
         private Mock<ICurrencyDataService> cdsMock;
         private Mock<ILogger<GameSessionService>> loggerMock;
+        private Mock<IConfiguration> configMock;
         private Mock<IGameSessionRepository> gsrMock;
         private Mock<IBotRepository> brMock;
         private Mock<IItemRepository> itemRepositoryMock;
@@ -137,6 +139,8 @@ namespace SteamDigiSellerBot.Tests
             gsrMock = new Mock<IGameSessionRepository>();
             gsrMock.Setup(r => r.UpdateFieldAsync(new GameSession(), gs => gs.Id).Result).Returns(true);
 
+            configMock = new Mock<IConfiguration>();
+
             brMock = new Mock<IBotRepository>();
             brMock.Setup(br => br.ListAsync(It.IsAny<Expression<Func<Bot, bool>>>()).Result).Returns(new List<Bot>
             {
@@ -156,7 +160,8 @@ namespace SteamDigiSellerBot.Tests
                 userDBRepository: null,
                 digiSellerNetworkService: dns.Object,
                 gameSessionStatusLogRepository: null,
-                logger: loggerMock.Object/*,
+                logger: loggerMock.Object,
+                configuration: configMock.Object/*,
                 itemRepository: itemRepositoryMock.Object*/);
         }
 
