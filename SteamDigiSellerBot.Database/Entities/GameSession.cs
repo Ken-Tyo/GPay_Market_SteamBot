@@ -117,6 +117,7 @@ namespace SteamDigiSellerBot.Database.Entities
         SendingGame=18,
         Queue=19,
         SwitchBot=20,
-        OrderConfirmed=21
+        OrderConfirmed=21,
+        InvitationBlocked=22,
     }
 }

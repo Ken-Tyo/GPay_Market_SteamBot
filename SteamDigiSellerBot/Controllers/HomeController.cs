@@ -187,7 +187,8 @@ namespace SteamDigiSellerBot.Controllers
             isRobotCheck = false;
 
             //Заявка отклонена
-            if (gs.StatusId == GameSessionStatusEnum.RequestReject)
+            if (gs.StatusId == GameSessionStatusEnum.RequestReject || 
+                gs.StatusId == GameSessionStatusEnum.InvitationBlocked)
             {
                 if (gs.Bot != null)
                 {

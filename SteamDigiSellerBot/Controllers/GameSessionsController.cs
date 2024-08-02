@@ -380,7 +380,9 @@ namespace SteamDigiSellerBot.Controllers
                 return this.CreateBadRequest();
             }
 
-            if (gs.StatusId != GameSessionStatusEnum.RequestReject && gs.StatusId != GameSessionStatusEnum.GameIsExists)
+            if (gs.StatusId != GameSessionStatusEnum.RequestReject && 
+                gs.StatusId != GameSessionStatusEnum.GameIsExists &&
+                gs.StatusId != GameSessionStatusEnum.InvitationBlocked)
             {
                 ModelState.AddModelError("", "не корректный статус заказа");
                 return this.CreateBadRequest();

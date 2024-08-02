@@ -156,8 +156,8 @@ namespace SteamDigiSellerBot.Services.Implementation
             //Уже есть этот продукт - 19
             //Некорректный регион - 5
             if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.RequestSent,
-                    GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError,
-                    GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.SwitchBot }.Contains(gs.StatusId))
+                    GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.GameIsExists, 
+                    GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked }.Contains(gs.StatusId))
                 return gs;
 
             _gameSessionManager.Remove(gs.Id);
@@ -217,7 +217,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         /// </summary>
         public static GameSessionStatusEnum[] BeforeExpStatuses = new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.SteamNetworkProblem, GameSessionStatusEnum.ProfileNoSet,
             GameSessionStatusEnum.BotLimit, GameSessionStatusEnum.GameRejected, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.RequestSent, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.IncorrectProfile
-            , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue, GameSessionStatusEnum.SwitchBot };
+            , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked };
 
         /// <summary>
         /// This method allow to check game session expired for further handling.
@@ -771,16 +771,30 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (isError)
             {
-                gs.StatusId = valueJson.rejectedByUser ? GameSessionStatusEnum.RequestReject : GameSessionStatusEnum.UnknownError;
-                
-                valueJson = new GameSessionStatusLog.ValueJson
+                if (MessageStartsFromUnitSeparator(valueJson.message))
                 {
-                    message = "Не удалось добавить пользователя в друзья",
-                    userProfileUrl = profileData.url,
-                    userSteamContact = gs.SteamContactValue,
-                    botId = bot.Id,
-                    botName = bot.UserName
-                };
+                    gs.StatusId = GameSessionStatusEnum.InvitationBlocked;
+
+                    valueJson = new GameSessionStatusLog.ValueJson
+                    {
+                        message = "Заявка была отменена в процессе смены профиля/аккаунта/бота, либо отклонена пользователем в процессе отправки заявки. Возможно, произошла какая-либо другая ошибка",
+                        botId = bot.Id,
+                        botName = bot.UserName
+                    };
+                }
+                else
+                {
+                    gs.StatusId = GameSessionStatusEnum.UnknownError;
+
+                    valueJson = new GameSessionStatusLog.ValueJson
+                    {
+                        message = "Не удалось добавить пользователя в друзья",
+                        userProfileUrl = profileData.url,
+                        userSteamContact = gs.SteamContactValue,
+                        botId = bot.Id,
+                        botName = bot.UserName
+                    };
+                }
             }
 
             var log = new GameSessionStatusLog
@@ -807,6 +821,13 @@ namespace SteamDigiSellerBot.Services.Implementation
             return isError 
                 ? AddToFriendStatus.error
                 : AddToFriendStatus.added;
+        }
+
+        private bool MessageStartsFromUnitSeparator(string message)
+        {
+            var unitSeparatorCode = 31;
+
+            return message.Length > 0 && message[0] == unitSeparatorCode;
         }
 
         private async Task<(bool, ValueJson)> AddToFriendBySteamContactType(
@@ -842,13 +863,16 @@ namespace SteamDigiSellerBot.Services.Implementation
                             _logger.LogError(
                                     $"GS ID {gs.Id} error while try add user with direct link - reponse\n {JsonConvert.SerializeObject(res)}");
                             isError = true;
-                            
-                            if (r.resRaw == "BadRequest")
-                                valueJson = new GameSessionStatusLog.ValueJson
-                                {
-                                    message = "Ошибка при добавлении пользователя в друзья - пользователь заблокировал добавление в друзья",
-                                    rejectedByUser = true
-                                };
+                            valueJson = new GameSessionStatusLog.ValueJson
+                            {
+                                userNickname = profileData.personaname,
+                                userProfileUrl = profileData.url,
+                                botId = bot.Id,
+                                botName = bot.UserName,
+                                botRegionName = await GetBotRegionName(bot),
+                                botRegionCode = bot.Region,
+                                message = res.resRaw
+                            };
                         }
 
                         break;
@@ -890,13 +914,16 @@ namespace SteamDigiSellerBot.Services.Implementation
                                 _logger.LogError(
                                     $"GS ID {gs.Id} error while try add user with direct link - response\n {JsonConvert.SerializeObject(afr)}");
                                 isError = true;
-                                
-                                if (r.resRaw == "BadRequest")
-                                    valueJson = new GameSessionStatusLog.ValueJson
-                                    {
-                                        message = "Ошибка при добавлении пользователя в друзья - пользователь заблокировал добавление в друзья",
-                                        rejectedByUser = true
-                                    };
+                                valueJson = new GameSessionStatusLog.ValueJson
+                                {
+                                    userNickname = profileData.personaname,
+                                    userProfileUrl = profileData.url,
+                                    botId = bot.Id,
+                                    botName = bot.UserName,
+                                    botRegionName = await GetBotRegionName(bot),
+                                    botRegionCode = bot.Region,
+                                    message = res.resRaw
+                                };
                             }
                         }
 
