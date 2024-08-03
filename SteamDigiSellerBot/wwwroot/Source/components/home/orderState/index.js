@@ -863,7 +863,9 @@ const Timer = ({ endTime }) => {
 
     useEffect(() => {
         let t = setInterval(() => {
-            if (endTime) {
+            let now = new Date();
+
+            if (endTime && moment(endTime).diff(now) > 0) {
                 let deadline = moment(endTime);
                 let last = moment.duration(deadline.diff(moment()));
 
