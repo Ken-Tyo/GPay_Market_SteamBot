@@ -9,6 +9,8 @@ export default function ModalBase({
   title,
   height,
   width,
+  marginTop,
+  letterSpacing,
   isLoading,
 }) {
   return (
@@ -59,7 +61,8 @@ export default function ModalBase({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginTop: '17px',
+                  marginTop: marginTop ?? '17px',
+                  letterSpacing: letterSpacing ?? '0.0075em'
                 }}
                 id="alert-dialog-title"
               >

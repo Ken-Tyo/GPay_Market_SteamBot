@@ -37190,6 +37190,8 @@ function ModalBase(_ref) {
     title = _ref.title,
     height = _ref.height,
     width = _ref.width,
+    marginTop = _ref.marginTop,
+    letterSpacing = _ref.letterSpacing,
     isLoading = _ref.isLoading;
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     children: /*#__PURE__*/(0,jsx_runtime.jsx)(Dialog_Dialog, {
@@ -37237,7 +37239,8 @@ function ModalBase(_ref) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginTop: '17px'
+              marginTop: marginTop !== null && marginTop !== void 0 ? marginTop : '17px',
+              letterSpacing: letterSpacing !== null && letterSpacing !== void 0 ? letterSpacing : '0.0075em'
             },
             id: "alert-dialog-title",
             children: title
@@ -42287,7 +42290,10 @@ var modalBulkPercentEdit_textbox_TextBox = function TextBox(_ref) {
   var hint = _ref.hint,
     onChange = _ref.onChange,
     defaultValue = _ref.defaultValue,
-    cymbol = _ref.cymbol;
+    cymbol = _ref.cymbol,
+    width = _ref.width,
+    fontSize = _ref.fontSize,
+    paddingLeft = _ref.paddingLeft;
   var onChangeText = function onChangeText(event) {
     var val = event.target.value;
     if (onChange) onChange(val);
@@ -42295,13 +42301,20 @@ var modalBulkPercentEdit_textbox_TextBox = function TextBox(_ref) {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: modalBulkPercentEdit_textbox_styles.wrapper,
     onChange: onChangeText,
+    style: {
+      width: width !== null && width !== void 0 ? width : '112px'
+    },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: modalBulkPercentEdit_textbox_styles.inputControl,
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalBulkPercentEdit_textbox_styles.inputArea,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("input", {
           type: 'text',
-          defaultValue: defaultValue
+          defaultValue: defaultValue,
+          style: {
+            fontSize: fontSize !== null && fontSize !== void 0 ? fontSize : '14px',
+            paddingLeft: paddingLeft !== null && paddingLeft !== void 0 ? paddingLeft : '15px'
+          }
         }), cymbol && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: modalBulkPercentEdit_textbox_styles.cymbol,
           children: cymbol
@@ -42316,7 +42329,7 @@ var modalBulkPercentEdit_textbox_TextBox = function TextBox(_ref) {
 /* harmony default export */ const modalBulkPercentEdit_textbox = (modalBulkPercentEdit_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPercentEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalBulkPercentEdit_styles = ({"content":"styles__content--RxP1h","contentItem":"styles__contentItem--MLwHF","name":"styles__name--YWc7f","operatorPercent":"styles__operatorPercent--U4XIL","percent":"styles__percent--jHms3","operator":"styles__operator--OiP0y","itemOr":"styles__itemOr--grqUt","actions":"styles__actions--_MNhl"});
+/* harmony default export */ const modalBulkPercentEdit_styles = ({"content":"styles__content--RxP1h","contentItem":"styles__contentItem--MLwHF","operatorPercent":"styles__operatorPercent--U4XIL","percent":"styles__percent--jHms3","operator":"styles__operator--OiP0y","itemOr":"styles__itemOr--grqUt","actions":"styles__actions--_MNhl"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPercentEdit/index.js
 function modalBulkPercentEdit_slicedToArray(arr, i) { return modalBulkPercentEdit_arrayWithHoles(arr) || modalBulkPercentEdit_iterableToArrayLimit(arr, i) || modalBulkPercentEdit_unsupportedIterableToArray(arr, i) || modalBulkPercentEdit_nonIterableRest(); }
 function modalBulkPercentEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -42334,6 +42347,7 @@ function modalBulkPercentEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) retu
 var modalBulkPercentEdit_FromItemText = function FromItemText(_ref) {
   var name_line_1 = _ref.name_line_1,
     name_line_2 = _ref.name_line_2,
+    name_line_3 = _ref.name_line_3,
     onChange = _ref.onChange,
     hint = _ref.hint,
     value = _ref.value,
@@ -42346,13 +42360,18 @@ var modalBulkPercentEdit_FromItemText = function FromItemText(_ref) {
         children: name_line_1
       }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         children: name_line_2
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        children: name_line_3
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPercentEdit_textbox, {
         hint: hint,
         onChange: onChange,
         defaultValue: value,
-        cymbol: cymbol
+        cymbol: cymbol,
+        width: '120px',
+        fontSize: '16px',
+        paddingLeft: '22px'
       })
     })]
   });
@@ -42390,7 +42409,10 @@ var IncreaseDecreaseItem = function IncreaseDecreaseItem(_ref2) {
         children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPercentEdit_textbox, {
           onChange: onValueChange,
           defaultValue: value,
-          cymbol: symbol
+          cymbol: symbol,
+          width: '120px',
+          fontSize: '16px',
+          paddingLeft: '22px'
         })
       })]
     })]
@@ -42439,13 +42461,16 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref3) {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: 'Массовая смена цен',
+    marginTop: '10px',
+    letterSpacing: '0.04em',
     width: 600,
     height: 450,
     children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: modalBulkPercentEdit_styles.content,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPercentEdit_FromItemText, {
         name_line_1: 'Введите цену в процентах.',
-        name_line_2: 'Цена будет рассчитываться от цены игр в Steam',
+        name_line_2: 'Цена будет рассчитываться',
+        name_line_3: 'от цены игр в Steam',
         onChange: handleChange,
         value: val,
         cymbol: '%'
@@ -42472,13 +42497,14 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref3) {
         text: 'Подтвердить',
         style: {
           backgroundColor: '#478C35',
-          marginRight: '24px',
-          width: '271px'
+          marginRight: '24px'
         },
         onClick: function onClick() {
           onSave(val, increaseDecreaseOperator, increaseDecreaseVal);
           clearValues();
-        }
+        },
+        width: '290px',
+        height: '70px'
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         text: 'Отмена',
         onClick: function onClick() {
@@ -42488,7 +42514,9 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref3) {
         style: {
           backgroundColor: '#9A7AA9',
           marginLeft: '0px'
-        }
+        },
+        width: '200px',
+        height: '70px'
       })]
     })]
   });

@@ -5,16 +5,19 @@ import TextBox from './textbox';
 import css from './styles.scss';
 import Select from '../modalEdit/select'
 
-const FromItemText = ({ name_line_1, name_line_2, onChange, hint, value, cymbol }) => {
+const FromItemText = ({ name_line_1, name_line_2, name_line_3, onChange, hint, value, cymbol }) => {
   return (
     <div className={css.contentItem}>
-      <div className={css.name}><div>{name_line_1}</div><div>{name_line_2}</div></div>
+      <div className={css.name}><div>{name_line_1}</div><div>{name_line_2}</div><div>{name_line_3}</div></div>
       <div>
         <TextBox
           hint={hint}
           onChange={onChange}
           defaultValue={value}
           cymbol={cymbol}
+          width={'120px'}
+          fontSize={'16px'}
+          paddingLeft={'22px'}
         />
       </div>
     </div>
@@ -42,6 +45,9 @@ const IncreaseDecreaseItem = ({ name, onValueChange, value, operatorValue, onOpe
             onChange={onValueChange}
             defaultValue={value}
             cymbol={symbol}
+            width={'120px'}
+            fontSize={'16px'}
+            paddingLeft={'22px'}
           />
         </div>
       </div>
@@ -79,13 +85,16 @@ const ModalBulkPercentEdit = ({ isOpen, onCancel, onSave }) => {
     <ModalBase
       isOpen={isOpen}
       title={'Массовая смена цен'}
+      marginTop={'10px'}
+      letterSpacing={'0.04em'}
       width={600}
       height={450}
     >
       <div className={css.content}>
         <FromItemText
           name_line_1={'Введите цену в процентах.'}
-          name_line_2={'Цена будет рассчитываться от цены игр в Steam'}
+          name_line_2={'Цена будет рассчитываться'}
+          name_line_3={'от цены игр в Steam'}
           onChange={handleChange}
           value={val}
           cymbol={'%'}
@@ -110,12 +119,13 @@ const ModalBulkPercentEdit = ({ isOpen, onCancel, onSave }) => {
           style={{
             backgroundColor: '#478C35',
             marginRight: '24px',
-            width: '271px',
           }}
           onClick={() => {
             onSave(val, increaseDecreaseOperator, increaseDecreaseVal);
             clearValues();
           }}
+          width={'290px'}
+          height={'70px'}
         />
         <Button
           text={'Отмена'}
@@ -124,6 +134,8 @@ const ModalBulkPercentEdit = ({ isOpen, onCancel, onSave }) => {
             clearValues();
           }}
           style={{ backgroundColor: '#9A7AA9', marginLeft: '0px' }}
+          width={'200px'}
+          height={'70px'}
         />
       </div>
     </ModalBase>
