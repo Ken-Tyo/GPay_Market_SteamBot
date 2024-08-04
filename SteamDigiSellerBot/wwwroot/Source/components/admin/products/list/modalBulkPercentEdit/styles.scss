@@ -4,9 +4,10 @@
     color: $white-3;
     font-size: 16px;
     line-height: 16px;
-    padding: 27px 78px 0 92px;
+    padding: 33px 86px 0 100px;
     overflow-y: auto;
     height: 450px;
+    letter-spacing: 0.04em;
 
     &::-webkit-scrollbar {
         width: 0px;
@@ -16,10 +17,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        .name {
-            padding-right: 27px;
-        }
+        line-height: 18px;
 
         .operatorPercent {
             display: flex;
@@ -41,7 +39,7 @@
 
     .itemOr {
         text-align: center;
-        margin: 20px 0;
+        margin: 32px 0 36px -8px;
         opacity: 0.7;
         font-size: 20px;
     }
@@ -52,5 +50,6 @@
     justify-content: center !important;
     align-items: center;
     flex: 0 1 123px;
-    padding-bottom: 27px;
+    padding-bottom: 33px;
+    letter-spacing: 0.06em;
 }
