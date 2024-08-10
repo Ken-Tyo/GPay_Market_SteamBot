@@ -297,7 +297,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public (int, List<GamePrice>) GetSortedPriorityPrices(Item item)
         {
             // по АКТИВНОЙ иерархии регионы не будут браться если они выше ценовой основы товара на 8% или более
-            var percentsToCompareInHierarchy = Convert.ToInt32(_configuration.GetSection("percentsForBotsInHierarchy").Value);
+            var percentsToCompareInHierarchy = 8;
 
             var maxFailUsingCount = 3;
             var priorityPrices = item.GamePrices
