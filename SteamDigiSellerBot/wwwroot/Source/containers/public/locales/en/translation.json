@@ -47,6 +47,13 @@
     "iSentInvitation": "I sent a friend request",
     "tryWithBot": "Repeat request from another bot"
   },
+  "tempInviteBan": {
+    "error": "Error",
+    "youRefused": "This bot can not send you invites anymore!",
+    "info": "You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.",
+    "iSentInvitation": "I sent a friend request",
+    "tryWithBot": "Repeat request from another bot"
+  },
   "invitationRefusedWithRemoteBot": {
     "info": "You need to either request a new request from another bot, or you can provide a new link to the account where your order needs to be delivered."
   },

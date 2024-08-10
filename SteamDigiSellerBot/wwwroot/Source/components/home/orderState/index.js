@@ -43,6 +43,7 @@ const OrderState = () => {
     const { t: tError } = useTranslation('error');
     const { t: tOrderClosed } = useTranslation('orderClosed');
     const { t: tCommon } = useTranslation('common');
+    const { t: tTempInviteBan } = useTranslation('tempInviteBan');
 
     const navigate = useNavigate();
     const recaptchaRef = React.createRef();
@@ -62,6 +63,7 @@ const OrderState = () => {
         gameSession && gameSession.statusId === 16 && gameSession.steamProfileUrl;
     const showIvitationSended = gameSession && gameSession.statusId === 6;
     const showInvitationRefused = gameSession && gameSession.statusId === 4 && gameSession.botName;
+    const showTempInviteBan = gameSession && gameSession.statusId === 22 && gameSession.botName;
     const showInvitationRefusedWithRemoteBot = gameSession && gameSession.statusId === 4 && !gameSession.botName;
     const showGameAlreadyExists = gameSession && gameSession.statusId === 14;
     const showSendInProgress = gameSession && gameSession.statusId === 18;
@@ -782,6 +784,83 @@ const OrderState = () => {
                     </div>
                 </Area>
             )}
+
+            {showTempInviteBan && (
+                <Area
+                    title={`${tCommon('order')} #${gameSession.id} - ${tTempInviteBan(
+                        'error'
+                    )}`}
+                >
+                    <div className={css.ivitationRefused}>
+                        {!checkCodeLoading && (
+                            <>
+                                <div className={css.hints}>
+                                    <div className={css.hint}>
+                                        {tTempInviteBan('youRefused')}
+                                    </div>
+                                    <div
+                                        className={css.hint}
+                                        dangerouslySetInnerHTML={{
+                                            __html: tTempInviteBan('info', {
+                                                botName: `<a href="${gameSession.botInvitationUrl ||
+                                                    gameSession.botProfileUrl
+                                                    }" 
+                                     style="color: #8615BC; text-decoration: none; " 
+                                     target="_blank" >${gameSession.botName
+                                                    }</a>`,
+                                            }),
+                                        }}
+                                    ></div>
+                                </div>
+
+                                <div className={css.accButtons}>
+                                    <div className={css.line1}>
+                                        {!gameSession.blockOrder && (
+                                            <Button
+                                                text={tOrderState('changeAccountBut')}
+                                                style={{
+                                                    backgroundColor: '#FFFFFF',
+                                                    color: '#8615BC',
+                                                    border: '1px solid #571676',
+                                                    marginRight: '1.5em'
+                                                }}
+                                                onClick={() => {
+                                                    apiResetSteamAcc();
+                                                }}
+                                            />)}
+                                        <Button
+                                            text={tTempInviteBan('iSentInvitation')}
+                                            className={css.but}
+                                            onClick={() => {
+                                                apiCheckFriend(gameSession.uniqueCode);
+                                            }}
+                                        />
+                                    </div>
+                                    {gameSession.isAnotherBotExists && (
+                                        <div className={css.line1} style={{ marginTop: '32px' }}>
+                                            <Button
+                                                text={tTempInviteBan('tryWithBot')}
+                                                className={css.but}
+                                                style={{ width: '377px' }}
+                                                onClick={() => { }}
+                                            />
+                                        </div>
+                                    )}
+
+                                    <div className={css.contactSellerWrapper}>
+                                        <ContactTheSeller digisellerId={gameSession.digisellerId} />
+                                    </div>
+                                </div>
+
+                                <Dlc isDlc={isDlc} />
+                                <Timer endTime={discountEndDate} />
+                            </>
+                        )}
+                        {checkCodeLoading && <CircularLoader color={'#571676'} />}
+                    </div>
+                </Area>
+            )}
+
         </div>
     );
 };
