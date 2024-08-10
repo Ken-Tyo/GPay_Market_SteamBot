@@ -26647,28 +26647,63 @@ function switch_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var SwitchBtn = function SwitchBtn(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
-    style = _ref.style;
+    style = _ref.style,
+    lastSaveTime = _ref.lastSaveTime;
   var _React$useState = react.useState(false),
     _React$useState2 = switch_slicedToArray(_React$useState, 2),
     checked = _React$useState2[0],
     setChecked = _React$useState2[1];
+  var _React$useState3 = react.useState(Date.now()),
+    _React$useState4 = switch_slicedToArray(_React$useState3, 2),
+    componentKey = _React$useState4[0],
+    setComponentKey = _React$useState4[1];
+  var hasMoreThanOneMinutePassed = function hasMoreThanOneMinutePassed(lastSaveTime) {
+    if (!lastSaveTime) return true;
+    try {
+      var lastSaveDate = new Date(lastSaveTime + 'Z'); // Ensure lastSaveTime is in UTC
+      var currentTime = new Date();
+      var timeDiff = currentTime.getTime() - lastSaveDate.getTime();
+      var diffMin = timeDiff / 60000; // Convert milliseconds to minutes
+      return diffMin > 1;
+    } catch (error) {
+      console.error('Error processing lastSaveTime:', error);
+      return false;
+    }
+  };
   react.useEffect(function () {
-    setChecked(value);
-  }, [value]);
+    setChecked(value && hasMoreThanOneMinutePassed(lastSaveTime));
+  }, [value, lastSaveTime]);
+  react.useEffect(function () {
+    var checkInterval = setInterval(function () {
+      if (!lastSaveTime) return;
+      try {
+        if (hasMoreThanOneMinutePassed(lastSaveTime)) {
+          setChecked(value);
+        }
+      } catch (error) {
+        console.error('Error processing lastSaveTime:', error);
+      }
+    }, 15000);
+    return function () {
+      return clearInterval(checkInterval);
+    };
+  }, [lastSaveTime]);
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: switch_styles.wrapper,
     style: switch_objectSpread({}, style),
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: hasMoreThanOneMinutePassed(lastSaveTime) && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: switch_styles.track + ' ' + (checked ? switch_styles.checked : ''),
       onClick: function onClick() {
-        if (onChange) onChange(!checked);
-        setChecked(!checked);
+        if (hasMoreThanOneMinutePassed(lastSaveTime)) {
+          if (onChange) onChange(!checked);
+          setChecked(!checked);
+        }
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         className: switch_styles.thumb + ' ' + (checked ? switch_styles.checked : '')
       })
     })
-  });
+  }, componentKey);
 };
 /* harmony default export */ const shared_switch = (SwitchBtn);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/styles.scss
@@ -60494,7 +60529,8 @@ var grid_grid = function grid() {
                 },
                 style: {
                   transform: 'scale(0.96)'
-                }
+                },
+                lastSaveTime: i.lastTimeUpdated
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: grid_styles.buttons,

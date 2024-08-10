@@ -13,7 +13,6 @@
             position: absolute;
             left: 8px;
             top: 4.5px;
-
             width: 21px;
             height: 20px;
             border-radius: 34px;
@@ -22,7 +21,6 @@
 
             &.checked {
                 background-color: #AED88D;
-
                 transform: translateX(29px);
                 transition-duration: 300ms;
             }
@@ -31,5 +29,14 @@
         &.checked {
             background-color: #4B9252;
         }
-     }
+    }
+
+    .awation {
+        position: relative;
+        width: 65px;
+        height: 29px;
+        border-radius: 34px;
+        background-color: #ab3768;
+        cursor: default;
+    }
 }

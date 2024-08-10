@@ -234,6 +234,7 @@ const grid = () => {
                     value={i.isON}
                     onChange={(val) => apiBotSetIsOn(i.id, val)}
                     style={{ transform: 'scale(0.96)' }}
+                    lastSaveTime={i.lastTimeUpdated}
                   />
                 </div>
                 <div className={css.buttons}>
