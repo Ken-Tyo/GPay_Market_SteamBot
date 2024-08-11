@@ -4,7 +4,7 @@ import css from './styles.scss';
 const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
 
     const [checked, setChecked] = React.useState(value);
-    const [timer, setTimer] = React.useState(Date.now());
+    const [timer, setTimer] = React.useState();
 
     const timeDiffSeconds = (lastSaveTime) => {
         if (!lastSaveTime) return 86400;
@@ -21,13 +21,13 @@ const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
     };
 
     React.useEffect(() => {
+        setChecked(value);
+    }, [value]);
+
+    React.useEffect(() => {
         const updateStates = () => {
             const seconds = timeDiffSeconds(lastSaveTime);
             setTimer(60 - seconds);
-
-            if (seconds > 59) {
-                setChecked(checked);
-            }
         };
 
         updateStates(); // Initial call to set the states immediately
@@ -35,7 +35,7 @@ const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
         const intervalId = setInterval(updateStates, 1000); // Update states every 15 seconds
 
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
-    }, [lastSaveTime, value]); // Depend on lastSaveTime and value
+    }, [lastSaveTime]); // Depend on lastSaveTime and value
 
 
   return (

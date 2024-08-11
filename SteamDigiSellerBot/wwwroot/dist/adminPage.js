@@ -26653,7 +26653,7 @@ var SwitchBtn = function SwitchBtn(_ref) {
     _React$useState2 = switch_slicedToArray(_React$useState, 2),
     checked = _React$useState2[0],
     setChecked = _React$useState2[1];
-  var _React$useState3 = react.useState(Date.now()),
+  var _React$useState3 = react.useState(),
     _React$useState4 = switch_slicedToArray(_React$useState3, 2),
     timer = _React$useState4[0],
     setTimer = _React$useState4[1];
@@ -26671,12 +26671,12 @@ var SwitchBtn = function SwitchBtn(_ref) {
     }
   };
   react.useEffect(function () {
+    setChecked(value);
+  }, [value]);
+  react.useEffect(function () {
     var updateStates = function updateStates() {
       var seconds = timeDiffSeconds(lastSaveTime);
       setTimer(60 - seconds);
-      if (seconds > 59) {
-        setChecked(checked);
-      }
     };
     updateStates(); // Initial call to set the states immediately
 
@@ -26685,7 +26685,7 @@ var SwitchBtn = function SwitchBtn(_ref) {
     return function () {
       return clearInterval(intervalId);
     }; // Cleanup interval on component unmount
-  }, [lastSaveTime, value]); // Depend on lastSaveTime and value
+  }, [lastSaveTime]); // Depend on lastSaveTime and value
 
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: switch_styles.wrapper,
