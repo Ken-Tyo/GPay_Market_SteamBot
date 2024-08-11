@@ -3,70 +3,54 @@ import css from './styles.scss';
 
 const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
 
-  const [checked, setChecked] = React.useState(false);
-  const [componentKey, setComponentKey] = React.useState(Date.now());
+    const [checked, setChecked] = React.useState(value);
+    const [timer, setTimer] = React.useState(Date.now());
 
-  const hasMoreThanOneMinutePassed = (lastSaveTime) => {
-    if (!lastSaveTime) return true;
-    try {
-        const lastSaveDate = new Date(lastSaveTime + 'Z'); // Ensure lastSaveTime is in UTC
-        const currentTime = new Date();
-        const timeDiff = currentTime.getTime() - lastSaveDate.getTime();
-        const diffMin = timeDiff / 60000; // Convert milliseconds to minutes
-        return diffMin > 1;
-    } catch (error) {
-        console.error('Error processing lastSaveTime:', error);
-        return false;
-    }
-    };
-  const timeDiffSeconds = (lastSaveTime) => {
+    const timeDiffSeconds = (lastSaveTime) => {
+        if (!lastSaveTime) return 86400;
         try {
             const lastSaveDate = new Date(lastSaveTime + 'Z'); // Ensure lastSaveTime is in UTC
             const currentTime = new Date();
             const timeDiff = currentTime.getTime() - lastSaveDate.getTime();
             const diffSec = timeDiff / 1000; // Convert milliseconds to minutes
-            return '0:' + diffSec.toString();
+            return Math.floor(diffSec);
         } catch (error) {
             console.error('Error processing lastSaveTime:', error);
-            return '';
+            return 86400;
         }
     };
 
     React.useEffect(() => {
-    setChecked(value && hasMoreThanOneMinutePassed(lastSaveTime));
-  }, [value, lastSaveTime]);
+        const updateStates = () => {
+            const seconds = timeDiffSeconds(lastSaveTime);
+            setTimer(60 - seconds);
 
-  React.useEffect(() => {
-    const checkInterval = setInterval(() => {
-        if (!lastSaveTime) return; 
-
-        try {
-            if (hasMoreThanOneMinutePassed(lastSaveTime)) {
-                setChecked(value);
+            if (seconds > 59) {
+                setChecked(checked);
             }
-        } catch (error) {
-            console.error('Error processing lastSaveTime:', error);
-        }
-    }, 15000);
+        };
 
-    return () => clearInterval(checkInterval);
-  }, [lastSaveTime]);
+        updateStates(); // Initial call to set the states immediately
+
+        const intervalId = setInterval(updateStates, 1000); // Update states every 15 seconds
+
+        return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    }, [lastSaveTime, value]); // Depend on lastSaveTime and value
+
 
   return (
-      <div className={css.wrapper} style={{ ...style }} key={componentKey}>
-          {hasMoreThanOneMinutePassed(lastSaveTime) &&
-              (<div
+      <div className={css.wrapper} style={{ ...style }}>
+          {timer < 0 ? (
+              <div
                   className={css.track + ' ' + (checked ? css.checked : '')}
                   onClick={() => {
-                      if (hasMoreThanOneMinutePassed(lastSaveTime)) {
-                          if (onChange) onChange(!checked);
-                          setChecked(!checked);
-                      }
-                  }}>
-                  <div className={css.thumb + ' ' + (checked ? css.checked : '')}></div>
-              </div>)}
-          {!hasMoreThanOneMinutePassed(lastSaveTime) &&
-              (<div className={css.track}>{timeDiffSeconds(lastSaveTime)}</div>)}
+                    if (onChange) onChange(!checked);
+                    setChecked(!checked);}}>
+                <div className={css.thumb + ' ' + (checked ? css.checked : '')}></div>
+              </div>
+          ) : (
+              <div className={css.awaition}>{timer > 9 ? `0:${timer}` : `0:0${timer}`}</div>
+          )}
     </div>
   );
 };
