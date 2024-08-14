@@ -514,7 +514,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             IEnumerable<Bot> botFilterRes = await _botRepository
                 .ListAsync(db, b => (b.State == BotState.active || b.State == BotState.tempLimit) 
                               && b.SendedGiftsSum < b.MaxSendedGiftsSum //сумма подарков не превышает максимальную
-                              && b.IsON);
+                              && b.IsON && (!b.LastTimeUpdated.HasValue || DateTime.UtcNow.AddMinutes(-1) > b.LastTimeUpdated));
 
             gs.BotSwitchList ??= new();
             if (gs.BotSwitchList.Count > 0)
