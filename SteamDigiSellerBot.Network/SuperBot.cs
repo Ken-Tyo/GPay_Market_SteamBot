@@ -868,7 +868,7 @@ namespace SteamDigiSellerBot.Network
                     var res = country;
                     var isProblemRegion = false;
 
-                    res = SteamHelper.MapCountryCode(country);
+                    res = country;
 
                     if (false && (res == "JP" || res == "CN"))
                     {
