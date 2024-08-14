@@ -341,8 +341,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                 GamePrice prevPrice = prices.First();
                 decimal currentPrecentsDiffToBasePrice = 0;// текущая разница в процентах между текущей ценой и базовой
 
-                foreach (var nextPrice in prices)
+                for (int i = 1;i < prices.Count; i++)
                 {
+                    GamePrice nextPrice = prices[i];
+
                     _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, nextPriceId={nextPrice.Id}, prevPriceId={prevPrice.Id}");
                     if (priceInRub[nextPrice.Id] != 0)
                     {
