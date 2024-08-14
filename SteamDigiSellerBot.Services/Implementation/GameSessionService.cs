@@ -76,6 +76,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
         {
+            _logger.LogInformation($"[ASHT] start SetSteamContact gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
 
             ProfileDataRes profileData = null;
@@ -115,6 +117,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else
                 {
+                    _logger.LogInformation($"[ASHT] StatusId = GameSessionStatusEnum.WaitingToConfirm gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+
                     gs.StatusId = GameSessionStatusEnum.WaitingToConfirm; //Ожидается подтверждение
                     logVal = new ValueJson { userSteamContact = gs.SteamContactValue, userProfileUrl = profileData.url };
 
@@ -306,6 +310,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             var basePrice = item.GetPrice();
 
+            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name},priorityPricesCount={priorityPrices.Count}, basePriceId={basePrice.Id}, GameId={basePrice.GameId}, CurrentSteamPrice={basePrice.CurrentSteamPrice}");
+
             //если выбрано 1 или более приортетных цен
             if (priorityPrices.Count() > 0)
             {
@@ -337,18 +343,27 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                 foreach (var nextPrice in prices)
                 {
+                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, nextPriceId={nextPrice.Id}, prevPriceId={prevPrice.Id}");
                     if (priceInRub[nextPrice.Id] != 0)
                     {
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPrice={priceInRub[nextPrice.Id]}");
+
                         currentPrecentsDiffToBasePrice +=
                             Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
+
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, currentPrecentsDiffToBasePrice={currentPrecentsDiffToBasePrice}");
                     }
 
                     if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
                     {
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}... break");
+
                         break;
                     }
 
                     forNotDelete.Add(nextPrice.Id);
+
+                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, forNotDelete+ id={nextPrice.Id}");
 
                     prevPrice = nextPrice;
                 }
@@ -358,6 +373,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //базовую цену в конец
                 prices.Add(basePrice);
 
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, pricesCount={prices.Count}");
+
                 return (maxFailUsingCount, prices);
             }
             else
@@ -366,6 +383,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var list = new List<GamePrice>();
                 if (basePrice != null)
                     list.Add(basePrice);
+
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices only base ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, listCount={list.Count}");
 
                 return (maxFailUsingCount, list);
             }
