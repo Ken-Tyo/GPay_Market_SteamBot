@@ -10,6 +10,8 @@ using System;
 using SteamDigiSellerBot.Utilities;
 using Castle.Core.Internal;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore.Internal;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 
 namespace SteamDigiSellerBot.Database.Repositories
 {
@@ -182,18 +184,10 @@ namespace SteamDigiSellerBot.Database.Repositories
                 else
                 {
                     finalResult = new List<Item>();
-                    if (hierarchyParams_isActiveHierarchyOn == true)
-                    {
-                        var res = sortedQuery
-                                .Select(e =>
-                                    new
-                                    {
-                                        Item = e,
-                                        targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
-                                        baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)
-                                    })
-                                .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
-                                .ToList();
+                    var res = ItemHierFilter.Filter(hierarchyParams_targetSteamCurrencyId,
+                        hierarchyParams_baseSteamCurrencyId,
+                        hierarchyParams_isActiveHierarchyOn, 
+                        sortedQuery);
 
 
                         Func<decimal, decimal, bool> compareFunc = hierarchyParams_compareSign switch
@@ -235,63 +229,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-
-                        var res = sortedQuery
-                                .Select(e =>
-                                    new
-                                    {
-                                        Item = e,
-                                        targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
-                                        baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId && e.IsPriority == false)
-                                    })
-                                .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
-                                .ToList();
-
-
-                        Func<decimal, decimal, bool> compareFunc = hierarchyParams_compareSign switch
-                        {
-                            ">=" => MoreOrEqual,
-                            "=<" => LessOrEqual,
-                            "<>" => MoreOrLessEqual,
-                            _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
-                        };
-
-                        decimal targetDiff = hierarchyParams_compareSign switch
-                        {
-                            ">=" => Math.Abs(hierarchyParams_percentDiff.Value),
-                            "=<" => -Math.Abs(hierarchyParams_percentDiff.Value),
-                            "<>" => Math.Abs(hierarchyParams_percentDiff.Value),
-                            _ => throw new ArgumentException($"{nameof(hierarchyParams_compareSign)} некорректен")
-                        };
-                        foreach (var e in res)
-                        {
-                            var targetGamePrice = e.targetGamePrice;
-                            var baseGamePrice = e.baseGamePrice;
-
-                            if ((targetGamePrice?.CurrentSteamPrice).HasValue && (baseGamePrice?.CurrentSteamPrice).HasValue)
-                            {
-                                if (targetGamePrice.IsPriceWithError || baseGamePrice.IsPriceWithError)
-                                {
-                                    continue;
-                                }
-                                //Конвертирование в рубль
-                                var targetRubPrice = ExchangeHelper.Convert(targetGamePrice.CurrentSteamPrice, currencies[targetGamePrice.SteamCurrencyId], rub);
-                                var baseRubPrice = ExchangeHelper.Convert(baseGamePrice.CurrentSteamPrice, currencies[baseGamePrice.SteamCurrencyId], rub);
-
-
-                                var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
-                                debugResult.Add((diffPrice, baseGamePrice.IsPriority));
-                                if (compareFunc(diffPrice, targetDiff))
-                                {
-                                    finalResult.Add(e.Item);
-                                }
-                            }
-                        }
-
-                    }
+                    
+                 
                 }
             }
             catch (Exception ex)
@@ -312,7 +251,141 @@ namespace SteamDigiSellerBot.Database.Repositories
             return MoreOrEqual(absCalc, absTarget) || LessOrEqual(absCalc, -absTarget);
         }
 
+        private class ItemHierFilter
+        {
+            public Item Item { get; init; }
+            public GamePrice targetGamePrice { get; init; }
 
+            public GamePrice baseGamePrice { get; init; }
+
+            public static List<ItemHierFilter> Filter(int? hierarchyParams_targetSteamCurrencyId,
+                int? hierarchyParams_baseSteamCurrencyId,
+                bool? hierarchyParams_isActiveHierarchyOn, 
+                IQueryable<Item> sortedQuery)
+            {
+                List<ItemHierFilter> res = new List<ItemHierFilter>();
+                if (hierarchyParams_targetSteamCurrencyId > 0 && hierarchyParams_baseSteamCurrencyId > 0)
+                {
+                    if (hierarchyParams_isActiveHierarchyOn == true)
+                    {
+                        res = sortedQuery
+                            .Select(e =>
+                                new ItemHierFilter
+                                {
+                                    Item = e,
+                                    targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
+                                    baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                    else
+                    {
+                        res = sortedQuery
+                            .Select(e =>
+                                new ItemHierFilter
+                                {
+                                    Item = e,
+                                    targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
+                                    baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId && e.IsPriority == false)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                }
+                else if(hierarchyParams_targetSteamCurrencyId < 0 && hierarchyParams_baseSteamCurrencyId < 0)
+                {
+                    if (hierarchyParams_isActiveHierarchyOn == true)
+                    {
+                        res = sortedQuery
+                            .Select(q =>
+                                new ItemHierFilter
+                                {
+                                    Item = q,
+                                    targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId),
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                    else
+                    {
+                        res = sortedQuery
+                            .Select(q =>
+                                new ItemHierFilter
+                                {
+                                    Item = q,
+                                    targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId),
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId && e.IsPriority == false)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                }
+                else if(hierarchyParams_targetSteamCurrencyId < 0)
+                {
+
+                    if (hierarchyParams_isActiveHierarchyOn == true)
+                    {
+                        res = sortedQuery
+                            .Select(q =>
+                                new ItemHierFilter
+                                {
+                                    Item = q,
+                                    targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId),
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                    else
+                    {
+                        res = sortedQuery
+                            .Select(q =>
+                                new ItemHierFilter
+                                {
+                                    Item = q,
+                                    targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId),
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId == false)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                }
+                else if (hierarchyParams_baseSteamCurrencyId < 0)
+                {
+                    if (hierarchyParams_isActiveHierarchyOn == true)
+                    {
+                        res = sortedQuery
+                            .Select(q =>
+                                new ItemHierFilter
+                                {
+                                    Item = q,
+                                    targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                    else
+                    {
+                         res = sortedQuery
+                            .Select(q =>
+                                new ItemHierFilter
+                                {
+                                    Item = q,
+                                    targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId && e.IsPriority == false)
+                                })
+                            .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
+                            .ToList();
+                    }
+                }
+
+                return res;
+            }
+            
+        }
         private async Task<IQueryable<Item>> GetSortedItemsAsQuery()
         {
             await using var db = dbContextFactory.CreateDbContext();

@@ -34,6 +34,7 @@ export const state = entity({
   selectedItems: [],
   exchageRates: [],
   currencies: [],
+  productFilterCurrencies: [],
   steamRegions: [],
   digiPriceSetType: [
     { id: 1, name: "%" },
@@ -200,7 +201,7 @@ export const apiFetchItems = async (filter) => {
   if (filter == null) {
     filterDTO = { IsFilterOn: false };
   } else {
-    const currencies = state.get().currencies.map((c) => {
+    const currencies = state.get().productFilterCurrencies.map((c) => {
       return {
         id: c.steamId,
         name: c.code,
@@ -266,15 +267,15 @@ export const apiSetItemPricePriority = async (gpId) => {
 };
 
 export const sortByPrice = async (items, price) => {
-    return items.sort((a, b) => {
-        if (a[price] < b[price]) {
-            return -1;
-        }
-        if (a[price] > b[price]) {
-            return 1;
-        }
-        return 0;
-    });
+  return items.sort((a, b) => {
+    if (a[price] < b[price]) {
+      return -1;
+    }
+    if (a[price] > b[price]) {
+      return 1;
+    }
+    return 0;
+  });
 };
 
 export const apiFetchGameSessions = async (filter) => {
@@ -662,7 +663,12 @@ export const toggleOrderCreationInfoModal = async (isOpen) => {
   });
 };
 
-export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) => {
+export const apiChangeItemBulk = async (
+  SteamPercent,
+  IncreaseDecreaseOperator,
+  IncreaseDecreasePercent,
+  Ids
+) => {
   setItemsLoading(true);
   setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/change`, {
@@ -741,11 +747,25 @@ export const apiGetCurrencies = async () => {
       steamSymbol: c.steamSymbol,
     };
   });
+  let productFilterCurrencies = [
+    {
+      code: "Base",
+      steamId: -1,
+      steamSymbol: "Base",
+    },
+  ];
+  productFilterCurrencies = [...currencies];
+  productFilterCurrencies.unshift({
+    code: "Base",
+    steamId: -1,
+    steamSymbol: "Base",
+  });
 
   state.set((value) => {
     return {
       ...value,
       currencies: currencies,
+      productFilterCurrencies: productFilterCurrencies,
     };
   });
 };
