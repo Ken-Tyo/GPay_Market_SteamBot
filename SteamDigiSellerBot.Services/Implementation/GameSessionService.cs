@@ -332,6 +332,22 @@ namespace SteamDigiSellerBot.Services.Implementation
                 item.GamePrices.RemoveAll(item => forDelete.Contains(item.Id));
                 priorityPrices.RemoveAll(item => forDelete.Contains(item.Id));
 
+                // если базовая цена не самая низкая, то ее нужно добавить в оставшееся дерево для сравнения по %
+                if (!priorityPrices.Any(x => x.Id == basePrice.Id))
+                    priorityPrices.Add(basePrice);
+
+                decimal basePriceInRub = 0;
+
+                var convertResultBase = _currencyDataService.TryConvertToRUB(basePrice.CurrentSteamPrice, basePrice.SteamCurrencyId).Result;
+                if (convertResultBase.success)
+                {
+                    priceInRub.Add(basePrice.Id, convertResultBase.value.Value);
+
+                    basePriceInRub = convertResultBase.value.Value;
+                }
+
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, basePriceInRub={basePriceInRub}");
+
                 //берем ту где цена меньше всего
                 var prices = priorityPrices
                     .OrderBy(gp => priceInRub[gp.Id])
@@ -341,39 +357,56 @@ namespace SteamDigiSellerBot.Services.Implementation
                 GamePrice prevPrice = prices.First();
                 decimal currentPrecentsDiffToBasePrice = 0;// текущая разница в процентах между текущей ценой и базовой
 
+                if (priceInRub[prevPrice.Id] < basePriceInRub)//если регион ниже ценовой основы, его не проверять на разницу цен в %
+                {
+                    forNotDelete.Add(prevPrice.Id);
+                }
+
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.prevPriceId={priceInRub[prevPrice.Id]},basePriceInRub={basePriceInRub}");
+
                 for (int i = 1;i < prices.Count; i++)
                 {
                     GamePrice nextPrice = prices[i];
 
-                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, nextPriceId={nextPrice.Id}, prevPriceId={prevPrice.Id}");
-                    if (priceInRub[nextPrice.Id] != 0)
+                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPriceId={priceInRub[nextPrice.Id]},basePriceInRub={basePriceInRub}");
+
+                    if (priceInRub[nextPrice.Id] < basePriceInRub || nextPrice.Id == basePrice.Id)
                     {
-                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPrice={priceInRub[nextPrice.Id]}");
-
-                        currentPrecentsDiffToBasePrice +=
-                            Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
-
-                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, currentPrecentsDiffToBasePrice={currentPrecentsDiffToBasePrice}");
+                        forNotDelete.Add(nextPrice.Id);
                     }
-
-                    if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
+                    else
                     {
-                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}... break");
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, nextPriceId={nextPrice.Id}, prevPriceId={prevPrice.Id}");
 
-                        break;
+                        if (priceInRub[nextPrice.Id] != 0)
+                        {
+                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPrice={priceInRub[nextPrice.Id]}");
+
+                            currentPrecentsDiffToBasePrice +=
+                                Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
+
+                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, currentPrecentsDiffToBasePrice={currentPrecentsDiffToBasePrice}");
+                        }
+
+                        if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
+                        {
+                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}... break");
+
+                            break;
+                        }
+
+                        forNotDelete.Add(nextPrice.Id);
+
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, forNotDelete+ id={nextPrice.Id}");
                     }
-
-                    forNotDelete.Add(nextPrice.Id);
-
-                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, forNotDelete+ id={nextPrice.Id}");
 
                     prevPrice = nextPrice;
                 }
 
                 prices.RemoveAll(item => !forNotDelete.Contains(item.Id));
 
-                //базовую цену в конец
-                prices.Add(basePrice);
+                if (!prices.Any(x => x.Id == basePrice.Id))
+                    prices.Add(basePrice);
 
                 _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, pricesCount={prices.Count}");
 
