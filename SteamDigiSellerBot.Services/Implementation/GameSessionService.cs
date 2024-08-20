@@ -341,7 +341,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var convertResultBase = _currencyDataService.TryConvertToRUB(basePrice.CurrentSteamPrice, basePrice.SteamCurrencyId).Result;
                 if (convertResultBase.success)
                 {
-                    priceInRub.Add(basePrice.Id, convertResultBase.value.Value);
+                    if(!priceInRub.Any(x => x.Key == basePrice.Id))
+                        priceInRub.Add(basePrice.Id, convertResultBase.value.Value);
 
                     basePriceInRub = convertResultBase.value.Value;
                 }
