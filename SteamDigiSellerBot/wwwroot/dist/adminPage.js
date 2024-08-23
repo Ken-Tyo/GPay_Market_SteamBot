@@ -26690,7 +26690,10 @@ var SwitchBtn = function SwitchBtn(_ref) {
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: switch_styles.wrapper,
     style: switch_objectSpread({}, style),
-    children: timer < 0 ? /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: timer >= 0 ? /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: switch_styles.awaition,
+      children: timer > 9 ? "0:".concat(timer) : "0:0".concat(timer)
+    }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: switch_styles.track + ' ' + (checked ? switch_styles.checked : ''),
       onClick: function onClick() {
         if (onChange) onChange(!checked);
@@ -26699,9 +26702,6 @@ var SwitchBtn = function SwitchBtn(_ref) {
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
         className: switch_styles.thumb + ' ' + (checked ? switch_styles.checked : '')
       })
-    }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: switch_styles.awaition,
-      children: timer > 9 ? "0:".concat(timer) : "0:0".concat(timer)
     })
   });
 };

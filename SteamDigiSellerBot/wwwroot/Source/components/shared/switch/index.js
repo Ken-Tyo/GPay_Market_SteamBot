@@ -40,7 +40,9 @@ const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
 
   return (
       <div className={css.wrapper} style={{ ...style }}>
-          {timer < 0 ? (
+          {timer >= 0 ? (
+              <div className={css.awaition}>{timer > 9 ? `0:${timer}` : `0:0${timer}`}</div>
+          ) : (
               <div
                   className={css.track + ' ' + (checked ? css.checked : '')}
                   onClick={() => {
@@ -48,8 +50,6 @@ const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
                     setChecked(!checked);}}>
                 <div className={css.thumb + ' ' + (checked ? css.checked : '')}></div>
               </div>
-          ) : (
-              <div className={css.awaition}>{timer > 9 ? `0:${timer}` : `0:0${timer}`}</div>
           )}
     </div>
   );
