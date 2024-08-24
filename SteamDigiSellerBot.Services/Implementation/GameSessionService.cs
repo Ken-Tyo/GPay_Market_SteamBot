@@ -1427,11 +1427,18 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
 
 #if !DEBUG
-                (ProfileDataRes profileData, string err) =
-                    await _steamNetworkService.ParseUserProfileData(gs.SteamProfileUrl, SteamContactType.profileUrl);
+                        try
+                        {
+                            (ProfileDataRes profileData, string err) =
+                                await _steamNetworkService.ParseUserProfileData(gs.SteamProfileUrl,
+                                    SteamContactType.profileUrl);
 
-                if (profileData != null)
-                    await sbot.RemoveFromFriends(profileData);
+                            if (profileData != null)
+                                await sbot.RemoveFromFriends(profileData);
+                        }
+                        catch
+                        {
+                        }
 #endif
                     }
                     else if (sendRes.result == SendeGameResult.gameExists)
