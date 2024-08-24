@@ -1436,8 +1436,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                             if (profileData != null)
                                 await sbot.RemoveFromFriends(profileData);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            _logger?.LogError(ex, $"GS ID {gs?.Id} Bot: {sbot?.Bot?.UserName}: Ошибка при удалении клиента после покупки.");
                         }
 #endif
                     }
