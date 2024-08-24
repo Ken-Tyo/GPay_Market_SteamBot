@@ -154,44 +154,58 @@ namespace SteamDigiSellerBot.Network
 
         private async Task<(bool, decimal)> _GetBotBalance_Proto(ILogger logger, bool repeat = true)
         {
-            if (_bot.Result != EResult.OK)
-                return (false, 0);
-
             try
             {
-                var item = new CUserAccount_GetClientWalletDetails_Request()
-                {
-                    include_balance_in_usd = true
-                };
-                var api = _steamClient.Configuration.GetAsyncWebAPIInterface("IUserAccountService");
-                var response = await api.CallProtobufAsync<CUserAccount_GetWalletDetails_Response>(
-                    HttpMethod.Post, "GetClientWalletDetails", args: PrepareProtobufArguments(item, accessToken));
+                if (_bot.Result != EResult.OK)
+                    return (false, 0);
 
-                return (true, response.balance / 100M);
-            }
-            catch (WebAPIRequestException ex)
-            {
-                if (repeat)
+                try
                 {
-                    Login();
-                    await Task.Delay(TimeSpan.FromSeconds(5));
-                    return await _GetBotBalance_Proto(logger, false);
+                    var item = new CUserAccount_GetClientWalletDetails_Request()
+                    {
+                        include_balance_in_usd = true
+                    };
+                    var api = _steamClient.Configuration.GetAsyncWebAPIInterface("IUserAccountService");
+                    var response = await api.CallProtobufAsync<CUserAccount_GetWalletDetails_Response>(
+                        HttpMethod.Post, "GetClientWalletDetails", args: PrepareProtobufArguments(item, accessToken));
+
+                    return (true, response.balance / 100M);
                 }
-            }
-            catch (Exception ex)
-            {
-                if (logger != null)
+                catch (WebAPIRequestException ex)
                 {
-                    logger.LogError(ex, $"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                    try
+                    {
+                        if (repeat)
+                        {
+                            Login();
+                            await Task.Delay(TimeSpan.FromSeconds(5));
+                            return await _GetBotBalance_Proto(logger, false);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"{ex.Message} {ex.StackTrace}");
-                    Console.WriteLine($"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                    if (logger != null)
+                    {
+                        logger.LogError(ex, $"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{ex.Message} {ex.StackTrace}");
+                        Console.WriteLine($"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                    }
+
                 }
-                
+
+                return await GetBotBalance();
             }
-            return await GetBotBalance();
+            catch 
+            {return (false, 0); }
+
         }
 
         public async Task<bool> CheckoutFriendGift_Proto(uint subId, bool isBundle, int reciverId)
