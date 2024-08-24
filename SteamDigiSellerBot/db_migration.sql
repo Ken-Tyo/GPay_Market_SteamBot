@@ -240,3 +240,6 @@ alter table "Bots" ADD "SendGameAttemptsArrayDaily" JSON null;
 
 20.07
 alter table "GameSessions" add "BlockOrder" boolean not null default false;
+
+05.08
+alter table "Bots" add "LastTimeUpdated" timestamp without time zone null;
