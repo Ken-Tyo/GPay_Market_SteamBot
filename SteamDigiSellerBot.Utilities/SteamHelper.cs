@@ -32,7 +32,7 @@ namespace SteamDigiSellerBot.Utilities
                 .Where(ch => char.IsDigit(ch) || ch == '.').ToArray())
                 .Trim('.');
 
-            //2,250.12 руб. -> 2.250.12 руб. -> 
+            //2,250.12 руб. -> 2.250.12 руб. ->
             symbol = new string(str
                 .Replace(',', '.')
                 .Where(ch => !char.IsDigit(ch) && ch != '.' && ch != ' ').ToArray());
@@ -68,9 +68,9 @@ namespace SteamDigiSellerBot.Utilities
             number = decimal.Parse(newStr);
             return true;
         }
-        
 
-        //TODO Стоит всю эту обработку с данными перенести в бд. 
+
+        //TODO Стоит всю эту обработку с данными перенести в бд.
 
         public static class Regions
         {
@@ -111,7 +111,7 @@ namespace SteamDigiSellerBot.Utilities
 
         /// <summary>
         /// Метод служит для сопоставления регионов. Отдельный метод создан для того, чтобы учитывать виртуальных регионов
-        /// Групповой регион определяется по <paramref name="currCode"/> 
+        /// Групповой регион определяется по <paramref name="currCode"/>
         /// </summary>
         /// <param name="targetRegion">С чем сравниваем</param>
         /// <param name="currRegion">Регион валюты в обычном случае</param>
@@ -151,6 +151,7 @@ namespace SteamDigiSellerBot.Utilities
             {
                 profileData.sessionId = GetSessionIdFromProfilePage(prPage);
                 //prPage.Substring("g_sessionID = \"", "\"");
+                profileData.url = $"https://steamcommunity.com/profiles/{profileData.steamid}/";
                 profileData.avatarUrl = GetAvatarFromProfilePage(prPage);
                 profileData.gifteeAccountId = GetGifteeAccountIDFromProfilePage(prPage);
             }
