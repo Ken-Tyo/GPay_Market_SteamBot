@@ -42938,7 +42938,7 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
           },
           isDisabled: state_namespaceObject.itemInfoTemplatesLoading
         }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-          text: 'Отмена',
+          text: 'Назад',
           onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
             return modalItemInfoEdit_regeneratorRuntime().wrap(function _callee$(_context) {
               while (1) switch (_context.prev = _context.next) {
@@ -44487,8 +44487,6 @@ var products = function products() {
         toggleItemAdditionalInfoModal(false);
       },
       onSave: function onSave(russianText, englishText) {
-        console.log("ru: ".concat(russianText));
-        console.log("en: ".concat(englishText));
         var updateItemInfoesCommand = items.filter(function (i) {
           return selectedItems.includes(i.id);
         }).flatMap(function (x) {

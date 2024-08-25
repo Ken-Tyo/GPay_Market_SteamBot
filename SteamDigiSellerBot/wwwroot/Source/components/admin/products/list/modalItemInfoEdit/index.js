@@ -175,7 +175,7 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
             isDisabled={itemInfoTemplatesLoading}
           />
           <Button
-            text={'Отмена'}
+            text={'Назад'}
             onClick={async () => {
               if (onCancel) {
                 setRussianText('');

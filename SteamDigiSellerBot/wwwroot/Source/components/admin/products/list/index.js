@@ -537,9 +537,6 @@ const products = () => {
           toggleItemAdditionalInfoModal(false);
         }}
         onSave={(russianText, englishText) => {
-          console.log(`ru: ${russianText}`);
-          console.log(`en: ${englishText}`);
-
           var updateItemInfoesCommand = items
             .filter(i => selectedItems.includes(i.id))
             .flatMap(x => x.digiSellerIds)
