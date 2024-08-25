@@ -19,8 +19,11 @@ import {
   apiBulkDeleteItem,
   apiChangeItem,
   apiCreateItem,
+  apiUpdateItemInfoes,
   toggleBulkEditPercentModal,
   toggleEditItemModal,
+  toggleItemMainInfoModal,
+  toggleItemAdditionalInfoModal,
   apiChangeItemBulk,
   setSelectedItem,
   setSelectedItems,
@@ -28,6 +31,7 @@ import {
 } from "../../../../containers/admin/state";
 import ConfirmDialog from "../../../shared/modalConfirm";
 import EditItemModal from "./modalEdit";
+import EditItemInfoModal from "./modalItemInfoEdit";
 import BulkPercentEdit from "./modalBulkPercentEdit";
 import ToggleSort from "./modalSort/index";
 import Popover from "@mui/material/Popover";
@@ -41,12 +45,15 @@ const products = () => {
     itemsLoading,
     bulkEditPercentModalIsOpen,
     editItemModalIsOpen,
+    editItemMainInfoModalIsOpen,
+    editItemAdditionalInfoModalIsOpen,
     selectedItem,
     selectedItems,
     currencies,
     itemsResponse,
     productsFilter,
     changeItemBulkResponse,
+    itemInfoTemplates,
   } = state.use();
 
   const [sortedItems, setSortedItems] = useState([...items]);
@@ -58,6 +65,8 @@ const products = () => {
 
   const [errParsePriceText, setErrParsePriceText] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [subMenuVisibility, setSubMenuVisibility] = useState(css.subMenuHidden);
+
   const open = Boolean(anchorEl);
   const massChangeButStyle = {
     width: "200px",
@@ -160,6 +169,28 @@ const products = () => {
     active: "",
   };
 
+  const getBtnMassDescriptionBlock = (lines) => {
+    return <div className={css.massDescriptionText}>{lines.map(line => (<div>{line}</div>))}</div>;
+  };
+
+  const toggleMassDescriptionSubMenu = () => {
+    if (subMenuVisibility == css.subMenuVisible) {
+      setSubMenuVisibility(css.subMenuHidden);
+    } else {
+      setSubMenuVisibility(css.subMenuVisible);
+    }
+  }
+
+  const getLoadingText = () => {
+    if (changeItemBulkResponse.loading) {
+      return "Происходит обновление цен";
+    }
+    if (changeItemBulkResponse.loadingItemInfo) {
+      return "Происходит обновление описаний товаров";
+    }
+    return "Подгружаем товары";
+  }
+
   console.log(itemsLoading);
   return (
     <div className={css.wrapper}>
@@ -167,12 +198,7 @@ const products = () => {
         headers={Object.values(headers)}
         data={[...sortedItems]}
         isLoading={itemsLoading}
-        loadingText={() => {
-          if (changeItemBulkResponse.loading) {
-            return "Происходит обновление цен";
-          }
-          return "Подгружаем товары";
-        }}
+        loadingText={getLoadingText}
         itemRenderer={(i) => {
           let priceColor = "#D4D4D4";
           if (i.currentDigiSellerPrice > i.currentSteamPriceRub)
@@ -459,6 +485,28 @@ const products = () => {
           </div>
           <div className={css.btnWrapper}>
             <Button
+              text={getBtnMassDescriptionBlock(['Смена описания/', 'доп. информации'])}
+              style={massChangeButStyle}
+              onClick={() => {
+                toggleMassDescriptionSubMenu();
+              }}
+            />
+
+            <div className={css.subMenu + ' ' + subMenuVisibility}>
+              <div className={css.subMenuItem} onClick={() => {
+                toggleItemMainInfoModal(true);
+                toggleMassDescriptionSubMenu();
+              }
+              }>Основная информация</div>
+              <div className={css.subMenuItem} onClick={() => {
+                toggleItemAdditionalInfoModal(true);
+                toggleMassDescriptionSubMenu();
+              }
+              }>Доп. информация</div>
+            </div>
+          </div>
+          <div className={css.btnWrapper}>
+            <Button
               text={"Удалить все"}
               style={massChangeButStyle}
               onClick={() => {
@@ -480,6 +528,43 @@ const products = () => {
           if (newItem.id) apiChangeItem(newItem);
           else apiCreateItem(newItem);
         }}
+      />
+      <EditItemInfoModal
+        isOpen={editItemMainInfoModalIsOpen || editItemAdditionalInfoModalIsOpen}
+        viewMode={editItemMainInfoModalIsOpen ? 'main' : (editItemAdditionalInfoModalIsOpen ? 'additional' : 'none')}
+        onCancel={() => {
+          toggleItemMainInfoModal(false);
+          toggleItemAdditionalInfoModal(false);
+        }}
+        onSave={(russianText, englishText) => {
+          var updateItemInfoesCommand = items
+            .filter(i => selectedItems.includes(i.id))
+            .flatMap(x => x.digiSellerIds)
+            .map(x => {
+              return {
+                digiSellerId: x,
+                description: editItemMainInfoModalIsOpen ? [{
+                  locale: "ru-RU",
+                  value: russianText
+                }, {
+                  locale: "en-US",
+                  value: englishText
+                  }] : [],
+                add_info: !editItemMainInfoModalIsOpen ? [{
+                  locale: "ru-RU",
+                  value: russianText
+                }, {
+                  locale: "en-US",
+                  value: englishText
+                }] : []
+              };
+            });
+
+          toggleItemMainInfoModal(false);
+          toggleItemAdditionalInfoModal(false);
+          apiUpdateItemInfoes(updateItemInfoesCommand);
+        }}
+        itemInfoTemplates={ itemInfoTemplates }
       />
       <ConfirmDialog
         title={"Подтвердите удаление"}

@@ -26474,6 +26474,71 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 
+// NAMESPACE OBJECT: ./wwwroot/Source/containers/admin/state.js
+var state_namespaceObject = {};
+__webpack_require__.r(state_namespaceObject);
+__webpack_require__.d(state_namespaceObject, {
+  Fj: () => (apiAddCommentGameSession),
+  aU: () => (apiAddGameSession),
+  he: () => (apiBotSetIsOn),
+  To: () => (apiBulkDeleteItem),
+  tr: () => (apiChangeDigisellerData),
+  CG: () => (apiChangeItem),
+  sD: () => (apiChangeItemBulk),
+  VI: () => (apiChangeUserPassword),
+  MZ: () => (apiCreateItem),
+  w_: () => (apiCreateItemInfoTemplate),
+  Zu: () => (apiDeleteBot),
+  vI: () => (apiDeleteItem),
+  D$: () => (apiDeleteItemInfoTemplate),
+  kB: () => (apiDeleteProxy),
+  z2: () => (apiDeleteProxyAll),
+  cz: () => (apiEditBot),
+  fu: () => (apiFetchGameSessStatuses),
+  ZW: () => (apiFetchGameSessionsWithCurrentFilter),
+  av: () => (apiFetchItemInfoTemplateValues),
+  PK: () => (apiFetchItems),
+  hz: () => (apiFetchProxies),
+  QE: () => (apiGetCurrencies),
+  oq: () => (apiGetItem),
+  wL: () => (apiGetSteamRegions),
+  bh: () => (apiLoadNewProxy),
+  aS: () => (apiResetGameSession),
+  wE: () => (apiSaveBotRegionSettings),
+  T2: () => (apiSetGameSessionStatus),
+  ib: () => (apiSetItemActiveStatus),
+  DP: () => (apiUpdateExchangeDataManual),
+  $H: () => (apiUpdateItemInfoes),
+  My: () => (initAdmin),
+  mB: () => (initBotsPage),
+  Zq: () => (setItemPrice),
+  rv: () => (setItemPricePriority),
+  xN: () => (setSelectedBot),
+  tS: () => (setSelectedItem),
+  gU: () => (setSelectedItems),
+  Zo: () => (setStateProp),
+  wk: () => (state),
+  R8: () => (toggleAddGameSesCommentModal),
+  vV: () => (toggleBotDetailsModal),
+  f4: () => (toggleBulkEditPercentModal),
+  J0: () => (toggleChangePasswordModal),
+  wA: () => (toggleDigisellerEditModal),
+  $s: () => (toggleEditBotModal),
+  fi: () => (toggleEditBotRegionSetModal),
+  x7: () => (toggleEditItemModal),
+  Mr: () => (toggleEditOrderModal),
+  gH: () => (toggleExchangeRatesModal),
+  PU: () => (toggleFilterOrdersModal),
+  kn: () => (toggleFilterProductsModal),
+  wl: () => (toggleItemAdditionalInfoModal),
+  _y: () => (toggleItemMainInfoModal),
+  yS: () => (toggleLoadProxiesModal),
+  hf: () => (toggleOrderCreationInfoModal),
+  lD: () => (toggleViewStatusHistoryModal),
+  F0: () => (updateGameSessionsFilter),
+  oO: () => (updateProductsFilter)
+});
+
 // EXTERNAL MODULE: ./node_modules/react/index.js
 var react = __webpack_require__(6540);
 var react_namespaceObject = /*#__PURE__*/__webpack_require__.t(react, 2);
@@ -26607,21 +26672,31 @@ function button_toPrimitive(t, r) { if ("object" != button_typeof(t) || !t) retu
 
 
 var Button = function Button(_ref) {
-  var text = _ref.text,
+  var children = _ref.children,
+    text = _ref.text,
     _onClick = _ref.onClick,
     width = _ref.width,
     height = _ref.height,
-    style = _ref.style;
-  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    style = _ref.style,
+    isDisabled = _ref.isDisabled,
+    className = _ref.className,
+    innerTextMargin = _ref.innerTextMargin;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     style: button_objectSpread({
       width: width || 221,
+      minWidth: width || 221,
       height: height || 65
     }, style || {}),
-    className: button_styles.wrapper + ' ' + button_styles.pointer,
+    className: button_styles.wrapper + ' ' + button_styles.pointer + (isDisabled ? button_styles.disabled : '') + (className ? ' ' + className : ''),
     onClick: function onClick() {
-      if (_onClick) _onClick();
+      if (_onClick && isDisabled !== true) _onClick();
     },
-    children: text
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+      style: {
+        margin: innerTextMargin ? innerTextMargin : '0px'
+      },
+      children: text
+    }), children]
   });
 };
 /* harmony default export */ const shared_button = (Button);
@@ -26708,7 +26783,7 @@ var SwitchBtn = function SwitchBtn(_ref) {
 /* harmony default export */ const shared_switch = (SwitchBtn);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const list_styles = ({"wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","loader":"styles__loader--qLq6S","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","errPopover":"styles__errPopover--lUtCS"});
+/* harmony default export */ const list_styles = ({"wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","loader":"styles__loader--qLq6S","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","massDescriptionText":"styles__massDescriptionText--nZkry","subMenu":"styles__subMenu--BvgsJ","subMenuItem":"styles__subMenuItem--lEV1I","subMenuVisible":"styles__subMenuVisible--aZuZk","subMenuHidden":"styles__subMenuHidden--LODMB","errPopover":"styles__errPopover--lUtCS"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/trash.svg
 const trash_namespaceObject = __webpack_require__.p + "a4c9a89c8403eb3d97c3.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pen.svg
@@ -26994,7 +27069,8 @@ var state = es_entity({
   itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
   changeItemBulkResponse: {
-    loading: false
+    loading: false,
+    loadingItemInfo: false
   },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
@@ -27010,6 +27086,8 @@ var state = es_entity({
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
   orderCreationInfoIsOpen: false,
+  editItemMainInfoModalIsOpen: false,
+  editItemAdditionalInfoModalIsOpen: false,
   wsconn: null
 });
 var initAdmin = /*#__PURE__*/function () {
@@ -28006,10 +28084,40 @@ var setItemsLoading = function setItemsLoading(isOn) {
     });
   });
 };
+var setItemInfoTemplatesLoading = function setItemInfoTemplatesLoading(isOn) {
+  state.set(function (value) {
+    return state_objectSpread(state_objectSpread({}, value), {}, {
+      itemInfoTemplatesLoading: isOn
+    });
+  });
+};
+var setItemInfoTemplates = function setItemInfoTemplates(itemInfoTemplates) {
+  state.set(function (value) {
+    return state_objectSpread(state_objectSpread({}, value), {}, {
+      itemInfoTemplates: itemInfoTemplates
+    });
+  });
+};
 var toggleBulkEditPercentModal = function toggleBulkEditPercentModal(isOpen) {
   state.set(function (value) {
     return state_objectSpread(state_objectSpread({}, value), {}, {
       bulkEditPercentModalIsOpen: isOpen
+    });
+  });
+};
+var toggleItemMainInfoModal = function toggleItemMainInfoModal(isOpen) {
+  apiFetchItemInfoTemplates(0).then(function () {
+    state.set(function (value) {
+      return state_objectSpread(state_objectSpread({}, value), {}, {
+        editItemMainInfoModalIsOpen: isOpen
+      });
+    });
+  });
+};
+var toggleItemAdditionalInfoModal = function toggleItemAdditionalInfoModal(isOpen) {
+  state.set(function (value) {
+    return state_objectSpread(state_objectSpread({}, value), {}, {
+      editItemAdditionalInfoModalIsOpen: isOpen
     });
   });
 };
@@ -28223,14 +28331,14 @@ var toggleEditItemModal = /*#__PURE__*/function () {
     return _ref38.apply(this, arguments);
   };
 }();
-var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
+var toggleEditItemMainInfoModal = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
   var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(isOpen) {
     return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
       while (1) switch (_context39.prev = _context39.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
-              orderCreationInfoIsOpen: isOpen
+              editItemMainInfoModalIsOpen: isOpen
             });
           });
         case 1:
@@ -28239,21 +28347,61 @@ var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
       }
     }, _callee39);
   }));
-  return function toggleOrderCreationInfoModal(_x39) {
+  return function toggleEditItemMainInfoModal(_x39) {
     return _ref39.apply(this, arguments);
+  };
+}()));
+var toggleEditItemAdditionalInfoModal = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
+  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
+      while (1) switch (_context40.prev = _context40.next) {
+        case 0:
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              editItemAdditionalInfoModalIsOpen: isOpen
+            });
+          });
+        case 1:
+        case "end":
+          return _context40.stop();
+      }
+    }, _callee40);
+  }));
+  return function toggleEditItemAdditionalInfoModal(_x40) {
+    return _ref40.apply(this, arguments);
+  };
+}()));
+var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
+  var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
+      while (1) switch (_context41.prev = _context41.next) {
+        case 0:
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              orderCreationInfoIsOpen: isOpen
+            });
+          });
+        case 1:
+        case "end":
+          return _context41.stop();
+      }
+    }, _callee41);
+  }));
+  return function toggleOrderCreationInfoModal(_x41) {
+    return _ref41.apply(this, arguments);
   };
 }();
 var apiChangeItemBulk = /*#__PURE__*/function () {
-  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
+  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
-      while (1) switch (_context40.prev = _context40.next) {
+    return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
+      while (1) switch (_context42.prev = _context42.next) {
         case 0:
           setItemsLoading(true);
           setStateProp("changeItemBulkResponse", {
             loading: true
           });
-          _context40.next = 4;
+          _context42.next = 4;
           return fetch("/items/bulk/change", {
             method: "POST",
             body: mapToFormData({
@@ -28264,83 +28412,83 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context40.sent;
+          res = _context42.sent;
           setStateProp("changeItemBulkResponse", {
             loading: false
           });
-          _context40.next = 8;
+          _context42.next = 8;
           return apiFetchItems();
         case 8:
-        case "end":
-          return _context40.stop();
-      }
-    }, _callee40);
-  }));
-  return function apiChangeItemBulk(_x40, _x41, _x42, _x43) {
-    return _ref40.apply(this, arguments);
-  };
-}();
-var apiChangeDigisellerData = /*#__PURE__*/function () {
-  var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(data) {
-    var res;
-    return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
-      while (1) switch (_context41.prev = _context41.next) {
-        case 0:
-          _context41.next = 2;
-          return fetch("/user/edit/digiseller", {
-            method: "POST",
-            body: mapToFormData(data)
-          });
-        case 2:
-          res = _context41.sent;
-        case 3:
-        case "end":
-          return _context41.stop();
-      }
-    }, _callee41);
-  }));
-  return function apiChangeDigisellerData(_x44) {
-    return _ref41.apply(this, arguments);
-  };
-}();
-var apiChangeUserPassword = /*#__PURE__*/function () {
-  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(data) {
-    var res;
-    return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
-      while (1) switch (_context42.prev = _context42.next) {
-        case 0:
-          _context42.next = 2;
-          return fetch("/user/password", {
-            method: "POST",
-            body: mapToFormData(data)
-          });
-        case 2:
-          res = _context42.sent;
-          toggleChangePasswordModal(!res.ok);
-        case 4:
         case "end":
           return _context42.stop();
       }
     }, _callee42);
   }));
-  return function apiChangeUserPassword(_x45) {
+  return function apiChangeItemBulk(_x42, _x43, _x44, _x45) {
     return _ref42.apply(this, arguments);
   };
 }();
-var apiGetCurrentUser = /*#__PURE__*/function () {
-  var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43() {
-    var res, data;
+var apiChangeDigisellerData = /*#__PURE__*/function () {
+  var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43(data) {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee43$(_context43) {
       while (1) switch (_context43.prev = _context43.next) {
         case 0:
           _context43.next = 2;
-          return fetch("/user");
+          return fetch("/user/edit/digiseller", {
+            method: "POST",
+            body: mapToFormData(data)
+          });
         case 2:
           res = _context43.sent;
-          _context43.next = 5;
+        case 3:
+        case "end":
+          return _context43.stop();
+      }
+    }, _callee43);
+  }));
+  return function apiChangeDigisellerData(_x46) {
+    return _ref43.apply(this, arguments);
+  };
+}();
+var apiChangeUserPassword = /*#__PURE__*/function () {
+  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(data) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee44$(_context44) {
+      while (1) switch (_context44.prev = _context44.next) {
+        case 0:
+          _context44.next = 2;
+          return fetch("/user/password", {
+            method: "POST",
+            body: mapToFormData(data)
+          });
+        case 2:
+          res = _context44.sent;
+          toggleChangePasswordModal(!res.ok);
+        case 4:
+        case "end":
+          return _context44.stop();
+      }
+    }, _callee44);
+  }));
+  return function apiChangeUserPassword(_x47) {
+    return _ref44.apply(this, arguments);
+  };
+}();
+var apiGetCurrentUser = /*#__PURE__*/function () {
+  var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45() {
+    var res, data;
+    return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
+      while (1) switch (_context45.prev = _context45.next) {
+        case 0:
+          _context45.next = 2;
+          return fetch("/user");
+        case 2:
+          res = _context45.sent;
+          _context45.next = 5;
           return res.json();
         case 5:
-          data = _context43.sent;
+          data = _context45.sent;
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
               user: data
@@ -28348,28 +28496,28 @@ var apiGetCurrentUser = /*#__PURE__*/function () {
           });
         case 7:
         case "end":
-          return _context43.stop();
+          return _context45.stop();
       }
-    }, _callee43);
+    }, _callee45);
   }));
   return function apiGetCurrentUser() {
-    return _ref43.apply(this, arguments);
+    return _ref45.apply(this, arguments);
   };
 }();
 var apiGetExchageRates = /*#__PURE__*/function () {
-  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44() {
+  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46() {
     var res, data;
-    return state_regeneratorRuntime().wrap(function _callee44$(_context44) {
-      while (1) switch (_context44.prev = _context44.next) {
+    return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
+      while (1) switch (_context46.prev = _context46.next) {
         case 0:
-          _context44.next = 2;
+          _context46.next = 2;
           return fetch("/exchangerates/list");
         case 2:
-          res = _context44.sent;
-          _context44.next = 5;
+          res = _context46.sent;
+          _context46.next = 5;
           return res.json();
         case 5:
-          data = _context44.sent;
+          data = _context46.sent;
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
               exchageRates: data
@@ -28377,18 +28525,18 @@ var apiGetExchageRates = /*#__PURE__*/function () {
           });
         case 7:
         case "end":
-          return _context44.stop();
+          return _context46.stop();
       }
-    }, _callee44);
+    }, _callee46);
   }));
   return function apiGetExchageRates() {
-    return _ref44.apply(this, arguments);
+    return _ref46.apply(this, arguments);
   };
 }();
 var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
-  var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45(data) {
-    return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
-      while (1) switch (_context45.prev = _context45.next) {
+  var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47(data) {
+    return state_regeneratorRuntime().wrap(function _callee47$(_context47) {
+      while (1) switch (_context47.prev = _context47.next) {
         case 0:
           //let res = await
           fetch("/exchangerates/update", {
@@ -28400,35 +28548,35 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
           toggleExchangeRatesModal(false);
         case 2:
         case "end":
-          return _context45.stop();
+          return _context47.stop();
       }
-    }, _callee45);
+    }, _callee47);
   }));
-  return function apiUpdateExchangeDataManual(_x46) {
-    return _ref45.apply(this, arguments);
+  return function apiUpdateExchangeDataManual(_x48) {
+    return _ref47.apply(this, arguments);
   };
 }();
 var apiGetCurrencies = /*#__PURE__*/function () {
-  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46() {
+  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48() {
     var currencies, res, data;
-    return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
-      while (1) switch (_context46.prev = _context46.next) {
+    return state_regeneratorRuntime().wrap(function _callee48$(_context48) {
+      while (1) switch (_context48.prev = _context48.next) {
         case 0:
           currencies = state.get().currencies;
           if (!(currencies && currencies.length > 0)) {
-            _context46.next = 3;
+            _context48.next = 3;
             break;
           }
-          return _context46.abrupt("return");
+          return _context48.abrupt("return");
         case 3:
-          _context46.next = 5;
+          _context48.next = 5;
           return fetch("/exchangerates/list");
         case 5:
-          res = _context46.sent;
-          _context46.next = 8;
+          res = _context48.sent;
+          _context48.next = 8;
           return res.json();
         case 8:
-          data = _context46.sent;
+          data = _context48.sent;
           currencies = data.currencies.map(function (c) {
             return {
               code: c.code,
@@ -28443,80 +28591,80 @@ var apiGetCurrencies = /*#__PURE__*/function () {
           });
         case 11:
         case "end":
-          return _context46.stop();
-      }
-    }, _callee46);
-  }));
-  return function apiGetCurrencies() {
-    return _ref46.apply(this, arguments);
-  };
-}();
-var apiGetItem = /*#__PURE__*/function () {
-  var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47(id) {
-    var res, data;
-    return state_regeneratorRuntime().wrap(function _callee47$(_context47) {
-      while (1) switch (_context47.prev = _context47.next) {
-        case 0:
-          _context47.next = 2;
-          return fetch("/items/".concat(id, "/info"));
-        case 2:
-          res = _context47.sent;
-          _context47.next = 5;
-          return res.json();
-        case 5:
-          data = _context47.sent;
-          return _context47.abrupt("return", data);
-        case 7:
-        case "end":
-          return _context47.stop();
-      }
-    }, _callee47);
-  }));
-  return function apiGetItem(_x47) {
-    return _ref47.apply(this, arguments);
-  };
-}();
-var apiGetSteamRegions = /*#__PURE__*/function () {
-  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48() {
-    var steamRegions, res, data;
-    return state_regeneratorRuntime().wrap(function _callee48$(_context48) {
-      while (1) switch (_context48.prev = _context48.next) {
-        case 0:
-          steamRegions = state.get().steamRegions;
-          if (!(steamRegions && steamRegions.length > 0)) {
-            _context48.next = 3;
-            break;
-          }
-          return _context48.abrupt("return");
-        case 3:
-          _context48.next = 5;
-          return fetch("/dict/regions");
-        case 5:
-          res = _context48.sent;
-          _context48.next = 8;
-          return res.json();
-        case 8:
-          data = _context48.sent;
-          steamRegions = data;
-          setStateProp("steamRegions", steamRegions);
-        case 11:
-        case "end":
           return _context48.stop();
       }
     }, _callee48);
   }));
-  return function apiGetSteamRegions() {
+  return function apiGetCurrencies() {
     return _ref48.apply(this, arguments);
   };
 }();
-var apiSetGameSessionStatus = /*#__PURE__*/function () {
-  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(gSesId, statusId) {
-    var _state$get3, gameSessionsFilter, res;
+var apiGetItem = /*#__PURE__*/function () {
+  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(id) {
+    var res, data;
     return state_regeneratorRuntime().wrap(function _callee49$(_context49) {
       while (1) switch (_context49.prev = _context49.next) {
         case 0:
+          _context49.next = 2;
+          return fetch("/items/".concat(id, "/info"));
+        case 2:
+          res = _context49.sent;
+          _context49.next = 5;
+          return res.json();
+        case 5:
+          data = _context49.sent;
+          return _context49.abrupt("return", data);
+        case 7:
+        case "end":
+          return _context49.stop();
+      }
+    }, _callee49);
+  }));
+  return function apiGetItem(_x49) {
+    return _ref49.apply(this, arguments);
+  };
+}();
+var apiGetSteamRegions = /*#__PURE__*/function () {
+  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50() {
+    var steamRegions, res, data;
+    return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
+      while (1) switch (_context50.prev = _context50.next) {
+        case 0:
+          steamRegions = state.get().steamRegions;
+          if (!(steamRegions && steamRegions.length > 0)) {
+            _context50.next = 3;
+            break;
+          }
+          return _context50.abrupt("return");
+        case 3:
+          _context50.next = 5;
+          return fetch("/dict/regions");
+        case 5:
+          res = _context50.sent;
+          _context50.next = 8;
+          return res.json();
+        case 8:
+          data = _context50.sent;
+          steamRegions = data;
+          setStateProp("steamRegions", steamRegions);
+        case 11:
+        case "end":
+          return _context50.stop();
+      }
+    }, _callee50);
+  }));
+  return function apiGetSteamRegions() {
+    return _ref50.apply(this, arguments);
+  };
+}();
+var apiSetGameSessionStatus = /*#__PURE__*/function () {
+  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(gSesId, statusId) {
+    var _state$get3, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee51$(_context51) {
+      while (1) switch (_context51.prev = _context51.next) {
+        case 0:
           _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
-          _context49.next = 3;
+          _context51.next = 3;
           return fetch("/gamesessions/setstatus", {
             method: "POST",
             body: mapToFormData({
@@ -28525,26 +28673,26 @@ var apiSetGameSessionStatus = /*#__PURE__*/function () {
             })
           });
         case 3:
-          res = _context49.sent;
+          res = _context51.sent;
           apiFetchGameSessions(gameSessionsFilter);
         case 5:
         case "end":
-          return _context49.stop();
+          return _context51.stop();
       }
-    }, _callee49);
+    }, _callee51);
   }));
-  return function apiSetGameSessionStatus(_x48, _x49) {
-    return _ref49.apply(this, arguments);
+  return function apiSetGameSessionStatus(_x50, _x51) {
+    return _ref51.apply(this, arguments);
   };
 }();
 var apiResetGameSession = /*#__PURE__*/function () {
-  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50(gSesId) {
+  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(gSesId) {
     var _state$get4, gameSessionsFilter, res;
-    return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
-      while (1) switch (_context50.prev = _context50.next) {
+    return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
+      while (1) switch (_context52.prev = _context52.next) {
         case 0:
           _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
-          _context50.next = 3;
+          _context52.next = 3;
           return fetch("/gamesessions/reset", {
             method: "POST",
             body: mapToFormData({
@@ -28552,27 +28700,27 @@ var apiResetGameSession = /*#__PURE__*/function () {
             })
           });
         case 3:
-          res = _context50.sent;
+          res = _context52.sent;
           apiFetchGameSessions(gameSessionsFilter);
         case 5:
         case "end":
-          return _context50.stop();
+          return _context52.stop();
       }
-    }, _callee50);
+    }, _callee52);
   }));
-  return function apiResetGameSession(_x50) {
-    return _ref50.apply(this, arguments);
+  return function apiResetGameSession(_x52) {
+    return _ref52.apply(this, arguments);
   };
 }();
 var apiAddCommentGameSession = /*#__PURE__*/function () {
-  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(gSesId, comment) {
+  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(gSesId, comment) {
     var _state$get5, gameSessionsFilter, res;
-    return state_regeneratorRuntime().wrap(function _callee51$(_context51) {
-      while (1) switch (_context51.prev = _context51.next) {
+    return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
+      while (1) switch (_context53.prev = _context53.next) {
         case 0:
           _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
           toggleAddGameSesCommentModal(false);
-          _context51.next = 4;
+          _context53.next = 4;
           return fetch("/gamesessions/comment", {
             method: "POST",
             body: mapToFormData({
@@ -28581,117 +28729,117 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context51.sent;
+          res = _context53.sent;
           apiFetchGameSessions(gameSessionsFilter);
-        case 6:
-        case "end":
-          return _context51.stop();
-      }
-    }, _callee51);
-  }));
-  return function apiAddCommentGameSession(_x51, _x52) {
-    return _ref51.apply(this, arguments);
-  };
-}();
-var updateGameSessionsFilter = /*#__PURE__*/function () {
-  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(newData) {
-    var _state$get6, gameSessionsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
-      while (1) switch (_context52.prev = _context52.next) {
-        case 0:
-          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("gameSessionsFilter", newFilter);
-          _context52.next = 6;
-          return apiFetchGameSessions(newFilter);
-        case 6:
-        case "end":
-          return _context52.stop();
-      }
-    }, _callee52);
-  }));
-  return function updateGameSessionsFilter(_x53) {
-    return _ref52.apply(this, arguments);
-  };
-}();
-var updateProductsFilter = /*#__PURE__*/function () {
-  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(newData) {
-    var _state$get7, productsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
-      while (1) switch (_context53.prev = _context53.next) {
-        case 0:
-          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("productsFilter", newFilter);
-          _context53.next = 6;
-          return apiFetchItems(newFilter);
         case 6:
         case "end":
           return _context53.stop();
       }
     }, _callee53);
   }));
-  return function updateProductsFilter(_x54) {
+  return function apiAddCommentGameSession(_x53, _x54) {
     return _ref53.apply(this, arguments);
   };
 }();
-var apiAddGameSession = /*#__PURE__*/function () {
-  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(data) {
-    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+var updateGameSessionsFilter = /*#__PURE__*/function () {
+  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(newData) {
+    var _state$get6, gameSessionsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
       while (1) switch (_context54.prev = _context54.next) {
+        case 0:
+          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("gameSessionsFilter", newFilter);
+          _context54.next = 6;
+          return apiFetchGameSessions(newFilter);
+        case 6:
+        case "end":
+          return _context54.stop();
+      }
+    }, _callee54);
+  }));
+  return function updateGameSessionsFilter(_x55) {
+    return _ref54.apply(this, arguments);
+  };
+}();
+var updateProductsFilter = /*#__PURE__*/function () {
+  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(newData) {
+    var _state$get7, productsFilter, newFilter;
+    return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
+      while (1) switch (_context55.prev = _context55.next) {
+        case 0:
+          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("productsFilter", newFilter);
+          _context55.next = 6;
+          return apiFetchItems(newFilter);
+        case 6:
+        case "end":
+          return _context55.stop();
+      }
+    }, _callee55);
+  }));
+  return function updateProductsFilter(_x56) {
+    return _ref55.apply(this, arguments);
+  };
+}();
+var apiAddGameSession = /*#__PURE__*/function () {
+  var _ref56 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(data) {
+    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+    return state_regeneratorRuntime().wrap(function _callee56$(_context56) {
+      while (1) switch (_context56.prev = _context56.next) {
         case 0:
           setStateProp("editOrderResponse", {
             loading: true,
             errors: []
           });
-          _context54.next = 3;
+          _context56.next = 3;
           return fetch("/gamesession", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 3:
-          res = _context54.sent;
+          res = _context56.sent;
           errors = [];
           if (!res.ok) {
-            _context54.next = 12;
+            _context56.next = 12;
             break;
           }
           _state$get8 = state.get(), gameSessionsFilter = _state$get8.gameSessionsFilter;
-          _context54.next = 9;
+          _context56.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
           toggleEditOrderModal(false);
-          _context54.next = 19;
+          _context56.next = 19;
           break;
         case 12:
           if (!(res.status === 500)) {
-            _context54.next = 16;
+            _context56.next = 16;
             break;
           }
           errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context54.next = 19;
+          _context56.next = 19;
           break;
         case 16:
-          _context54.next = 18;
+          _context56.next = 18;
           return res.json();
         case 18:
-          errors = _context54.sent.errors;
+          errors = _context56.sent.errors;
         case 19:
           setStateProp("editOrderResponse", {
             loading: false,
             errors: errors
           });
           if (!res.ok) {
-            _context54.next = 27;
+            _context56.next = 27;
             break;
           }
-          _context54.next = 23;
+          _context56.next = 23;
           return res.json();
         case 23:
-          newUniqueCodes = _context54.sent;
+          newUniqueCodes = _context56.sent;
           console.log(newUniqueCodes);
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28701,12 +28849,194 @@ var apiAddGameSession = /*#__PURE__*/function () {
           toggleOrderCreationInfoModal(true);
         case 27:
         case "end":
-          return _context54.stop();
+          return _context56.stop();
       }
-    }, _callee54);
+    }, _callee56);
   }));
-  return function apiAddGameSession(_x55) {
-    return _ref54.apply(this, arguments);
+  return function apiAddGameSession(_x57) {
+    return _ref56.apply(this, arguments);
+  };
+}();
+var apiFetchItemInfoTemplates = /*#__PURE__*/function () {
+  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(userId) {
+    var result, json;
+    return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
+      while (1) switch (_context57.prev = _context57.next) {
+        case 0:
+          setItemInfoTemplatesLoading(true);
+          _context57.next = 3;
+          return fetch("/iteminfotemplate?userId=".concat(userId));
+        case 3:
+          result = _context57.sent;
+          if (!result.ok) {
+            _context57.next = 9;
+            break;
+          }
+          _context57.next = 7;
+          return result.json();
+        case 7:
+          json = _context57.sent;
+          setItemInfoTemplates(json);
+        case 9:
+          setItemInfoTemplatesLoading(false);
+        case 10:
+        case "end":
+          return _context57.stop();
+      }
+    }, _callee57);
+  }));
+  return function apiFetchItemInfoTemplates(_x58) {
+    return _ref57.apply(this, arguments);
+  };
+}();
+var apiFetchItemInfoTemplateValues = /*#__PURE__*/function () {
+  var _ref58 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee58(itemInfoTemplateId) {
+    var result;
+    return state_regeneratorRuntime().wrap(function _callee58$(_context58) {
+      while (1) switch (_context58.prev = _context58.next) {
+        case 0:
+          setItemInfoTemplatesLoading(true);
+          _context58.next = 3;
+          return fetch("/iteminfotemplatevalue/".concat(itemInfoTemplateId));
+        case 3:
+          result = _context58.sent;
+          if (!result.ok) {
+            _context58.next = 9;
+            break;
+          }
+          setItemInfoTemplatesLoading(false);
+          _context58.next = 8;
+          return result.json();
+        case 8:
+          return _context58.abrupt("return", _context58.sent);
+        case 9:
+          setItemInfoTemplatesLoading(false);
+          return _context58.abrupt("return", null);
+        case 11:
+        case "end":
+          return _context58.stop();
+      }
+    }, _callee58);
+  }));
+  return function apiFetchItemInfoTemplateValues(_x59) {
+    return _ref58.apply(this, arguments);
+  };
+}();
+var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
+  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(itemInfoTemplateValues) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee59$(_context59) {
+      while (1) switch (_context59.prev = _context59.next) {
+        case 0:
+          setItemInfoTemplatesLoading(true);
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(itemInfoTemplateValues).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(itemInfoTemplateValues)
+          };
+          _context59.next = 7;
+          return fetch("/iteminfotemplate", options);
+        case 7:
+          res = _context59.sent;
+          if (!res.ok) {
+            _context59.next = 11;
+            break;
+          }
+          _context59.next = 11;
+          return apiFetchItemInfoTemplates(0);
+        case 11:
+          setItemInfoTemplatesLoading(false);
+        case 12:
+        case "end":
+          return _context59.stop();
+      }
+    }, _callee59);
+  }));
+  return function apiCreateItemInfoTemplate(_x60) {
+    return _ref59.apply(this, arguments);
+  };
+}();
+var apiDeleteItemInfoTemplate = /*#__PURE__*/function () {
+  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(itemInfoTemplateId) {
+    var options, res;
+    return state_regeneratorRuntime().wrap(function _callee60$(_context60) {
+      while (1) switch (_context60.prev = _context60.next) {
+        case 0:
+          setItemInfoTemplatesLoading(true);
+          options = {
+            method: "DELETE"
+          };
+          _context60.next = 4;
+          return fetch("/iteminfotemplate/".concat(itemInfoTemplateId), options);
+        case 4:
+          res = _context60.sent;
+          if (!res.ok) {
+            _context60.next = 8;
+            break;
+          }
+          _context60.next = 8;
+          return apiFetchItemInfoTemplates(0);
+        case 8:
+          setItemInfoTemplatesLoading(false);
+        case 9:
+        case "end":
+          return _context60.stop();
+      }
+    }, _callee60);
+  }));
+  return function apiDeleteItemInfoTemplate(_x61) {
+    return _ref60.apply(this, arguments);
+  };
+}();
+var apiUpdateItemInfoes = /*#__PURE__*/function () {
+  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(itemInfoesValues) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee61$(_context61) {
+      while (1) switch (_context61.prev = _context61.next) {
+        case 0:
+          toggleItemMainInfoModal(false);
+          toggleItemAdditionalInfoModal(false);
+          setItemsLoading(true);
+          setStateProp("changeItemBulkResponse", {
+            loadingItemInfo: true
+          });
+          _context61.prev = 4;
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
+          options = {
+            method: "PATCH",
+            headers: headers,
+            body: JSON.stringify(itemInfoesValues)
+          };
+          _context61.next = 11;
+          return fetch("/iteminfo", options);
+        case 11:
+          res = _context61.sent;
+          if (!res.ok) {
+            _context61.next = 15;
+            break;
+          }
+          _context61.next = 15;
+          return apiFetchItems();
+        case 15:
+          _context61.prev = 15;
+          setStateProp("changeItemBulkResponse", {
+            loadingItemInfo: false
+          });
+          setItemsLoading(false);
+          return _context61.finish(15);
+        case 19:
+        case "end":
+          return _context61.stop();
+      }
+    }, _callee61, null, [[4,, 15, 19]]);
+  }));
+  return function apiUpdateItemInfoes(_x62) {
+    return _ref61.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -42314,6 +42644,328 @@ var ModalEdit = function ModalEdit(_ref5) {
   });
 };
 /* harmony default export */ const modalEdit = (ModalEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const modalItemInfoEdit_styles = ({"wrapper":"styles__wrapper--jBnWE","textareaWrapper":"styles__textareaWrapper--jyrSH","textareaContent":"styles__textareaContent--ynM1R","templates":"styles__templates--fG8d5","loadTemplate":"styles__loadTemplate--cvFnw","disabled":"styles__disabled--v4WR7","btnCreateTemplate":"styles__btnCreateTemplate--cL14X","actions":"styles__actions--UIzI_"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textarea/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const textarea_styles = ({"wrapper":"styles__wrapper--gUZ9v","inputControl":"styles__inputControl--NWJQk","boxes":"styles__boxes--BQWU_","textarea":"styles__textarea--c283q"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textarea/index.js
+
+
+
+var Textarea = function Textarea(_ref) {
+  var onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue,
+    width = _ref.width,
+    height = _ref.height,
+    placeholder = _ref.placeholder,
+    value = _ref.value;
+  var onChangeTextarea = function onChangeTextarea(event) {
+    var val = event.target.value;
+    if (onChange) onChange(val);
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: textarea_styles.wrapper,
+    style: {
+      width: width
+    },
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: textarea_styles.inputControl,
+      style: {
+        height: height
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: textarea_styles.boxes,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("textarea", {
+          onChange: onChangeTextarea,
+          rows: "18",
+          className: textarea_styles.textarea,
+          defaultValue: defaultValue,
+          value: value,
+          placeholder: placeholder,
+          style: {
+            width: width,
+            height: height
+          }
+        })
+      })
+    })
+  });
+};
+/* harmony default export */ const shared_textarea = (Textarea);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/index.js
+function modalItemInfoEdit_typeof(o) { "@babel/helpers - typeof"; return modalItemInfoEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalItemInfoEdit_typeof(o); }
+function modalItemInfoEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalItemInfoEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalItemInfoEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalItemInfoEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function modalItemInfoEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function modalItemInfoEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { modalItemInfoEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { modalItemInfoEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function modalItemInfoEdit_slicedToArray(arr, i) { return modalItemInfoEdit_arrayWithHoles(arr) || modalItemInfoEdit_iterableToArrayLimit(arr, i) || modalItemInfoEdit_unsupportedIterableToArray(arr, i) || modalItemInfoEdit_nonIterableRest(); }
+function modalItemInfoEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalItemInfoEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalItemInfoEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalItemInfoEdit_arrayLikeToArray(o, minLen); }
+function modalItemInfoEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalItemInfoEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalItemInfoEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onSave = _ref.onSave,
+    onCancel = _ref.onCancel,
+    viewMode = _ref.viewMode,
+    itemInfoTemplates = _ref.itemInfoTemplates;
+  var buttonWidth = '386px';
+  var buttonTemplateWidth = '172px';
+  var buttonCreateTemplateWidth = '207px';
+  var buttonTemplateHeight = '50px';
+  var maxTemplatesCount = 100;
+  var _useState = (0,react.useState)(''),
+    _useState2 = modalItemInfoEdit_slicedToArray(_useState, 2),
+    russianText = _useState2[0],
+    setRussianText = _useState2[1];
+  var _useState3 = (0,react.useState)(''),
+    _useState4 = modalItemInfoEdit_slicedToArray(_useState3, 2),
+    englishText = _useState4[0],
+    setEnglishText = _useState4[1];
+  var getTitle = function getTitle() {
+    if (viewMode === 'main') {
+      return 'Настроить описание товара';
+    } else if (viewMode === 'additional') {
+      return 'Настроить дополнительную информацию о товаре';
+    }
+  };
+  var handleChangeRussianText = function handleChangeRussianText(text) {
+    setRussianText(text);
+  };
+  var handleChangeEnglishText = function handleChangeEnglishText(text) {
+    setEnglishText(text);
+  };
+  var handleDeleteTemplate = function handleDeleteTemplate(itemInfoTemplate) {
+    apiDeleteItemInfoTemplate(itemInfoTemplate.id);
+  };
+  var onLoadTemplate = function onLoadTemplate(itemInfoTemplate) {
+    apiFetchItemInfoTemplateValues(itemInfoTemplate.id).then(function (itemInfoTemplateValues) {
+      if (itemInfoTemplateValues && itemInfoTemplateValues.length === 2) {
+        setRussianText(itemInfoTemplateValues[0].value);
+        setEnglishText(itemInfoTemplateValues[1].value);
+      }
+    });
+  };
+  var onCreateTemplate = function onCreateTemplate() {
+    var itemInfoTemplateValues = [{
+      LanguageCode: "ru-RU",
+      Value: russianText
+    }, {
+      LanguageCode: "en-US",
+      Value: englishText
+    }];
+    apiCreateItemInfoTemplate(itemInfoTemplateValues);
+  };
+  var getButtonsTemplate = function getButtonsTemplate() {
+    if (!itemInfoTemplates) {
+      return;
+    }
+    var templates = itemInfoTemplates;
+    return templates.map(function (val) {
+      return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalItemInfoEdit_styles.loadTemplate,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: "\u0428\u0430\u0431\u043B\u043E\u043D \u2116".concat(val.id),
+          width: buttonTemplateWidth,
+          height: buttonTemplateHeight,
+          onClick: function onClick() {
+            onLoadTemplate(val);
+          },
+          isDisabled: state_namespaceObject.itemInfoTemplatesLoading,
+          innerTextMargin: '0 16px 0 0'
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+          width: "15",
+          height: "14",
+          viewBox: "0 0 15 14",
+          fill: "none",
+          xmlns: "http://www.w3.org/2000/svg",
+          onClick: function onClick() {
+            return handleDeleteTemplate(val);
+          },
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+            d: "M10.8227 14H4.35081C3.03247 14 1.99377 13.055 1.99377 11.935V5.6C1.99377 5.39 2.15357 5.25 2.39327 5.25C2.63297 5.25 2.79277 5.39 2.79277 5.6V11.935C2.79277 12.705 3.51186 13.3 4.35081 13.3H10.8227C11.7016 13.3 12.3807 12.67 12.3807 11.935V5.6C12.3807 5.39 12.5405 5.25 12.7802 5.25C13.0199 5.25 13.1797 5.39 13.1797 5.6V11.935C13.1797 13.055 12.101 14 10.8227 14Z"
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+            d: "M12.9407 1.715H9.90447C9.70473 0.735 8.74593 0 7.58739 0C6.42885 0 5.47006 0.735 5.27031 1.715H2.23413C1.31529 1.715 0.596191 2.345 0.596191 3.15C0.596191 3.955 1.31529 4.55 2.23413 4.55H12.9806C13.8994 4.55 14.6185 3.92 14.6185 3.115C14.6185 2.31 13.8595 1.715 12.9407 1.715ZM7.58739 0.7C8.30648 0.7 8.90573 1.12 9.06553 1.715H6.0693C6.26905 1.12 6.8683 0.7 7.58739 0.7ZM12.9407 3.85H2.23413C1.79468 3.85 1.39519 3.535 1.39519 3.115C1.39519 2.73 1.75473 2.38 2.23413 2.38H12.9806C13.42 2.38 13.8195 2.695 13.8195 3.115C13.7796 3.535 13.42 3.85 12.9407 3.85Z"
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+            d: "M4.78976 12.2852C4.55006 12.2852 4.39026 12.1452 4.39026 11.9352V6.09023C4.39026 5.88023 4.55006 5.74023 4.78976 5.74023C5.02945 5.74023 5.18925 5.88023 5.18925 6.09023V11.9352C5.18925 12.1102 4.9895 12.2852 4.78976 12.2852Z"
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+            d: "M10.3836 12.2852C10.1439 12.2852 9.98413 12.1452 9.98413 11.9352V6.09023C9.98413 5.88023 10.1439 5.74023 10.3836 5.74023C10.6233 5.74023 10.7831 5.88023 10.7831 6.09023V11.9352C10.7831 12.1102 10.5834 12.2852 10.3836 12.2852Z"
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+            d: "M7.58822 12.2852C7.34852 12.2852 7.18872 12.1452 7.18872 11.9352V6.09023C7.18872 5.88023 7.34852 5.74023 7.58822 5.74023C7.82792 5.74023 7.98771 5.88023 7.98771 6.09023V11.9352C7.98771 12.1102 7.78797 12.2852 7.58822 12.2852Z"
+          })]
+        })]
+      });
+    });
+  };
+  var getCreateTemplateButton = function getCreateTemplateButton() {
+    if (!itemInfoTemplates || itemInfoTemplates.length >= maxTemplatesCount) {
+      return;
+    }
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+      text: "\u041D\u043E\u0432\u044B\u0439 \u0448\u0430\u0431\u043B\u043E\u043D",
+      width: buttonCreateTemplateWidth,
+      height: buttonTemplateHeight,
+      onClick: function onClick() {
+        onCreateTemplate();
+      },
+      isDisabled: state_namespaceObject.itemInfoTemplatesLoading,
+      className: modalItemInfoEdit_styles.btnCreateTemplate
+    });
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalBase, {
+    isOpen: isOpen,
+    title: getTitle(),
+    width: 1548,
+    height: 836,
+    letterSpacing: '0.03em',
+    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalItemInfoEdit_styles.wrapper,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalItemInfoEdit_styles.textareaWrapper,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalItemInfoEdit_styles.textareaContent,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "33",
+            height: "23",
+            viewBox: "0 0 33 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+              fill: "white"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+              fill: "#D52B1E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+              fill: "#0039A6"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeRussianText,
+            defaultValue: russianText,
+            value: russianText,
+            placeholder: 'Введенный текст с описанием товара',
+            height: '492px',
+            width: '100%'
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalItemInfoEdit_styles.textareaContent,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "32",
+            height: "23",
+            viewBox: "0 0 32 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+              fill: "#FEFEFE"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 14.813H27.542L32 17.0407V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+              fill: "#C8102E"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeEnglishText,
+            defaultValue: englishText,
+            value: englishText,
+            placeholder: 'Введенный текст с описанием товара',
+            height: '492px',
+            width: '100%'
+          })]
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalItemInfoEdit_styles.templates,
+        children: [getButtonsTemplate(), getCreateTemplateButton()]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalItemInfoEdit_styles.actions,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: 'Сохранить',
+          style: {
+            backgroundColor: '#478C35',
+            marginRight: '46px'
+          },
+          width: buttonWidth,
+          onClick: function onClick() {
+            onSave(russianText, englishText);
+            setRussianText('');
+            setEnglishText('');
+          },
+          isDisabled: state_namespaceObject.itemInfoTemplatesLoading
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          text: 'Назад',
+          onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
+            return modalItemInfoEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+              while (1) switch (_context.prev = _context.next) {
+                case 0:
+                  if (onCancel) {
+                    setRussianText('');
+                    setEnglishText('');
+                    onCancel();
+                  }
+                case 1:
+                case "end":
+                  return _context.stop();
+              }
+            }, _callee);
+          })),
+          width: buttonWidth,
+          style: {
+            backgroundColor: '#9A7AA9',
+            marginLeft: '0px'
+          },
+          isDisabled: state_namespaceObject.itemInfoTemplatesLoading
+        })]
+      })]
+    })
+  });
+};
+/* harmony default export */ const modalItemInfoEdit = (ModalItemInfoEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPercentEdit/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalBulkPercentEdit_textbox_styles = ({"wrapper":"styles__wrapper--ispxo","inputControl":"styles__inputControl--N6zn4","inputArea":"styles__inputArea--QoNMg","cymbol":"styles__cymbol--dlwCA","hint":"styles__hint--IhFHo"});
@@ -43280,18 +43932,22 @@ function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var products = function products() {
   var _state$use = state.use(),
     items = _state$use.items,
     itemsLoading = _state$use.itemsLoading,
     bulkEditPercentModalIsOpen = _state$use.bulkEditPercentModalIsOpen,
     editItemModalIsOpen = _state$use.editItemModalIsOpen,
+    editItemMainInfoModalIsOpen = _state$use.editItemMainInfoModalIsOpen,
+    editItemAdditionalInfoModalIsOpen = _state$use.editItemAdditionalInfoModalIsOpen,
     selectedItem = _state$use.selectedItem,
     selectedItems = _state$use.selectedItems,
     currencies = _state$use.currencies,
     itemsResponse = _state$use.itemsResponse,
     productsFilter = _state$use.productsFilter,
-    changeItemBulkResponse = _state$use.changeItemBulkResponse;
+    changeItemBulkResponse = _state$use.changeItemBulkResponse,
+    itemInfoTemplates = _state$use.itemInfoTemplates;
   var _useState = (0,react.useState)(_toConsumableArray(items)),
     _useState2 = list_slicedToArray(_useState, 2),
     sortedItems = _useState2[0],
@@ -43317,6 +43973,10 @@ var products = function products() {
     _React$useState2 = list_slicedToArray(_React$useState, 2),
     anchorEl = _React$useState2[0],
     setAnchorEl = _React$useState2[1];
+  var _useState11 = (0,react.useState)(list_styles.subMenuHidden),
+    _useState12 = list_slicedToArray(_useState11, 2),
+    subMenuVisibility = _useState12[0],
+    setSubMenuVisibility = _useState12[1];
   var open = Boolean(anchorEl);
   var massChangeButStyle = {
     width: "200px",
@@ -43443,6 +44103,32 @@ var products = function products() {
     options: "Опции",
     active: ""
   };
+  var getBtnMassDescriptionBlock = function getBtnMassDescriptionBlock(lines) {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: list_styles.massDescriptionText,
+      children: lines.map(function (line) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          children: line
+        });
+      })
+    });
+  };
+  var toggleMassDescriptionSubMenu = function toggleMassDescriptionSubMenu() {
+    if (subMenuVisibility == list_styles.subMenuVisible) {
+      setSubMenuVisibility(list_styles.subMenuHidden);
+    } else {
+      setSubMenuVisibility(list_styles.subMenuVisible);
+    }
+  };
+  var getLoadingText = function getLoadingText() {
+    if (changeItemBulkResponse.loading) {
+      return "Происходит обновление цен";
+    }
+    if (changeItemBulkResponse.loadingItemInfo) {
+      return "Происходит обновление описаний товаров";
+    }
+    return "Подгружаем товары";
+  };
   console.log(itemsLoading);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
@@ -43450,12 +44136,7 @@ var products = function products() {
       headers: Object.values(headers),
       data: _toConsumableArray(sortedItems),
       isLoading: itemsLoading,
-      loadingText: function loadingText() {
-        if (changeItemBulkResponse.loading) {
-          return "Происходит обновление цен";
-        }
-        return "Подгружаем товары";
-      },
+      loadingText: getLoadingText,
       itemRenderer: function itemRenderer(i) {
         var priceColor = "#D4D4D4";
         if (i.currentDigiSellerPrice > i.currentSteamPriceRub) priceColor = "#EDBE16";else if (i.currentDigiSellerPrice < i.currentSteamPriceRub) priceColor = "#13E428";
@@ -43751,6 +44432,32 @@ var products = function products() {
               toggleBulkEditPercentModal(true);
             }
           })
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: list_styles.btnWrapper,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: getBtnMassDescriptionBlock(['Смена описания/', 'доп. информации']),
+            style: massChangeButStyle,
+            onClick: function onClick() {
+              toggleMassDescriptionSubMenu();
+            }
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: list_styles.subMenu + ' ' + subMenuVisibility,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.subMenuItem,
+              onClick: function onClick() {
+                toggleItemMainInfoModal(true);
+                toggleMassDescriptionSubMenu();
+              },
+              children: "\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              className: list_styles.subMenuItem,
+              onClick: function onClick() {
+                toggleItemAdditionalInfoModal(true);
+                toggleMassDescriptionSubMenu();
+              },
+              children: "\u0414\u043E\u043F. \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F"
+            })]
+          })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: list_styles.btnWrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
@@ -43772,6 +44479,42 @@ var products = function products() {
         console.log(newItem);
         if (newItem.id) apiChangeItem(newItem);else apiCreateItem(newItem);
       }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit, {
+      isOpen: editItemMainInfoModalIsOpen || editItemAdditionalInfoModalIsOpen,
+      viewMode: editItemMainInfoModalIsOpen ? 'main' : editItemAdditionalInfoModalIsOpen ? 'additional' : 'none',
+      onCancel: function onCancel() {
+        toggleItemMainInfoModal(false);
+        toggleItemAdditionalInfoModal(false);
+      },
+      onSave: function onSave(russianText, englishText) {
+        var updateItemInfoesCommand = items.filter(function (i) {
+          return selectedItems.includes(i.id);
+        }).flatMap(function (x) {
+          return x.digiSellerIds;
+        }).map(function (x) {
+          return {
+            digiSellerId: x,
+            description: editItemMainInfoModalIsOpen ? [{
+              locale: "ru-RU",
+              value: russianText
+            }, {
+              locale: "en-US",
+              value: englishText
+            }] : [],
+            add_info: !editItemMainInfoModalIsOpen ? [{
+              locale: "ru-RU",
+              value: russianText
+            }, {
+              locale: "en-US",
+              value: englishText
+            }] : []
+          };
+        });
+        toggleItemMainInfoModal(false);
+        toggleItemAdditionalInfoModal(false);
+        apiUpdateItemInfoes(updateItemInfoesCommand);
+      },
+      itemInfoTemplates: itemInfoTemplates
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
       title: "Подтвердите удаление",
       content: "\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C ".concat(selectedItems.length, " \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u044B\u0445 \u043F\u043E\u0437\u0438\u0446\u0438\u0439?"),
@@ -62434,43 +63177,6 @@ function modalEdit_select_MultipleSelectPlaceholder(_ref4) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const orders_modalEdit_styles = ({"content":"styles__content--nbE3J","formItem":"styles__formItem--tXCE7","name":"styles__name--mUXE5","doubleControl":"styles__doubleControl--qqCRz","errors":"styles__errors--f_fyP","title":"styles__title--gzTyN","list":"styles__list--Ipjo4","item":"styles__item--f07MY","actions":"styles__actions--NuNVS"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/textarea/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const textarea_styles = ({"wrapper":"styles__wrapper--e6k0c","inputControl":"styles__inputControl--RQcU1","boxes":"styles__boxes--OFOgx","textarea":"styles__textarea--R0Nce"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/textarea/index.js
-
-
-
-var Textarea = function Textarea(_ref) {
-  var onChange = _ref.onChange,
-    defaultValue = _ref.defaultValue,
-    width = _ref.width,
-    placeholder = _ref.placeholder;
-  var onChangeTextarea = function onChangeTextarea(event) {
-    var val = event.target.value;
-    if (onChange) onChange(val);
-  };
-  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-    className: textarea_styles.wrapper,
-    style: {
-      width: width
-    },
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: textarea_styles.inputControl,
-      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: textarea_styles.boxes,
-        children: /*#__PURE__*/(0,jsx_runtime.jsx)("textarea", {
-          onChange: onChangeTextarea,
-          rows: "18",
-          className: textarea_styles.textarea,
-          defaultValue: defaultValue,
-          placeholder: placeholder
-        })
-      })
-    })
-  });
-};
-/* harmony default export */ const modalEdit_textarea = (Textarea);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalEdit/index.js
 function orders_modalEdit_typeof(o) { "@babel/helpers - typeof"; return orders_modalEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, orders_modalEdit_typeof(o); }
 function orders_modalEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ orders_modalEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == orders_modalEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(orders_modalEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -62569,7 +63275,7 @@ var modalEdit_FromItemTextarea = function FromItemTextarea(_ref4) {
       className: orders_modalEdit_styles.name,
       children: name
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_textarea, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
         onChange: onChange,
         defaultValue: value,
         placeholder: placeholder

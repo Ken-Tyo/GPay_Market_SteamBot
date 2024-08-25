@@ -1,0 +1,93 @@
+﻿.wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .textareaWrapper {
+        display: flex;
+        padding: 0 82px;
+
+        .textareaContent {
+            width: 50%;
+            padding: 0 10px;
+
+            svg {
+                margin-left: 12px;
+            }
+        }
+    }
+
+    .templates {
+        display: flex;
+        align-self: center;
+        margin: 42px 0 26px -20px;
+        max-width: calc(100% - 200px);
+        overflow-x: scroll;
+        padding-bottom: 20px;
+
+        &::-webkit-scrollbar {
+            width: 14px
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border: 6px solid transparent;
+            background-clip: padding-box;
+            border-radius: 9999px;
+            background-color: #83409b
+        }
+
+        .loadTemplate {
+            position: relative;
+
+            div {
+                padding-right: 30px;
+                margin-left: 20px;
+                font-size: 16px;
+                min-width: 150px;
+                background-color: #8a44ab;
+                transition: ease-in-out 0.3s all;
+            }
+
+            div.disabled {
+                background-color: #210a34;
+            }
+
+            div:hover {
+                background-color: #9b4bc1;
+            }
+
+            svg {
+                position: absolute;
+                right: 26px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+                transition: ease-in-out 0.1s all;
+
+                path {
+                    fill: #C14378;
+                }
+            }
+
+            svg:hover {
+                transform: scale(1.6, 1.6) translateY(-25%);
+            }
+        }
+    }
+
+    .templates > div.btnCreateTemplate:last-child {
+        background-color: #8a44ab;
+        margin-left: 20px;
+        font-size: 14px;
+        min-width: 180px;
+        transition: ease-in-out 0.3s all;
+    }
+
+    .templates > div.btnCreateTemplate:last-child:hover {
+        background-color: #a348ce;
+    }
+
+    .actions {
+        display: flex;
+        align-self: center;
+    }
+}

@@ -4,13 +4,25 @@ using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Extensions;
+using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Database.Repositories;
+using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
+using SteamDigiSellerBot.Network.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using System.Linq.Expressions;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+using Expression = System.Linq.Expressions.Expression;
+using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
+using SteamDigiSellerBot.Network.Models;
+using static SteamDigiSellerBot.Network.Services.DigiSellerNetworkService;
+using SteamDigiSellerBot.Network.Extensions;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -21,6 +33,8 @@ namespace SteamDigiSellerBot.Network.Services
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
+
+        Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken);
     }
 
     public class ItemNetworkService : IItemNetworkService
@@ -92,7 +106,7 @@ namespace SteamDigiSellerBot.Network.Services
             var skipNum = 0;
             var chunkSize = (int) Math.Ceiling(CountRecomendationChankSize(proxyCount, ProxyPull.MAX_REQUESTS, currenicesCount)/1.5M);
             var chunk = groupedItems.Skip(skipNum).Take(chunkSize);
-            Random r = new Random();
+            Random r = new();
             while (chunk.Count() > 0)
             {
                 var tasks = new List<Task>();
@@ -145,6 +159,85 @@ namespace SteamDigiSellerBot.Network.Services
             {
                 await _digiSellerNetworkService.SetDigiSellerPrice(toUpdate, aspNetUserId);
                 _logger.LogInformation($"GroupedItemsByAppIdAndSendCurrentPrices: finished update " + toUpdate.Count);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
+        {
+            var languageCodes = updateItemInfoCommands
+                    .SelectMany(x => x.InfoData?.Any() == true ? x.InfoData.Select(x => x.Locale) : x.AdditionalInfoData.Select(x => x.Locale))
+                    .ToHashSet();
+
+            var getProductsBaseAsyncTask = GetProductsBaseAsync(updateItemInfoCommands, languageCodes, cancellationToken);
+            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(updateItemInfoCommands, cancellationToken);
+            await Task.WhenAll(getProductsBaseAsyncTask, replaceTagsAsyncTask);
+
+            EnrichUpdateItemInfoCommands(updateItemInfoCommands, getProductsBaseAsyncTask.Result, languageCodes);
+            await _digiSellerNetworkService.UpdateItemsInfoesAsync(updateItemInfoCommands, aspNetUserId, cancellationToken);
+        }
+
+        private async Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, HashSet<string> languageCodes, CancellationToken cancellationToken) =>
+            await _digiSellerNetworkService.GetProductsBaseAsync(
+                languageCodes,
+                cancellationToken,
+                updateItemInfoCommands.Select(x => x.DigiSellerId).ToArray());
+
+        private async Task ReplaceAllLocalValueDataTagsAsync(
+            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            CancellationToken cancellationToken)
+        {
+            await ReplaceTagsAsync(updateItemInfoCommands, updateItemInfoCommands => updateItemInfoCommands.InfoData, cancellationToken);
+            await ReplaceTagsAsync(updateItemInfoCommands, updateItemInfoCommands => updateItemInfoCommands.AdditionalInfoData, cancellationToken);
+        }
+
+        private async Task ReplaceTagsAsync(
+            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            Func<UpdateItemInfoCommand, List<LocaleValuePair>> getLocaleValuePair,
+            CancellationToken cancellationToken)
+        {
+            // Replace tags by item specification
+            await using var db = _contextFactory.CreateDbContext();
+            var digiSellerIdsWithTags = updateItemInfoCommands.Where(c => getLocaleValuePair(c).ContainsTags()).Select(x => x.DigiSellerId.ToString()).ToArray();
+            if (digiSellerIdsWithTags.Any())
+            {
+                var itemsWithTags = await db
+                    .Items
+                    .Where(x => x.DigiSellerIds.Any(digiSellerId => digiSellerIdsWithTags.Contains(digiSellerId)))
+                    .ToListAsync(cancellationToken);
+
+                foreach (var updateItemInfoCommand in updateItemInfoCommands)
+                {
+                    if (getLocaleValuePair(updateItemInfoCommand).ContainsTags())
+                    {
+                        var item = itemsWithTags.First(x => x.DigiSellerIds.Contains(updateItemInfoCommand.DigiSellerId.ToString()));
+                        getLocaleValuePair(updateItemInfoCommand).ReplaceTagsToValue(item);
+                    }
+                }
+            }
+        }
+
+        private static void EnrichUpdateItemInfoCommands(
+            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            IReadOnlyList<ProductBaseLanguageDecorator> products,
+            HashSet<string> languageCodes)
+        {
+            foreach(var updateItemInfoCommand in updateItemInfoCommands)
+            {
+                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id == updateItemInfoCommand.DigiSellerId);
+                if (productsByDigiSellerId.Any())
+                {
+                    updateItemInfoCommand.Name = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Name);
+                    if (updateItemInfoCommand.InfoData?.Any() != true)
+                    {
+                        updateItemInfoCommand.InfoData = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Info);
+                    }
+
+                    if (updateItemInfoCommand.AdditionalInfoData?.Any() != true)
+                    {
+                        updateItemInfoCommand.AdditionalInfoData = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.AddInfo);
+                    }
+                }
             }
         }
 
