@@ -175,9 +175,9 @@ namespace SteamDigiSellerBot.Network
                 {
                     try
                     {
-                        if (repeat)
+                        if (repeat && LastLogin < DateTime.UtcNow.AddMinutes(-28))
                         {
-                            Login();
+                            this.Login();
                             await Task.Delay(TimeSpan.FromSeconds(5));
                             return await _GetBotBalance_Proto(logger, false);
                         }
