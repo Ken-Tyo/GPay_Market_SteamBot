@@ -107,6 +107,7 @@ namespace SteamDigiSellerBot.Controllers
                 bot.SendGameAttemptsArray = oldBot.SendGameAttemptsArray;
                 bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
                 bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
+                bot.LastTimeUpdated = DateTime.UtcNow;
             }
 
             if (ModelState.ErrorCount > 0)

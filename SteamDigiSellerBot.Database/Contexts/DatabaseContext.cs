@@ -5,6 +5,7 @@ using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Models;
 using System;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using SteamDigiSellerBot.Database.Entities.Templates;
 
 namespace SteamDigiSellerBot.Database.Contexts
 {
@@ -38,6 +39,15 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<GameSessionItem> GameSessionItems { get; set; }
 
 
+        #region Шаблоны описания и доп. описания
+        public DbSet<ItemInfoTemplate> ItemInfoTemplates { get; set; }
+        public DbSet<ItemInfoTemplateValue> ItemInfoTemplateValues { get; set; }
+        public DbSet<ItemAdditionalInfoTemplate> ItemAdditionalInfoTemplates { get; set; }
+        public DbSet<ItemAdditionalInfoTemplateValue> ItemAdditionalInfoTemplateValues { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        #endregion
+
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
         {
@@ -53,6 +63,23 @@ namespace SteamDigiSellerBot.Database.Contexts
             builder.Entity<GameSession>()
                 .HasIndex(new string[] { "UniqueCode" }, "gamesessions_un")
                 .IsUnique();
+
+            builder.Entity<ItemAdditionalInfoTemplateValue>()
+                .HasKey(x => new { x.ItemAdditionalInfoTemplateId, x.LanguageCode });
+
+            builder.Entity<ItemInfoTemplateValue>()
+                .HasKey(x => new { x.ItemInfoTemplateId, x.LanguageCode });
+
+            builder.Entity<ItemInfoTemplate>()
+                .HasMany(x => x.ItemInfoTemplateValues)
+                .WithOne(x => x.ItemInfoTemplate);
+
+            builder.Entity<ItemInfoTemplateValue>()
+                .HasOne(x => x.Language)
+                .WithMany(x => x.ItemInfoTemplateValues);
+
+            builder.Entity<Language>()
+                .HasKey(x => x.Code);
 
             base.OnModelCreating(builder);
         }

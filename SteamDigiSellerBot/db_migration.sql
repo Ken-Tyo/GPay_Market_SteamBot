@@ -1,6 +1,48 @@
 alter table "GameSessions" drop column "CopyCount";
 
+задача 68
 
+CREATE TABLE "Languages" (
+	"Code" varchar(8) primary key,
+	"Description" varchar(16) not null
+);
+
+insert into "Languages"("Code", "Description") values ('ru-RU', 'Русский');
+insert into "Languages"("Code", "Description") values ('en-US', 'English');
+
+CREATE TABLE "ItemInfoTemplates" (
+	"Id" serial primary key
+);
+
+CREATE TABLE "ItemInfoTemplateValues" (
+	"ItemInfoTemplateId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" text not null,
+	primary key("ItemInfoTemplateId", "LanguageCode")
+);
+
+ALTER TABLE "ItemInfoTemplateValues" add constraint "ItemInfoTemplateValues_ItemInfoTemplateId_fkey" 
+foreign key ("ItemInfoTemplateId") references "ItemInfoTemplates"("Id") on delete cascade;
+
+ALTER TABLE "ItemInfoTemplateValues" add constraint "ItemInfoTemplateValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+CREATE TABLE "ItemAdditionalInfoTemplates" (
+	"Id" serial primary key
+);
+
+CREATE TABLE "ItemAdditionalInfoTemplateValues" (
+	"ItemAdditionalInfoTemplateId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" text not null,
+	primary key("ItemAdditionalInfoTemplateId", "LanguageCode")
+);
+
+ALTER TABLE "ItemAdditionalInfoTemplateValues" add constraint "ItemAdditionalInfoTemplateValues_ItemAdditionalInfoTmplId_fkey" 
+foreign key ("ItemAdditionalInfoTemplateId") references "ItemAdditionalInfoTemplates"("Id") on delete cascade;
+
+ALTER TABLE "ItemAdditionalInfoTemplateValues" add constraint "ItemAdditionalInfoTemplateValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
 
 задача 44
 ALTER TABLE "GameSessions" add "PriorityPrice" numeric null;
@@ -240,3 +282,6 @@ alter table "Bots" ADD "SendGameAttemptsArrayDaily" JSON null;
 
 20.07
 alter table "GameSessions" add "BlockOrder" boolean not null default false;
+
+05.08
+alter table "Bots" add "LastTimeUpdated" timestamp without time zone null;
