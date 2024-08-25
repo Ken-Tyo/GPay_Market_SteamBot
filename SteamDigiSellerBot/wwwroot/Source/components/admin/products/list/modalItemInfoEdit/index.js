@@ -8,6 +8,9 @@ import { state, itemInfoTemplatesLoading, apiFetchItemInfoTemplateValues, apiCre
 import Textarea from '../../../../shared/textarea'
 
 const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplates }) => {
+  if (!isOpen)
+    return;
+
   const buttonWidth = '386px';
   const buttonTemplateWidth = '172px';
   const buttonCreateTemplateWidth = '207px';
