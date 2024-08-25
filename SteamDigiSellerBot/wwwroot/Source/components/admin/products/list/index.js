@@ -191,7 +191,6 @@ const products = () => {
     return "Подгружаем товары";
   }
 
-  console.log(itemsLoading);
   return (
     <div className={css.wrapper}>
       <List

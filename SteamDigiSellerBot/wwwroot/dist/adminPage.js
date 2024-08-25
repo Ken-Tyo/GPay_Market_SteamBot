@@ -42720,6 +42720,7 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     onCancel = _ref.onCancel,
     viewMode = _ref.viewMode,
     itemInfoTemplates = _ref.itemInfoTemplates;
+  if (!isOpen) return;
   var buttonWidth = '386px';
   var buttonTemplateWidth = '172px';
   var buttonCreateTemplateWidth = '207px';
@@ -44129,7 +44130,6 @@ var products = function products() {
     }
     return "Подгружаем товары";
   };
-  console.log(itemsLoading);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
