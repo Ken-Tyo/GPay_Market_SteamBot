@@ -15,6 +15,7 @@ using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -110,11 +111,12 @@ namespace SteamDigiSellerBot.Network
             _bot = bot;
         }
 
+        [NotMapped]
+        public DateTime? LastLogin { get; set; }
         public void Login()
         {
             if (_isRunning)
                 return;
-
             _isRunning = true;
             _steamClient.Connect(proxy: _bot.Proxy);
 
@@ -332,7 +334,7 @@ namespace SteamDigiSellerBot.Network
 
             //_bot.SteamCookies = GetWebCookiesAsync().GetAwaiter().GetResult();
             _bot.SteamCookies = cookies;
-
+            LastLogin = DateTime.UtcNow;
             System.Diagnostics.Trace.WriteLine("Login Successful!");
 
             //_isRunning = false;
@@ -868,7 +870,7 @@ namespace SteamDigiSellerBot.Network
                     var res = country;
                     var isProblemRegion = false;
 
-                    res = SteamHelper.MapCountryCode(country);
+                    res = country;
 
                     if (false && (res == "JP" || res == "CN"))
                     {

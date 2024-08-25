@@ -76,6 +76,8 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
         {
+            _logger.LogInformation($"[ASHT] start SetSteamContact gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
 
             ProfileDataRes profileData = null;
@@ -115,6 +117,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else
                 {
+                    _logger.LogInformation($"[ASHT] StatusId = GameSessionStatusEnum.WaitingToConfirm gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+
                     gs.StatusId = GameSessionStatusEnum.WaitingToConfirm; //Ожидается подтверждение
                     logVal = new ValueJson { userSteamContact = gs.SteamContactValue, userProfileUrl = profileData.url };
 
@@ -297,7 +301,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public (int, List<GamePrice>) GetSortedPriorityPrices(Item item)
         {
             // по АКТИВНОЙ иерархии регионы не будут браться если они выше ценовой основы товара на 8% или более
-            var percentsToCompareInHierarchy = Convert.ToInt32(_configuration.GetSection("percentsForBotsInHierarchy").Value);
+            var percentsToCompareInHierarchy = 8;
 
             var maxFailUsingCount = 3;
             var priorityPrices = item.GamePrices
@@ -305,6 +309,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 .ToList();
 
             var basePrice = item.GetPrice();
+
+            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name},priorityPricesCount={priorityPrices.Count}, basePriceId={basePrice.Id}, GameId={basePrice.GameId}, CurrentSteamPrice={basePrice.CurrentSteamPrice}");
 
             //если выбрано 1 или более приортетных цен
             if (priorityPrices.Count() > 0)
@@ -326,6 +332,23 @@ namespace SteamDigiSellerBot.Services.Implementation
                 item.GamePrices.RemoveAll(item => forDelete.Contains(item.Id));
                 priorityPrices.RemoveAll(item => forDelete.Contains(item.Id));
 
+                // если базовая цена не самая низкая, то ее нужно добавить в оставшееся дерево для сравнения по %
+                if (!priorityPrices.Any(x => x.Id == basePrice.Id))
+                    priorityPrices.Add(basePrice);
+
+                decimal basePriceInRub = 0;
+
+                var convertResultBase = _currencyDataService.TryConvertToRUB(basePrice.CurrentSteamPrice, basePrice.SteamCurrencyId).Result;
+                if (convertResultBase.success)
+                {
+                    if(!priceInRub.Any(x => x.Key == basePrice.Id))
+                        priceInRub.Add(basePrice.Id, convertResultBase.value.Value);
+
+                    basePriceInRub = convertResultBase.value.Value;
+                }
+
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, basePriceInRub={basePriceInRub}");
+
                 //берем ту где цена меньше всего
                 var prices = priorityPrices
                     .OrderBy(gp => priceInRub[gp.Id])
@@ -335,28 +358,58 @@ namespace SteamDigiSellerBot.Services.Implementation
                 GamePrice prevPrice = prices.First();
                 decimal currentPrecentsDiffToBasePrice = 0;// текущая разница в процентах между текущей ценой и базовой
 
-                foreach (var nextPrice in prices)
+                if (priceInRub[prevPrice.Id] < basePriceInRub)//если регион ниже ценовой основы, его не проверять на разницу цен в %
                 {
-                    if (priceInRub[nextPrice.Id] != 0)
-                    {
-                        currentPrecentsDiffToBasePrice +=
-                            Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
-                    }
+                    forNotDelete.Add(prevPrice.Id);
+                }
 
-                    if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
-                    {
-                        break;
-                    }
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.prevPriceId={priceInRub[prevPrice.Id]},basePriceInRub={basePriceInRub}");
 
-                    forNotDelete.Add(nextPrice.Id);
+                for (int i = 1;i < prices.Count; i++)
+                {
+                    GamePrice nextPrice = prices[i];
+
+                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPriceId={priceInRub[nextPrice.Id]},basePriceInRub={basePriceInRub}");
+
+                    if (priceInRub[nextPrice.Id] < basePriceInRub || nextPrice.Id == basePrice.Id)
+                    {
+                        forNotDelete.Add(nextPrice.Id);
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, nextPriceId={nextPrice.Id}, prevPriceId={prevPrice.Id}");
+
+                        if (priceInRub[nextPrice.Id] != 0)
+                        {
+                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPrice={priceInRub[nextPrice.Id]}");
+
+                            currentPrecentsDiffToBasePrice +=
+                                Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
+
+                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, currentPrecentsDiffToBasePrice={currentPrecentsDiffToBasePrice}");
+                        }
+
+                        if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
+                        {
+                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}... break");
+
+                            break;
+                        }
+
+                        forNotDelete.Add(nextPrice.Id);
+
+                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, forNotDelete+ id={nextPrice.Id}");
+                    }
 
                     prevPrice = nextPrice;
                 }
 
                 prices.RemoveAll(item => !forNotDelete.Contains(item.Id));
 
-                //базовую цену в конец
-                prices.Add(basePrice);
+                if (!prices.Any(x => x.Id == basePrice.Id))
+                    prices.Add(basePrice);
+
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, pricesCount={prices.Count}");
 
                 return (maxFailUsingCount, prices);
             }
@@ -366,6 +419,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var list = new List<GamePrice>();
                 if (basePrice != null)
                     list.Add(basePrice);
+
+                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices only base ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, listCount={list.Count}");
 
                 return (maxFailUsingCount, list);
             }
@@ -459,7 +514,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             IEnumerable<Bot> botFilterRes = await _botRepository
                 .ListAsync(db, b => (b.State == BotState.active || b.State == BotState.tempLimit) 
                               && b.SendedGiftsSum < b.MaxSendedGiftsSum //сумма подарков не превышает максимальную
-                              && b.IsON);
+                              && b.IsON && (!b.LastTimeUpdated.HasValue || DateTime.UtcNow.AddMinutes(-1) > b.LastTimeUpdated));
 
             gs.BotSwitchList ??= new();
             if (gs.BotSwitchList.Count > 0)
@@ -1406,11 +1461,19 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
 
 #if !DEBUG
-                (ProfileDataRes profileData, string err) =
-                    await _steamNetworkService.ParseUserProfileData(gs.SteamProfileUrl, SteamContactType.profileUrl);
+                        try
+                        {
+                            (ProfileDataRes profileData, string err) =
+                                await _steamNetworkService.ParseUserProfileData(gs.SteamProfileUrl,
+                                    SteamContactType.profileUrl);
 
-                if (profileData != null)
-                    await sbot.RemoveFromFriends(profileData);
+                            if (profileData != null)
+                                await sbot.RemoveFromFriends(profileData);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, $"GS ID {gs?.Id} Bot: {sbot?.Bot?.UserName}: Ошибка при удалении клиента после покупки.");
+                        }
 #endif
                     }
                     else if (sendRes.result == SendeGameResult.gameExists)

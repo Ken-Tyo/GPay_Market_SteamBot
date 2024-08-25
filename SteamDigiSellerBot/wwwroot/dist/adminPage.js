@@ -26702,7 +26702,7 @@ var Button = function Button(_ref) {
 /* harmony default export */ const shared_button = (Button);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/switch/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const switch_styles = ({"wrapper":"styles__wrapper--rY7Uw","track":"styles__track--I9p92","thumb":"styles__thumb--DjOut","checked":"styles__checked--pfUsB"});
+/* harmony default export */ const switch_styles = ({"wrapper":"styles__wrapper--rY7Uw","track":"styles__track--I9p92","thumb":"styles__thumb--DjOut","checked":"styles__checked--pfUsB","awaition":"styles__awaition--ZZrnH"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/switch/index.js
 function switch_typeof(o) { "@babel/helpers - typeof"; return switch_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, switch_typeof(o); }
 function switch_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -26722,18 +26722,53 @@ function switch_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var SwitchBtn = function SwitchBtn(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
-    style = _ref.style;
-  var _React$useState = react.useState(false),
+    style = _ref.style,
+    lastSaveTime = _ref.lastSaveTime;
+  var _React$useState = react.useState(value),
     _React$useState2 = switch_slicedToArray(_React$useState, 2),
     checked = _React$useState2[0],
     setChecked = _React$useState2[1];
+  var _React$useState3 = react.useState(),
+    _React$useState4 = switch_slicedToArray(_React$useState3, 2),
+    timer = _React$useState4[0],
+    setTimer = _React$useState4[1];
+  var timeDiffSeconds = function timeDiffSeconds(lastSaveTime) {
+    if (!lastSaveTime) return 86400;
+    try {
+      var lastSaveDate = new Date(lastSaveTime + 'Z'); // Ensure lastSaveTime is in UTC
+      var currentTime = new Date();
+      var timeDiff = currentTime.getTime() - lastSaveDate.getTime();
+      var diffSec = timeDiff / 1000; // Convert milliseconds to minutes
+      return Math.floor(diffSec);
+    } catch (error) {
+      console.error('Error processing lastSaveTime:', error);
+      return 86400;
+    }
+  };
   react.useEffect(function () {
     setChecked(value);
   }, [value]);
+  react.useEffect(function () {
+    var updateStates = function updateStates() {
+      var seconds = timeDiffSeconds(lastSaveTime);
+      setTimer(60 - seconds);
+    };
+    updateStates(); // Initial call to set the states immediately
+
+    var intervalId = setInterval(updateStates, 1000); // Update states every 15 seconds
+
+    return function () {
+      return clearInterval(intervalId);
+    }; // Cleanup interval on component unmount
+  }, [lastSaveTime]); // Depend on lastSaveTime and value
+
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: switch_styles.wrapper,
     style: switch_objectSpread({}, style),
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    children: timer >= 0 ? /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: switch_styles.awaition,
+      children: timer > 9 ? "0:".concat(timer) : "0:0".concat(timer)
+    }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: switch_styles.track + ' ' + (checked ? switch_styles.checked : ''),
       onClick: function onClick() {
         if (onChange) onChange(!checked);
@@ -61239,7 +61274,8 @@ var grid_grid = function grid() {
                 },
                 style: {
                   transform: 'scale(0.96)'
-                }
+                },
+                lastSaveTime: i.lastTimeUpdated
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: grid_styles.buttons,

@@ -32,7 +32,7 @@ namespace SteamDigiSellerBot.Utilities
                 .Where(ch => char.IsDigit(ch) || ch == '.').ToArray())
                 .Trim('.');
 
-            //2,250.12 руб. -> 2.250.12 руб. -> 
+            //2,250.12 руб. -> 2.250.12 руб. ->
             symbol = new string(str
                 .Replace(',', '.')
                 .Where(ch => !char.IsDigit(ch) && ch != '.' && ch != ' ').ToArray());
@@ -68,9 +68,9 @@ namespace SteamDigiSellerBot.Utilities
             number = decimal.Parse(newStr);
             return true;
         }
-        
 
-        //TODO Стоит всю эту обработку с данными перенести в бд. 
+
+        //TODO Стоит всю эту обработку с данными перенести в бд.
 
         public static class Regions
         {
@@ -97,6 +97,7 @@ namespace SteamDigiSellerBot.Utilities
         private static readonly string[] europianCodes = new string[] { "EU", "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "EL", "ES",
                     "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU", "MT", "NL", "AT", "PL", "PT", "RO", "SI",
                     "SK", "FI", "SE"};
+
         private static readonly string[] cisDollarCodes = new string[] { "CIS", "AM", "AZ", "GE", "KG", "MD", "TJ", "TM", "UZ", "BY",  };
 
         private static readonly string[] sAsiaDollarCodes = new string[] { "SAsia" , "BD", "BT", "NP", "PK", "LK" };
@@ -110,7 +111,7 @@ namespace SteamDigiSellerBot.Utilities
 
         /// <summary>
         /// Метод служит для сопоставления регионов. Отдельный метод создан для того, чтобы учитывать виртуальных регионов
-        /// Групповой регион определяется по <paramref name="currCode"/> 
+        /// Групповой регион определяется по <paramref name="currCode"/>
         /// </summary>
         /// <param name="targetRegion">С чем сравниваем</param>
         /// <param name="currRegion">Регион валюты в обычном случае</param>
@@ -127,11 +128,11 @@ namespace SteamDigiSellerBot.Utilities
 
             return result;
         }
-        public static string MapCountryCode(string code) => code switch
-        {
-            _ when europianCodes.Contains(code) => Regions.EU,
-            _ => code
-        };
+        //public static string MapCountryCode(string code) => code switch
+        //{
+        //    _ when europianCodes.Contains(code) => Regions.EU,
+        //    _ => code
+        //};
 
         public static string MapCountryCodeToNameGroupCountryCode(string code) => code switch
         {
@@ -139,6 +140,7 @@ namespace SteamDigiSellerBot.Utilities
             _ when sAsiaDollarCodes.Contains(code) => Regions.SAsia,
             _ when menaDollarCodes.Contains(code) => Regions.MENA,
             _ when latanDollarCodes.Contains(code) => Regions.LATAN,
+            _ when europianCodes.Contains(code) => Regions.EU,
             _ => code
         };
 
@@ -149,6 +151,7 @@ namespace SteamDigiSellerBot.Utilities
             {
                 profileData.sessionId = GetSessionIdFromProfilePage(prPage);
                 //prPage.Substring("g_sessionID = \"", "\"");
+                profileData.url = $"https://steamcommunity.com/profiles/{profileData.steamid}/";
                 profileData.avatarUrl = GetAvatarFromProfilePage(prPage);
                 profileData.gifteeAccountId = GetGifteeAccountIDFromProfilePage(prPage);
             }

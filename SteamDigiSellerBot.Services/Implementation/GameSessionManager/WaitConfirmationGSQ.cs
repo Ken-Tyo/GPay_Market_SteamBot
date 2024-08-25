@@ -58,6 +58,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         try
                         {
+                            _logger.LogInformation($"[ASHT] WaitConfirmationGSQ loop: gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+
                             //if (!q.ContainsKey(gs.Id))
                             //{
                             //    SendToManager(new Untracked { gsId = gs.Id });
@@ -84,6 +86,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                             gs.AutoSendInvitationTime = null;
                             await gsr.UpdateFieldAsync(gs, gs => gs.AutoSendInvitationTime);
                             //await gsr.EditAsync(gs);
+
+                            _logger.LogInformation($"[ASHT] WaitConfirmationGSQ SendToManager Done: gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+
                             SendToManager(new Done { gsId = gs.Id });
                         }
                         catch (Exception ex)
