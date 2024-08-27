@@ -243,3 +243,4 @@ alter table "GameSessions" add "BlockOrder" boolean not null default false;
 
 05.08
 alter table "Bots" add "LastTimeUpdated" timestamp without time zone null;
+alter table "Bots" add "LastTimeBalanceUpdated" timestamp without time zone null;

@@ -1527,7 +1527,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //обновляем баланс бота
                     (bool balanceParsed, decimal balance) = await sbot.GetBotBalance_Proto(_logger);
                     if (balanceParsed)
+                    {
+                        if (balance != gs.Bot.Balance)
+                            _logger?.LogInformation(
+                                $"BalanceMonitor: {gs.Bot.UserName} изменил баланс с {gs.Bot.Balance} на {balance}");
                         gs.Bot.Balance = balance;
+                        gs.Bot.LastTimeBalanceUpdated = DateTime.UtcNow;
+                    }
+                    else
+                        _logger?.LogWarning($"BalanceMonitor: {gs.Bot.UserName} не смог обновить баланс");
+                    //if (balanceParsed)
+                    //    gs.Bot.Balance = balance;
                     //    }),
                     //    Task.Run(() =>
                     //    {

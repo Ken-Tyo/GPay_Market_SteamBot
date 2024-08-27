@@ -31,6 +31,7 @@ using xNet;
 using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
+using Microsoft.Extensions.Logging;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -153,7 +154,10 @@ namespace SteamDigiSellerBot.Network
                 {
                     (bool balanceFetched, decimal balance) = GetBotBalance_Proto().Result;
                     if (balanceFetched)
+                    {
                         _bot.Balance = balance;
+                        _bot.LastTimeBalanceUpdated=DateTime.UtcNow;
+                    }
                 }),
                 Task.Run(() =>
                 {
@@ -716,7 +720,7 @@ namespace SteamDigiSellerBot.Network
             }
         }
 
-        public async Task<(bool, decimal)> GetBotBalance()
+        public async Task<(bool, decimal)> GetBotBalance(ILogger logger=null)
         {
             if (_bot.Result != EResult.OK)
                 return (false, 0);
@@ -742,8 +746,15 @@ namespace SteamDigiSellerBot.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message} {ex.StackTrace}");
-                Console.WriteLine($"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance)})");
+                if (logger != null)
+                {
+                    logger.LogError(ex, $"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance)})");
+                }
+                else
+                {
+                    Console.WriteLine($"{ex.Message} {ex.StackTrace}");
+                    Console.WriteLine($"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance)})");
+                }
                 return (false, 0);
             }
         }
