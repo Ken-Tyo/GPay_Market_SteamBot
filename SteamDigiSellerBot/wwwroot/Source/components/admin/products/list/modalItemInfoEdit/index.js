@@ -67,10 +67,10 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
     }
 
     var templates = itemInfoTemplates;
-    return templates.map((val) => (
+    return templates.map((val, index) => (
       <div className={css.loadTemplate}>
         <Button
-          text={`Шаблон №${val.id}`}
+          text={`Шаблон №${index+1}`}
           width={buttonTemplateWidth}
           height={buttonTemplateHeight}
           onClick={() => {
