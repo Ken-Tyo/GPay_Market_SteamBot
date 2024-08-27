@@ -12,8 +12,8 @@ using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.ModelValidators;
 using SteamDigiSellerBot.Network;
+using SteamDigiSellerBot.Network.Providers;
 using SteamDigiSellerBot.Network.Services;
-using SteamDigiSellerBot.Services;
 using SteamDigiSellerBot.Services.Implementation;
 using SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService;
 using SteamDigiSellerBot.Services.Interfaces;
@@ -60,16 +60,10 @@ namespace SteamDigiSellerBot
             services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();
             services.AddSingleton<IItemNetworkService, ItemNetworkService>();
             services.AddSingleton<ICurrencyDataService, CurrencyDataService>();
+            services.AddSingleton<DigisellerTokenProvider>();
+            services.AddSingleton<UpdateItemsInfoService>();
 
             services.AddSingleton<IGameSessionService, GameSessionService>();
-
-#if !DEBUG
-            services.AddHostedService<UpdateExchangeRatesService>();
-            services.AddHostedService<UpdateBotsService>();
-            services.AddHostedService<ItemMonitoringService>();
-            services.AddHostedService<DiscountMonitoringService>();
-#endif
-
             services.AddSingleton<ISuperBotPool, SuperBotPool>();
             services.AddSingleton<IProxyPull, ProxyPull>();
             services.AddSingleton<IWsNotificationSender, WsNotificationSender>();
