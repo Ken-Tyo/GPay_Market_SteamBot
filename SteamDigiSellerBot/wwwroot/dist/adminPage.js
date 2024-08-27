@@ -42773,11 +42773,11 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
       return;
     }
     var templates = itemInfoTemplates;
-    return templates.map(function (val) {
+    return templates.map(function (val, index) {
       return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: modalItemInfoEdit_styles.loadTemplate,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-          text: "\u0428\u0430\u0431\u043B\u043E\u043D \u2116".concat(val.id),
+          text: "\u0428\u0430\u0431\u043B\u043E\u043D \u2116".concat(index + 1),
           width: buttonTemplateWidth,
           height: buttonTemplateHeight,
           onClick: function onClick() {
