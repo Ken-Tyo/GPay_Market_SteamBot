@@ -46,6 +46,7 @@ namespace SteamDigiSellerBot.Network.Services
         private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly ILogger<ItemNetworkService> _logger;
         private readonly ISteamProxyRepository _steamProxyRepository;
+        private readonly UpdateItemsInfoService _updateItemsInfoService;
 
         public ItemNetworkService(
            ISteamNetworkService steamNetworkService,
@@ -54,7 +55,8 @@ namespace SteamDigiSellerBot.Network.Services
            ICurrencyDataRepository currencyDataRepository,
            IConfiguration configuration,
            ILogger<ItemNetworkService> logger,
-           ISteamProxyRepository steamProxyRepository)
+           ISteamProxyRepository steamProxyRepository,
+           UpdateItemsInfoService updateItemsInfoService)
         {
             _steamNetworkService = steamNetworkService;
             _digiSellerNetworkService = digiSellerNetworkService;
@@ -63,6 +65,7 @@ namespace SteamDigiSellerBot.Network.Services
             _currencyDataRepository = currencyDataRepository;
             _logger = logger;
             _steamProxyRepository = steamProxyRepository;
+            _updateItemsInfoService = updateItemsInfoService ?? throw new ArgumentNullException(nameof(updateItemsInfoService));
         }
 
         public async Task SetPrices(
@@ -174,7 +177,7 @@ namespace SteamDigiSellerBot.Network.Services
             await Task.WhenAll(getProductsBaseAsyncTask, replaceTagsAsyncTask);
 
             EnrichUpdateItemInfoCommands(updateItemInfoCommands, getProductsBaseAsyncTask.Result, languageCodes);
-            await _digiSellerNetworkService.UpdateItemsInfoesAsync(updateItemInfoCommands, aspNetUserId, cancellationToken);
+            await _updateItemsInfoService.UpdateItemsInfoesAsync(updateItemInfoCommands, aspNetUserId, cancellationToken);
         }
 
         private async Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, HashSet<string> languageCodes, CancellationToken cancellationToken) =>
