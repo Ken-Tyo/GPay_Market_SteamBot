@@ -157,7 +157,17 @@ namespace SteamDigiSellerBot.Network
             try
             {
                 if (_bot.Result != EResult.OK)
-                    return (false, 0);
+                {
+                    if (_bot.IsON && LastLogin != null && LastLogin < DateTime.UtcNow.AddMinutes(-42))
+                    {
+                        this.Login();
+                    }
+                    if (_bot.Result != EResult.OK)
+                    {
+                        logger.LogWarning($"BalanceMonitor: {_bot.UserName} offline ({nameof(GetBotBalance_Proto)})");
+                        return (false, 0);
+                    }
+                }
 
                 try
                 {
