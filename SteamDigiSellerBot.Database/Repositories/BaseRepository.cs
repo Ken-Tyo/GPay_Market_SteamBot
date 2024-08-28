@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using DatabaseRepository.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,12 +28,12 @@ namespace DatabaseRepository.Repositories
             return await databaseContext.Set<T>().FindAsync((object)id);
         }
 
-        public virtual async Task<int> CountAsync()
+        public virtual async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
             await using var databaseContext = _databaseContextFactory.CreateDbContext();
-            return await CountAsync(databaseContext);
+            return await CountAsync(databaseContext, cancellationToken);
         }
-        public virtual async Task<int> CountAsync(DbContext databaseContext)
+        public virtual async Task<int> CountAsync(DbContext databaseContext, CancellationToken cancellationToken = default)
         {
             return await databaseContext.Set<T>().CountAsync<T>();
         }
@@ -78,14 +79,14 @@ namespace DatabaseRepository.Repositories
             return await databaseContext.Set<T>().FirstOrDefaultAsync<T>(predicate);
         }
 
-        public async Task<List<T>> ListAsync()
+        public async Task<List<T>> ListAsync(CancellationToken cancellationToken = default)
         {
             await using var databaseContext = _databaseContextFactory.CreateDbContext();
-            return await ListAsync(databaseContext);
+            return await ListAsync(databaseContext, cancellationToken);
         }
-        public async Task<List<T>> ListAsync(DbContext databaseContext)
+        public async Task<List<T>> ListAsync(DbContext databaseContext, CancellationToken cancellationToken = default)
         {
-            return await databaseContext.Set<T>().ToListAsync<T>();
+            return await databaseContext.Set<T>().ToListAsync(cancellationToken);
         }
 
         public async Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate)
@@ -108,15 +109,15 @@ namespace DatabaseRepository.Repositories
             return await databaseContext.Set<T>().Skip<T>(start).Take<T>(end).ToListAsync<T>();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             await using var databaseContext = _databaseContextFactory.CreateDbContext();
-            await AddAsync(databaseContext,entity);
+            await AddAsync(databaseContext,entity, cancellationToken);
         }
-        public async Task AddAsync(DbContext databaseContext, T entity)
+        public async Task AddAsync(DbContext databaseContext, T entity, CancellationToken cancellationToken = default)
         {
-            EntityEntry<T> entityEntry = await databaseContext.Set<T>().AddAsync(entity);
-            int num = await databaseContext.SaveChangesAsync();
+            EntityEntry<T> entityEntry = await databaseContext.Set<T>().AddAsync(entity, cancellationToken);
+            int num = await databaseContext.SaveChangesAsync(cancellationToken);
         }
 
 
@@ -174,15 +175,15 @@ namespace DatabaseRepository.Repositories
             return _databaseContextFactory.CreateDbContext();
         }
 
-        public virtual async Task DeleteAsync(T entity)
+        public virtual async Task<int> DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             await using var databaseContext = _databaseContextFactory.CreateDbContext();
-            await DeleteAsync(databaseContext, entity);
+            return await DeleteAsync(databaseContext, entity, cancellationToken);
         }
-        public virtual async Task DeleteAsync(DbContext databaseContext, T entity)
+        public virtual async Task<int> DeleteAsync(DbContext databaseContext, T entity, CancellationToken cancellationToken = default)
         {
             databaseContext.Set<T>().Remove(entity);
-            int num = await databaseContext.SaveChangesAsync();
+            return await databaseContext.SaveChangesAsync();
         }
 
         public virtual async Task DeleteListAsync(IEnumerable<T> entities)
@@ -240,8 +241,8 @@ namespace DatabaseRepository.Repositories
 
     public interface IBaseRepository<T> where T : class
     {
-        Task<int> CountAsync();
-        Task<int> CountAsync(DbContext databaseContext);
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
+        Task<int> CountAsync(DbContext databaseContext, CancellationToken cancellationToken = default);
 
         Task<bool> AnyAsync();
         Task<bool> AnyAsync(DbContext databaseContext);
@@ -270,8 +271,8 @@ namespace DatabaseRepository.Repositories
         Task<T> GetByPredicateAsync(Expression<Func<T, bool>> predicate);
         Task<T> GetByPredicateAsync(DbContext databaseContext, Expression<Func<T, bool>> predicate);
 
-        Task<List<T>> ListAsync();
-        Task<List<T>> ListAsync(DbContext databaseContext);
+        Task<List<T>> ListAsync(CancellationToken cancellationToken = default);
+        Task<List<T>> ListAsync(DbContext databaseContext, CancellationToken cancellationToken = default);
 
         Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate);
         Task<List<T>> ListAsync(DbContext databaseContext, Expression<Func<T, bool>> predicate);
@@ -279,14 +280,14 @@ namespace DatabaseRepository.Repositories
         Task<List<T>> ListAsync(int start, int end);
         Task<List<T>> ListAsync(DbContext databaseContext, int start, int end);
 
-        Task AddAsync(T entity);
-        Task AddAsync(DbContext databaseContext, T entity);
+        Task AddAsync(T entity, CancellationToken cancellationToken = default);
+        Task AddAsync(DbContext databaseContext, T entity, CancellationToken cancellationToken = default);
 
         Task AddRangeAsync(IEnumerable<T> entity);
         Task AddRangeAsync(DbContext databaseContext, IEnumerable<T> entity);
 
-        Task DeleteAsync(T entity);
-        Task DeleteAsync(DbContext databaseContext, T entity);
+        Task<int> DeleteAsync(T entity, CancellationToken cancellationToken = default);
+        Task<int> DeleteAsync(DbContext databaseContext, T entity, CancellationToken cancellationToken = default);
 
         Task DeleteListAsync(IEnumerable<T> entities);
         Task DeleteListAsync(DbContext databaseContext, IEnumerable<T> entities);

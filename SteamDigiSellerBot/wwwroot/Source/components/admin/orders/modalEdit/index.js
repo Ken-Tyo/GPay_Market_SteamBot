@@ -6,7 +6,7 @@ import TextSwitch from './textSwitch';
 import Select from './select';
 import css from './styles.scss';
 import { state } from '../../../../containers/admin/state';
-import Textarea from "./textarea";
+import Textarea from "../../../shared/textarea";
 
 const FromItemText = ({ name, onChange, hint, value, symbol }) => {
   return (

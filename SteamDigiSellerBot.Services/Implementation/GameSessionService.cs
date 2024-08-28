@@ -11,7 +11,7 @@ using SteamDigiSellerBot.Database.Enums;
 using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Network;
-using SteamDigiSellerBot.Network.Helpers;
+using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models;
 using SteamDigiSellerBot.Network.Services;
 using SteamDigiSellerBot.Services.Interfaces;

@@ -3,21 +3,19 @@ using Newtonsoft.Json;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Network.Models;
-using SteamDigiSellerBot.Utilities.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Npgsql.TypeMapping;
-using SteamKit2.Internal;
 using xNet;
+using SteamDigiSellerBot.Network.Helpers;
 using static SteamDigiSellerBot.Network.Services.DigiSellerNetworkService;
+using SteamDigiSellerBot.Network.Providers;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -37,23 +35,30 @@ namespace SteamDigiSellerBot.Network.Services
         Task<bool> SendOrderChatMessage(string digisellerDealId, string message, string aspNetUserId);
 
         Task<Dictionary<int, decimal>> GetPriceList(string sellerId);
+
+        /// <summary>
+        /// Getting minified/base products information using the Digiseller API.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <param name="languageCodes"></param>
+        /// <param name="digiSellerIds"></param>
+        /// <returns></returns>
+        Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(HashSet<string> languageCodes, CancellationToken cancellationToken, params int[] digiSellerIds);
     }
 
     public class DigiSellerNetworkService : IDigiSellerNetworkService
     {
         private readonly ILogger<DigiSellerNetworkService> _logger;
-        private readonly ICryptographyUtilityService _cryptographyUtilityService;
         private readonly IUserDBRepository _userDBRepository;
-
-        private const int _triesCount = 10;
+        private readonly DigisellerTokenProvider _digisellerTokenProvider;
 
         public DigiSellerNetworkService(
             ILogger<DigiSellerNetworkService> logger,
-            ICryptographyUtilityService cryptographyUtilityService,
-            IUserDBRepository userDBRepository)
+            IUserDBRepository userDBRepository,
+            DigisellerTokenProvider digisellerTokenProvider)
         {
             _logger = logger;
-            _cryptographyUtilityService = cryptographyUtilityService;
+            _digisellerTokenProvider = digisellerTokenProvider;
             _userDBRepository = userDBRepository;
         }
 
@@ -66,9 +71,9 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
-                string token = await GetDigisellerToken(aspNetUserId);
+                string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(aspNetUserId);
 
-                HttpRequest request = new HttpRequest()
+                HttpRequest request = new()
                 {
                     Cookies = new CookieDictionary(),
                     UserAgent = Http.ChromeUserAgent()
@@ -79,20 +84,20 @@ namespace SteamDigiSellerBot.Network.Services
                     var dsId = digiSellerId;
                     var task = Task.Factory.StartNew(() =>
                     {
-                        for (int t = 0; t < _triesCount; t++)
+                        for (int t = 0; t < NetworkConst.TriesCount; t++)
                         {
                             try
                             {
                                 if (!string.IsNullOrWhiteSpace(token))
                                 {
-                                    request.AddHeader(HttpHeader.Accept, "application/json");
+                                    request.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
 
                                     string priceParams = "{\"enabled\":" + condition.ToString().ToLower() + "}";
 
-                                    string s = request.Post("https://api.digiseller.ru/api/product/edit/base/" + dsId + "?token=" + token, priceParams, "application/json").ToString();
+                                    string s = request.Post("https://api.digiseller.ru/api/product/edit/base/" + dsId + "?token=" + token, priceParams, NetworkConst.ApplicationJsonContentType).ToString();
 
                                     // Избегаем попадать в лимит при обращении к серверу
-                                    Thread.Sleep(TimeSpan.FromMilliseconds(200));
+                                    Thread.Sleep(TimeSpan.FromMilliseconds(NetworkConst.RequestDelayInMs));
 
                                     if (s.Contains("\"status\":\"Success\""))
                                     {
@@ -106,7 +111,7 @@ namespace SteamDigiSellerBot.Network.Services
                             }
                             catch (HttpException ex)
                             {
-                                Thread.Sleep(TimeSpan.FromSeconds(5));
+                                Thread.Sleep(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds));
                                 _logger.LogError(default, ex, "SetDigiSellerItemsCondition");
                             }
                         }
@@ -133,22 +138,22 @@ namespace SteamDigiSellerBot.Network.Services
         {
             if (!string.IsNullOrEmpty(digiSellerId))
             {
-                for (int t = 0; t < _triesCount; t++)
+                for (int t = 0; t < NetworkConst.TriesCount; t++)
                 {
                     // Получается токен (авторизационный ключ) для доступа к API Digiseller
-                    string token = await GetDigisellerToken(aspNetUserId);
+                    string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(aspNetUserId);
 
                     if (!string.IsNullOrWhiteSpace(token))
                     {
                         try
                         {
-                            HttpRequest request = new HttpRequest()
+                            HttpRequest request = new()
                             {
                                 Cookies = new CookieDictionary(),
                                 UserAgent = Http.ChromeUserAgent()
                             };
 
-                            request.AddHeader(HttpHeader.Accept, "application/json");
+                            request.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
 
                             string s = request.Get("https://api.digiseller.ru/api/products/" + digiSellerId + "/info?token=" + token + "&currency=RUR").ToString();
 
@@ -161,7 +166,7 @@ namespace SteamDigiSellerBot.Network.Services
                         }
                         catch (HttpException ex)
                         {
-                            Thread.Sleep(TimeSpan.FromSeconds(5));
+                            Thread.Sleep(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds));
                             _logger.LogError(default, ex, $"HttpRequest can't 'GetItem' from Digiseller with ID: {digiSellerId}");
                         }
                     }
@@ -180,11 +185,11 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
-                string token = await GetDigisellerToken(aspNetUserId);
+                string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(aspNetUserId);
 
                 if (!string.IsNullOrWhiteSpace(token))
                 {
-                    HttpRequest request = new HttpRequest()
+                    HttpRequest request = new()
                     {
                         Cookies = new CookieDictionary(),
                         UserAgent = Http.ChromeUserAgent()
@@ -214,7 +219,7 @@ namespace SteamDigiSellerBot.Network.Services
             if (items.Count == 0)
                 return;
 
-            string token = await GetDigisellerToken(aspNetUserId);
+            string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(aspNetUserId);
 
             if (items.Count == 1)
             {
@@ -250,26 +255,26 @@ namespace SteamDigiSellerBot.Network.Services
             {
                 if (price > 0)
                 {
-                    for (int t = 0; t < _triesCount; t++)
+                    for (int t = 0; t < NetworkConst.TriesCount; t++)
                     {
                         try
                         {
                             if (!string.IsNullOrWhiteSpace(token))
                             {
-                                HttpRequest request = new HttpRequest()
+                                HttpRequest request = new()
                                 {
                                     Cookies = new CookieDictionary(),
                                     UserAgent = Http.ChromeUserAgent()
                                 };
 
-                                request.AddHeader(HttpHeader.Accept, "application/json");
+                                request.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
 
                                 string priceParams = "{\"price\": {\"price\":" + price.ToString("F", CultureInfo.InvariantCulture) + ",\"currency\":\"RUB\"}}";
 
-                                string s = request.Post("https://api.digiseller.ru/api/product/edit/base/" + digiSellerId + "?token=" + token, priceParams, "application/json").ToString();
+                                string s = request.Post("https://api.digiseller.ru/api/product/edit/base/" + digiSellerId + "?token=" + token, priceParams, NetworkConst.ApplicationJsonContentType).ToString();
 
                                 // Избегаем попадать в лимит при обращении к серверу
-                                Thread.Sleep(TimeSpan.FromMilliseconds(200));
+                                Thread.Sleep(TimeSpan.FromMilliseconds(NetworkConst.RequestDelayInMs));
 
                                 return s.Contains("Success");
                             }
@@ -279,7 +284,7 @@ namespace SteamDigiSellerBot.Network.Services
                             _logger.LogError(default, ex, $"HttpRequest can't 'SetRubPrice' to Digiseller with ID: {digiSellerId}");
                         }
 
-                        Thread.Sleep(TimeSpan.FromSeconds(5));
+                        Thread.Sleep(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds));
                     }
                 }
             }
@@ -304,22 +309,22 @@ namespace SteamDigiSellerBot.Network.Services
                     _logger.LogError(default, new Exception("Не указан токет DigiSeler"), $"");
                     return;
                 }
-                for (int t = 0; t < _triesCount; t++)
+                for (int t = 0; t < NetworkConst.TriesCount; t++)
                 {
                     try
                     {
-                        HttpRequest request = new HttpRequest()
+                        HttpRequest request = new()
                         {
                             Cookies = new CookieDictionary(),
                             UserAgent = Http.ChromeUserAgent()
                         };
 
-                        request.AddHeader(HttpHeader.Accept, "application/json");
+                        request.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
 
                         string priceParams = System.Text.Json.JsonSerializer.Serialize(array);
 
                         var response = request.Post("https://api.digiseller.ru/api/product/edit/prices?token=" + token,
-                            priceParams, "application/json");
+                            priceParams, NetworkConst.ApplicationJsonContentType);
                         if (response.IsOK)
                         {
                             var answer = response.ToString();
@@ -328,12 +333,12 @@ namespace SteamDigiSellerBot.Network.Services
                                 Thread.Sleep(TimeSpan.FromSeconds(30));
                                 while (true)
                                 {
-                                    HttpRequest checkStatus = new HttpRequest()
+                                    HttpRequest checkStatus = new()
                                     {
                                         Cookies = request.Cookies,
                                         UserAgent = request.UserAgent
                                     };
-                                    checkStatus.AddHeader(HttpHeader.Accept, "application/json");
+                                    checkStatus.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
                                     var statusAnswer =
                                         System.Text.Json.JsonSerializer.Deserialize<DigiUpdatePriceStatus>(
                                             checkStatus
@@ -358,7 +363,7 @@ namespace SteamDigiSellerBot.Network.Services
                                             return;
                                     }
 
-                                    Thread.Sleep(TimeSpan.FromSeconds(15));
+                                    Thread.Sleep(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds));
                                 }
                             }
                             else
@@ -383,6 +388,68 @@ namespace SteamDigiSellerBot.Network.Services
             {
                 _logger.LogError(default, ex, $"Error {ex.GetType()} {ex.Message} in SetRubPriceArrayUpdate");
             }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(HashSet<string> languageCodes, CancellationToken cancellationToken, params int[] digiSellerIds)
+        {
+            HttpRequest httpRequest = new()
+            {
+                Cookies = new CookieDictionary(),
+                UserAgent = Http.ChromeUserAgent()
+            };
+
+            try
+            {
+                var result = new List<ProductBaseLanguageDecorator>();
+                var digiSellerIdsQueryParameters = digiSellerIds.ToQueryParamStrings();
+                foreach (var digiSellerIdsQueryParameterChunk in digiSellerIdsQueryParameters)
+                {
+                    foreach(var languageCode in languageCodes)
+                    {
+                        var currentRetryCount = NetworkConst.TriesCount;
+                        while (currentRetryCount > 0)
+                        {
+                            try
+                            {
+                                httpRequest.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
+                                var requestParams = new RequestParams()
+                                {
+                                    new KeyValuePair<string, string>("ids", digiSellerIdsQueryParameterChunk),
+                                    new KeyValuePair<string, string>("lang", languageCode),
+                                };
+
+                                string requestResult = httpRequest.Get("https://api.digiseller.ru/api/products/list", requestParams).ToString();
+
+                                // Избегаем попадать в лимит при обращении к серверу
+                                await Task.Delay(TimeSpan.FromMilliseconds(NetworkConst.RequestDelayInMs));
+
+                                var deserializedResult = JsonConvert.DeserializeObject<List<ProductBase>>(requestResult.Replace("&amp;", "&"));
+
+                                result.AddRange(deserializedResult.Select(x => new ProductBaseLanguageDecorator(languageCode, x)));
+                                break;
+                            }
+                            catch (HttpException ex)
+                            {
+                                await Task.Delay(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds));
+                                _logger.LogError(default, ex, "GetProductsBase");
+                            }
+                            finally
+                            {
+                                currentRetryCount--;
+                            }
+                        }
+                    }
+                }
+
+                return result;
+            }
+            catch (HttpException ex)
+            {
+                _logger.LogError(default, ex, "GetProductsBase");
+            }
+
+            return null;
         }
 
         public class DigiPriceUpdateArrayItem
@@ -418,20 +485,20 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
-                string token = await GetDigisellerToken(aspNetUserId);
+                string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(aspNetUserId);
 
-                HttpRequest request = new HttpRequest()
+                HttpRequest request = new()
                 {
                     Cookies = new CookieDictionary(),
                     UserAgent = Http.ChromeUserAgent()
                 };
 
-                request.AddHeader(HttpHeader.Accept, "application/json");
+                request.AddHeader(HttpHeader.Accept, NetworkConst.ApplicationJsonContentType);
 
                 string body = $"{{'message': '{message}'}}";
 
                 var res = request.Post(
-                    "https://api.digiseller.ru/api/debates/v2/?token=" + token + "&id_i=" + digisellerDealId, body, "application/json");
+                    "https://api.digiseller.ru/api/debates/v2/?token=" + token + "&id_i=" + digisellerDealId, body, NetworkConst.ApplicationJsonContentType);
 
                 // Избегаем попадать в лимит при обращении к серверу
                 Thread.Sleep(TimeSpan.FromMilliseconds(150));
@@ -445,55 +512,11 @@ namespace SteamDigiSellerBot.Network.Services
             }
         }
 
-        private async Task<string> GetDigisellerToken(string aspNetUserId)
-        {
-            var user = await _userDBRepository.GetByAspNetUserId(aspNetUserId);
-            if (!string.IsNullOrEmpty(user.DigisellerToken)
-             && user.DigisellerTokenExp > DateTimeOffset.UtcNow)
-                return user.DigisellerToken;
-
-            var newToken = GenerateNewToken(user.DigisellerApiKey, user.DigisellerID);
-            if (newToken.Retval == 0)
-            {
-                user.DigisellerToken = newToken.Token;
-                user.DigisellerTokenExp = DateTimeOffset.Parse(newToken.Exp).AddMinutes(-15);
-                await _userDBRepository.EditAsync(user);
-                return newToken.Token;
-            }
-
-            return null;
-        }
-
-        private DigisellerCreateTokenResp GenerateNewToken(string apiKey, string sellerId)
-        {
-            string timeStamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString();
-            string sign = _cryptographyUtilityService.GetSha256(apiKey + timeStamp);
-            string tokenParams = JsonConvert.SerializeObject(new DigisellerCreateTokenReq
-            {
-                SellerId = sellerId,
-                Timestamp = timeStamp,
-                Sign = sign
-            });
-
-            HttpRequest request = new HttpRequest()
-            {
-                Cookies = new CookieDictionary(),
-                UserAgent = Http.ChromeUserAgent()
-            };
-
-            string s = request
-                .Post("https://api.digiseller.ru/api/apilogin", tokenParams, "application/json").ToString();
-
-            var res = JsonConvert.DeserializeObject<DigisellerCreateTokenResp>(s);
-
-            return res;
-        }
-
         public async Task<Dictionary<int, decimal>> GetPriceList(string sellerId)
         {
             Dictionary<int, decimal> result = new();
-            HttpClient request = new HttpClient();
-            request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpClient request = new();
+            request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(NetworkConst.ApplicationJsonContentType));
             //var categories = await request.GetFromJsonAsync<CategoriesList>("https://api.digiseller.ru/api/categories?seller_id=" + sellerId);
             //Thread.Sleep(500);
             //foreach (var c in categories.category)
@@ -532,6 +555,19 @@ namespace SteamDigiSellerBot.Network.Services
                 goods.product.Where(x => !result.ContainsKey(int.Parse(x.id))).ToList()
                     .ForEach(x => result.Add(int.Parse(x.id), decimal.Parse(x.price_rub)));
             }
+        }
+
+        public class ProductBaseLanguageDecorator
+        {
+            public ProductBaseLanguageDecorator(string languageCode, ProductBase productBase)
+            {
+                LanguageCode = languageCode;
+                ProductBase = productBase;
+            }
+
+            public string LanguageCode { get; }
+
+            public ProductBase ProductBase { get; }
         }
 
 
