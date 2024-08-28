@@ -64,6 +64,14 @@ namespace SteamDigiSellerBot
             services.AddSingleton<UpdateItemsInfoService>();
 
             services.AddSingleton<IGameSessionService, GameSessionService>();
+
+#if !DEBUG
+            services.AddHostedService<UpdateExchangeRatesService>();
+            services.AddHostedService<UpdateBotsService>();
+            services.AddHostedService<ItemMonitoringService>();
+            services.AddHostedService<DiscountMonitoringService>();
+#endif
+
             services.AddSingleton<ISuperBotPool, SuperBotPool>();
             services.AddSingleton<IProxyPull, ProxyPull>();
             services.AddSingleton<IWsNotificationSender, WsNotificationSender>();
