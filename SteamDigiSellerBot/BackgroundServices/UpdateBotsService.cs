@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Serilog.Core;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Enums;
@@ -83,7 +84,21 @@ namespace SteamDigiSellerBot.Services
                     {
                         var sb = _superBotPool.GetById(bot.Id);
                         if (!sb.IsOk())
-                            continue;
+                        {
+                            if (sb.Bot.IsON && sb.LastLogin != null && sb.LastLogin < DateTime.UtcNow.AddMinutes(-45))
+                            {
+                                sb.Login();
+                            }
+
+                            if (!sb.IsOk())
+                            {
+                                _logger?.LogWarning(
+                                    $"UpdateBotsService: {sb?.Bot.UserName} offline ({nameof(UpdateBotsService)})");
+                                continue;
+                            }
+                        }
+
+                        
 
                         if (string.IsNullOrWhiteSpace(bot.Region))
                         {

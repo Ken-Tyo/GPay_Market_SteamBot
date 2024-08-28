@@ -158,7 +158,7 @@ namespace SteamDigiSellerBot.Network
             {
                 if (_bot.Result != EResult.OK)
                 {
-                    if (_bot.IsON && LastLogin != null && LastLogin < DateTime.UtcNow.AddMinutes(-42))
+                    if (_bot.IsON && LastLogin != null && LastLogin < DateTime.UtcNow.AddMinutes(-45))
                     {
                         this.Login();
                     }
@@ -185,7 +185,7 @@ namespace SteamDigiSellerBot.Network
                 {
                     try
                     {
-                        if (repeat && LastLogin!=null && LastLogin < DateTime.UtcNow.AddMinutes(-28))
+                        if (repeat && LastLogin!=null && LastLogin < DateTime.UtcNow.AddMinutes(-30))
                         {
                             this.Login();
                             await Task.Delay(TimeSpan.FromSeconds(5));
