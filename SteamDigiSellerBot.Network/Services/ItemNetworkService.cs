@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Extensions;
@@ -20,6 +21,8 @@ namespace SteamDigiSellerBot.Network.Services
         Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
+            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
+        Task SetPrices(string appId, string subId, string aspNetUserId,
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
     }
 
@@ -57,6 +60,13 @@ namespace SteamDigiSellerBot.Network.Services
         {
             var itemsSet = items.Select(i => i.SubId).ToHashSet();
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
+        }
+
+        public async Task SetPrices(
+            string appId, string subId, string aspNetUserId,
+            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true)
+        {
+            await SetPrices(appId, new List<string>{ subId }.ToHashSet(), aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
         public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null, bool manualUpdate = true)
@@ -165,6 +175,8 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
+                _logger.LogWarning($"[ASHT] ItemNetworkService.SetPrices appId={appId}, items={JsonConvert.SerializeObject(items)}");
+
                 await using var db = _contextFactory.CreateDbContext();
                 db.Database.SetCommandTimeout(TimeSpan.FromMinutes(1));
                 var currencyData = await _currencyDataRepository.GetCurrencyData(true);

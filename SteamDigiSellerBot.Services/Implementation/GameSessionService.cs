@@ -76,7 +76,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
         {
-            _logger.LogInformation($"[ASHT] start SetSteamContact gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+            _logger.LogWarning($"[ASHT] start SetSteamContact gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}, AppId={gs.Item?.AppId}, SubId={gs.Item?.SubId}");
 
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
 
@@ -117,7 +117,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else
                 {
-                    _logger.LogInformation($"[ASHT] StatusId = GameSessionStatusEnum.WaitingToConfirm gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+                    _logger.LogWarning($"[ASHT] StatusId = GameSessionStatusEnum.WaitingToConfirm gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}, AppId={gs.Item?.AppId}, SubId={gs.Item?.SubId}");
 
                     gs.StatusId = GameSessionStatusEnum.WaitingToConfirm; //Ожидается подтверждение
                     logVal = new ValueJson { userSteamContact = gs.SteamContactValue, userProfileUrl = profileData.url };

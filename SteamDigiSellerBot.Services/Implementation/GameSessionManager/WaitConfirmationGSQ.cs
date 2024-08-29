@@ -58,7 +58,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         try
                         {
-                            _logger.LogInformation($"[ASHT] WaitConfirmationGSQ loop: gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+                            _logger.LogWarning($"[ASHT] WaitConfirmationGSQ loop: gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}, AppId={gs.Item?.AppId}, SubId={gs.Item?.SubId}");
 
                             //if (!q.ContainsKey(gs.Id))
                             //{
@@ -87,7 +87,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             await gsr.UpdateFieldAsync(gs, gs => gs.AutoSendInvitationTime);
                             //await gsr.EditAsync(gs);
 
-                            _logger.LogInformation($"[ASHT] WaitConfirmationGSQ SendToManager Done: gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}");
+                            _logger.LogWarning($"[ASHT] WaitConfirmationGSQ SendToManager Done: gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}, AppId={gs.Item?.AppId}, SubId={gs.Item?.SubId}");
 
                             SendToManager(new Done { gsId = gs.Id });
                         }
