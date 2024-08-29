@@ -353,7 +353,7 @@ namespace SteamDigiSellerBot.Tests
             botSender = new Bot
             {
                 Id = 106,
-                UserName = "ufqtwembuuvvfqi",
+                UserName = "anexfodump1979",
                 IsON = true,
                 Region = "RU",
                 SteamCurrencyId = 5,//RUB
@@ -361,25 +361,26 @@ namespace SteamDigiSellerBot.Tests
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "N7655wsehnbmm,",
-                ProxyStr = "85.208.84.85:64672:AwJyXm9A:hcnnkmGv",
-                MaFileStr = "{\"shared_secret\":\"EoLrwpU24me8oHiew0t4axpPJqw=\",\"serial_number\":\"2569989706888315743\",\"revocation_code\":\"R73911\",\"uri\":\"otpauth://totp/Steam:ufqtwembuuvvfqi?secret=CKBOXQUVG3RGPPFAPCPMGS3YNMNE6JVM&issuer=Steam\",\"server_time\":1605832241,\"account_name\":\"ufqtwembuuvvfqi\",\"token_gid\":\"23d1dde04356d184\",\"identity_secret\":\"bWeLrwTPKW142gl/sj1bmUZjWMw=\",\"secret_1\":\"pTuRNEdwh+O0lH4n+2Z3gn19U+c=\",\"status\":0,\"device_id\":\"android:cd54f71f-1305-b78a-18d0-230c2f0149b5\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"b9bb2e9f17d88cc518c57093\",\"SteamLogin\":\"76561199107574353%7C%7C5F13C3937C1FC73AD4ED50268055EEF3D0D2EF70\",\"SteamLoginSecure\":\"76561199107574353%7C%7CB4D5FD95D8504741CFEB067E58D75D45CCE2146D\",\"WebCookie\":\"65A28C0703B74067B67EC235588721F9D6C71689\",\"OAuthToken\":\"5c77a510c0eb05125c9bf2ee19653ac7\",\"SteamID\":76561199107574353}}"
+                Password = "i643ui3546y4",
+                ProxyStr = "195.19.199.116:64724:AwJyXm9A:hcnnkmGv",
+                MaFileStr = "{\"shared_secret\":\"jyT9ABWyvo4FJqVJ1FcZCX0cJxg=\",\"serial_number\":\"17394068322834032642\",\"revocation_code\":\"R80801\",\"uri\":\"otpauth://totp/Steam:anexfodump1979?secret=R4SP2AAVWK7I4BJGUVE5IVYZBF6RYJYY&issuer=Steam\",\"server_time\":1622977770,\"account_name\":\"anexfodump1979\",\"token_gid\":\"2881ee06470e760f\",\"identity_secret\":\"wQxO9Gj1xV3pTDCX7Pn9aVNIS9o=\",\"secret_1\":\"h01pUFfA5aeBtwexGHHVqpNTV5M=\",\"status\":0,\"device_id\":\"android:e4a8cd86-4378-7d59-437c-51a779d80d28\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"8b7bdebb0fda4a229136abc4\",\"SteamLogin\":\"76561199175591059%7C%7CC51CEB3B4A37CC20935127E52AEF7CB7B705445F\",\"SteamLoginSecure\":\"76561199175591059%7C%7C3B893C92E355022A7B72924F71EA7E64695C8DE9\",\"WebCookie\":\"4BDA2C310328C2517889086F8A691F1EE1C76E37\",\"OAuthToken\":\"8fbb6d5c4479445549f948df0ed185cd\",\"SteamID\":76561199175591059}}"
 
             };
             var sb = new SuperBot(botSender);
 
-            var (appId, subId) = ("19680", "8533");
+            var (appId, subId) = ("220240", "17982");
+            var session0 = await sb.GetSessiondId();
             sb.Login();
-            var b= sb.IsOk();
-            var session = await sb.GetSessiondId();
+            var b= sb.IsOk();var session = await sb.GetSessiondId();
 
-            //await sb.SendInvitationViaAddAsFriend(new ProfileDataRes()
-            //{
-            //    sessionId = session, steamid = "76561197988630828",
-            //    url = "https://steamcommunity.com/profiles/76561197988630828/"
-            //});
+            await sb.SendInvitationViaAddAsFriend(new ProfileDataRes()
+            {
+                sessionId = session,
+                steamid = "76561197988630828",
+                url = "https://steamcommunity.com/profiles/76561197988630828/"
+            });
 
-            var sendResult = await sb.SendGameProto(uint.Parse(appId), uint.Parse(subId), false, "902828091", "______", "Тест", botSender.Region);
+            var sendResult = await sb.SendGameProto(uint.Parse(appId), uint.Parse(subId), false, "28365100", "______", "Тест", botSender.Region);
         }
 
         [Test]

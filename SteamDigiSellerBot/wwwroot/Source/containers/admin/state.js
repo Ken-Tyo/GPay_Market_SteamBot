@@ -45,7 +45,7 @@ export const state = entity({
   itemsMode: iMode[1],
   itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
-  changeItemBulkResponse: { loading: false },
+  changeItemBulkResponse: { loading: false, loadingItemInfo: false },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
   loadProxiesModalIsOpen: false,
@@ -60,6 +60,8 @@ export const state = entity({
   statusHistoryModalIsOpen: false,
   botDetailsModalIsOpen: false,
   orderCreationInfoIsOpen: false,
+  editItemMainInfoModalIsOpen: false,
+  editItemAdditionalInfoModalIsOpen: false,
   wsconn: null,
 });
 
@@ -534,11 +536,49 @@ export const setItemsLoading = (isOn) => {
   });
 };
 
+export const setItemInfoTemplatesLoading = (isOn) => {
+  state.set((value) => {
+    return {
+      ...value,
+      itemInfoTemplatesLoading: isOn,
+    };
+  });
+};
+
+export const setItemInfoTemplates = (itemInfoTemplates) => {
+  state.set((value) => {
+    return {
+      ...value,
+      itemInfoTemplates: itemInfoTemplates,
+    };
+  });
+};
+
 export const toggleBulkEditPercentModal = (isOpen) => {
   state.set((value) => {
     return {
       ...value,
       bulkEditPercentModalIsOpen: isOpen,
+    };
+  });
+};
+
+export const toggleItemMainInfoModal = (isOpen) => {
+  apiFetchItemInfoTemplates(0).then(() => {
+    state.set((value) => {
+      return {
+        ...value,
+        editItemMainInfoModalIsOpen: isOpen,
+      };
+    });
+  })
+};
+
+export const toggleItemAdditionalInfoModal = (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      editItemAdditionalInfoModalIsOpen: isOpen,
     };
   });
 };
@@ -652,6 +692,25 @@ export const toggleEditItemModal = async (isOpen) => {
     };
   });
 };
+
+export const toggleEditItemMainInfoModal = async (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      editItemMainInfoModalIsOpen: isOpen,
+    };
+  });
+};
+
+export const toggleEditItemAdditionalInfoModal = async (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      editItemAdditionalInfoModalIsOpen: isOpen,
+    };
+  });
+};
+
 
 export const toggleOrderCreationInfoModal = async (isOpen) => {
   state.set((value) => {
@@ -873,5 +932,97 @@ export const apiAddGameSession = async (data) => {
       };
     });
     toggleOrderCreationInfoModal(true);
+  }
+};
+
+export const apiFetchItemInfoTemplates = async (userId) => {
+  setItemInfoTemplatesLoading(true);
+
+  let result = await fetch(`/iteminfotemplate?userId=${userId}`);
+
+  if (result.ok) {
+    const json = await result.json();
+    setItemInfoTemplates(json);
+  }
+
+  setItemInfoTemplatesLoading(false);
+};
+
+export const apiFetchItemInfoTemplateValues = async (itemInfoTemplateId) => {
+  setItemInfoTemplatesLoading(true);
+
+  let result = await fetch(`/iteminfotemplatevalue/${itemInfoTemplateId}`);
+
+  if (result.ok) {
+    setItemInfoTemplatesLoading(false);
+    return await result.json();
+  }
+
+  setItemInfoTemplatesLoading(false);
+  return null;
+};
+
+export const apiCreateItemInfoTemplate = async (itemInfoTemplateValues) => {
+  setItemInfoTemplatesLoading(true);
+
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(itemInfoTemplateValues).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(itemInfoTemplateValues)
+  }
+
+  let res = await fetch(`/iteminfotemplate`, options);
+
+  if (res.ok) {
+    await apiFetchItemInfoTemplates(0);
+  }
+
+  setItemInfoTemplatesLoading(false);
+};
+
+export const apiDeleteItemInfoTemplate = async (itemInfoTemplateId) => {
+  setItemInfoTemplatesLoading(true);
+
+  const options = {
+    method: "DELETE"
+  }
+
+  let res = await fetch(`/iteminfotemplate/${itemInfoTemplateId}`, options);
+
+  if (res.ok) {
+    await apiFetchItemInfoTemplates(0);
+  }
+
+  setItemInfoTemplatesLoading(false);
+};
+
+export const apiUpdateItemInfoes = async (itemInfoesValues) => {
+  toggleItemMainInfoModal(false);
+  toggleItemAdditionalInfoModal(false);
+  setItemsLoading(true);
+  setStateProp("changeItemBulkResponse", { loadingItemInfo: true });
+  try {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
+
+    const options = {
+      method: "PATCH",
+      headers: headers,
+      body: JSON.stringify(itemInfoesValues)
+    }
+
+    let res = await fetch(`/iteminfo`, options);
+    if (res.ok) {
+      await apiFetchItems();
+    }
+  }
+  finally {
+    setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
+    setItemsLoading(false);
   }
 };

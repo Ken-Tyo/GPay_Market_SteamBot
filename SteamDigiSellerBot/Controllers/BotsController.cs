@@ -107,6 +107,7 @@ namespace SteamDigiSellerBot.Controllers
                 bot.SendGameAttemptsArray = oldBot.SendGameAttemptsArray;
                 bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
                 bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
+                bot.LastTimeUpdated = DateTime.UtcNow;
             }
 
             if (ModelState.ErrorCount > 0)
@@ -136,6 +137,7 @@ namespace SteamDigiSellerBot.Controllers
                     if (botAuthOK)
                     {
                         bot.Id = _botPool.GetIdForNewBot();
+                        bot.State = Database.Enums.BotState.active;
                         await superBot.SetBotCreationData(currencyData, vacCheckList);
                         await _steamBotRepository.AddAsync(db,bot);
                         _botPool.Add(bot);

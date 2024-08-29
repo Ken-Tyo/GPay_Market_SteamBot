@@ -34,7 +34,7 @@ namespace SteamDigiSellerBot.Network.Helpers
                 .Replace("\n", "")
                 .Replace("\t", "")
                 .Replace("\\", "")
-                .Substrings("<td class=\"wht_date\">", $"<td class=\"wht_wallet_change wallet_column")
+                .Substrings("<td class=\"wht_date\">", $"<td class=\"wht_wallet_change")
                 .Select(x => x
                     //.Replace("\r", "")
                     //.Replace("\n", "")

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Serilog.Core;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Enums;
@@ -83,7 +84,21 @@ namespace SteamDigiSellerBot.Services
                     {
                         var sb = _superBotPool.GetById(bot.Id);
                         if (!sb.IsOk())
-                            continue;
+                        {
+                            if (sb.Bot.IsON && sb.LastLogin != null && sb.LastLogin < DateTime.UtcNow.AddMinutes(-45))
+                            {
+                                sb.Login();
+                            }
+
+                            if (!sb.IsOk())
+                            {
+                                _logger?.LogWarning(
+                                    $"UpdateBotsService: {sb?.Bot.UserName} offline ({nameof(UpdateBotsService)})");
+                                continue;
+                            }
+                        }
+
+                        
 
                         if (string.IsNullOrWhiteSpace(bot.Region))
                         {
@@ -101,9 +116,15 @@ namespace SteamDigiSellerBot.Services
                         (bool balanceFetched, decimal balance) = await sb.GetBotBalance_Proto(_logger);
                         if (balanceFetched)
                         {
+                            if (balance != bot.Balance)
+                                _logger?.LogInformation(
+                                    $"BalanceMonitor: {bot.UserName} изменил баланс с {bot.Balance} на {balance}");
                             bot.Balance = balance;
-                            await _botRepository.UpdateFieldAsync(db, bot, b => b.Balance);
+                            bot.LastTimeBalanceUpdated= DateTime.UtcNow;
+                            await _botRepository.UpdateFieldsAsync(db, bot, b => b.Balance, b=> b.LastTimeBalanceUpdated);
                         }
+                        else 
+                            _logger?.LogWarning($"BalanceMonitor: {bot.UserName} не смог обновить баланс");
 
                         (bool, List<Database.Entities.Bot.VacGame>) vacParse = await sb.GetBotVacGames(vacCheckList, bot.Region);
                         if (vacParse.Item1)

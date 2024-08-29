@@ -3,18 +3,18 @@ using SteamDigiSellerBot.Network.Models;
 using System;
 using System.Linq;
 
-namespace SteamDigiSellerBot.Network.Helpers
+namespace SteamDigiSellerBot.Network.Extensions
 {
     public static class Extensions
     {
         public static SteamContactType GetSteamContactType(this Option option)
         {
-            if (option.Value.Contains("steamcommunity.com/id/") 
+            if (option.Value.Contains("steamcommunity.com/id/")
             || option.Value.Contains("steamcommunity.com/profiles/")
             || option.Value.Contains("steamcommunity.com/user/"))
             {
                 return SteamContactType.profileUrl;
-            }    
+            }
 
             if (option.Value.Contains("/s.team/"))
                 return SteamContactType.friendInvitationUrl;

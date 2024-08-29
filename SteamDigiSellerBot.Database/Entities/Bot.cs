@@ -14,6 +14,8 @@ namespace SteamDigiSellerBot.Database.Entities
 {
     public class Bot : BaseEntity
     {
+        public DateTime? LastTimeUpdated { get; set; }
+        public DateTime? LastTimeBalanceUpdated { get; set; }
         public ActivationCountry ActivationCountry { get; set; }
         public BotState? State { get; set; }
         public DateTimeOffset TempLimitDeadline { get; set; }

@@ -23,5 +23,10 @@
       <HintPath>..\SteamKit2.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>SteamDigiSellerBot.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 
 </Project>

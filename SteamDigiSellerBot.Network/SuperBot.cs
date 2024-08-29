@@ -15,6 +15,7 @@ using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -30,6 +31,7 @@ using xNet;
 using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
+using Microsoft.Extensions.Logging;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -110,11 +112,12 @@ namespace SteamDigiSellerBot.Network
             _bot = bot;
         }
 
+        [NotMapped]
+        public DateTime? LastLogin { get; set; }
         public void Login()
         {
             if (_isRunning)
                 return;
-
             _isRunning = true;
             _steamClient.Connect(proxy: _bot.Proxy);
 
@@ -151,7 +154,10 @@ namespace SteamDigiSellerBot.Network
                 {
                     (bool balanceFetched, decimal balance) = GetBotBalance_Proto().Result;
                     if (balanceFetched)
+                    {
                         _bot.Balance = balance;
+                        _bot.LastTimeBalanceUpdated=DateTime.UtcNow;
+                    }
                 }),
                 Task.Run(() =>
                 {
@@ -332,7 +338,7 @@ namespace SteamDigiSellerBot.Network
 
             //_bot.SteamCookies = GetWebCookiesAsync().GetAwaiter().GetResult();
             _bot.SteamCookies = cookies;
-
+            LastLogin = DateTime.UtcNow;
             System.Diagnostics.Trace.WriteLine("Login Successful!");
 
             //_isRunning = false;
@@ -714,7 +720,7 @@ namespace SteamDigiSellerBot.Network
             }
         }
 
-        public async Task<(bool, decimal)> GetBotBalance()
+        public async Task<(bool, decimal)> GetBotBalance(ILogger logger=null)
         {
             if (_bot.Result != EResult.OK)
                 return (false, 0);
@@ -740,8 +746,15 @@ namespace SteamDigiSellerBot.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message} {ex.StackTrace}");
-                Console.WriteLine($"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance)})");
+                if (logger != null)
+                {
+                    logger.LogError(ex, $"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance)})");
+                }
+                else
+                {
+                    Console.WriteLine($"{ex.Message} {ex.StackTrace}");
+                    Console.WriteLine($"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance)})");
+                }
                 return (false, 0);
             }
         }

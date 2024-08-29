@@ -11,7 +11,7 @@ using SteamDigiSellerBot.Database.Enums;
 using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Network;
-using SteamDigiSellerBot.Network.Helpers;
+using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models;
 using SteamDigiSellerBot.Network.Services;
 using SteamDigiSellerBot.Services.Interfaces;
@@ -514,7 +514,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             IEnumerable<Bot> botFilterRes = await _botRepository
                 .ListAsync(db, b => (b.State == BotState.active || b.State == BotState.tempLimit) 
                               && b.SendedGiftsSum < b.MaxSendedGiftsSum //сумма подарков не превышает максимальную
-                              && b.IsON);
+                              && b.IsON && (!b.LastTimeUpdated.HasValue || DateTime.UtcNow.AddMinutes(-1) > b.LastTimeUpdated));
 
             gs.BotSwitchList ??= new();
             if (gs.BotSwitchList.Count > 0)
@@ -1461,11 +1461,19 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
 
 #if !DEBUG
-                (ProfileDataRes profileData, string err) =
-                    await _steamNetworkService.ParseUserProfileData(gs.SteamProfileUrl, SteamContactType.profileUrl);
+                        try
+                        {
+                            (ProfileDataRes profileData, string err) =
+                                await _steamNetworkService.ParseUserProfileData(gs.SteamProfileUrl,
+                                    SteamContactType.profileUrl);
 
-                if (profileData != null)
-                    await sbot.RemoveFromFriends(profileData);
+                            if (profileData != null)
+                                await sbot.RemoveFromFriends(profileData);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, $"GS ID {gs?.Id} Bot: {sbot?.Bot?.UserName}: Ошибка при удалении клиента после покупки.");
+                        }
 #endif
                     }
                     else if (sendRes.result == SendeGameResult.gameExists)
@@ -1519,7 +1527,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //обновляем баланс бота
                     (bool balanceParsed, decimal balance) = await sbot.GetBotBalance_Proto(_logger);
                     if (balanceParsed)
+                    {
+                        if (balance != gs.Bot.Balance)
+                            _logger?.LogInformation(
+                                $"BalanceMonitor: {gs.Bot.UserName} изменил баланс с {gs.Bot.Balance} на {balance}");
                         gs.Bot.Balance = balance;
+                        gs.Bot.LastTimeBalanceUpdated = DateTime.UtcNow;
+                    }
+                    else
+                        _logger?.LogWarning($"BalanceMonitor: {gs.Bot.UserName} не смог обновить баланс");
+                    //if (balanceParsed)
+                    //    gs.Bot.Balance = balance;
                     //    }),
                     //    Task.Run(() =>
                     //    {

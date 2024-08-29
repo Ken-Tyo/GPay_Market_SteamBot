@@ -1,20 +1,22 @@
 import React from 'react';
 import css from './styles.scss';
 
-const Button = ({ text, onClick, width, height, style }) => {
+const Button = ({ children, text, onClick, width, height, style, isDisabled, className, innerTextMargin }) => {
   return (
     <div
       style={{
         width: width || 221,
+        minWidth: width || 221,
         height: height || 65,
         ...(style || {}),
       }}
-      className={css.wrapper + ' ' + css.pointer}
+      className={css.wrapper + ' ' + css.pointer + (isDisabled ? css.disabled : '') + (className ? ' ' + className : '') }
       onClick={() => {
-        if (onClick) onClick();
+        if (onClick && isDisabled !== true) onClick();
       }}
     >
-      {text}
+      <span style={{ margin: innerTextMargin ? innerTextMargin : '0px' }}>{text}</span>
+      {children}
     </div>
   );
 };

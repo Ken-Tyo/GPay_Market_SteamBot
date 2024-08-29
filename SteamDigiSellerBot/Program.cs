@@ -4,9 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Serilog.Filters;
 using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Database.Repositories;
+using SteamDigiSellerBot.Network.Services;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -50,6 +52,18 @@ namespace SteamDigiSellerBot
                    shared: true,
                    flushToDiskInterval: TimeSpan.FromSeconds(1),
                    restrictedToMinimumLevel: LogEventLevel.Error)
+                .WriteTo.Logger(lc => lc
+                    .Filter
+                    .ByIncludingOnly(Matching.FromSource<UpdateItemsInfoService>())
+                    .WriteTo
+                    .File(
+                       System.IO.Path.Combine("Logs", "update_item_descriptions.txt"),
+                       rollingInterval: RollingInterval.Day,
+                       fileSizeLimitBytes: 30 * 1024 * 1024,
+                       rollOnFileSizeLimit: true,
+                       shared: true,
+                       flushToDiskInterval: TimeSpan.FromSeconds(1),
+                       restrictedToMinimumLevel: LogEventLevel.Information))
                 //.WriteTo.File(
                 //    System.IO.Path.Combine("Logs", "debug.txt"),
                 //    rollingInterval: RollingInterval.Day,
