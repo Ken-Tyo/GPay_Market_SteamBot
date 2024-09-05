@@ -40,6 +40,8 @@ namespace SteamDigiSellerBot.Models.Home
         public string SteamContactValue { get; set; }
         public DateTimeOffset? SessionEndTime { get; set; }
         public DateTimeOffset? AutoSendInvitationTime { get; set; }
+        public DateTimeOffset AddedDateTime { get; set; }
+
         public bool IsDlc { get; set; }
         public bool IsAnotherBotExists { get; set; }
         public bool CanResendGame { get; set; }
