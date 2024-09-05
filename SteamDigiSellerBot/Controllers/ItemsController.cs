@@ -302,7 +302,7 @@ namespace SteamDigiSellerBot.Controllers
                     newSubId,
                     user.Id,
                     setName: true,
-                    onlyBaseCurrency: true);
+                    onlyBaseCurrency: false);
 
                 return Ok();
             }
