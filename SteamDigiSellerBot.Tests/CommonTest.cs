@@ -353,25 +353,25 @@ namespace SteamDigiSellerBot.Tests
             botSender = new Bot
             {
                 Id = 106,
-                UserName = "cyejc57508",
+                UserName = "anexfodump1979",
                 IsON = true,
-                Region = "KZ",
+                Region = "RU",
                 SteamCurrencyId = 5,//RUB
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "wwxw14663K",
-                ProxyStr = "176.116.20.34:63812:AwJyXm9A:hcnnkmGv",
-                MaFileStr = "{\"shared_secret\":\"NBqeYvWIEeUElLiAfpBoqCthiGw=\",\"serial_number\":\"6525961878660311186\",\"revocation_code\":\"R05729\",\"uri\":\"otpauth://totp/Steam:cyejc57508?secret=GQNJ4YXVRAI6KBEUXCAH5EDIVAVWDCDM&issuer=Steam\",\"server_time\":1718026352,\"account_name\":\"cyejc57508\",\"token_gid\":\"373e48936cdf88f4\",\"identity_secret\":\"yGQkNc4KO1p1q4tMfd2WeSGZVfc=\",\"secret_1\":\"tTnVpyM65NUfI81Bj+0XsjU3Duw=\",\"status\":1,\"device_id\":\"android:501c3efa-28f9-4d33-bce4-6ddf7c70e7c1\",\"fully_enrolled\":true,\"Session\":{\"SteamID\":76561199658487666,\"AccessToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MEVFQ18yNDg5MzZFQl8zNzEyMSIsICJzdWIiOiAiNzY1NjExOTk2NTg0ODc2NjYiLCAiYXVkIjogWyAid2ViIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MTgxMTM5NTUsICJuYmYiOiAxNzA5Mzg2MzUwLCAiaWF0IjogMTcxODAyNjM1MCwgImp0aSI6ICIwRUVGXzI0ODkzNkVDXzlCQzBEIiwgIm9hdCI6IDE3MTgwMjYzNTAsICJydF9leHAiOiAxNzM2MTc5MjQ4LCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMTkzLjE4Ny4xMDYuMTg4IiwgImlwX2NvbmZpcm1lciI6ICIxOTMuMTg3LjEwNi4xODgiIH0.zCZ8DEVqo3PN2Kn0hRAmo6p0iPH57H3uEPf0Yv6SGN_TGjSLTUnNXkWOa0ffRMTJRyEDdhmKunxLydShMYbEBA\",\"RefreshToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5OTY1ODQ4NzY2NiIsICJhdWQiOiBbICJ3ZWIiLCAicmVuZXciLCAiZGVyaXZlIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MzYxNzkyNDgsICJuYmYiOiAxNzA5Mzg2MzUwLCAiaWF0IjogMTcxODAyNjM1MCwgImp0aSI6ICIwRUVDXzI0ODkzNkVCXzM3MTIxIiwgIm9hdCI6IDE3MTgwMjYzNTAsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIxOTMuMTg3LjEwNi4xODgiLCAiaXBfY29uZmlybWVyIjogIjE5My4xODcuMTA2LjE4OCIgfQ.tCNaf2OcJxttNLnmiPz603W9QYlOgg2yO1dKOo4wSLj86jN18kbjbT-dFkWL0FTzHeJkIiBXTJHCpP73T_bDAw\",\"SessionID\":null}}"
+                Password = "i643ui3546y4",
+                ProxyStr = "195.19.199.116:64724:AwJyXm9A:hcnnkmGv",
+                MaFileStr = "{\"shared_secret\":\"jyT9ABWyvo4FJqVJ1FcZCX0cJxg=\",\"serial_number\":\"17394068322834032642\",\"revocation_code\":\"R80801\",\"uri\":\"otpauth://totp/Steam:anexfodump1979?secret=R4SP2AAVWK7I4BJGUVE5IVYZBF6RYJYY&issuer=Steam\",\"server_time\":1622977770,\"account_name\":\"anexfodump1979\",\"token_gid\":\"2881ee06470e760f\",\"identity_secret\":\"wQxO9Gj1xV3pTDCX7Pn9aVNIS9o=\",\"secret_1\":\"h01pUFfA5aeBtwexGHHVqpNTV5M=\",\"status\":0,\"device_id\":\"android:e4a8cd86-4378-7d59-437c-51a779d80d28\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"8b7bdebb0fda4a229136abc4\",\"SteamLogin\":\"76561199175591059%7C%7CC51CEB3B4A37CC20935127E52AEF7CB7B705445F\",\"SteamLoginSecure\":\"76561199175591059%7C%7C3B893C92E355022A7B72924F71EA7E64695C8DE9\",\"WebCookie\":\"4BDA2C310328C2517889086F8A691F1EE1C76E37\",\"OAuthToken\":\"8fbb6d5c4479445549f948df0ed185cd\",\"SteamID\":76561199175591059}}"
 
             };
             var sb = new SuperBot(botSender);
 
             var (appId, subId) = ("220240", "17982");
+            var session0 = await sb.GetSessiondId();
             sb.Login();
-            var b= sb.IsOk();
-            var session = await sb.GetSessiondId();
+            var b= sb.IsOk();var session = await sb.GetSessiondId();
 
             await sb.SendInvitationViaAddAsFriend(new ProfileDataRes()
             {

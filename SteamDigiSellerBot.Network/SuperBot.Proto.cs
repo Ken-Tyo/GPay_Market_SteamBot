@@ -157,7 +157,17 @@ namespace SteamDigiSellerBot.Network
             try
             {
                 if (_bot.Result != EResult.OK)
-                    return (false, 0);
+                {
+                    if (_bot.IsON && LastLogin != null && LastLogin < DateTime.UtcNow.AddMinutes(-45))
+                    {
+                        this.Login();
+                    }
+                    if (_bot.Result != EResult.OK)
+                    {
+                        logger.LogWarning($"BalanceMonitor: {_bot.UserName} offline ({nameof(GetBotBalance_Proto)})");
+                        return (false, 0);
+                    }
+                }
 
                 try
                 {
@@ -175,15 +185,24 @@ namespace SteamDigiSellerBot.Network
                 {
                     try
                     {
-                        if (repeat && LastLogin < DateTime.UtcNow.AddMinutes(-28))
+                        if (repeat && LastLogin!=null && LastLogin < DateTime.UtcNow.AddMinutes(-30))
                         {
                             this.Login();
                             await Task.Delay(TimeSpan.FromSeconds(5));
                             return await _GetBotBalance_Proto(logger, false);
                         }
                     }
-                    catch
+                    catch (Exception ex2)
                     {
+                        if (logger != null)
+                        {
+                            logger.LogError(ex2, $"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{ex2.Message} {ex2.StackTrace}");
+                            Console.WriteLine($"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                        }
 
                     }
                 }
@@ -191,20 +210,32 @@ namespace SteamDigiSellerBot.Network
                 {
                     if (logger != null)
                     {
-                        logger.LogError(ex, $"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                        logger.LogError(ex, $"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
                     }
                     else
                     {
                         Console.WriteLine($"{ex.Message} {ex.StackTrace}");
-                        Console.WriteLine($"BOT {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                        Console.WriteLine($"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
                     }
 
                 }
 
-                return await GetBotBalance();
+                return await GetBotBalance(logger);
             }
-            catch 
-            {return (false, 0); }
+            catch (Exception ex)
+            {
+                if (logger != null)
+                {
+                    logger.LogError(ex, $"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                }
+                else
+                {
+                    Console.WriteLine($"{ex.Message} {ex.StackTrace}");
+                    Console.WriteLine($"BalanceMonitor: {_bot.UserName} error parse balance ({nameof(GetBotBalance_Proto)})");
+                }
+                return (false, 0);
+            }
+
 
         }
 

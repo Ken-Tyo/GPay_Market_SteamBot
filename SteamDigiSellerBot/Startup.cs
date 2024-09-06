@@ -12,6 +12,7 @@ using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.ModelValidators;
 using SteamDigiSellerBot.Network;
+using SteamDigiSellerBot.Network.Providers;
 using SteamDigiSellerBot.Network.Services;
 using SteamDigiSellerBot.Services;
 using SteamDigiSellerBot.Services.Implementation;
@@ -60,6 +61,8 @@ namespace SteamDigiSellerBot
             services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();
             services.AddSingleton<IItemNetworkService, ItemNetworkService>();
             services.AddSingleton<ICurrencyDataService, CurrencyDataService>();
+            services.AddSingleton<DigisellerTokenProvider>();
+            services.AddSingleton<UpdateItemsInfoService>();
 
             services.AddSingleton<IGameSessionService, GameSessionService>();
 

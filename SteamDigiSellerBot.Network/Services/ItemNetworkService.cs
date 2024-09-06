@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Extensions;
@@ -33,6 +34,8 @@ namespace SteamDigiSellerBot.Network.Services
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
+        Task SetPrices(string appId, string subId, string aspNetUserId,
+            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
 
         Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken);
     }
@@ -46,6 +49,7 @@ namespace SteamDigiSellerBot.Network.Services
         private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly ILogger<ItemNetworkService> _logger;
         private readonly ISteamProxyRepository _steamProxyRepository;
+        private readonly UpdateItemsInfoService _updateItemsInfoService;
 
         public ItemNetworkService(
            ISteamNetworkService steamNetworkService,
@@ -54,7 +58,8 @@ namespace SteamDigiSellerBot.Network.Services
            ICurrencyDataRepository currencyDataRepository,
            IConfiguration configuration,
            ILogger<ItemNetworkService> logger,
-           ISteamProxyRepository steamProxyRepository)
+           ISteamProxyRepository steamProxyRepository,
+           UpdateItemsInfoService updateItemsInfoService)
         {
             _steamNetworkService = steamNetworkService;
             _digiSellerNetworkService = digiSellerNetworkService;
@@ -63,6 +68,7 @@ namespace SteamDigiSellerBot.Network.Services
             _currencyDataRepository = currencyDataRepository;
             _logger = logger;
             _steamProxyRepository = steamProxyRepository;
+            _updateItemsInfoService = updateItemsInfoService ?? throw new ArgumentNullException(nameof(updateItemsInfoService));
         }
 
         public async Task SetPrices(
@@ -71,6 +77,13 @@ namespace SteamDigiSellerBot.Network.Services
         {
             var itemsSet = items.Select(i => i.SubId).ToHashSet();
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
+        }
+
+        public async Task SetPrices(
+            string appId, string subId, string aspNetUserId,
+            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true)
+        {
+            await SetPrices(appId, new List<string>{ subId }.ToHashSet(), aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
         public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null, bool manualUpdate = true)
@@ -174,7 +187,7 @@ namespace SteamDigiSellerBot.Network.Services
             await Task.WhenAll(getProductsBaseAsyncTask, replaceTagsAsyncTask);
 
             EnrichUpdateItemInfoCommands(updateItemInfoCommands, getProductsBaseAsyncTask.Result, languageCodes);
-            await _digiSellerNetworkService.UpdateItemsInfoesAsync(updateItemInfoCommands, aspNetUserId, cancellationToken);
+            await _updateItemsInfoService.UpdateItemsInfoesAsync(updateItemInfoCommands, aspNetUserId, cancellationToken);
         }
 
         private async Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, HashSet<string> languageCodes, CancellationToken cancellationToken) =>
@@ -258,6 +271,8 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
+                _logger.LogWarning($"[ASHT] ItemNetworkService.SetPrices appId={appId}, items={JsonConvert.SerializeObject(items)}");
+
                 await using var db = _contextFactory.CreateDbContext();
                 db.Database.SetCommandTimeout(TimeSpan.FromMinutes(1));
                 var currencyData = await _currencyDataRepository.GetCurrencyData(true);
