@@ -40,7 +40,6 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public DateTimeOffset? ActivationEndDate { get; set; }
         public DateTimeOffset? AutoSendInvitationTime { get; set; }
-
         public int? SteamCountryCodeId { get; set; }
 
         [ForeignKey("SteamCountryCodeId")]
