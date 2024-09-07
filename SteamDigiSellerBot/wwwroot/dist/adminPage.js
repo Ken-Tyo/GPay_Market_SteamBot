@@ -26498,7 +26498,11 @@ __webpack_require__.d(state_namespaceObject, {
   ZW: () => (apiFetchGameSessionsWithCurrentFilter),
   av: () => (apiFetchItemInfoTemplateValues),
   PK: () => (apiFetchItems),
+  iI: () => (apiFetchLanguages),
+  BI: () => (apiFetchMarketPlaces),
   hz: () => (apiFetchProxies),
+  K0: () => (apiFetchTagPromoReplacementValues),
+  rE: () => (apiFetchTagTypeReplacementValues),
   QE: () => (apiGetCurrencies),
   oq: () => (apiGetItem),
   wL: () => (apiGetSteamRegions),
@@ -26507,6 +26511,8 @@ __webpack_require__.d(state_namespaceObject, {
   wE: () => (apiSaveBotRegionSettings),
   T2: () => (apiSetGameSessionStatus),
   ib: () => (apiSetItemActiveStatus),
+  iH: () => (apiTagPromoReplacementValues),
+  xW: () => (apiTagTypeReplacementValues),
   DP: () => (apiUpdateExchangeDataManual),
   $H: () => (apiUpdateItemInfoes),
   My: () => (initAdmin),
@@ -29037,6 +29043,201 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
   }));
   return function apiUpdateItemInfoes(_x62) {
     return _ref61.apply(this, arguments);
+  };
+}();
+var apiTagTypeReplacementValues = /*#__PURE__*/function () {
+  var _ref62 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee62(data) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee62$(_context62) {
+      while (1) switch (_context62.prev = _context62.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context62.next = 6;
+          return fetch("/tagtypereplacementvalue", options);
+        case 6:
+          res = _context62.sent;
+          if (!res.ok) {
+            _context62.next = 9;
+            break;
+          }
+          return _context62.abrupt("return", true);
+        case 9:
+          return _context62.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context62.stop();
+      }
+    }, _callee62);
+  }));
+  return function apiTagTypeReplacementValues(_x63) {
+    return _ref62.apply(this, arguments);
+  };
+}();
+var apiFetchTagTypeReplacementValues = /*#__PURE__*/function () {
+  var _ref63 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee63() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee63$(_context63) {
+      while (1) switch (_context63.prev = _context63.next) {
+        case 0:
+          _context63.next = 2;
+          return fetch("/tagtypereplacementvalue");
+        case 2:
+          res = _context63.sent;
+          if (!res.ok) {
+            _context63.next = 8;
+            break;
+          }
+          _context63.next = 6;
+          return res.json();
+        case 6:
+          json = _context63.sent;
+          return _context63.abrupt("return", json);
+        case 8:
+          return _context63.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context63.stop();
+      }
+    }, _callee63);
+  }));
+  return function apiFetchTagTypeReplacementValues() {
+    return _ref63.apply(this, arguments);
+  };
+}();
+var apiFetchMarketPlaces = /*#__PURE__*/function () {
+  var _ref64 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee64() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee64$(_context64) {
+      while (1) switch (_context64.prev = _context64.next) {
+        case 0:
+          _context64.next = 2;
+          return fetch("/marketplace");
+        case 2:
+          res = _context64.sent;
+          if (!res.ok) {
+            _context64.next = 8;
+            break;
+          }
+          _context64.next = 6;
+          return res.json();
+        case 6:
+          json = _context64.sent;
+          return _context64.abrupt("return", json);
+        case 8:
+          return _context64.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context64.stop();
+      }
+    }, _callee64);
+  }));
+  return function apiFetchMarketPlaces() {
+    return _ref64.apply(this, arguments);
+  };
+}();
+var apiFetchLanguages = /*#__PURE__*/function () {
+  var _ref65 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee65() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee65$(_context65) {
+      while (1) switch (_context65.prev = _context65.next) {
+        case 0:
+          _context65.next = 2;
+          return fetch("/language");
+        case 2:
+          res = _context65.sent;
+          if (!res.ok) {
+            _context65.next = 8;
+            break;
+          }
+          _context65.next = 6;
+          return res.json();
+        case 6:
+          json = _context65.sent;
+          return _context65.abrupt("return", json);
+        case 8:
+          return _context65.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context65.stop();
+      }
+    }, _callee65);
+  }));
+  return function apiFetchLanguages() {
+    return _ref65.apply(this, arguments);
+  };
+}();
+var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref66 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee66() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee66$(_context66) {
+      while (1) switch (_context66.prev = _context66.next) {
+        case 0:
+          _context66.next = 2;
+          return fetch("/tagpromoreplacementvalue");
+        case 2:
+          res = _context66.sent;
+          if (!res.ok) {
+            _context66.next = 9;
+            break;
+          }
+          _context66.next = 6;
+          return res.json();
+        case 6:
+          json = _context66.sent;
+          console.log(json);
+          return _context66.abrupt("return", json);
+        case 9:
+          return _context66.abrupt("return", null);
+        case 10:
+        case "end":
+          return _context66.stop();
+      }
+    }, _callee66);
+  }));
+  return function apiFetchTagPromoReplacementValues() {
+    return _ref66.apply(this, arguments);
+  };
+}();
+var apiTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref67 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee67(data) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee67$(_context67) {
+      while (1) switch (_context67.prev = _context67.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context67.next = 6;
+          return fetch("/tagpromoreplacementvalue", options);
+        case 6:
+          res = _context67.sent;
+          if (!res.ok) {
+            _context67.next = 9;
+            break;
+          }
+          return _context67.abrupt("return", true);
+        case 9:
+          return _context67.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context67.stop();
+      }
+    }, _callee67);
+  }));
+  return function apiTagPromoReplacementValues(_x64) {
+    return _ref67.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -37553,13 +37754,16 @@ function ModalBase(_ref) {
   var isOpen = _ref.isOpen,
     children = _ref.children,
     title = _ref.title,
+    renderTitleBtn = _ref.renderTitleBtn,
     height = _ref.height,
     width = _ref.width,
     marginTop = _ref.marginTop,
     letterSpacing = _ref.letterSpacing,
+    className = _ref.className,
     isLoading = _ref.isLoading;
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     children: /*#__PURE__*/(0,jsx_runtime.jsx)(Dialog_Dialog, {
+      className: className !== null && className !== void 0 ? className : '',
       open: isOpen,
       "aria-labelledby": "alert-dialog-title",
       "aria-describedby": "alert-dialog-description",
@@ -37596,7 +37800,7 @@ function ModalBase(_ref) {
           style: {
             flex: '0 1 auto'
           },
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)(DialogTitle_DialogTitle, {
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)(DialogTitle_DialogTitle, {
             sx: {
               color: '#FFFFFF',
               fontSize: '28px',
@@ -37608,7 +37812,7 @@ function ModalBase(_ref) {
               letterSpacing: letterSpacing !== null && letterSpacing !== void 0 ? letterSpacing : '0.0075em'
             },
             id: "alert-dialog-title",
-            children: title
+            children: [title, renderTitleBtn ? renderTitleBtn() : '']
           })
         }), !isLoading && children, isLoading && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           style: {
@@ -42646,7 +42850,412 @@ var ModalEdit = function ModalEdit(_ref5) {
 /* harmony default export */ const modalEdit = (ModalEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalItemInfoEdit_styles = ({"wrapper":"styles__wrapper--jBnWE","textareaWrapper":"styles__textareaWrapper--jyrSH","textareaContent":"styles__textareaContent--ynM1R","templates":"styles__templates--fG8d5","loadTemplate":"styles__loadTemplate--cvFnw","disabled":"styles__disabled--v4WR7","btnCreateTemplate":"styles__btnCreateTemplate--cL14X","actions":"styles__actions--UIzI_"});
+/* harmony default export */ const modalItemInfoEdit_styles = ({"wrapper":"styles__wrapper--jBnWE","textareaWrapper":"styles__textareaWrapper--jyrSH","error":"styles__error--Wg7zh","textareaContent":"styles__textareaContent--ynM1R","templates":"styles__templates--fG8d5","loadTemplate":"styles__loadTemplate--cvFnw","disabled":"styles__disabled--v4WR7","btnCreateTemplate":"styles__btnCreateTemplate--cL14X","actions":"styles__actions--UIzI_","titleButton":"styles__titleButton--RqDkS"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalTypeTagEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalTypeTagEdit_styles = ({"tagTypeEditModalContent":"styles__tagTypeEditModalContent--r4GBO","title":"styles__title--usGNp","titleDescription":"styles__titleDescription--UMvQa","tagItemEdit":"styles__tagItemEdit--YDfGH","tagItemEditLang":"styles__tagItemEditLang--JOZye","tagItemEditLangTitle":"styles__tagItemEditLangTitle--LXpkg","tagItemValue":"styles__tagItemValue--_lEvD","tagTypeEditButtons":"styles__tagTypeEditButtons--FgvI9"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const shared_textbox_styles = ({"wrapper":"styles__wrapper--H8Xnp"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/index.js
+
+
+
+var shared_textbox_TextBox = function TextBox(_ref) {
+  var onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue,
+    width = _ref.width,
+    placeholder = _ref.placeholder,
+    className = _ref.className;
+  var onChangeText = function onChangeText(event) {
+    var val = event.target.value;
+    if (onChange) onChange(val);
+  };
+  var wrapperStyle = {
+    width: width || '226px'
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: shared_textbox_styles.wrapper + className ? shared_textbox_styles.className : '',
+    onChange: onChangeText,
+    style: wrapperStyle,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+      type: 'text',
+      defaultValue: defaultValue,
+      placeholder: placeholder
+    })
+  });
+};
+/* harmony default export */ const shared_textbox = (shared_textbox_TextBox);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalTypeTagEdit/index.js
+function ModalTypeTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalTypeTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalTypeTagEdit_typeof(o); }
+function ModalTypeTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalTypeTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function ModalTypeTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalTypeTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalTypeTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalTypeTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function ModalTypeTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function ModalTypeTagEdit_slicedToArray(arr, i) { return ModalTypeTagEdit_arrayWithHoles(arr) || ModalTypeTagEdit_iterableToArrayLimit(arr, i) || ModalTypeTagEdit_unsupportedIterableToArray(arr, i) || ModalTypeTagEdit_nonIterableRest(); }
+function ModalTypeTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalTypeTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalTypeTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalTypeTagEdit_arrayLikeToArray(o, minLen); }
+function ModalTypeTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalTypeTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalTypeTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var languageCodes = ['ru-RU', 'en-US'];
+  var _useState = (0,react.useState)(''),
+    _useState2 = ModalTypeTagEdit_slicedToArray(_useState, 2),
+    tagGameRu = _useState2[0],
+    setTagGameRu = _useState2[1];
+  var _useState3 = (0,react.useState)(''),
+    _useState4 = ModalTypeTagEdit_slicedToArray(_useState3, 2),
+    tagGameEn = _useState4[0],
+    setTagGameEn = _useState4[1];
+  var _useState5 = (0,react.useState)(''),
+    _useState6 = ModalTypeTagEdit_slicedToArray(_useState5, 2),
+    tagDlcRu = _useState6[0],
+    setTagDlcRu = _useState6[1];
+  var _useState7 = (0,react.useState)(''),
+    _useState8 = ModalTypeTagEdit_slicedToArray(_useState7, 2),
+    tagDlcEn = _useState8[0],
+    setTagDlcEn = _useState8[1];
+  var languageCodesSetters = new Map().set(languageCodes[0], function (isDlc) {
+    return isDlc == true ? setTagDlcRu : setTagGameRu;
+  }).set(languageCodes[1], function (isDlc) {
+    return isDlc == true ? setTagDlcEn : setTagGameEn;
+  });
+  var handleChange = function handleChange(setValue, event) {
+    var val = event.target.value;
+    setValue(val);
+  };
+  var onSave = /*#__PURE__*/function () {
+    var _ref2 = ModalTypeTagEdit_asyncToGenerator( /*#__PURE__*/ModalTypeTagEdit_regeneratorRuntime().mark(function _callee() {
+      var data;
+      return ModalTypeTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            data = [{
+              isDlc: true,
+              values: [{
+                languageCode: languageCodes[0],
+                value: tagDlcRu
+              }, {
+                languageCode: languageCodes[1],
+                value: tagDlcEn
+              }]
+            }, {
+              isDlc: false,
+              values: [{
+                languageCode: languageCodes[0],
+                value: tagGameRu
+              }, {
+                languageCode: languageCodes[1],
+                value: tagGameEn
+              }]
+            }];
+            _context.next = 3;
+            return apiTagTypeReplacementValues(data);
+          case 3:
+            onClose();
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function onSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  (0,react.useEffect)(function () {
+    apiFetchTagTypeReplacementValues().then(function (data) {
+      if (!data || data.length == 0) {
+        return;
+      }
+      var _iterator = ModalTypeTagEdit_createForOfIteratorHelper(data),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var item = _step.value;
+          if (!item.tagTypeReplacementValues || item.tagTypeReplacementValues.length == 0) {
+            continue;
+          }
+          var _iterator2 = ModalTypeTagEdit_createForOfIteratorHelper(item.tagTypeReplacementValues),
+            _step2;
+          try {
+            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+              var tagTypeReplacementValue = _step2.value;
+              var setter = languageCodesSetters.get(tagTypeReplacementValue.languageCode)(item.isDlc);
+              if (!tagTypeReplacementValue.value) {
+                continue;
+              }
+              setter(tagTypeReplacementValue.value);
+            }
+          } catch (err) {
+            _iterator2.e(err);
+          } finally {
+            _iterator2.f();
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    });
+  }, []);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    className: ModalTypeTagEdit_styles.tagTypeEditModalContent,
+    width: '685px',
+    height: 'auto',
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalTypeTagEdit_styles.title,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+        children: "\u0422\u0435\u0433\u0438 - %type%"
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalTypeTagEdit_styles.titleDescription,
+      children: "\u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0442\u0438\u043F \u043F\u0440\u043E\u0434\u0443\u043A\u0442\u0430 - \u0418\u0433\u0440\u0430/\u0414\u043E\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435"
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalTypeTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "33",
+            height: "23",
+            viewBox: "0 0 33 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+              fill: "white"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+              fill: "#D52B1E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+              fill: "#0039A6"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "\u0418\u0433\u0440\u0430"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagGameRu,
+            value: tagGameRu,
+            placeholder: 'Игра',
+            onChange: function onChange(event) {
+              return handleChange(setTagGameRu, event);
+            }
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "32",
+            height: "23",
+            viewBox: "0 0 32 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+              fill: "#FEFEFE"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 14.813H27.542L32 17.0407V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+              fill: "#C8102E"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "\u0418\u0433\u0440\u0430"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagGameEn,
+            value: tagGameEn,
+            placeholder: 'Game',
+            onChange: function onChange(event) {
+              return handleChange(setTagGameEn, event);
+            }
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalTypeTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "33",
+            height: "23",
+            viewBox: "0 0 33 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+              fill: "white"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+              fill: "#D52B1E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+              fill: "#0039A6"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "DLC"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagDlcRu,
+            value: tagDlcRu,
+            placeholder: 'Дополнение',
+            onChange: function onChange(event) {
+              return handleChange(setTagDlcRu, event);
+            }
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "32",
+            height: "23",
+            viewBox: "0 0 32 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+              fill: "#FEFEFE"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 14.813H27.542L32 17.0407V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+              fill: "#C8102E"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "DLC"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagDlcEn,
+            value: tagDlcEn,
+            placeholder: 'DLC',
+            onChange: function onChange(event) {
+              return handleChange(setTagDlcEn, event);
+            }
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalTypeTagEdit_styles.tagTypeEditButtons,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onSave,
+        children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const ModalTagsView_ModalTypeTagEdit = (ModalTypeTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalPromoTagEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalPromoTagEdit_styles = ({"tagPromoEditModalContent":"styles__tagPromoEditModalContent--xlZGl","title":"styles__title--hFwZq","titleDescription":"styles__titleDescription--kGV5u","tagItemEdit":"styles__tagItemEdit--licj8","tagItemEditLang":"styles__tagItemEditLang--xpw7v","tagItemEditLangTitle":"styles__tagItemEditLangTitle--RNveZ","tagItemEditLangPlatforms":"styles__tagItemEditLangPlatforms--ci0wA","activeTab":"styles__activeTab--hg_2M","tagItemValue":"styles__tagItemValue--WcOhs","tagPromoEditButtons":"styles__tagPromoEditButtons--bPKTS"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textarea/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const textarea_styles = ({"wrapper":"styles__wrapper--gUZ9v","inputControl":"styles__inputControl--NWJQk","boxes":"styles__boxes--BQWU_","textarea":"styles__textarea--c283q"});
@@ -42694,6 +43303,426 @@ var Textarea = function Textarea(_ref) {
   });
 };
 /* harmony default export */ const shared_textarea = (Textarea);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalPromoTagEdit/index.js
+function ModalPromoTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalPromoTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalPromoTagEdit_typeof(o); }
+function ModalPromoTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalPromoTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalPromoTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalPromoTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function ModalPromoTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function ModalPromoTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalPromoTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function ModalPromoTagEdit_slicedToArray(arr, i) { return ModalPromoTagEdit_arrayWithHoles(arr) || ModalPromoTagEdit_iterableToArrayLimit(arr, i) || ModalPromoTagEdit_unsupportedIterableToArray(arr, i) || ModalPromoTagEdit_nonIterableRest(); }
+function ModalPromoTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalPromoTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalPromoTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalPromoTagEdit_arrayLikeToArray(o, minLen); }
+function ModalPromoTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalPromoTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalPromoTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var _useState = (0,react.useState)([]),
+    _useState2 = ModalPromoTagEdit_slicedToArray(_useState, 2),
+    languages = _useState2[0],
+    setLanguages = _useState2[1];
+  var _useState3 = (0,react.useState)([]),
+    _useState4 = ModalPromoTagEdit_slicedToArray(_useState3, 2),
+    marketPlaces = _useState4[0],
+    setMarketPlaces = _useState4[1];
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = ModalPromoTagEdit_slicedToArray(_useState5, 2),
+    selectedRuPlatform = _useState6[0],
+    setSelectedRuPlatform = _useState6[1];
+  var _useState7 = (0,react.useState)(null),
+    _useState8 = ModalPromoTagEdit_slicedToArray(_useState7, 2),
+    selectedEnPlatform = _useState8[0],
+    setSelectedEnPlatform = _useState8[1];
+  var _useState9 = (0,react.useState)(new Map()),
+    _useState10 = ModalPromoTagEdit_slicedToArray(_useState9, 2),
+    values = _useState10[0],
+    setValues = _useState10[1];
+  var getInitValues = function getInitValues(marketPlaceData, langData) {
+    var map = new Map();
+    marketPlaceData.forEach(function (item) {
+      langData.forEach(function (lang) {
+        map.set("".concat(item.id).concat(lang), '');
+      });
+    });
+    return map;
+  };
+  (0,react.useEffect)(function () {
+    apiFetchLanguages().then(function (langData) {
+      if (!langData || langData.length == 0) {
+        return;
+      }
+      var langData = langData.map(function (x) {
+        return x.code;
+      });
+      setLanguages(langData);
+      apiFetchMarketPlaces().then(function (marketPlaceData) {
+        if (!marketPlaceData || marketPlaceData.length == 0) {
+          return;
+        }
+        setMarketPlaces(marketPlaceData);
+        setSelectedEnPlatform(marketPlaceData[0]);
+        setSelectedRuPlatform(marketPlaceData[0]);
+        apiFetchTagPromoReplacementValues().then(function (data) {
+          if (!data || data.length == 0) {
+            return;
+          }
+          var newMap = new Map(getInitValues(marketPlaceData, langData));
+          var _iterator = ModalPromoTagEdit_createForOfIteratorHelper(data),
+            _step;
+          try {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
+              var item = _step.value;
+              if (!item.tagPromoReplacementValues || item.tagPromoReplacementValues.length == 0) {
+                continue;
+              }
+              var _iterator2 = ModalPromoTagEdit_createForOfIteratorHelper(item.tagPromoReplacementValues),
+                _step2;
+              try {
+                for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                  var tagPromoReplacementValue = _step2.value;
+                  if (!tagPromoReplacementValue.value) {
+                    continue;
+                  }
+                  newMap = new Map(newMap.set("".concat(item.marketPlaceId).concat(tagPromoReplacementValue.languageCode), tagPromoReplacementValue.value));
+                }
+              } catch (err) {
+                _iterator2.e(err);
+              } finally {
+                _iterator2.f();
+              }
+            }
+          } catch (err) {
+            _iterator.e(err);
+          } finally {
+            _iterator.f();
+          }
+          setValues(newMap);
+        });
+      });
+    });
+  }, []);
+  var handleChangeRussianText = function handleChangeRussianText(text) {
+    setValues(new Map(values.set("".concat(selectedRuPlatform.id).concat(languages[0]), text)));
+  };
+  var handleChangeEnglishText = function handleChangeEnglishText(text) {
+    setValues(new Map(values.set("".concat(selectedEnPlatform.id).concat(languages[1]), text)));
+  };
+  var onSave = /*#__PURE__*/function () {
+    var _ref2 = ModalPromoTagEdit_asyncToGenerator( /*#__PURE__*/ModalPromoTagEdit_regeneratorRuntime().mark(function _callee() {
+      var data, _iterator3, _step3, item, marketPlaceItem, _iterator4, _step4, language;
+      return ModalPromoTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            data = [];
+            _iterator3 = ModalPromoTagEdit_createForOfIteratorHelper(marketPlaces);
+            try {
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                item = _step3.value;
+                marketPlaceItem = {
+                  marketPlaceId: item.id,
+                  values: []
+                };
+                _iterator4 = ModalPromoTagEdit_createForOfIteratorHelper(languages);
+                try {
+                  for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+                    language = _step4.value;
+                    marketPlaceItem.values.push({
+                      languageCode: language,
+                      value: values.get("".concat(item.id).concat(language))
+                    });
+                  }
+                } catch (err) {
+                  _iterator4.e(err);
+                } finally {
+                  _iterator4.f();
+                }
+                data.push(marketPlaceItem);
+              }
+            } catch (err) {
+              _iterator3.e(err);
+            } finally {
+              _iterator3.f();
+            }
+            _context.next = 5;
+            return apiTagPromoReplacementValues(data);
+          case 5:
+            onClose();
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function onSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var renderPlatforms = function renderPlatforms(lang) {
+    if (!marketPlaces || marketPlaces.length == 0) {
+      return null;
+    }
+    return marketPlaces.map(function (value) {
+      return renderPlatform(lang, value);
+    });
+  };
+  var renderPlatform = function renderPlatform(lang, value) {
+    if (lang == languages[0]) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: (selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id) == value.id ? ModalPromoTagEdit_styles.activeTab : '',
+        onClick: function onClick() {
+          return setSelectedRuPlatform(value);
+        },
+        children: value.name
+      });
+    } else if (lang == languages[1]) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: (selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id) == value.id ? ModalPromoTagEdit_styles.activeTab : '',
+        onClick: function onClick() {
+          return setSelectedEnPlatform(value);
+        },
+        children: value.name
+      });
+    }
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    className: ModalPromoTagEdit_styles.tagPromoEditModalContent,
+    width: '890px',
+    height: 'auto',
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalPromoTagEdit_styles.title,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+        children: "\u0422\u0435\u0433\u0438 - %promo%"
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalPromoTagEdit_styles.titleDescription,
+      children: ["\u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0440\u0435\u043A\u043B\u0430\u043C\u043D\u043E\u0435 \u043F\u0440\u043E\u043C\u043E, \u043C\u043E\u0436\u043D\u043E \u0443\u043A\u0430\u0437\u0430\u0442\u044C", /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), "\u0442\u043E\u0432\u0430\u0440\u044B \u043F\u0440\u043E\u0434\u0430\u0432\u0446\u0430 \u0434\u043B\u044F \u043F\u0440\u043E\u0434\u0432\u0438\u0436\u0435\u043D\u0438\u044F"]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalPromoTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalPromoTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalPromoTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "33",
+              height: "23",
+              viewBox: "0 0 33 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+                fill: "white"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+                fill: "#D52B1E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+                fill: "#0039A6"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+              children: "\u0418\u0433\u0440\u0430"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: ModalPromoTagEdit_styles.tagItemEditLangPlatforms,
+            children: renderPlatforms(languages[0])
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalPromoTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeRussianText,
+            defaultValue: values ? values.get("".concat(selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id).concat(languages[0])) : '',
+            value: values ? values.get("".concat(selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id).concat(languages[0])) : '',
+            placeholder: 'Введенный текст промо',
+            height: '327px',
+            width: '100%'
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalPromoTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalPromoTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "32",
+              height: "23",
+              viewBox: "0 0 32 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+                fill: "#FEFEFE"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 14.813H27.542L32 17.0407V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+                fill: "#C8102E"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+              children: "\u0418\u0433\u0440\u0430"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: ModalPromoTagEdit_styles.tagItemEditLangPlatforms,
+            children: renderPlatforms(languages[1])
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalPromoTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeEnglishText,
+            defaultValue: values ? values.get("".concat(selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id).concat(languages[1])) : '',
+            value: values ? values.get("".concat(selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id).concat(languages[1])) : '',
+            placeholder: 'Введенный текст промо',
+            height: '327px',
+            width: '100%'
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalPromoTagEdit_styles.tagPromoEditButtons,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onSave,
+        children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const ModalTagsView_ModalPromoTagEdit = (ModalPromoTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalTagsView_styles = ({"tagsViewModalContent":"styles__tagsViewModalContent--MItAf","title":"styles__title--wOjwr","tagButtons":"styles__tagButtons--gCyRC","closeTagViewButton":"styles__closeTagViewButton--b53oI"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/index.js
+function ModalTagsView_slicedToArray(arr, i) { return ModalTagsView_arrayWithHoles(arr) || ModalTagsView_iterableToArrayLimit(arr, i) || ModalTagsView_unsupportedIterableToArray(arr, i) || ModalTagsView_nonIterableRest(); }
+function ModalTagsView_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalTagsView_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalTagsView_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalTagsView_arrayLikeToArray(o, minLen); }
+function ModalTagsView_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalTagsView_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalTagsView_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalTagsView = function ModalTagsView(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var _useState = (0,react.useState)(false),
+    _useState2 = ModalTagsView_slicedToArray(_useState, 2),
+    showTagTypeEditModal = _useState2[0],
+    setShowTagTypeEditModal = _useState2[1];
+  var _useState3 = (0,react.useState)(false),
+    _useState4 = ModalTagsView_slicedToArray(_useState3, 2),
+    showTagPromoEditModal = _useState4[0],
+    setShowTagPromoEditModal = _useState4[1];
+  var renderModals = function renderModals() {
+    if (showTagTypeEditModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalTypeTagEdit, {
+        isOpen: showTagTypeEditModal,
+        onClose: function onClose() {
+          return setShowTagTypeEditModal(!showTagTypeEditModal);
+        }
+      });
+    }
+    if (showTagPromoEditModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalPromoTagEdit, {
+        isOpen: showTagPromoEditModal,
+        onClose: function onClose() {
+          return setShowTagPromoEditModal(!showTagPromoEditModal);
+        }
+      });
+    }
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+      isOpen: isOpen,
+      className: ModalTagsView_styles.tagsViewModalContent,
+      width: '730px',
+      height: 'auto',
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: ModalTagsView_styles.title,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+          children: "\u0422\u0435\u0433\u0438 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432"
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTagsView_styles.tagButtons,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          onClick: function onClick() {
+            return setShowTagTypeEditModal(true);
+          },
+          text: '%type%',
+          width: '190px',
+          height: '70px'
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+          onClick: function onClick() {
+            return setShowTagPromoEditModal(true);
+          },
+          text: '%promo%',
+          width: '190px',
+          height: '70px'
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: 'auto',
+        height: 'auto',
+        className: ModalTagsView_styles.closeTagViewButton,
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    }), renderModals()]
+  });
+};
+/* harmony default export */ const modalItemInfoEdit_ModalTagsView = (ModalTagsView);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/index.js
 function modalItemInfoEdit_typeof(o) { "@babel/helpers - typeof"; return modalItemInfoEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalItemInfoEdit_typeof(o); }
 function modalItemInfoEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalItemInfoEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalItemInfoEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalItemInfoEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -42714,6 +43743,7 @@ function modalItemInfoEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return 
 
 
 
+
 var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
   var isOpen = _ref.isOpen,
     onSave = _ref.onSave,
@@ -42721,6 +43751,9 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     viewMode = _ref.viewMode,
     itemInfoTemplates = _ref.itemInfoTemplates;
   if (!isOpen) return;
+  var maxRussianTextLength = 3969;
+  var maxEnglishTextLength = 3988;
+  var languageCodes = ['ru-RU', 'en-US'];
   var buttonWidth = '386px';
   var buttonTemplateWidth = '172px';
   var buttonCreateTemplateWidth = '207px';
@@ -42734,6 +43767,46 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     _useState4 = modalItemInfoEdit_slicedToArray(_useState3, 2),
     englishText = _useState4[0],
     setEnglishText = _useState4[1];
+  var _useState5 = (0,react.useState)(''),
+    _useState6 = modalItemInfoEdit_slicedToArray(_useState5, 2),
+    errorRussianText = _useState6[0],
+    setErrorRussianText = _useState6[1];
+  var _useState7 = (0,react.useState)(''),
+    _useState8 = modalItemInfoEdit_slicedToArray(_useState7, 2),
+    errorEnglishText = _useState8[0],
+    setErrorEnglishText = _useState8[1];
+  var _useState9 = (0,react.useState)(false),
+    _useState10 = modalItemInfoEdit_slicedToArray(_useState9, 2),
+    showTagsModal = _useState10[0],
+    setShowTagsModal = _useState10[1];
+  var _useState11 = (0,react.useState)([]),
+    _useState12 = modalItemInfoEdit_slicedToArray(_useState11, 2),
+    tagPromoReplacementValues = _useState12[0],
+    setTagPromoReplacementValues = _useState12[1];
+  var _useState13 = (0,react.useState)([]),
+    _useState14 = modalItemInfoEdit_slicedToArray(_useState13, 2),
+    tagTypeReplacementValues = _useState14[0],
+    setTagTypeReplacementValues = _useState14[1];
+  (0,react.useEffect)(function () {
+    apiFetchTagPromoReplacementValues().then(function (data) {
+      if (!data || data.length == 0) {
+        return;
+      }
+      setTagPromoReplacementValues(data.flatMap(function (x) {
+        return x.tagPromoReplacementValues;
+      }));
+    });
+  }, []);
+  (0,react.useEffect)(function () {
+    apiFetchTagTypeReplacementValues().then(function (data) {
+      if (!data || data.length == 0) {
+        return;
+      }
+      setTagTypeReplacementValues(data.flatMap(function (x) {
+        return x.tagTypeReplacementValues;
+      }));
+    });
+  }, []);
   var getTitle = function getTitle() {
     if (viewMode === 'main') {
       return 'Настроить описание товара';
@@ -42760,10 +43833,10 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
   };
   var onCreateTemplate = function onCreateTemplate() {
     var itemInfoTemplateValues = [{
-      LanguageCode: "ru-RU",
+      LanguageCode: languageCodes[0],
       Value: russianText
     }, {
-      LanguageCode: "en-US",
+      LanguageCode: languageCodes[1],
       Value: englishText
     }];
     apiCreateItemInfoTemplate(itemInfoTemplateValues);
@@ -42824,146 +43897,219 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
       className: modalItemInfoEdit_styles.btnCreateTemplate
     });
   };
-  return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalBase, {
-    isOpen: isOpen,
-    title: getTitle(),
-    width: 1548,
-    height: 836,
-    letterSpacing: '0.03em',
-    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: modalItemInfoEdit_styles.wrapper,
-      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: modalItemInfoEdit_styles.textareaWrapper,
+  var renderTitleBtn = function renderTitleBtn() {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+      width: "auto",
+      minWidth: "auto",
+      height: "auto",
+      className: modalItemInfoEdit_styles.titleButton,
+      text: "\u0422\u0435\u0433\u0438",
+      onClick: function onClick() {
+        setShowTagsModal(!showTagsModal);
+      }
+    });
+  };
+  var renderModals = function renderModals() {
+    if (showTagsModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit_ModalTagsView, {
+        isOpen: showTagsModal,
+        onClose: function onClose() {
+          return setShowTagsModal(!showTagsModal);
+        }
+      });
+    }
+  };
+  var validateText = function validateText(russianText, englishText) {
+    var russianTextLength = russianText.length + getTextActualLengthDiff(russianText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[0]) + getTextActualLengthDiff(russianText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[0]);
+    if (russianTextLength > maxRussianTextLength) {
+      setErrorRussianText("\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0442\u0435\u043A\u0441\u0442\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435 (".concat(maxRussianTextLength, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"));
+      return;
+    } else {
+      setErrorRussianText('');
+    }
+    var englishTextLength = englishText.length + getTextActualLengthDiff(englishText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[1]) + getTextActualLengthDiff(englishText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[1]);
+    if (englishTextLength > maxEnglishTextLength) {
+      setErrorEnglishText("\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0442\u0435\u043A\u0441\u0442\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043D\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435 (".concat(maxEnglishTextLength, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"));
+      return;
+    } else {
+      setErrorEnglishText('');
+    }
+  };
+  var getTextActualLengthDiff = function getTextActualLengthDiff(source, tagReplacementValues, patternTagValue, tagValue, languageCode) {
+    var tagCount = ((source || '').match(patternTagValue) || []).length;
+    if (tagCount > 0) {
+      var findedTagValue = tagReplacementValues.find(function (x) {
+        return x.languageCode == languageCode;
+      });
+      var diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
+      return diffTagReplacementValuesLength * tagCount;
+    }
+    return 0;
+  };
+  var renderRussianErrors = function renderRussianErrors() {
+    if (!errorRussianText) {
+      return;
+    }
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalItemInfoEdit_styles.error,
+      children: errorRussianText
+    });
+  };
+  var renderEnglishErrors = function renderEnglishErrors() {
+    if (!errorEnglishText) {
+      return;
+    }
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalItemInfoEdit_styles.error,
+      children: errorEnglishText
+    });
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ModalBase, {
+      isOpen: isOpen,
+      title: getTitle(),
+      renderTitleBtn: renderTitleBtn,
+      width: 1548,
+      height: 836,
+      letterSpacing: '0.03em',
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalItemInfoEdit_styles.wrapper,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: modalItemInfoEdit_styles.textareaContent,
-          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
-            width: "33",
-            height: "23",
-            viewBox: "0 0 33 23",
-            fill: "none",
-            xmlns: "http://www.w3.org/2000/svg",
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
-              fill: "white"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
-              fill: "#D52B1E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
-              fill: "#0039A6"
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
-            onChange: handleChangeRussianText,
-            defaultValue: russianText,
-            value: russianText,
-            placeholder: 'Введенный текст с описанием товара',
-            height: '492px',
-            width: '100%'
+          className: modalItemInfoEdit_styles.textareaWrapper,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalItemInfoEdit_styles.textareaContent,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "33",
+              height: "23",
+              viewBox: "0 0 33 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+                fill: "white"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+                fill: "#D52B1E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+                fill: "#0039A6"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+              onChange: handleChangeRussianText,
+              defaultValue: russianText,
+              value: russianText,
+              placeholder: 'Введенный текст с описанием товара',
+              height: '492px',
+              width: '100%'
+            }), renderRussianErrors()]
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalItemInfoEdit_styles.textareaContent,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "32",
+              height: "23",
+              viewBox: "0 0 32 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+                fill: "#FEFEFE"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 14.813H27.542L32 17.0407V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+                fill: "#C8102E"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+              onChange: handleChangeEnglishText,
+              defaultValue: englishText,
+              value: englishText,
+              placeholder: 'Введенный текст с описанием товара',
+              height: '492px',
+              width: '100%'
+            }), renderEnglishErrors()]
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: modalItemInfoEdit_styles.textareaContent,
-          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
-            width: "32",
-            height: "23",
-            viewBox: "0 0 32 23",
-            fill: "none",
-            xmlns: "http://www.w3.org/2000/svg",
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
-              fill: "#FEFEFE"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M32 14.813H27.542L32 17.0407V14.813Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
-              fill: "#C8102E"
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
-            onChange: handleChangeEnglishText,
-            defaultValue: englishText,
-            value: englishText,
-            placeholder: 'Введенный текст с описанием товара',
-            height: '492px',
-            width: '100%'
+          className: modalItemInfoEdit_styles.templates,
+          children: [getButtonsTemplate(), getCreateTemplateButton()]
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalItemInfoEdit_styles.actions,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Сохранить',
+            style: {
+              backgroundColor: '#478C35',
+              marginRight: '46px'
+            },
+            width: buttonWidth,
+            onClick: function onClick() {
+              if (!validateText(russianText, englishText)) {
+                return;
+              }
+              onSave(russianText, englishText);
+              setRussianText('');
+              setEnglishText('');
+            },
+            isDisabled: state_namespaceObject.itemInfoTemplatesLoading
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Назад',
+            onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
+              return modalItemInfoEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+                while (1) switch (_context.prev = _context.next) {
+                  case 0:
+                    if (onCancel) {
+                      setRussianText('');
+                      setEnglishText('');
+                      onCancel();
+                    }
+                  case 1:
+                  case "end":
+                    return _context.stop();
+                }
+              }, _callee);
+            })),
+            width: buttonWidth,
+            style: {
+              backgroundColor: '#9A7AA9',
+              marginLeft: '0px'
+            },
+            isDisabled: state_namespaceObject.itemInfoTemplatesLoading
           })]
         })]
-      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: modalItemInfoEdit_styles.templates,
-        children: [getButtonsTemplate(), getCreateTemplateButton()]
-      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: modalItemInfoEdit_styles.actions,
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-          text: 'Сохранить',
-          style: {
-            backgroundColor: '#478C35',
-            marginRight: '46px'
-          },
-          width: buttonWidth,
-          onClick: function onClick() {
-            onSave(russianText, englishText);
-            setRussianText('');
-            setEnglishText('');
-          },
-          isDisabled: state_namespaceObject.itemInfoTemplatesLoading
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-          text: 'Назад',
-          onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
-            return modalItemInfoEdit_regeneratorRuntime().wrap(function _callee$(_context) {
-              while (1) switch (_context.prev = _context.next) {
-                case 0:
-                  if (onCancel) {
-                    setRussianText('');
-                    setEnglishText('');
-                    onCancel();
-                  }
-                case 1:
-                case "end":
-                  return _context.stop();
-              }
-            }, _callee);
-          })),
-          width: buttonWidth,
-          style: {
-            backgroundColor: '#9A7AA9',
-            marginLeft: '0px'
-          },
-          isDisabled: state_namespaceObject.itemInfoTemplatesLoading
-        })]
-      })]
-    })
+      })
+    }), renderModals()]
   });
 };
 /* harmony default export */ const modalItemInfoEdit = (ModalItemInfoEdit);
@@ -44476,7 +45622,6 @@ var products = function products() {
         toggleEditItemModal(false);
       },
       onSave: function onSave(newItem) {
-        console.log(newItem);
         if (newItem.id) apiChangeItem(newItem);else apiCreateItem(newItem);
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit, {
@@ -62309,37 +63454,6 @@ var BotStats = function BotStats(_ref) {
   });
 };
 /* harmony default export */ const botStats = (BotStats);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const shared_textbox_styles = ({"wrapper":"styles__wrapper--H8Xnp"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/index.js
-
-
-
-var shared_textbox_TextBox = function TextBox(_ref) {
-  var onChange = _ref.onChange,
-    defaultValue = _ref.defaultValue,
-    width = _ref.width,
-    placeholder = _ref.placeholder;
-  var onChangeText = function onChangeText(event) {
-    var val = event.target.value;
-    if (onChange) onChange(val);
-  };
-  var wrapperStyle = {
-    width: width || '226px'
-  };
-  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-    className: shared_textbox_styles.wrapper,
-    onChange: onChangeText,
-    style: wrapperStyle,
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-      type: 'text',
-      defaultValue: defaultValue,
-      placeholder: placeholder
-    })
-  });
-};
-/* harmony default export */ const shared_textbox = (shared_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalDigisellerEdit/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalDigisellerEdit_styles = ({"content":"styles__content--Ihpor","boxes":"styles__boxes--VDgRX","actions":"styles__actions--rvof6"});

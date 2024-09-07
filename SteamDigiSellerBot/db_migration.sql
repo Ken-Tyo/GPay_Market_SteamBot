@@ -317,3 +317,75 @@ create trigger set_gamesessions_modified before
 update
     on
     public."GameSessions" for each row execute function trigger_set_Modified();
+
+05.09.2024 Задача 68
+CREATE TABLE "TagTypeReplacements" (
+	"Id" serial PRIMARY KEY,
+	"IsDlc" BOOL DEFAULT false
+);
+
+comment on table "TagTypeReplacements" is 'Замены тэгов типа продукта - %type%';
+comment on column "TagTypeReplacements"."Id" is 'Идентификатор';
+comment on column "TagTypeReplacements"."IsDlc" is 'Признак DLC';
+
+CREATE TABLE "TagTypeReplacementValues" (
+	"TagTypeReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagTypeReplacementId", "LanguageCode")
+);
+
+comment on table "TagTypeReplacementValues" is 'Значения для замены тэгов продукта %type%';
+comment on column "TagTypeReplacementValues"."TagTypeReplacementId" is 'ИД замены тэга продукта';
+comment on column "TagTypeReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagTypeReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagTypeReplacementValues" add constraint "TagTypeReplacementValues_TagTypeReplacementId_fkey" 
+foreign key ("TagTypeReplacementId") references "TagTypeReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagTypeReplacementValues" add constraint "TagTypeReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+CREATE TABLE "MarketPlaces" (
+	"Id" INT PRIMARY KEY,
+	"Name" VARCHAR(16)
+);
+
+comment on table "MarketPlaces" is 'Площадки';
+comment on column "MarketPlaces"."Id" is 'Идентификатор';
+comment on column "MarketPlaces"."Name" is 'Наименование';
+
+INSERT INTO "MarketPlaces"("Id", "Name") VALUES(1, 'WMCentre');
+INSERT INTO "MarketPlaces"("Id", "Name") VALUES(2, 'GGSel');
+INSERT INTO "MarketPlaces"("Id", "Name") VALUES(3, 'Plati');
+
+CREATE TABLE "TagPromoReplacements" (
+	"Id" serial PRIMARY KEY,
+	"MarketPlaceId" INT
+);
+
+ALTER TABLE "TagPromoReplacements" add constraint "TagPromoReplacements_MarketPlaceId_fkey" 
+foreign key ("MarketPlaceId") references "MarketPlaces"("Id") on delete cascade;
+
+comment on table "TagPromoReplacements" is 'Замены тэгов типа продукта - %promo%';
+comment on column "TagPromoReplacements"."Id" is 'Идентификатор';
+comment on column "TagPromoReplacements"."MarketPlaceId" is 'ИД площадки';
+
+CREATE TABLE "TagPromoReplacementValues" (
+	"TagPromoReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagPromoReplacementId", "LanguageCode")
+);
+
+comment on table "TagPromoReplacementValues" is 'Значения для замены тэгов промо-акции %promo%';
+comment on column "TagPromoReplacementValues"."TagPromoReplacementId" is 'ИД замены тэга промо-акции';
+comment on column "TagPromoReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagPromoReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagPromoReplacementValues" add constraint "TagPromoReplacementValues_TagPromoReplacementId_fkey" 
+foreign key ("TagPromoReplacementId") references "TagPromoReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagPromoReplacementValues" add constraint "TagPromoReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+

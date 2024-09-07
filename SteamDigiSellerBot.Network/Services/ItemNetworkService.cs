@@ -24,6 +24,8 @@ using static System.Net.Mime.MediaTypeNames;
 using SteamDigiSellerBot.Network.Models;
 using static SteamDigiSellerBot.Network.Services.DigiSellerNetworkService;
 using SteamDigiSellerBot.Network.Extensions;
+using SteamDigiSellerBot.Database.Repositories.TagRepositories;
+using SteamDigiSellerBot.Database.Entities.TagReplacements;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -37,7 +39,12 @@ namespace SteamDigiSellerBot.Network.Services
         Task SetPrices(string appId, string subId, string aspNetUserId,
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
 
-        Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken);
+        Task UpdateItemsInfoesAsync(
+            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            CancellationToken cancellationToken);
     }
 
     public class ItemNetworkService : IItemNetworkService
@@ -176,14 +183,19 @@ namespace SteamDigiSellerBot.Network.Services
         }
 
         /// <inheritdoc/>
-        public async Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
+        public async Task UpdateItemsInfoesAsync(
+            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements, 
+            CancellationToken cancellationToken)
         {
             var languageCodes = updateItemInfoCommands
                     .SelectMany(x => x.InfoData?.Any() == true ? x.InfoData.Select(x => x.Locale) : x.AdditionalInfoData.Select(x => x.Locale))
                     .ToHashSet();
 
             var getProductsBaseAsyncTask = GetProductsBaseAsync(updateItemInfoCommands, languageCodes, cancellationToken);
-            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(updateItemInfoCommands, cancellationToken);
+            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(updateItemInfoCommands, aspNetUserId, tagTypeReplacements, tagPromoReplacements, cancellationToken);
             await Task.WhenAll(getProductsBaseAsyncTask, replaceTagsAsyncTask);
 
             EnrichUpdateItemInfoCommands(updateItemInfoCommands, getProductsBaseAsyncTask.Result, languageCodes);
@@ -198,15 +210,34 @@ namespace SteamDigiSellerBot.Network.Services
 
         private async Task ReplaceAllLocalValueDataTagsAsync(
             List<UpdateItemInfoCommand> updateItemInfoCommands,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
             CancellationToken cancellationToken)
         {
-            await ReplaceTagsAsync(updateItemInfoCommands, updateItemInfoCommands => updateItemInfoCommands.InfoData, cancellationToken);
-            await ReplaceTagsAsync(updateItemInfoCommands, updateItemInfoCommands => updateItemInfoCommands.AdditionalInfoData, cancellationToken);
+            await ReplaceTagsAsync(
+                updateItemInfoCommands,
+                updateItemInfoCommands => updateItemInfoCommands.InfoData,
+                aspNetUserId,
+                tagTypeReplacements,
+                tagPromoReplacements,
+                cancellationToken);
+
+            await ReplaceTagsAsync(
+                updateItemInfoCommands,
+                updateItemInfoCommands => updateItemInfoCommands.AdditionalInfoData,
+                aspNetUserId,
+                tagTypeReplacements,
+                tagPromoReplacements,
+                cancellationToken);
         }
 
         private async Task ReplaceTagsAsync(
             List<UpdateItemInfoCommand> updateItemInfoCommands,
             Func<UpdateItemInfoCommand, List<LocaleValuePair>> getLocaleValuePair,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
             CancellationToken cancellationToken)
         {
             // Replace tags by item specification
@@ -224,7 +255,7 @@ namespace SteamDigiSellerBot.Network.Services
                     if (getLocaleValuePair(updateItemInfoCommand).ContainsTags())
                     {
                         var item = itemsWithTags.First(x => x.DigiSellerIds.Contains(updateItemInfoCommand.DigiSellerId.ToString()));
-                        getLocaleValuePair(updateItemInfoCommand).ReplaceTagsToValue(item);
+                        getLocaleValuePair(updateItemInfoCommand).ReplaceTagsToValue(item, tagTypeReplacements, tagPromoReplacements);
                     }
                 }
             }

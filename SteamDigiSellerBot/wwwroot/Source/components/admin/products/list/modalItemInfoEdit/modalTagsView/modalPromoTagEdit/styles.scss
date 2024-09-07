@@ -1,0 +1,135 @@
+﻿.tagPromoEditModalContent {
+    .title {
+        text-align: center;
+        color: white;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        padding: 16px 0 0 0;
+    }
+
+    .titleDescription {
+        font-size: 14px;
+        text-align: center;
+        color: white;
+        letter-spacing: 0.06em;
+        opacity: 0.7;
+    }
+
+    .tagItemEdit {
+        font-size: 14px;
+        display: flex;
+        align-self: center;
+        color: white;
+        width: 100%;
+
+        .tagItemEditLang {
+            font-size: 14px;
+            width: calc(50% - 40px);
+            margin: 23px 0 0 30px;
+
+            .tagItemEditLangTitle {
+                font-size: 14px;
+                display: flex;
+                justify-content: space-between;
+
+                div {
+                    display: flex;
+                    align-items: center;
+                    margin: 0 0 2px 11px;
+
+                    span {
+                        margin-left: 16px;
+                    }
+                }
+
+                .tagItemEditLangPlatforms {
+                    display: flex;
+                    margin: 0 28px 0 0;
+                    font-size: 10px;
+                    letter-spacing: 0.05em;
+
+                    div {
+                        background-color: #8a44ab;
+                        margin: 0 0 0 2px;
+                        padding: 0 18px;
+                        height: 100%;
+                        border-top-left-radius: 15px;
+                        border-top-right-radius: 15px;
+                        cursor: pointer;
+                        user-select: none;
+
+                        &:hover {
+                            background-color: #9c3cc9;
+                        }
+                    }
+
+                    div.activeTab {
+                        background-color: #9c3cc9;
+                    }
+                }
+            }
+
+            .tagItemValue {
+                font-size: 14px;
+
+                input {
+                    width: 100%;
+                    height: 70px;
+                    font-size: 14px;
+                    line-height: 14px;
+                    background-color: #512068;
+                    color: white;
+                    border-radius: 15px;
+                    border: none;
+                    padding-top: 0;
+                    padding-bottom: 14px;
+                    padding-right: 0;
+                    padding-left: 15px;
+
+                    &:focus {
+                        border: none;
+                        outline: none;
+                    }
+                }
+            }
+        }
+
+        .tagItemEditLang:last-child {
+            margin-left: 20px;
+        }
+    }
+
+    .tagPromoEditButtons {
+        display: flex;
+        align-items: center;
+        align-self: center;
+
+        div {
+            margin: 25px 0;
+            align-self: center;
+            font-size: 26px;
+            align-self: center;
+            padding: 19px 0;
+            border-radius: 22px;
+            user-select: none;
+        }
+
+        div:first-child {
+            background-color: rgb(71, 140, 53);
+            margin-right: 10px;
+        }
+
+        div:first-child:hover {
+            opacity: 0.8;
+        }
+
+        div:last-child {
+            background-color: #8a44ab;
+            margin-left: 10px;
+        }
+
+        div:last-child:hover {
+            background-color: #9c3cc9;
+        }
+    }
+}

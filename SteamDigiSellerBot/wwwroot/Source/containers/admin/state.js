@@ -1026,3 +1026,86 @@ export const apiUpdateItemInfoes = async (itemInfoesValues) => {
     setItemsLoading(false);
   }
 };
+
+export const apiTagTypeReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/tagtypereplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagTypeReplacementValues = async () => {
+  let res = await fetch(`/tagtypereplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiFetchMarketPlaces = async () => {
+  let res = await fetch(`/marketplace`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiFetchLanguages = async () => {
+  let res = await fetch(`/language`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiFetchTagPromoReplacementValues = async () => {
+  let res = await fetch(`/tagpromoreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    console.log(json);
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagPromoReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/tagpromoreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};

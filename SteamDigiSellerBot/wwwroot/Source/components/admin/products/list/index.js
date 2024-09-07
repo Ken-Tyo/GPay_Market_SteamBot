@@ -523,7 +523,6 @@ const products = () => {
           toggleEditItemModal(false);
         }}
         onSave={(newItem) => {
-          console.log(newItem);
           if (newItem.id) apiChangeItem(newItem);
           else apiCreateItem(newItem);
         }}

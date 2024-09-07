@@ -1,0 +1,54 @@
+﻿.tagsViewModalContent {
+    .title {
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        letter-spacing: 0.06em;
+        padding: 24px 0;
+    }
+
+    .tagButtons {
+        display: flex;
+        align-self: center;
+        margin-top: 16px;
+
+        * {
+            background-color: #8a44ab;
+            margin-left: 20px;
+            border-radius: 40px;
+            font-size: 24px;
+            user-select: none;
+        }
+
+        *:first-child {
+            margin-left: 0px;
+            margin-right: 20px;
+        }
+
+        *:hover {
+            background-color: #9b4bc1;
+        }
+
+        *:hover {
+            span {
+                background-color: #9b4bc1;
+            }
+        }
+    }
+
+    .closeTagViewButton {
+        margin: 105px 0 50px 0;
+        align-self: center;
+        font-size: 40px;
+        align-self: center;
+        font-size: 40px;
+        padding: 38px 85px;
+        border-radius: 30px;
+        background-color: #8a44ab;
+        user-select: none;
+    }
+
+    .closeTagViewButton:hover {
+        background-color: #9b4bc1;
+    }
+}

@@ -6,6 +6,12 @@
         display: flex;
         padding: 0 82px;
 
+        .error {
+            color: #D52B1E;
+            font-size: 12px;
+            text-align: center;
+        }
+
         .textareaContent {
             width: 50%;
             padding: 0 10px;
@@ -90,4 +96,16 @@
         display: flex;
         align-self: center;
     }
+}
+
+
+.titleButton {
+    margin-left: 26px;
+    font-size: 16px;
+    padding: 8px 26px;
+    background-color: #8a44ab;
+}
+
+.titleButton:hover {
+    background-color: #9b4bc1;
 }
