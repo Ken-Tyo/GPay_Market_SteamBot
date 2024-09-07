@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './styles.scss';
 
-const TextBox = ({ onChange, defaultValue, width, placeholder }) => {
+const TextBox = ({ onChange, defaultValue, width, placeholder, className }) => {
   const onChangeText = (event) => {
     let val = event.target.value;
     if (onChange) onChange(val);
@@ -12,7 +12,7 @@ const TextBox = ({ onChange, defaultValue, width, placeholder }) => {
   };
 
   return (
-    <div className={css.wrapper} onChange={onChangeText} style={wrapperStyle}>
+    <div className={css.wrapper + className ? css.className : ''} onChange={onChangeText} style={wrapperStyle}>
       <input
         type={'text'}
         defaultValue={defaultValue}

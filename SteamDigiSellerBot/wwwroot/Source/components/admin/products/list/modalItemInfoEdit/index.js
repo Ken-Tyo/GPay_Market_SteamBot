@@ -4,13 +4,26 @@ import DialogActions from '@mui/material/DialogActions';
 import ModalBase from '../../../../shared/modalBase';
 import Switch from '../../../../shared/switch';
 import css from './styles.scss';
-import { state, itemInfoTemplatesLoading, apiFetchItemInfoTemplateValues, apiCreateItemInfoTemplate, apiDeleteItemInfoTemplate } from '../../../../../containers/admin/state';
+import {
+  state,
+  itemInfoTemplatesLoading,
+  apiFetchItemInfoTemplateValues,
+  apiCreateItemInfoTemplate,
+  apiDeleteItemInfoTemplate,
+  apiFetchTagTypeReplacementValues,
+  apiFetchTagPromoReplacementValues
+} from '../../../../../containers/admin/state';
+import ModalTagsView from './ModalTagsView'
 import Textarea from '../../../../shared/textarea'
 
 const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplates }) => {
   if (!isOpen)
     return;
 
+  const maxRussianTextLength = 3969;
+  const maxEnglishTextLength = 3988;
+
+  const languageCodes = ['ru-RU', 'en-US'];
   const buttonWidth = '386px';
   const buttonTemplateWidth = '172px';
   const buttonCreateTemplateWidth = '207px';
@@ -18,6 +31,31 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
   const maxTemplatesCount = 100;
   const [russianText, setRussianText] = useState('');
   const [englishText, setEnglishText] = useState('');
+  const [errorRussianText, setErrorRussianText] = useState('');
+  const [errorEnglishText, setErrorEnglishText] = useState('');
+  const [showTagsModal, setShowTagsModal] = useState(false);
+  const [tagPromoReplacementValues, setTagPromoReplacementValues] = useState([])
+  const [tagTypeReplacementValues, setTagTypeReplacementValues] = useState([])
+
+  useEffect(() => {
+    apiFetchTagPromoReplacementValues().then((data) => {
+      if (!data || data.length == 0) {
+        return;
+      }
+
+      setTagPromoReplacementValues(data.flatMap(x => x.tagPromoReplacementValues));
+    })
+  }, [])
+
+  useEffect(() => {
+    apiFetchTagTypeReplacementValues().then((data) => {
+      if (!data || data.length == 0) {
+        return;
+      }
+
+      setTagTypeReplacementValues(data.flatMap(x => x.tagTypeReplacementValues));
+    })
+  }, [])
 
   const getTitle = () => {
     if (viewMode === 'main') {
@@ -51,11 +89,11 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
   const onCreateTemplate = () => {
     let itemInfoTemplateValues = [
     {
-        LanguageCode: "ru-RU",
+        LanguageCode: languageCodes[0],
         Value: russianText,
     },
     {
-      LanguageCode: "en-US",
+      LanguageCode: languageCodes[1],
       Value: englishText,
     }]
     apiCreateItemInfoTemplate(itemInfoTemplateValues);
@@ -105,10 +143,82 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
       className={css.btnCreateTemplate}/>);
   }
 
+  const renderTitleBtn = () => {
+    return (<Button
+      width={`auto`}
+      minWidth={`auto`}
+      height={`auto`}
+      className={css.titleButton}
+      text={`Теги`}
+      onClick={() => { setShowTagsModal(!showTagsModal) }}
+    />)
+  }
+
+  const renderModals = () => {
+    if (showTagsModal) {
+      return (<ModalTagsView
+          isOpen={showTagsModal}
+          onClose={() => setShowTagsModal(!showTagsModal)}/>);
+    }
+  }
+
+  const validateText = (russianText, englishText) => {
+    var russianTextLength = russianText.length
+      + getTextActualLengthDiff(russianText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[0])
+      + getTextActualLengthDiff(russianText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[0]);
+
+    if (russianTextLength > maxRussianTextLength) {
+      setErrorRussianText(`Превышена максимально возможная длина текста описания на русском языке (${maxRussianTextLength} символов)`)
+      return;
+    } else {
+      setErrorRussianText('')
+    }
+
+    var englishTextLength = englishText.length
+      + getTextActualLengthDiff(englishText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[1])
+      + getTextActualLengthDiff(englishText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[1]);
+
+    if (englishTextLength > maxEnglishTextLength) {
+      setErrorEnglishText(`Превышена максимально возможная длина текста описания на английском языке (${maxEnglishTextLength} символов)`)
+      return;
+    } else {
+      setErrorEnglishText('')
+    }
+  }
+
+  const getTextActualLengthDiff = (source, tagReplacementValues, patternTagValue, tagValue, languageCode) => {
+    let tagCount = ((source || '').match(patternTagValue) || []).length;
+    if (tagCount > 0) {
+      let findedTagValue = tagReplacementValues.find(x => x.languageCode == languageCode);
+      let diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
+      return diffTagReplacementValuesLength * tagCount;
+    }
+
+    return 0;
+  }
+
+  const renderRussianErrors = () => {
+    if (!errorRussianText) {
+      return;
+    }
+
+    return (<div className={css.error}>{errorRussianText}</div>)
+  }
+
+  const renderEnglishErrors = () => {
+    if (!errorEnglishText) {
+      return;
+    }
+
+    return (<div className={css.error}>{errorEnglishText}</div>)
+  }
+
   return (
+    <div>
     <ModalBase
       isOpen={isOpen}
       title={getTitle()}
+      renderTitleBtn={renderTitleBtn}
       width={1548}
       height={836}
       letterSpacing={'0.03em'}>
@@ -119,7 +229,7 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
               <path d="M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z" fill="white" />
               <path d="M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z" fill="#D52B1E" />
               <path d="M0 7.47266H32.2862V14.9455H0V7.47266Z" fill="#0039A6" />
-            </svg>
+              </svg>
             <Textarea
               onChange={handleChangeRussianText}
               defaultValue={russianText}
@@ -127,7 +237,8 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
               placeholder={'Введенный текст с описанием товара'}
               height={'492px'}
               width={'100%'}
-            />
+              />
+              {renderRussianErrors()}
           </div>
 
           <div className={css.textareaContent}>
@@ -147,7 +258,6 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
               <path d="M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z" fill="#C8102E" />
               <path d="M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z" fill="#C8102E" />
             </svg>
-
             <Textarea
               onChange={handleChangeEnglishText}
               defaultValue={englishText}
@@ -155,7 +265,8 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
               placeholder={'Введенный текст с описанием товара'}
               height={'492px'}
               width={'100%'}
-            />
+              />
+              {renderEnglishErrors()}
           </div>
         </div>
         <div className={css.templates}>
@@ -171,6 +282,9 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
             }}
             width={buttonWidth}
             onClick={() => {
+              if (!validateText(russianText, englishText)) {
+                return;
+              }
               onSave(russianText, englishText);
               setRussianText('');
               setEnglishText('');
@@ -192,7 +306,9 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
           />
         </div>
       </div>
-    </ModalBase>);
+      </ModalBase>
+      {renderModals()}
+    </div>);
 }
 
 export default ModalItemInfoEdit;

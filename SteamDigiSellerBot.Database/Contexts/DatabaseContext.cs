@@ -6,6 +6,7 @@ using SteamDigiSellerBot.Database.Models;
 using System;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SteamDigiSellerBot.Database.Entities.Templates;
+using SteamDigiSellerBot.Database.Entities.TagReplacements;
 
 namespace SteamDigiSellerBot.Database.Contexts
 {
@@ -47,6 +48,14 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<Language> Languages { get; set; }
         #endregion
 
+        #region Тэги
+        public DbSet<MarketPlace> MarketPlaces { get; set; }
+        public DbSet<TagPromoReplacement> TagPromoReplacements { get; set; }
+        public DbSet<TagPromoReplacementValue> TagPromoReplacementValues { get; set; }
+        public DbSet<TagTypeReplacement> TagTypeReplacements { get; set; }
+        public DbSet<TagTypeReplacementValue> TagTypeReplacementValues { get; set; }
+        #endregion
+
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
@@ -80,6 +89,30 @@ namespace SteamDigiSellerBot.Database.Contexts
 
             builder.Entity<Language>()
                 .HasKey(x => x.Code);
+
+            builder.Entity<TagTypeReplacementValue>()
+                .HasKey(x => new { x.TagTypeReplacementId, x.LanguageCode });
+
+            builder.Entity<TagTypeReplacement>()
+                .HasKey(x => new { x.Id });
+
+            builder.Entity<TagTypeReplacement>()
+                .HasMany(x => x.TagTypeReplacementValues)
+                .WithOne(x => x.TagTypeReplacement);
+
+            builder.Entity<TagPromoReplacementValue>()
+                .HasKey(x => new { x.TagPromoReplacementId, x.LanguageCode });
+
+            builder.Entity<TagPromoReplacement>()
+                .HasKey(x => new { x.Id });
+
+            builder.Entity<TagPromoReplacement>()
+                .HasOne(x => x.MarketPlace)
+                .WithMany(x => x.TagPromoReplacements);
+
+            builder.Entity<TagPromoReplacement>()
+                .HasMany(x => x.TagPromoReplacementValues)
+                .WithOne(x => x.TagPromoReplacement);
 
             base.OnModelCreating(builder);
         }

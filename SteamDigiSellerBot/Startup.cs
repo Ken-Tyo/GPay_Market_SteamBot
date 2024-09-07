@@ -8,15 +8,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SteamDigiSellerBot.Database.Extensions;
+using SteamDigiSellerBot.Database.Providers;
 using SteamDigiSellerBot.Database.Repositories;
+using SteamDigiSellerBot.Database.Repositories.TagRepositories;
 using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.ModelValidators;
 using SteamDigiSellerBot.Network;
 using SteamDigiSellerBot.Network.Providers;
 using SteamDigiSellerBot.Network.Services;
-using SteamDigiSellerBot.Services;
 using SteamDigiSellerBot.Services.Implementation;
 using SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService;
+using SteamDigiSellerBot.Services.Implementation.TagServices;
+using SteamDigiSellerBot.Services.Implementation.TagServices.MappingProfiles;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities.Services;
 using SteamDigiSellerBot.Validators;
@@ -53,7 +56,13 @@ namespace SteamDigiSellerBot
             services.AddTransient<IGamePriceRepository, GamePriceRepository>();
             services.AddTransient<IItemInfoTemplateRepository, ItemInfoTemplateRepository>();
             services.AddTransient<IItemInfoTemplateValueRepository, ItemInfoTemplateValueRepository>();
+            services.AddTransient<TagTypeReplacementsRepository>();
+            services.AddTransient<TagPromoReplacementsRepository>();
+            services.AddTransient<MarketPlaceProvider>();
+            services.AddTransient<LanguageProvider>();
             services.AddTransient<IItemBulkUpdateService, ItemBulkUpdateService>();
+            services.AddTransient<TagTypeReplacementService>();
+            services.AddTransient<TagPromoReplacementService>();
 
             services.AddSingleton<ICryptographyUtilityService, CryptographyUtilityService>();
 
@@ -82,7 +91,7 @@ namespace SteamDigiSellerBot
                 e.AddConsole();
                 e.AddDebug();
                 });
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup), typeof(AddOrUpdateTagTypeReplacementsCommandMappingProfile));
 
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
             {

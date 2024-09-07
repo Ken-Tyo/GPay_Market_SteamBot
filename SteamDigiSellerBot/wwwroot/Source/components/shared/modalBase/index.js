@@ -7,15 +7,18 @@ export default function ModalBase({
   isOpen,
   children,
   title,
+  renderTitleBtn,
   height,
   width,
   marginTop,
   letterSpacing,
+  className,
   isLoading,
 }) {
   return (
     <div>
       <Dialog
+        className={className ?? ''}
         open={isOpen}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -67,6 +70,7 @@ export default function ModalBase({
                 id="alert-dialog-title"
               >
                 {title}
+                {renderTitleBtn ? renderTitleBtn() : ''}
               </DialogTitle>
             </div>
           )}
