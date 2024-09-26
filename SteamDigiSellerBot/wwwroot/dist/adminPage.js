@@ -43923,17 +43923,18 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     var russianTextLength = russianText.length + getTextActualLengthDiff(russianText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[0]) + getTextActualLengthDiff(russianText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[0]);
     if (russianTextLength > maxRussianTextLength) {
       setErrorRussianText("\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0442\u0435\u043A\u0441\u0442\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435 (".concat(maxRussianTextLength, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"));
-      return;
+      return false;
     } else {
       setErrorRussianText('');
     }
     var englishTextLength = englishText.length + getTextActualLengthDiff(englishText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[1]) + getTextActualLengthDiff(englishText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[1]);
     if (englishTextLength > maxEnglishTextLength) {
       setErrorEnglishText("\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0442\u0435\u043A\u0441\u0442\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043D\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435 (".concat(maxEnglishTextLength, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"));
-      return;
+      return false;
     } else {
       setErrorEnglishText('');
     }
+    return true;
   };
   var getTextActualLengthDiff = function getTextActualLengthDiff(source, tagReplacementValues, patternTagValue, tagValue, languageCode) {
     var tagCount = ((source || '').match(patternTagValue) || []).length;
