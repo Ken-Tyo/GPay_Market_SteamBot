@@ -234,19 +234,28 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/add"), ValidationActionFilter]
         public async Task<IActionResult> Item(AddItemRequest model)
         {
+            _logger.LogWarning($"[ASHT] ItemAdd model={JsonConvert.SerializeObject(model)}");
+
             Item item = _mapper.Map<Item>(model);
 
             if (item != null)
             {
                 User user = await _userManager.GetUserAsync(User);
+
+                _logger.LogWarning($"[ASHT] ItemAdd GetByAppIdAndSubId item.AppId={item.AppId}, item.SubId={item.SubId}");
+
                 Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
+                    _logger.LogWarning($"[ASHT] ItemAdd oldItem == null item.AppId={item.AppId}, item.SubId={item.SubId}");
+
                     await _itemRepository.AddAsync(db, item);
                 }
                 else
                 {
+                    _logger.LogWarning($"[ASHT] ItemAdd oldItem != null oldItem.AppId={oldItem.AppId}, oldItem.SubId={oldItem.SubId}, item.AppId={item.AppId}, item.SubId={item.SubId}, oldItem={JsonConvert.SerializeObject(oldItem)}");
+
                     //_mapper.Map(item, oldItem);
                     item.IsDeleted = false;
                     item.Active = false;
@@ -255,8 +264,13 @@ namespace SteamDigiSellerBot.Controllers
                 }
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+
+                _logger.LogWarning($"[ASHT] ItemAdd _itemNetworkService.SetPrices finished item.AppId={item.AppId}, item.SubId={item.SubId}");
+
                 return Ok();
             }
+            else
+                _logger.LogWarning($"[ASHT] ItemAdd item == null model={JsonConvert.SerializeObject(model)}");
 
             return BadRequest();
         }
