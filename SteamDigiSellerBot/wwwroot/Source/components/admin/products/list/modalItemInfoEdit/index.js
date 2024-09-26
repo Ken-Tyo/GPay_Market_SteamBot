@@ -162,14 +162,14 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
     }
   }
 
-  const validateText = (russianText, englishText) => {
+  const validateText = (russianText, englishText) => {    
     var russianTextLength = russianText.length
       + getTextActualLengthDiff(russianText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[0])
       + getTextActualLengthDiff(russianText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[0]);
 
     if (russianTextLength > maxRussianTextLength) {
       setErrorRussianText(`Превышена максимально возможная длина текста описания на русском языке (${maxRussianTextLength} символов)`)
-      return;
+      return false;
     } else {
       setErrorRussianText('')
     }
@@ -180,10 +180,12 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
 
     if (englishTextLength > maxEnglishTextLength) {
       setErrorEnglishText(`Превышена максимально возможная длина текста описания на английском языке (${maxEnglishTextLength} символов)`)
-      return;
+      return false;
     } else {
       setErrorEnglishText('')
     }
+
+    return true;
   }
 
   const getTextActualLengthDiff = (source, tagReplacementValues, patternTagValue, tagValue, languageCode) => {
