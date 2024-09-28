@@ -27,7 +27,7 @@ namespace SteamDigiSellerBot.Network.Services
         /// <param name="aspNetUserId"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
+        public async Task<bool> UpdateItemsInfoesAsync(UpdateItemInfoCommands updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
         {
             HttpRequest httpRequest = new()
             {
@@ -40,28 +40,35 @@ namespace SteamDigiSellerBot.Network.Services
             try
             {
                 _logger.LogInformation($"STARTING update items description...");
-                foreach (var updateItemInfoCommand in updateItemInfoCommands)
+                foreach (var updateItemInfoGoodsItem in updateItemInfoCommands.Goods)
                 {
-                    _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ", updateItemInfoCommand.DigiSellerId);
+                    _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ", updateItemInfoGoodsItem.DigiSellerId);
                     var currentRetryCount = NetworkConst.TriesCount;
                     while (currentRetryCount > 0)
                     {
                         try
                         {
                             _logger.LogInformation("    {num} try", NetworkConst.TriesCount - currentRetryCount + 1);
-                            var updateResult = await UpdateItemsInfoPostAsync(updateItemInfoCommand, token, httpRequest);
+                            var updateResult = await UpdateItemsInfoPostAsync(
+                                new UpdateItemInfoCommand(
+                                    digiSellerId: updateItemInfoGoodsItem.DigiSellerId,
+                                    name: updateItemInfoGoodsItem.Name,
+                                    infoData: updateItemInfoCommands.InfoData,
+                                    additionalInfoData: updateItemInfoCommands.AdditionalInfoData),
+                                token,
+                                httpRequest);
 
                             if (updateResult.Contains("\"status\":\"Success\""))
                             {
-                                _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoCommand.DigiSellerId);
+                                _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoGoodsItem.DigiSellerId);
                                 break;
                             }
                             else
                             {
-                                _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. Retry.", updateItemInfoCommand.DigiSellerId);
+                                _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. Retry.", updateItemInfoGoodsItem.DigiSellerId);
                             }
 
-                            _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoCommand.DigiSellerId);
+                            _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
                         }
                         catch (HttpException ex)
                         {

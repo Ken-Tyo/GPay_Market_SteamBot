@@ -42,7 +42,7 @@ namespace SteamDigiSellerBot.Controllers
 
         [HttpPatch("iteminfo")]
         public async Task<IActionResult> UpdateItemInfoAsync(
-            [FromBody] List<UpdateItemInfoCommand> updateItemInfoCommands,
+            [FromBody] UpdateItemInfoCommands updateItemInfoCommands,
             CancellationToken cancellationToken)
         { 
             User user = await _userManager.GetUserAsync(User);

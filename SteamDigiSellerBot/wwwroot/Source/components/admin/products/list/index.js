@@ -535,32 +535,36 @@ const products = () => {
           toggleItemAdditionalInfoModal(false);
         }}
         onSave={(russianText, englishText) => {
-          var updateItemInfoesCommand = items
+          var goods = items
             .filter(i => selectedItems.includes(i.id))
             .flatMap(x => x.digiSellerIds)
             .map(x => {
               return {
                 digiSellerId: x,
-                description: editItemMainInfoModalIsOpen ? [{
-                  locale: "ru-RU",
-                  value: russianText
-                }, {
-                  locale: "en-US",
-                  value: englishText
-                  }] : [],
-                add_info: !editItemMainInfoModalIsOpen ? [{
-                  locale: "ru-RU",
-                  value: russianText
-                }, {
-                  locale: "en-US",
-                  value: englishText
-                }] : []
               };
             });
 
+          var updateItemInfoesCommands = {
+            description: editItemMainInfoModalIsOpen ? [{
+              locale: "ru-RU",
+              value: russianText
+            }, {
+              locale: "en-US",
+              value: englishText
+            }] : [],
+            add_info: !editItemMainInfoModalIsOpen ? [{
+              locale: "ru-RU",
+              value: russianText
+            }, {
+              locale: "en-US",
+              value: englishText
+            }] : [],
+            goods: goods
+          }
+
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
-          apiUpdateItemInfoes(updateItemInfoesCommand);
+          apiUpdateItemInfoes(updateItemInfoesCommands);
         }}
         itemInfoTemplates={ itemInfoTemplates }
       />

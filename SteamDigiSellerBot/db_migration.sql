@@ -389,3 +389,10 @@ foreign key ("TagPromoReplacementId") references "TagPromoReplacements"("Id") on
 ALTER TABLE "TagPromoReplacementValues" add constraint "TagPromoReplacementValues_LanguageCode_fkey" 
 foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
 
+insert into "TagTypeReplacements"  ("Id", "IsDlc") values (1, false)
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (1, 'ru-RU', 'игра / программа')
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (1, 'en-US', 'game / software')
+insert into "TagTypeReplacements" ("Id", "IsDlc") values (2, true)
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'ru-RU', 'дополнение')
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'en-US', 'DLC')
+
