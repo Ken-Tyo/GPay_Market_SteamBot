@@ -189,11 +189,17 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
   }
 
   const getTextActualLengthDiff = (source, tagReplacementValues, patternTagValue, tagValue, languageCode) => {
+    if (tagReplacementValues.length == 0) {
+      return 0;
+    }
+
     let tagCount = ((source || '').match(patternTagValue) || []).length;
     if (tagCount > 0) {
       let findedTagValue = tagReplacementValues.find(x => x.languageCode == languageCode);
-      let diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
-      return diffTagReplacementValuesLength * tagCount;
+      if (findedTagValue.value) {
+        let diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
+        return diffTagReplacementValuesLength * tagCount;
+      }
     }
 
     return 0;

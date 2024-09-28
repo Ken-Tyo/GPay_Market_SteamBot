@@ -43937,13 +43937,18 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     return true;
   };
   var getTextActualLengthDiff = function getTextActualLengthDiff(source, tagReplacementValues, patternTagValue, tagValue, languageCode) {
+    if (tagReplacementValues.length == 0) {
+      return 0;
+    }
     var tagCount = ((source || '').match(patternTagValue) || []).length;
     if (tagCount > 0) {
       var findedTagValue = tagReplacementValues.find(function (x) {
         return x.languageCode == languageCode;
       });
-      var diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
-      return diffTagReplacementValuesLength * tagCount;
+      if (findedTagValue.value) {
+        var diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
+        return diffTagReplacementValuesLength * tagCount;
+      }
     }
     return 0;
   };
