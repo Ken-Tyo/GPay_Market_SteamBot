@@ -45638,32 +45638,35 @@ var products = function products() {
         toggleItemAdditionalInfoModal(false);
       },
       onSave: function onSave(russianText, englishText) {
-        var updateItemInfoesCommand = items.filter(function (i) {
+        var goods = items.filter(function (i) {
           return selectedItems.includes(i.id);
         }).flatMap(function (x) {
           return x.digiSellerIds;
         }).map(function (x) {
           return {
-            digiSellerId: x,
-            description: editItemMainInfoModalIsOpen ? [{
-              locale: "ru-RU",
-              value: russianText
-            }, {
-              locale: "en-US",
-              value: englishText
-            }] : [],
-            add_info: !editItemMainInfoModalIsOpen ? [{
-              locale: "ru-RU",
-              value: russianText
-            }, {
-              locale: "en-US",
-              value: englishText
-            }] : []
+            digiSellerId: x
           };
         });
+        var updateItemInfoesCommands = {
+          description: editItemMainInfoModalIsOpen ? [{
+            locale: "ru-RU",
+            value: russianText
+          }, {
+            locale: "en-US",
+            value: englishText
+          }] : [],
+          add_info: !editItemMainInfoModalIsOpen ? [{
+            locale: "ru-RU",
+            value: russianText
+          }, {
+            locale: "en-US",
+            value: englishText
+          }] : [],
+          goods: goods
+        };
         toggleItemMainInfoModal(false);
         toggleItemAdditionalInfoModal(false);
-        apiUpdateItemInfoes(updateItemInfoesCommand);
+        apiUpdateItemInfoes(updateItemInfoesCommands);
       },
       itemInfoTemplates: itemInfoTemplates
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
