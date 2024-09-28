@@ -234,7 +234,7 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/add"), ValidationActionFilter]
         public async Task<IActionResult> Item(AddItemRequest model)
         {
-            _logger.LogWarning($"[ASHT] ItemAdd model={JsonConvert.SerializeObject(model)}");
+            _logger.LogWarning($"[ASHT] ItemAdd AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
 
             Item item = _mapper.Map<Item>(model);
 
@@ -254,7 +254,7 @@ namespace SteamDigiSellerBot.Controllers
                 }
                 else
                 {
-                    _logger.LogWarning($"[ASHT] ItemAdd oldItem != null oldItem.AppId={oldItem.AppId}, oldItem.SubId={oldItem.SubId}, item.AppId={item.AppId}, item.SubId={item.SubId}, oldItem={JsonConvert.SerializeObject(oldItem)}");
+                    _logger.LogWarning($"[ASHT] ItemAdd oldItem != null oldItem.DigiSellerIds={string.Join(",", oldItem.DigiSellerIds)},oldItem.AppId={oldItem.AppId}, oldItem.SubId={oldItem.SubId}, item.AppId={item.AppId}, item.SubId={item.SubId}");
 
                     //_mapper.Map(item, oldItem);
                     item.IsDeleted = false;
@@ -270,7 +270,7 @@ namespace SteamDigiSellerBot.Controllers
                 return Ok();
             }
             else
-                _logger.LogWarning($"[ASHT] ItemAdd item == null model={JsonConvert.SerializeObject(model)}");
+                _logger.LogWarning($"[ASHT] ItemAdd item == null AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
 
             return BadRequest();
         }
@@ -278,19 +278,22 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/edit/{id}"), ValidationActionFilter]
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
-            _logger.LogWarning($"[ASHT] ItemEdit id={id}, model={JsonConvert.SerializeObject(model)}");
+            _logger.LogWarning($"[ASHT] ItemEdit id={id}, AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
 
             Item item = await _itemRepository.GetByIdAsync(db,id);
-            if (item.IsDeleted)
+
+            if (item != null && item.IsDeleted)
                 return BadRequest();
 
             if (item != null)
             {
-                _logger.LogWarning($"[ASHT] ItemEdit id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={JsonConvert.SerializeObject(item.DigiSellerIds)}");
+                _logger.LogWarning($"[ASHT] ItemEdit id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={string.Join(",", item.DigiSellerIds)}");
 
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map<AddItemRequest, Item>(model, item);
+
+                _logger.LogWarning($"[ASHT] ItemEdit editedItem.id={editedItem.Id}, editedItem.AppId={editedItem.AppId}, editedItem.SubId={editedItem.SubId}, editedItem.DigiSellerIds={string.Join(",", editedItem.DigiSellerIds)}");
 
                 string newAppId = item.AppId;
                 string newSubId = item.SubId;
@@ -299,14 +302,14 @@ namespace SteamDigiSellerBot.Controllers
                 {
                     newAppId = model.AppId;
 
-                    _logger.LogWarning($"[ASHT] ItemEdit appId different new and old: id={id}, model={JsonConvert.SerializeObject(model)}");
+                    _logger.LogWarning($"[ASHT] ItemEdit appId different new and old: id={id}, item.appId={item.AppId}, model.AppId={model.AppId}, model.SubId={model.SubId}, model.DigiSellerIds={model.DigiSellerIds}");
                 }
 
                 if (item.SubId != model.SubId)
                 {
                     newSubId = model.SubId;
 
-                    _logger.LogWarning($"[ASHT] ItemEdit subId different new and old: id={id}, model={JsonConvert.SerializeObject(model)}");
+                    _logger.LogWarning($"[ASHT] ItemEdit subId different new and old: id={id}, model.AppId={model.AppId}, item.SubId={item.SubId}, model.SubId={model.SubId}, model.DigiSellerIds={model.DigiSellerIds}");
                 }
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
@@ -320,6 +323,8 @@ namespace SteamDigiSellerBot.Controllers
 
                 return Ok();
             }
+            else
+                _logger.LogWarning($"[ASHT] ItemEdit item == null AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
 
             return BadRequest();
         }
@@ -376,7 +381,7 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/bulk/delete"), ValidationActionFilter]
         public async Task<IActionResult> BulkDelete(BulkDeleteRequest request)
         {
-            _logger.LogWarning($"[ASHT] BulkDelete request={JsonConvert.SerializeObject(request)}");
+            _logger.LogWarning($"[ASHT] BulkDelete request={string.Join(",", request.Ids)}");
 
             foreach (var id in request.Ids)
             {
@@ -384,10 +389,12 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (item != null)
                 {
-                    _logger.LogWarning($"[ASHT] BulkDelete id={id}, appId={item.AppId}, subId={item.SubId}");
+                    _logger.LogWarning($"[ASHT] BulkDelete id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={string.Join(",", item.DigiSellerIds)}");
 
                     await _itemRepository.DeleteItemAsync(item);
                 }
+                else
+                    _logger.LogWarning($"[ASHT] BulkDelete item = null id={id}");
             }
 
             return Ok();
@@ -437,10 +444,12 @@ namespace SteamDigiSellerBot.Controllers
                 Item item = await _itemRepository.GetByIdAsync(db,id);
                 if (item != null)
                 {
-                    _logger.LogWarning($"[ASHT] Delete id={id}, appId={item.AppId}, subId={item.SubId}");
+                    _logger.LogWarning($"[ASHT] Delete id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={string.Join(",", item.DigiSellerIds)}");
 
                     await _itemRepository.DeleteItemAsync(item);
                 }
+                else
+                    _logger.LogWarning($"[ASHT] Delete item = null id={id}");
             }
 
             return Ok(id);
