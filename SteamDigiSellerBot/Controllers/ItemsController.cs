@@ -244,24 +244,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 _logger.LogWarning($"[ASHT] ItemAdd GetByAppIdAndSubId item.AppId={item.AppId}, item.SubId={item.SubId}");
 
-                Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
-
-                if (oldItem == null) // Проверяется, что существующий товар не найден.
-                {
-                    _logger.LogWarning($"[ASHT] ItemAdd oldItem == null item.AppId={item.AppId}, item.SubId={item.SubId}");
-
-                    await _itemRepository.AddAsync(db, item);
-                }
-                else
-                {
-                    _logger.LogWarning($"[ASHT] ItemAdd oldItem != null oldItem.DigiSellerIds={string.Join(",", oldItem.DigiSellerIds)},oldItem.AppId={oldItem.AppId}, oldItem.SubId={oldItem.SubId}, item.AppId={item.AppId}, item.SubId={item.SubId}");
-
-                    //_mapper.Map(item, oldItem);
-                    item.IsDeleted = false;
-                    item.Active = false;
-                    item.AddedDateTime = DateTime.UtcNow;
-                    await _itemRepository.ReplaceAsync(db, oldItem, item);//.EditAsync(oldItem);
-                }
+                await _itemRepository.AddAsync(db, item);
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
 
