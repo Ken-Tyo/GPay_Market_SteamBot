@@ -92,7 +92,7 @@ namespace DatabaseRepository.Repositories
         public async Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate)
         {
             await using var databaseContext = _databaseContextFactory.CreateDbContext();
-            return await ListAsync(databaseContext);
+            return await ListAsync(databaseContext, predicate);
         }
         public async Task<List<T>> ListAsync(DbContext databaseContext, Expression<Func<T, bool>> predicate)
         {
