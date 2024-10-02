@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,14 @@ namespace SteamDigiSellerBot.Controllers
                 cancellationToken);
 
             return Ok();
+        }
+
+        [HttpGet("iteminfo/jobstatistics")]
+        public async Task<IActionResult> GetActiveJobStatisticAsync(CancellationToken cancellationToken)
+        {
+            var statistics = JobStorage.Current.GetMonitoringApi().GetStatistics();
+
+            return Ok(statistics);
         }
     }
 }

@@ -1,5 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,8 @@ using SteamDigiSellerBot.Services.Implementation.TagServices.MappingProfiles;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities.Services;
 using SteamDigiSellerBot.Validators;
+using SteamKit2.GC.Dota.Internal;
+using System;
 
 namespace SteamDigiSellerBot
 {
@@ -106,6 +110,7 @@ namespace SteamDigiSellerBot
             });
 
             AddValidators(services);
+            AddHangfire(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,5 +148,18 @@ namespace SteamDigiSellerBot
                 .AddFluentValidationAutoValidation()
                 .AddValidatorsFromAssemblyContaining<BulkActionRequestValidator>()
                 .AddValidatorsFromAssemblyContaining<UpdateItemInfoCommandValidator>();
+
+        private void AddHangfire(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHangfire(options =>
+            {
+                options.SetDataCompatibilityLevel(CompatibilityLevel.Version_180);
+                options.UseSimpleAssemblyNameTypeSerializer();
+                options.UseRecommendedSerializerSettings();
+                options.UsePostgreSqlStorage(configuration.GetConnectionString(DatabaseExtension.ConnectionName));
+            });
+
+            services.AddHangfireServer(options => options.WorkerCount = 1);
+        }
     }
 }

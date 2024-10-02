@@ -1084,7 +1084,6 @@ export const apiFetchTagPromoReplacementValues = async () => {
 
   if (res.ok) {
     const json = await res.json();
-    console.log(json);
     return json;
   }
 
@@ -1108,4 +1107,23 @@ export const apiTagPromoReplacementValues = async (data) => {
   }
 
   return false;
+};
+
+export const apiGetUpdateItemInfoJobStatistics = async () => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+
+  const options = {
+    method: "GET",
+    headers: headers
+  }
+
+  let res = await fetch(`/iteminfo/jobstatistics`, options);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
 };

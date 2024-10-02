@@ -26506,6 +26506,7 @@ __webpack_require__.d(state_namespaceObject, {
   QE: () => (apiGetCurrencies),
   oq: () => (apiGetItem),
   wL: () => (apiGetSteamRegions),
+  nt: () => (apiGetUpdateItemInfoJobStatistics),
   bh: () => (apiLoadNewProxy),
   aS: () => (apiResetGameSession),
   wE: () => (apiSaveBotRegionSettings),
@@ -29184,18 +29185,17 @@ var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
         case 2:
           res = _context66.sent;
           if (!res.ok) {
-            _context66.next = 9;
+            _context66.next = 8;
             break;
           }
           _context66.next = 6;
           return res.json();
         case 6:
           json = _context66.sent;
-          console.log(json);
           return _context66.abrupt("return", json);
-        case 9:
+        case 8:
           return _context66.abrupt("return", null);
-        case 10:
+        case 9:
         case "end":
           return _context66.stop();
       }
@@ -29238,6 +29238,43 @@ var apiTagPromoReplacementValues = /*#__PURE__*/function () {
   }));
   return function apiTagPromoReplacementValues(_x64) {
     return _ref67.apply(this, arguments);
+  };
+}();
+var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
+  var _ref68 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee68() {
+    var headers, options, res, json;
+    return state_regeneratorRuntime().wrap(function _callee68$(_context68) {
+      while (1) switch (_context68.prev = _context68.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          options = {
+            method: "GET",
+            headers: headers
+          };
+          _context68.next = 5;
+          return fetch("/iteminfo/jobstatistics", options);
+        case 5:
+          res = _context68.sent;
+          if (!res.ok) {
+            _context68.next = 11;
+            break;
+          }
+          _context68.next = 9;
+          return res.json();
+        case 9:
+          json = _context68.sent;
+          return _context68.abrupt("return", json);
+        case 11:
+          return _context68.abrupt("return", null);
+        case 12:
+        case "end":
+          return _context68.stop();
+      }
+    }, _callee68);
+  }));
+  return function apiGetUpdateItemInfoJobStatistics() {
+    return _ref68.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -43805,6 +43842,11 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
       setTagTypeReplacementValues(data.flatMap(function (x) {
         return x.tagTypeReplacementValues;
       }));
+    });
+  }, []);
+  (0,react.useEffect)(function () {
+    apiGetUpdateItemInfoJobStatistics().then(function (data) {
+      console.log("job statistics:", data);
     });
   }, []);
   var getTitle = function getTitle() {

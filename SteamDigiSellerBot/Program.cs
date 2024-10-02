@@ -9,6 +9,7 @@ using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Network.Services.Hangfire;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -55,6 +56,18 @@ namespace SteamDigiSellerBot
                 .WriteTo.Logger(lc => lc
                     .Filter
                     .ByIncludingOnly(Matching.FromSource<UpdateItemsInfoService>())
+                    .WriteTo
+                    .File(
+                       System.IO.Path.Combine("Logs", "update_item_descriptions.txt"),
+                       rollingInterval: RollingInterval.Day,
+                       fileSizeLimitBytes: 30 * 1024 * 1024,
+                       rollOnFileSizeLimit: true,
+                       shared: true,
+                       flushToDiskInterval: TimeSpan.FromSeconds(1),
+                       restrictedToMinimumLevel: LogEventLevel.Information))
+                .WriteTo.Logger(lc => lc
+                    .Filter
+                    .ByIncludingOnly(Matching.FromSource<HangfireUpdateItemInfoJob>())
                     .WriteTo
                     .File(
                        System.IO.Path.Combine("Logs", "update_item_descriptions.txt"),
