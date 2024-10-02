@@ -13,10 +13,10 @@ namespace SteamDigiSellerBot.Database.Extensions
 {
     public static class DatabaseExtension
     {
+        public const string ConnectionName = "DefaultDebugConnection";
+
         public static void AddDatabaseWithIdentity(this IServiceCollection services, IConfiguration configuration)
         {
-            string connection = "DefaultDebugConnection";
-
 #if !DEBUG
             //connection = "DefaultConnection";
 #endif
@@ -26,7 +26,7 @@ namespace SteamDigiSellerBot.Database.Extensions
                 options.EnableSensitiveDataLogging();
                 //options.LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuted });
                 options.UseLazyLoadingProxies()
-                    .UseNpgsql(configuration.GetConnectionString(connection), options2=> options2
+                    .UseNpgsql(configuration.GetConnectionString(ConnectionName), options2=> options2
                         .EnableRetryOnFailure(3, TimeSpan.FromSeconds(15), null)
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             }, poolSize: 256);

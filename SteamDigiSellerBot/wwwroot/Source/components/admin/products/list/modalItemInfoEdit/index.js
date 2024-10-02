@@ -11,7 +11,8 @@ import {
   apiCreateItemInfoTemplate,
   apiDeleteItemInfoTemplate,
   apiFetchTagTypeReplacementValues,
-  apiFetchTagPromoReplacementValues
+  apiFetchTagPromoReplacementValues,
+  apiGetUpdateItemInfoJobStatistics
 } from '../../../../../containers/admin/state';
 import ModalTagsView from './ModalTagsView'
 import Textarea from '../../../../shared/textarea'
@@ -54,6 +55,12 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
       }
 
       setTagTypeReplacementValues(data.flatMap(x => x.tagTypeReplacementValues));
+    })
+  }, [])
+
+  useEffect(() => {
+    apiGetUpdateItemInfoJobStatistics().then((data) => {      
+      console.log(`job statistics:`, data);
     })
   }, [])
 

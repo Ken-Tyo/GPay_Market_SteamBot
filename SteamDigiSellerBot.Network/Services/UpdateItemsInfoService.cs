@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Hangfire;
+using Hangfire.Server;
+using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Providers;
+using SteamDigiSellerBot.Network.Services.Hangfire;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using xNet;
@@ -11,13 +13,22 @@ namespace SteamDigiSellerBot.Network.Services
 {
     public sealed class UpdateItemsInfoService
     {
+        private const int _immediatelyRunMaximumTaskCount = 5;
+
         private readonly DigisellerTokenProvider _digisellerTokenProvider;
+        private readonly IBackgroundJobClientV2 _backgroundJobClient;
         private readonly ILogger<UpdateItemsInfoService> _logger;
 
-        public UpdateItemsInfoService(DigisellerTokenProvider digisellerTokenProvider, ILogger<UpdateItemsInfoService> logger)
+        public UpdateItemsInfoService(
+            DigisellerTokenProvider digisellerTokenProvider,
+            IBackgroundJobClientV2 backgroundJobClient,            
+            ILogger<UpdateItemsInfoService> logger)
         {
             _digisellerTokenProvider = digisellerTokenProvider ?? throw new ArgumentNullException(nameof(digisellerTokenProvider));
+            _backgroundJobClient = backgroundJobClient ?? throw new ArgumentNullException(nameof(backgroundJobClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            _backgroundJobClient.Storage.JobExpirationTimeout = TimeSpan.FromDays(1);
         }
 
         /// <summary>
@@ -29,6 +40,15 @@ namespace SteamDigiSellerBot.Network.Services
         /// <returns></returns>
         public async Task<bool> UpdateItemsInfoesAsync(UpdateItemInfoCommands updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
         {
+            if (updateItemInfoCommands.InfoData.Count > _immediatelyRunMaximumTaskCount || updateItemInfoCommands.AdditionalInfoData.Count > _immediatelyRunMaximumTaskCount)
+            {
+                _backgroundJobClient.Schedule<HangfireUpdateItemInfoJob>(
+                    s => s.ExecuteAsync(new HangfireUpdateItemInfoJobCommand(updateItemInfoCommands, aspNetUserId)),
+                    TimeSpan.FromMilliseconds(1));
+
+                return true;
+            }
+
             HttpRequest httpRequest = new()
             {
                 Cookies = new CookieDictionary(),
@@ -49,7 +69,7 @@ namespace SteamDigiSellerBot.Network.Services
                         try
                         {
                             _logger.LogInformation("    {num} try", NetworkConst.TriesCount - currentRetryCount + 1);
-                            var updateResult = await UpdateItemsInfoPostAsync(
+                            var updateResult = await UpdateItemInfoPostAsync(
                                 new UpdateItemInfoCommand(
                                     digiSellerId: updateItemInfoGoodsItem.DigiSellerId,
                                     name: updateItemInfoGoodsItem.Name,
@@ -94,7 +114,7 @@ namespace SteamDigiSellerBot.Network.Services
             return false;
         }
 
-        private static async Task<string> UpdateItemsInfoPostAsync(UpdateItemInfoCommand updateItemInfoCommand, string token, HttpRequest httpRequest)
+        internal static async Task<string> UpdateItemInfoPostAsync(UpdateItemInfoCommand updateItemInfoCommand, string token, HttpRequest httpRequest)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
