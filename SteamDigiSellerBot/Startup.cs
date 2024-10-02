@@ -26,8 +26,6 @@ using SteamDigiSellerBot.Services.Implementation.TagServices.MappingProfiles;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities.Services;
 using SteamDigiSellerBot.Validators;
-using SteamKit2.GC.Dota.Internal;
-using System;
 
 namespace SteamDigiSellerBot
 {
