@@ -40,7 +40,7 @@ namespace SteamDigiSellerBot.Network.Services
         /// <returns></returns>
         public async Task<bool> UpdateItemsInfoesAsync(UpdateItemInfoCommands updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
         {
-            if (updateItemInfoCommands.InfoData.Count > _immediatelyRunMaximumTaskCount || updateItemInfoCommands.AdditionalInfoData.Count > _immediatelyRunMaximumTaskCount)
+            if (updateItemInfoCommands.Goods.Count > _immediatelyRunMaximumTaskCount)
             {
                 _backgroundJobClient.Schedule<HangfireUpdateItemInfoJob>(
                     s => s.ExecuteAsync(new HangfireUpdateItemInfoJobCommand(updateItemInfoCommands, aspNetUserId)),
