@@ -41,9 +41,14 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
             try
             {
                 _logger.LogInformation($"STARTING update items description...");
+                int counter = 1;
+                int successCounter = 0;
                 foreach (var updateItemInfoGoodsItem in hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods)
                 {
-                    _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ", updateItemInfoGoodsItem.DigiSellerId);
+                    _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ({counter}/{total})",
+                        updateItemInfoGoodsItem.DigiSellerId,
+                        counter,
+                        hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count);
                     var currentRetryCount = NetworkConst.TriesCount;
                     while (currentRetryCount > 0)
                     {
@@ -62,6 +67,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                             if (updateResult.Contains("\"status\":\"Success\""))
                             {
                                 _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoGoodsItem.DigiSellerId);
+                                successCounter++;
                                 break;
                             }
                             else
@@ -73,19 +79,25 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                         }
                         catch (HttpException ex)
                         {
-                            await Task.Delay(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds), CancellationToken.None);
+                            if (ex.HttpStatusCode == HttpStatusCode.Unauthorized) {
+                                _logger.LogInformation("Токен протух. Генерация нового токена.");
+                                token = await _digisellerTokenProvider.GetDigisellerTokenAsync(hangfireUpdateJobCommand.AspNetUserId, CancellationToken.None);
+                                continue;
+                            }
+
                             _logger.LogError(default, ex, "UpdateItemsInfoesAsync");
+                            await Task.Delay(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds), CancellationToken.None);
                         }
                         finally
                         {
                             currentRetryCount--;
                         }
                     }
+
+                    counter++;
                 }
 
-                _logger.LogInformation($"FINISHED updating items description.");
-
-                return;
+                _logger.LogInformation($"FINISHED updating items description {successCounter}/{hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count}");
             }
             catch (HttpException ex)
             {
