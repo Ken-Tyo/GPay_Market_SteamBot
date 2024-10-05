@@ -12,7 +12,7 @@ const TextBox = ({ onChange, defaultValue, width, placeholder, className }) => {
   };
 
   return (
-    <div className={css.wrapper + className ? css.className : ''} onChange={onChangeText} style={wrapperStyle}>
+    <div className={css.wrapper + (className ? css.className : '')} onChange={onChangeText} style={wrapperStyle}>
       <input
         type={'text'}
         defaultValue={defaultValue}

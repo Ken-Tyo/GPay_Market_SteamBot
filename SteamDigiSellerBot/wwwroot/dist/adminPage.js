@@ -42912,7 +42912,7 @@ var shared_textbox_TextBox = function TextBox(_ref) {
     width: width || '226px'
   };
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-    className: shared_textbox_styles.wrapper + className ? shared_textbox_styles.className : '',
+    className: shared_textbox_styles.wrapper + (className ? shared_textbox_styles.className : ''),
     onChange: onChangeText,
     style: wrapperStyle,
     children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
