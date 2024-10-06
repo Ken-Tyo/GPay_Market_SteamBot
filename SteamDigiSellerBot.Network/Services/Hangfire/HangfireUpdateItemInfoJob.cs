@@ -36,6 +36,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                 UserAgent = Http.ChromeUserAgent()
             };
 
+            var sbNotUpdatedIds = new StringBuilder();
+
             string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(hangfireUpdateJobCommand.AspNetUserId, CancellationToken.None);
 
             try
@@ -86,7 +88,16 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                             }
 
                             _logger.LogError(default, ex, "UpdateItemsInfoesAsync");
-                            await Task.Delay(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds), CancellationToken.None);
+                            // delayTime = 5 + e^[0, 1, 2, 3, 4, 0, 1, 2, 3, 4] seconds
+                            // max(delayTime) ~ 1min
+                            var delayTime = NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds + Math.Exp((NetworkConst.TriesCount - currentRetryCount) % 5);
+                            var randomTimeDiff = new Random().Next(99) / 100.0;
+                            await Task.Delay(TimeSpan.FromMilliseconds(delayTime + randomTimeDiff), CancellationToken.None);
+
+                            if (currentRetryCount == 1)
+                            {
+                                sbNotUpdatedIds.Append($"{updateItemInfoGoodsItem.DigiSellerId},");
+                            }
                         }
                         finally
                         {
@@ -98,6 +109,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                 }
 
                 _logger.LogInformation($"FINISHED updating items description {successCounter}/{hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count}");
+                _logger.LogInformation($"NOT UPDATED DigisellerIds: {sbNotUpdatedIds}");
             }
             catch (HttpException ex)
             {
