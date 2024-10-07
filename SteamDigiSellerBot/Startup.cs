@@ -13,6 +13,7 @@ using SteamDigiSellerBot.Database.Extensions;
 using SteamDigiSellerBot.Database.Providers;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Database.Repositories.TagRepositories;
+using SteamDigiSellerBot.Filters;
 using SteamDigiSellerBot.Hubs;
 using SteamDigiSellerBot.ModelValidators;
 using SteamDigiSellerBot.Network;
@@ -138,6 +139,11 @@ namespace SteamDigiSellerBot
 
                 endpoints.MapHub<AdminHub>("/adminhub");
                 endpoints.MapHub<HomeHub>("/homehub");
+            });
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+            {
+                Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
             });
         }
 
