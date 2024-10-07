@@ -1,6 +1,7 @@
 ﻿using Castle.Core.Logging;
 using Hangfire;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Providers;
 using System;
@@ -35,6 +36,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                 Cookies = new CookieDictionary(),
                 UserAgent = Http.ChromeUserAgent()
             };
+
+            var sbNotUpdatedIds = new StringBuilder();
 
             string token = await _digisellerTokenProvider.GetDigisellerTokenAsync(hangfireUpdateJobCommand.AspNetUserId, CancellationToken.None);
 
@@ -76,17 +79,29 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                             }
 
                             _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
+
+                            var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
                         }
                         catch (HttpException ex)
                         {
-                            if (ex.HttpStatusCode == HttpStatusCode.Unauthorized) {
+                            _logger.LogError(default, ex, "HangfireUpdateItemInfoJob.ExecuteAsync");
+                            // delayTime = 7 + e^[0, 1, 2, 3, 4, 0, 1, 2, 3, 4] seconds
+                            // max(delayTime) ~ 1min
+                            var delayTimeInMs = (NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds + Math.Exp((NetworkConst.TriesCount - currentRetryCount) % 5)) * 1000;
+                            await RandomDelayStaticProvider.DelayAsync((int)Math.Round(delayTimeInMs), 1000);
+
+                            if (currentRetryCount == 1)
+                            {
+                                sbNotUpdatedIds.Append($"{updateItemInfoGoodsItem.DigiSellerId},");
+                            }
+
+                            if (ex.HttpStatusCode == HttpStatusCode.Unauthorized)
+                            {
                                 _logger.LogInformation("Токен протух. Генерация нового токена.");
                                 token = await _digisellerTokenProvider.GetDigisellerTokenAsync(hangfireUpdateJobCommand.AspNetUserId, CancellationToken.None);
                                 continue;
                             }
-
-                            _logger.LogError(default, ex, "UpdateItemsInfoesAsync");
-                            await Task.Delay(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds), CancellationToken.None);
                         }
                         finally
                         {
@@ -98,10 +113,11 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                 }
 
                 _logger.LogInformation($"FINISHED updating items description {successCounter}/{hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count}");
+                _logger.LogInformation($"NOT UPDATED DigisellerIds: {sbNotUpdatedIds}");
             }
             catch (HttpException ex)
             {
-                _logger.LogError(default, ex, "UpdateItemsInfoesAsync");
+                _logger.LogError(default, ex, "HangfireUpdateItemInfoJob.ExecuteAsync");
             }
         }
     }

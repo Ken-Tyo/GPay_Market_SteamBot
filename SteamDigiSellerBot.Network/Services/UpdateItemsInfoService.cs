@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Providers;
 using SteamDigiSellerBot.Network.Services.Hangfire;
@@ -44,7 +45,7 @@ namespace SteamDigiSellerBot.Network.Services
             {
                 _backgroundJobClient.Schedule<HangfireUpdateItemInfoJob>(
                     s => s.ExecuteAsync(new HangfireUpdateItemInfoJobCommand(updateItemInfoCommands, aspNetUserId)),
-                    TimeSpan.FromMilliseconds(1));
+                    TimeSpan.FromSeconds(10));
 
                 return true;
             }
@@ -89,11 +90,25 @@ namespace SteamDigiSellerBot.Network.Services
                             }
 
                             _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
+
+                            var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
                         }
                         catch (HttpException ex)
                         {
-                            await Task.Delay(TimeSpan.FromSeconds(NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds), cancellationToken);
                             _logger.LogError(default, ex, "UpdateItemsInfoesAsync");
+                            // delayTime = 7 + e^[0, 1, 2, 3, 4, 0, 1, 2, 3, 4] seconds
+                            // max(delayTime) ~ 1min
+                            var delayTimeInMs = (NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds + Math.Exp((NetworkConst.TriesCount - currentRetryCount) % 5)) * 1000;
+                            await RandomDelayStaticProvider.DelayAsync((int)Math.Round(delayTimeInMs), 1000);
+
+
+                            if (ex.HttpStatusCode == HttpStatusCode.Unauthorized)
+                            {
+                                _logger.LogInformation("Токен протух. Генерация нового токена.");
+                                token = await _digisellerTokenProvider.GetDigisellerTokenAsync(aspNetUserId, CancellationToken.None);
+                                continue;
+                            }
                         }
                         finally
                         {
