@@ -76,8 +76,6 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public async Task SetSteamContact(DatabaseContext db, GameSession gs, params Option[] opts)
         {
-            _logger.LogWarning($"[ASHT] start SetSteamContact gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}, AppId={gs.Item?.AppId}, SubId={gs.Item?.SubId}");
-
             var opt = opts.FirstOrDefault(o => o.GetSteamContactType() != SteamContactType.unknown);
 
             ProfileDataRes profileData = null;
@@ -117,8 +115,6 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
                 else
                 {
-                    _logger.LogWarning($"[ASHT] StatusId = GameSessionStatusEnum.WaitingToConfirm gsId={gs.Id}, GameSessionItemId= {gs.GameSessionItemId},StatusId= {gs.StatusId}, UniqueCode={gs.UniqueCode},UserId= {gs.UserId},ItemId= {gs.Item?.Id}, ItemName={gs.Item?.Name}, AppId={gs.Item?.AppId}, SubId={gs.Item?.SubId}");
-
                     gs.StatusId = GameSessionStatusEnum.WaitingToConfirm; //Ожидается подтверждение
                     logVal = new ValueJson { userSteamContact = gs.SteamContactValue, userProfileUrl = profileData.url };
 
@@ -310,8 +306,6 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             var basePrice = item.GetPrice();
 
-            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name},priorityPricesCount={priorityPrices.Count}, basePriceId={basePrice.Id}, GameId={basePrice.GameId}, CurrentSteamPrice={basePrice.CurrentSteamPrice}");
-
             //если выбрано 1 или более приортетных цен
             if (priorityPrices.Count() > 0)
             {
@@ -347,8 +341,6 @@ namespace SteamDigiSellerBot.Services.Implementation
                     basePriceInRub = convertResultBase.value.Value;
                 }
 
-                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, basePriceInRub={basePriceInRub}");
-
                 //берем ту где цена меньше всего
                 var prices = priorityPrices
                     .OrderBy(gp => priceInRub[gp.Id])
@@ -363,13 +355,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                     forNotDelete.Add(prevPrice.Id);
                 }
 
-                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.prevPriceId={priceInRub[prevPrice.Id]},basePriceInRub={basePriceInRub}");
-
                 for (int i = 1;i < prices.Count; i++)
                 {
                     GamePrice nextPrice = prices[i];
-
-                    _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPriceId={priceInRub[nextPrice.Id]},basePriceInRub={basePriceInRub}");
 
                     if (priceInRub[nextPrice.Id] < basePriceInRub || nextPrice.Id == basePrice.Id)
                     {
@@ -377,28 +365,18 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                     else
                     {
-                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, nextPriceId={nextPrice.Id}, prevPriceId={prevPrice.Id}");
-
                         if (priceInRub[nextPrice.Id] != 0)
                         {
-                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, priceInRub.nextPrice={priceInRub[nextPrice.Id]}");
-
                             currentPrecentsDiffToBasePrice +=
                                 Math.Abs((priceInRub[nextPrice.Id] - priceInRub[prevPrice.Id]) * 100) / priceInRub[prevPrice.Id];
-
-                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, currentPrecentsDiffToBasePrice={currentPrecentsDiffToBasePrice}");
                         }
 
                         if (currentPrecentsDiffToBasePrice > percentsToCompareInHierarchy)
                         {
-                            _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}... break");
-
                             break;
                         }
 
                         forNotDelete.Add(nextPrice.Id);
-
-                        _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, forNotDelete+ id={nextPrice.Id}");
                     }
 
                     prevPrice = nextPrice;
@@ -409,8 +387,6 @@ namespace SteamDigiSellerBot.Services.Implementation
                 if (!prices.Any(x => x.Id == basePrice.Id))
                     prices.Add(basePrice);
 
-                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, pricesCount={prices.Count}");
-
                 return (maxFailUsingCount, prices);
             }
             else
@@ -419,8 +395,6 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var list = new List<GamePrice>();
                 if (basePrice != null)
                     list.Add(basePrice);
-
-                _logger.LogInformation($"[ASHT] GetSortedPriorityPrices only base ItemId={item.Id}, itemName={item.Name}, GameId={basePrice.GameId}, listCount={list.Count}");
 
                 return (maxFailUsingCount, list);
             }

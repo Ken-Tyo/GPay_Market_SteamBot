@@ -174,13 +174,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 
                 if (sender == GSSCommon.WaitConfirmationGSQ)
                 {
-                    _logger.LogInformation($"[ASHT] GameSessionCommon.Send gsId={gsId}");
-
                     GSSCommon.WaitConfirmationGSQ.Remove(gsId);
                     if (res is Done)
                     {
-                        _logger.LogInformation($"[ASHT] GameSessionCommon.Send UpdateStage=AddToFriend gsId={gsId}");
-
                         var ur = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
                         GSSCommon.AddToFriendGSQ.Add(gsId);
                     }

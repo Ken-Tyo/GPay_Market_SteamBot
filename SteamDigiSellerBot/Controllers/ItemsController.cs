@@ -234,26 +234,31 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/add"), ValidationActionFilter]
         public async Task<IActionResult> Item(AddItemRequest model)
         {
-            _logger.LogWarning($"[ASHT] ItemAdd AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
-
             Item item = _mapper.Map<Item>(model);
 
             if (item != null)
             {
                 User user = await _userManager.GetUserAsync(User);
 
-                _logger.LogWarning($"[ASHT] ItemAdd GetByAppIdAndSubId item.AppId={item.AppId}, item.SubId={item.SubId}");
+                Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
 
-                await _itemRepository.AddAsync(db, item);
+                if (oldItem == null) // Проверяется, что существующий товар не найден.
+                {
+                    await _itemRepository.AddAsync(db, item);
+                }
+                else
+                {
+                    //_mapper.Map(item, oldItem);
+                    item.IsDeleted = false;
+                    item.Active = false;
+                    item.AddedDateTime = DateTime.UtcNow;
+                    await _itemRepository.ReplaceAsync(db, oldItem, item);//.EditAsync(oldItem);
+                }
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
 
-                _logger.LogWarning($"[ASHT] ItemAdd _itemNetworkService.SetPrices finished item.AppId={item.AppId}, item.SubId={item.SubId}");
-
                 return Ok();
             }
-            else
-                _logger.LogWarning($"[ASHT] ItemAdd item == null AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
 
             return BadRequest();
         }
@@ -261,53 +266,27 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/edit/{id}"), ValidationActionFilter]
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
-            _logger.LogWarning($"[ASHT] ItemEdit id={id}, AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
-
-            Item item = await _itemRepository.GetByIdAsync(db,id);
-
-            if (item != null && item.IsDeleted)
+            Item item = await _itemRepository.GetByIdAsync(db, id);
+            if (item.IsDeleted)
                 return BadRequest();
 
             if (item != null)
             {
-                _logger.LogWarning($"[ASHT] ItemEdit id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={string.Join(",", item.DigiSellerIds)}");
-
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map<AddItemRequest, Item>(model, item);
 
-                _logger.LogWarning($"[ASHT] ItemEdit editedItem.id={editedItem.Id}, editedItem.AppId={editedItem.AppId}, editedItem.SubId={editedItem.SubId}, editedItem.DigiSellerIds={string.Join(",", editedItem.DigiSellerIds)}");
-
-                string newAppId = item.AppId;
-                string newSubId = item.SubId;
-
-                if (item.AppId != model.AppId)
-                {
-                    newAppId = model.AppId;
-
-                    _logger.LogWarning($"[ASHT] ItemEdit appId different new and old: id={id}, item.appId={item.AppId}, model.AppId={model.AppId}, model.SubId={model.SubId}, model.DigiSellerIds={model.DigiSellerIds}");
-                }
-
-                if (item.SubId != model.SubId)
-                {
-                    newSubId = model.SubId;
-
-                    _logger.LogWarning($"[ASHT] ItemEdit subId different new and old: id={id}, model.AppId={model.AppId}, item.SubId={item.SubId}, model.SubId={model.SubId}, model.DigiSellerIds={model.DigiSellerIds}");
-                }
-
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
                 await _itemNetworkService.SetPrices(
-                    newAppId,
-                    newSubId,
+                    item.AppId,
+                    new List<Item>() { item },
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
 
                 return Ok();
             }
-            else
-                _logger.LogWarning($"[ASHT] ItemEdit item == null AppId={model.AppId}, SubId={model.SubId}, DigiSellerIds={model.DigiSellerIds}");
 
             return BadRequest();
         }
@@ -364,20 +343,14 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/bulk/delete"), ValidationActionFilter]
         public async Task<IActionResult> BulkDelete(BulkDeleteRequest request)
         {
-            _logger.LogWarning($"[ASHT] BulkDelete request={string.Join(",", request.Ids)}");
-
             foreach (var id in request.Ids)
             {
                 Item item = await _itemRepository.GetByIdAsync(db,id);
 
                 if (item != null)
                 {
-                    _logger.LogWarning($"[ASHT] BulkDelete id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={string.Join(",", item.DigiSellerIds)}");
-
                     await _itemRepository.DeleteItemAsync(item);
                 }
-                else
-                    _logger.LogWarning($"[ASHT] BulkDelete item = null id={id}");
             }
 
             return Ok();
@@ -420,19 +393,13 @@ namespace SteamDigiSellerBot.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            _logger.LogWarning($"[ASHT] Delete id={id}");
-
             if (id > 0)
             {
                 Item item = await _itemRepository.GetByIdAsync(db,id);
                 if (item != null)
                 {
-                    _logger.LogWarning($"[ASHT] Delete id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={string.Join(",", item.DigiSellerIds)}");
-
                     await _itemRepository.DeleteItemAsync(item);
                 }
-                else
-                    _logger.LogWarning($"[ASHT] Delete item = null id={id}");
             }
 
             return Ok(id);

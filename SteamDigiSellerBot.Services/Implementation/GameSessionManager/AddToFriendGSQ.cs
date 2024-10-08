@@ -102,8 +102,6 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public override void Add(int gsId)
         {
-            _logger.LogInformation($"[ASHT] AddToFriendGSQ.Add gsId={gsId}");
-
             base.Add(gsId);
             if (ProcessOnAdd.Contains(gsId))
                 return;

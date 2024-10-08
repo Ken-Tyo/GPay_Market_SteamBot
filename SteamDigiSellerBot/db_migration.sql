@@ -287,37 +287,6 @@ alter table "GameSessions" add "BlockOrder" boolean not null default false;
 alter table "Bots" add "LastTimeUpdated" timestamp without time zone null;
 alter table "Bots" add "LastTimeBalanceUpdated" timestamp without time zone null;
 
-29.08
-ALTER TABLE public."Items" ADD "Modified" timestamptz NULL;
-ALTER TABLE public."Games" ADD "Modified" timestamptz NULL;
-ALTER TABLE public."GameSessions" ADD "Modified" timestamptz NULL;
-
-CREATE OR REPLACE FUNCTION public.trigger_set_Modified()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-BEGIN
-  NEW."Modified" = NOW();
-  RETURN NEW;
-END;
-$function$
-;
-
-create trigger set_items_modified before
-update
-    on
-    public."Items" for each row execute function trigger_set_Modified();
-
-create trigger set_games_modified before
-update
-    on
-    public."Games" for each row execute function trigger_set_Modified();
-
-create trigger set_gamesessions_modified before
-update
-    on
-    public."GameSessions" for each row execute function trigger_set_Modified();
-
 05.09.2024 Задача 68
 CREATE TABLE "TagTypeReplacements" (
 	"Id" serial PRIMARY KEY,
