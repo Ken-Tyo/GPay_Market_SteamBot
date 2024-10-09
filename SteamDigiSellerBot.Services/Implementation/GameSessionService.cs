@@ -112,6 +112,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                         message = $"Не удалось спарсить данные пользователя. " +
                         $"Значение {gs.SteamContactValue} было определено как {gs.SteamContactType}.",
                     };
+
+                    _logger.LogError(url);
                 }
                 else
                 {
