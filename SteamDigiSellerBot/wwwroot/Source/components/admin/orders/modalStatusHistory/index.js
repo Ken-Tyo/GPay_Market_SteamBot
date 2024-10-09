@@ -13,6 +13,17 @@ const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
     const { gameSessionsStatuses: statuses } = state.use();
     const navigate = useNavigate();
 
+    const handleKeyUp = (event) => {
+        if (event.key === 'Escape' && isOpen) {
+            onCancel();
+        }
+    };
+    
+    useEffect(() => {
+       window.addEventListener("keyup", handleKeyUp);
+       return ()=> window.removeEventListener("keyup", handleKeyUp)
+    }, [isOpen]);
+
     const createBotLink = (val) => {
         return (
             <span
