@@ -126,6 +126,8 @@ namespace SteamDigiSellerBot.Network
             {
                 _manager.RunWaitCallbacks(TimeSpan.FromSeconds(1));
             }
+            if (!isOk)
+                _isRunning = false;
         }
 
         public async Task SetBotCreationData(CurrencyData currencyData, List<VacGame> vacCheckList)
@@ -348,6 +350,7 @@ namespace SteamDigiSellerBot.Network
         private void OnDisconnected(SteamClient.DisconnectedCallback callback)
         {
             System.Diagnostics.Trace.WriteLine("Disconnected from Steam");
+            _isRunning = false;
         }
 
         private CookieDictionary GetWebCookiesNonce(string myLoginKey) // depricated

@@ -13,23 +13,27 @@ namespace SteamDigiSellerBot.Utilities
         /// <summary>
         /// Метод скопирован из .NET 6 и выше https://github.com/dotnet/runtime/blob/5535e31a712343a63f5d7d796cd874e563e5ac14/src/libraries/System.Linq/src/System/Linq/Except.cs#L49C163-L49C205
         /// </summary>
-        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector) => ExceptBy(first, second, keySelector, null);
+        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first,
+            IEnumerable<TKey> second, Func<TSource, TKey> keySelector) => ExceptBy(first, second, keySelector, null);
 
 
         /// <summary>
         /// Метод скопирован из .NET 6 и выше https://github.com/dotnet/runtime/blob/5535e31a712343a63f5d7d796cd874e563e5ac14/src/libraries/System.Linq/src/System/Linq/Except.cs#L49C163-L49C205
         /// </summary>
-        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+        public static IEnumerable<TSource> ExceptBy<TSource, TKey>(this IEnumerable<TSource> first,
+            IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             if (first is null)
             {
                 throw new ArgumentNullException($"{nameof(ExceptBy)} : {nameof(first)}");
 
             }
+
             if (second is null)
             {
                 throw new ArgumentNullException($"{nameof(ExceptBy)} : {nameof(second)}");
             }
+
             if (keySelector is null)
             {
                 throw new ArgumentNullException($"{nameof(ExceptBy)} : {nameof(keySelector)}");
@@ -37,7 +41,9 @@ namespace SteamDigiSellerBot.Utilities
 
             return ExceptByIterator(first, second, keySelector, comparer);
         }
-        private static IEnumerable<TSource> ExceptByIterator<TSource, TKey>(IEnumerable<TSource> first, IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
+
+        private static IEnumerable<TSource> ExceptByIterator<TSource, TKey>(IEnumerable<TSource> first,
+            IEnumerable<TKey> second, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             var set = new HashSet<TKey>(second, comparer);
 
@@ -80,6 +86,7 @@ namespace SteamDigiSellerBot.Utilities
                 ArrayPool<char>.Shared.Return(pooledArray);
             }
         }
+
         private static string RemoveWhitespacesSpanHelper([NotNull] string source, Span<char> dest)
         {
             var pos = 0;
@@ -88,6 +95,24 @@ namespace SteamDigiSellerBot.Utilities
                 if (!char.IsWhiteSpace(c))
                     dest[pos++] = c;
             return source.Length == pos ? source : new string(dest[..pos]);
+        }
+
+        public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> source, int size)
+        {
+            if (size <= 0)
+                throw new ArgumentOutOfRangeException("size", "Must be greater than zero.");
+
+            using (IEnumerator<T> enumerator = source.GetEnumerator())
+                while (enumerator.MoveNext())
+                    yield return TakeIEnumerator(enumerator, size);
+        }
+
+        private static IEnumerable<T> TakeIEnumerator<T>(IEnumerator<T> source, int size)
+        {
+            int i = 0;
+            do
+                yield return source.Current;
+            while (++i < size && source.MoveNext());
         }
     }
 }
