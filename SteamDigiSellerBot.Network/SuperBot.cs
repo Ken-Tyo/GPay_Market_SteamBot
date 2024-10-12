@@ -80,8 +80,11 @@ namespace SteamDigiSellerBot.Network
         //    _vacCheckList = vacCheckList;
         //}
 
+        private ILogger _logger { get; set; }
+
         public SuperBot(
-            Bot bot
+            Bot bot,
+            ILogger logger = null
             //ICurrencyDataRepository currencyDataRepository,
             //IVacGameRepository vacGameRepository
             )
@@ -89,6 +92,7 @@ namespace SteamDigiSellerBot.Network
             _steamClient = new SteamClient();
             _manager = new CallbackManager(_steamClient);
             _bot = bot;
+            _logger = logger;
             //_currencyDataRepository = currencyDataRepository;
             //_vacGameRepository = vacGameRepository;
 
@@ -287,6 +291,10 @@ namespace SteamDigiSellerBot.Network
             _bot.Result = callback.Result;
 
             isOk = callback.Result == EResult.OK;
+            if (!isOk)
+            {
+                _logger?.LogWarning($"Bot fail login: {_bot?.UserName} LoggedOnCallback description:\n{System.Text.Json.JsonSerializer.Serialize(callback)}");
+            }
 
             bool isSteamGuard = callback.Result == EResult.AccountLogonDenied;
             bool is2FA = callback.Result == EResult.AccountLoginDeniedNeedTwoFactor;

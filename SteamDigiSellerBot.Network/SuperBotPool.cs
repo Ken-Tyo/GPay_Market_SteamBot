@@ -43,7 +43,7 @@ namespace SteamDigiSellerBot.Network
                 var allBots = _botRepository.ListAsync(b => b.IsON).Result;
                 foreach (var b in allBots)
                 {
-                    bots.TryAdd(b.Id, new SuperBot(b));
+                    bots.TryAdd(b.Id, new SuperBot(b, _logger));
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace SteamDigiSellerBot.Network
         {
             lock (sync)
             {
-                return bots.TryAdd(bot.Id, new SuperBot(bot));
+                return bots.TryAdd(bot.Id, new SuperBot(bot, _logger));
             }
         }
 
@@ -64,7 +64,7 @@ namespace SteamDigiSellerBot.Network
                 if (!exists)
                     return false;
 
-                bots[bot.Id] = new SuperBot(bot);
+                bots[bot.Id] = new SuperBot(bot, _logger);
                 return true;
             }
         }
@@ -120,7 +120,7 @@ namespace SteamDigiSellerBot.Network
                 else
                 {
                     var bot = _botRepository.GetByIdAsync(id).Result;
-                    bots[id] = new SuperBot(bot);
+                    bots[id] = new SuperBot(bot, _logger);
                     return GetById(bot.Id);
                 }
             }
@@ -133,7 +133,7 @@ namespace SteamDigiSellerBot.Network
                 if (bots.ContainsKey(b.Id))
                     bots.Remove(b.Id);
 
-                var sbot = new SuperBot(b);
+                var sbot = new SuperBot(b, _logger);
                 bots.TryAdd(b.Id, sbot);
                 LoginIfNot(sbot);
                 return sbot;

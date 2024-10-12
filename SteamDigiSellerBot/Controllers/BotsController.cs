@@ -17,6 +17,7 @@ using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Extensions;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
+using Microsoft.Extensions.Logging;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -30,6 +31,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ISuperBotPool _botPool;
         private readonly IBotSendGameAttemptsRepository _botSendGameAttemptsRepository;
         private readonly DatabaseContext db;
+        private readonly ILogger<BotsController> _logger;
 
         private readonly IMapper _mapper;
 
@@ -41,6 +43,7 @@ namespace SteamDigiSellerBot.Controllers
             ISuperBotPool botPoolService,
             IBotSendGameAttemptsRepository botSendGameAttemptsRepository,
             IMapper mapper,
+            ILogger<BotsController> logger,
             DatabaseContext dbContext)
         {
             _steamBotRepository = steamBotRepository;
@@ -50,6 +53,7 @@ namespace SteamDigiSellerBot.Controllers
             _botPool = botPoolService;
             _mapper = mapper;
             _botSendGameAttemptsRepository = botSendGameAttemptsRepository;
+            _logger = logger;
             db=dbContext;
         }
 
@@ -123,7 +127,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 try
                 {
-                    superBot = new SuperBot(bot);
+                    superBot = new SuperBot(bot, _logger);
                 }
                 catch (Exception)
                 {
@@ -216,7 +220,7 @@ namespace SteamDigiSellerBot.Controllers
 
             try
             {
-                superBot = new SuperBot(bot);
+                superBot = new SuperBot(bot,_logger);
             }
             catch (NotImplementedException )
             {
