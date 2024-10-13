@@ -159,7 +159,7 @@ namespace SteamDigiSellerBot.Network
                 sbot.Login();
                 var _logger = getLogger();
                 _logger.LogInformation(
-                    $"BOT {sbot.Bot.UserName} is logged ON - status: {sbot.Bot.Result}");
+                    $"BOT {sbot.Bot.UserName} is logged ON - status: {sbot.Bot.Result +(sbot.Bot.ResultSetTime!=null ? " "+ sbot.Bot.ResultSetTime.Value.ToShortTimeString() :" не было авторизации") + (sbot._isRunning ? "" : " (не запущен)")}");
                 _logger.LogInformation(new string('-', 70));
             }
 

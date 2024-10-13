@@ -45,7 +45,7 @@ namespace SteamDigiSellerBot.Network
 
         private CallbackManager _manager { get; set; }
 
-        private bool _isRunning { get; set; }
+        public bool _isRunning { get; set; }
         private string code = string.Empty;
         private string accessToken = string.Empty;
         public bool Connected => !string.IsNullOrEmpty(accessToken);
@@ -120,6 +120,7 @@ namespace SteamDigiSellerBot.Network
         public DateTime? LastLogin { get; set; }
         public void Login()
         {
+            DebugLog.Enabled = true;
             if (_isRunning)
                 return;
             _isRunning = true;
@@ -245,7 +246,6 @@ namespace SteamDigiSellerBot.Network
         private async void OnConnected(SteamClient.ConnectedCallback callback)
         {
             Console.WriteLine("Connected to Steam! Logging in '{0}'...", _bot.UserName);
-
             // Begin authenticating via credentials
             try
             {
@@ -279,8 +279,9 @@ namespace SteamDigiSellerBot.Network
                 accessToken = pollResponse.AccessToken;
                 refreshToken = pollResponse.RefreshToken;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger?.LogError(ex, $"Bot fail connection: {_bot?.UserName}");
                 Console.WriteLine("Упала авторизация и аутентификация бота");
                 //throw new NotImplementedException();
             }
@@ -289,7 +290,7 @@ namespace SteamDigiSellerBot.Network
         private async void OnLoggedOn(SteamUser.LoggedOnCallback callback)
         {
             _bot.Result = callback.Result;
-
+            _bot.ResultSetTime=DateTime.UtcNow;
             isOk = callback.Result == EResult.OK;
             if (!isOk)
             {
@@ -357,7 +358,7 @@ namespace SteamDigiSellerBot.Network
 
         private void OnDisconnected(SteamClient.DisconnectedCallback callback)
         {
-            System.Diagnostics.Trace.WriteLine("Disconnected from Steam");
+            _logger?.LogInformation("Disconnected from Steam '{0}'...", _bot.UserName);
             _isRunning = false;
         }
 
