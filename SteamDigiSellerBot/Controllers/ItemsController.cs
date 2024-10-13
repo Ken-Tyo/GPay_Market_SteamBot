@@ -42,6 +42,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ILogger<ItemsController> _logger;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly DatabaseContext db;
+        private readonly IGameRepository _gameRepository;
         private readonly IItemBulkUpdateService _itemBulkUpdateService;
 
         public ItemsController(
@@ -54,7 +55,8 @@ namespace SteamDigiSellerBot.Controllers
             ILogger<ItemsController> logger,
             IDigiSellerNetworkService digiSellerNetwork,
             DatabaseContext db,
-            IItemBulkUpdateService itemBulkUpdateService)
+            IItemBulkUpdateService itemBulkUpdateService, 
+            IGameRepository gameRepository)
         {
             _itemRepository = itemRepository;
             _digiSellerNetworkService = digiSellerNetwork;
@@ -68,6 +70,7 @@ namespace SteamDigiSellerBot.Controllers
             this.db = db;
 
             _itemBulkUpdateService = itemBulkUpdateService ?? throw new ArgumentNullException(nameof(itemBulkUpdateService));
+            _gameRepository = gameRepository;
 
             _logger = logger;
         }
@@ -249,13 +252,15 @@ namespace SteamDigiSellerBot.Controllers
                 else
                 {
                     //_mapper.Map(item, oldItem);
-                    item.IsDeleted = false;
-                    item.Active = false;
-                    item.AddedDateTime = DateTime.UtcNow;
+                    oldItem.IsDeleted = false;
+                    oldItem.Active = false;
+                    oldItem.AddedDateTime = DateTime.UtcNow;
+                    
+                    await _itemRepository.EditAsync(db, oldItem);
                     await _itemRepository.ReplaceAsync(db, oldItem, item);//.EditAsync(oldItem);
                 }
 
-                await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+                await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, "0904594a-68a2-46e7-be61-0466a542df7f", true);
 
                 return Ok();
             }
