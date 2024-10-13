@@ -71,6 +71,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                             {
                                 _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoGoodsItem.DigiSellerId);
                                 successCounter++;
+                                var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                                await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
                                 break;
                             }
                             else
@@ -80,8 +82,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
 
                             _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
 
-                            var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
-                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
+                            var delayTimeInMsOnErrorResult = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMsOnErrorResult, 1000);
                         }
                         catch (HttpException ex)
                         {

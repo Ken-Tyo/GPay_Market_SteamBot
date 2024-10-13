@@ -92,6 +92,8 @@ namespace SteamDigiSellerBot.Network.Services
                             }
 
                             _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
+                            var delayTimeInMsOnErrorResult = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMsOnErrorResult, 1000);
                         }
                         catch (HttpException ex)
                         {
