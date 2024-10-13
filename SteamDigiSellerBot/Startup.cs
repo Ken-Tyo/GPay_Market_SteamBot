@@ -27,6 +27,7 @@ using SteamDigiSellerBot.Services.Implementation.TagServices.MappingProfiles;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities.Services;
 using SteamDigiSellerBot.Validators;
+using System;
 
 namespace SteamDigiSellerBot
 {
@@ -163,7 +164,11 @@ namespace SteamDigiSellerBot
                 options.UsePostgreSqlStorage(configuration.GetConnectionString(DatabaseExtension.ConnectionName));
             });
 
-            services.AddHangfireServer(options => options.WorkerCount = 1);
+            services.AddHangfireServer(options =>
+            {
+                options.WorkerCount = 1;
+                options.CancellationCheckInterval = TimeSpan.FromSeconds(5);
+            });
         }
     }
 }

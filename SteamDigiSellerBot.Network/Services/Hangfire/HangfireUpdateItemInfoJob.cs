@@ -29,7 +29,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
 
         [DisableConcurrentExecution(10)]
         [AutomaticRetry(Attempts = 0, LogEvents = false, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task ExecuteAsync(HangfireUpdateItemInfoJobCommand hangfireUpdateJobCommand)
+        public async Task ExecuteAsync(HangfireUpdateItemInfoJobCommand hangfireUpdateJobCommand, CancellationToken cancellationToken)
         {
             HttpRequest httpRequest = new()
             {
@@ -57,6 +57,12 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                     {
                         try
                         {
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                _logger.LogInformation("    JOB has been cancelled manually");
+                                return;
+                            }
+
                             _logger.LogInformation("    {num} try", NetworkConst.TriesCount - currentRetryCount + 1);
                             var updateResult = await UpdateItemsInfoService.UpdateItemInfoPostAsync(
                                 new UpdateItemInfoCommand(
