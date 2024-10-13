@@ -26,6 +26,7 @@
     <ProjectReference Include="..\SteamDigiSellerBot.Network\SteamDigiSellerBot.Network.csproj" />
     <ProjectReference Include="..\SteamDigiSellerBot.Services\SteamDigiSellerBot.Services.csproj" />
     <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
+    <ProjectReference Include="..\SteamKit2\SteamKit2\SteamKit2\SteamKit2.csproj" />
   </ItemGroup>
 
   <ItemGroup>
