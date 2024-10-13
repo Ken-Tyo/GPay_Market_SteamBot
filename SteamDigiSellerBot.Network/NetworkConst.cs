@@ -7,5 +7,6 @@
         internal const int RequestRetryPauseDurationWithoutErrorInSeconds = 5;
         internal const int RequestRetryPauseDurationAfterErrorInSeconds = 7;
         internal const int RequestDelayInMs = 200;
+        internal const int RequestDelayAfterLongTimeInMs = 30 * 60 * 1000;
     }
 }

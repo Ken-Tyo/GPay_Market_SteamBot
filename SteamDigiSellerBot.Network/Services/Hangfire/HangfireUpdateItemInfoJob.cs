@@ -1,12 +1,9 @@
-﻿using Castle.Core.Logging;
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Providers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -89,6 +86,10 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                             _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
 
                             var delayTimeInMsOnErrorResult = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                            if (counter % 1000 == 0) // Делаем длинную паузу после 1000 обновлений 
+                            {
+                                delayTimeInMsOnErrorResult += NetworkConst.RequestDelayAfterLongTimeInMs;
+                            }
                             await RandomDelayStaticProvider.DelayAsync(delayTimeInMsOnErrorResult, 1000);
                         }
                         catch (HttpException ex)
