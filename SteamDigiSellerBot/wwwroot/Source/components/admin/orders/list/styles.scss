@@ -1,6 +1,8 @@
 @import '/wwwroot/Source/containers/admin/library';
 
 .wrapper {
+    overflow-y: auto; 
+    overflow-x: auto; 
     .cell {
         display: flex;
         justify-content: center;
