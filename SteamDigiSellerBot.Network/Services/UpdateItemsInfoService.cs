@@ -44,7 +44,7 @@ namespace SteamDigiSellerBot.Network.Services
             if (updateItemInfoCommands.Goods.Count > _immediatelyRunMaximumTaskCount)
             {
                 _backgroundJobClient.Schedule<HangfireUpdateItemInfoJob>(
-                    s => s.ExecuteAsync(new HangfireUpdateItemInfoJobCommand(updateItemInfoCommands, aspNetUserId)),
+                    s => s.ExecuteAsync(new HangfireUpdateItemInfoJobCommand(updateItemInfoCommands, aspNetUserId), new CancellationTokenSource().Token),
                     TimeSpan.FromSeconds(10));
 
                 return true;
