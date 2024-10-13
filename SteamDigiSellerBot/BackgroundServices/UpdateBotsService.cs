@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SteamDigiSellerBot.Utilities;
+using SteamKit2;
 using static SteamDigiSellerBot.Network.SuperBot;
 
 namespace SteamDigiSellerBot.Services
@@ -56,6 +57,7 @@ namespace SteamDigiSellerBot.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            DebugLog.AddListener((s,e)=> this._logger?.LogInformation("SteamKit logger:"+s+"\n"+e));
             await Task.Factory.StartNew(() => UpdateBotState(stoppingToken));
 
             while (!stoppingToken.IsCancellationRequested)
