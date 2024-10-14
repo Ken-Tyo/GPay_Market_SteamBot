@@ -1610,7 +1610,8 @@ namespace SteamDigiSellerBot.Network
         public async Task<(FinalTranResponse, FinalTranStatus)> FinalizeTransaction(
             string tranId, string sessionId, string beginCheckoutCart)
         {
-       
+            try
+            {
                 var finalTranUrl = "https://checkout.steampowered.com/checkout/finalizetransaction/";
                 var formParams = new RequestParams
                 {
@@ -1623,10 +1624,10 @@ namespace SteamDigiSellerBot.Network
                 reqMes.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
 
                 var cookies = new Dictionary<string, string>() {
-                { "sessionid", sessionId },
-                { "shoppingCartGID", beginCheckoutCart },
-                { "wants_mature_content", "1" }
-            };
+                    { "sessionid", sessionId },
+                    { "shoppingCartGID", beginCheckoutCart },
+                    { "wants_mature_content", "1" }
+                };
                 using var client = GetDefaultHttpClientBy(finalTranUrl, out HttpClientHandler handler, cookies);
                 using var response = client.Send(reqMes);
                 var s = await response.Content.ReadAsStringAsync();
@@ -1634,18 +1635,23 @@ namespace SteamDigiSellerBot.Network
                 Console.WriteLine(s);
                 var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
 
-            var statusUrl = $"https://checkout.steampowered.com/checkout/transactionstatus/?count=1&transid={tranId}";
-            var statusUri = new Uri(statusUrl);
-            var reqStatusMes = new HttpRequestMessage(HttpMethod.Post, statusUri);
+                var statusUrl = $"https://checkout.steampowered.com/checkout/transactionstatus/?count=1&transid={tranId}";
+                var statusUri = new Uri(statusUrl);
+                var reqStatusMes = new HttpRequestMessage(HttpMethod.Post, statusUri);
 
-            using var statusClient = GetDefaultHttpClientBy(statusUrl, out HttpClientHandler statusHandler, cookies);
-            using var statusResp = client.Send(reqStatusMes);
-            var ss = await statusResp.Content.ReadAsStringAsync();
+                using var statusClient = GetDefaultHttpClientBy(statusUrl, out HttpClientHandler statusHandler, cookies);
+                using var statusResp = client.Send(reqStatusMes);
+                var ss = await statusResp.Content.ReadAsStringAsync();
 
-            var finalTranStatus = JsonConvert.DeserializeObject<FinalTranStatus>(ss);
+                var finalTranStatus = JsonConvert.DeserializeObject<FinalTranStatus>(ss);
 
-            return (finalTranResp, finalTranStatus);
+                return (finalTranResp, finalTranStatus);
+            }
 
+            catch (Exception e)
+            {
+                throw new FinalTransactionException($"Произошла ошибка при финализации отправки заказа: {e.GetType().Name}: {e.Message}",e);
+            }
         }
 
         public class FinalTransactionException : Exception
