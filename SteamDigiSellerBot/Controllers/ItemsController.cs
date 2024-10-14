@@ -266,12 +266,6 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
             Item item = await _itemRepository.GetByIdAsync(db, id);
-            Item itemWithNewIds = await _itemRepository.GetByAppIdAndSubId(model.AppId, model.SubId);
-
-            if (itemWithNewIds is not null)
-            {
-                return BadRequest();
-            }
             
             if (item.IsDeleted)
                 return BadRequest();
