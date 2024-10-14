@@ -43,6 +43,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly ILogger<GameSessionService> _logger;
         private readonly IConfiguration _configuration;
         private GameSessionCommon _gameSessionManager { get; set; }
+        private Dictionary<int, int> _gsFailedAttemptsCounter = new Dictionary<int, int>();
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -1458,10 +1459,25 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                     else if (sendRes.result == SendeGameResult.error)
                     {
-                        gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71
-                                      || sendRes.initTranRes?.purchaseresultdetail == 72
-                            ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
-                            : GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+                        if (sendRes.initTranRes?.purchaseresultdetail == 71 || sendRes.initTranRes?.purchaseresultdetail == 72)
+                        {
+                            gs.StatusId = GameSessionStatusEnum.IncorrectRegion;
+                        }
+                        else if (sendRes.finalizeTranStatus.purchaseresultdetail == 11)
+                        {
+                            if (_gsFailedAttemptsCounter[gs.Id] > 5)
+                            {
+                                gs.StatusId = GameSessionStatusEnum.BotLimit;
+                            }
+                            else
+                            {
+                                _gsFailedAttemptsCounter[gs.Id]++;
+                            }
+                        }
+                        else
+                        {
+                            gs.StatusId = GameSessionStatusEnum.UnknownError;
+                        }
 
                         var mes = "Не удалось отправить игру.";
                         if (!string.IsNullOrEmpty(sendRes.errMessage))

@@ -1607,7 +1607,7 @@ namespace SteamDigiSellerBot.Network
             return (response.StatusCode == System.Net.HttpStatusCode.OK, s);
         }
 
-        public async Task<(FinalTranResponse,string)> FinalizeTransaction(
+        public async Task<(FinalTranResponse, FinalTranStatus)> FinalizeTransaction(
             string tranId, string sessionId, string beginCheckoutCart)
         {
        
@@ -1634,8 +1634,18 @@ namespace SteamDigiSellerBot.Network
                 Console.WriteLine(s);
                 var finalTranResp = JsonConvert.DeserializeObject<FinalTranResponse>(s);
 
-                return (finalTranResp, s);
-           
+            var statusUrl = $"https://checkout.steampowered.com/checkout/transactionstatus/?count=1&transid={tranId}";
+            var statusUri = new Uri(statusUrl);
+            var reqStatusMes = new HttpRequestMessage(HttpMethod.Post, statusUri);
+
+            using var statusClient = GetDefaultHttpClientBy(statusUrl, out HttpClientHandler statusHandler, cookies);
+            using var statusResp = client.Send(reqStatusMes);
+            var ss = await statusResp.Content.ReadAsStringAsync();
+
+            var finalTranStatus = JsonConvert.DeserializeObject<FinalTranStatus>(ss);
+
+            return (finalTranResp, finalTranStatus);
+
         }
 
         public class FinalTransactionException : Exception
@@ -1786,9 +1796,10 @@ namespace SteamDigiSellerBot.Network
             }
             try
             {
-                var (finalTranRes, fI) = await FinalizeTransaction(
+                var (finalTranRes, finalTranStatus) = await FinalizeTransaction(
                     initResp.transid, initResp.sessionId, gidShoppingCart);
                 res.finalizeTranRes = finalTranRes;
+                res.finalizeTranStatus = finalTranStatus;
 
                 if (finalTranRes.success != 22)
                 {
@@ -1801,12 +1812,23 @@ namespace SteamDigiSellerBot.Network
                     res.result = SendeGameResult.error;
                     res.errMessage = mes;
                     if (initResp.purchaseresultdetail == 0)
-                        res.errMessage += "\n\n" + fI;
+                        res.errMessage += "\n\n" + JsonConvert.SerializeObject(finalTranStatus);
+                    
                     res.errCode = finalTranRes.purchaseresultdetail;
                     {
                         sendGame = res;
                         return sendGame;
                     }
+                }
+                if (finalTranStatus.success == 2 && finalTranStatus.purchaseresultdetail == 11)
+                {
+                    res.result = SendeGameResult.error;
+                    res.errCode = finalTranStatus.purchaseresultdetail;
+                    res.errMessage = $"Бот \"{this.Bot.UserName}\" получил Gift Ban - постоянный лимит на отправку игр. Если это ошибка, передобавьте бота или попробуйте вручную. Последняя сумма отправки игры: {res.finalizeTranStatus.purchasereceipt.formattedTotal} / {countryCode}.";
+                    res.ChangeBot = true;
+
+                    sendGame = res;
+                    return sendGame;
                 }
 
                 var forgerCartRes = await ForgetCart(sessionId, gidShoppingCart);
@@ -1921,6 +1943,32 @@ namespace SteamDigiSellerBot.Network
         //public string browserid;
     }
 
+    public class FinalTranReceipt
+    {
+        public int paymentmethod;
+        public int purchasestatus;
+        public int resultdetail;
+        public string baseprice;
+        public string totaldiscount;
+        public string tax;
+        public string shipping;
+        public int packageid;
+        public int transactiontime;
+        public string transactionid;
+        public int currencycode;
+        public string formattedTotal;
+        public string rewardPointsBalance;
+    }
+
+    public class FinalTranStatus
+    {
+        public int success;
+        public int purchaseresultdetail;
+        public FinalTranReceipt purchasereceipt;
+        public string strReceiptPageHTML;
+        public bool bShowBRSpecificCreditCardError;
+    }
+
     public class SendGameResponse
     {
         public SendeGameResult result;
@@ -1935,6 +1983,7 @@ namespace SteamDigiSellerBot.Network
         public bool IsCartForgot;
         public bool ChangeBot;
         public bool BlockOrder;
+        public FinalTranStatus finalizeTranStatus;
     }
 
     public enum SendeGameResult
