@@ -45,7 +45,7 @@ namespace SteamDigiSellerBot.Network
 
         private CallbackManager _manager { get; set; }
 
-        private bool _isRunning { get; set; }
+        public bool _isRunning { get; set; }
         private string code = string.Empty;
         private string accessToken = string.Empty;
         public bool Connected => !string.IsNullOrEmpty(accessToken);
@@ -80,8 +80,11 @@ namespace SteamDigiSellerBot.Network
         //    _vacCheckList = vacCheckList;
         //}
 
+        private ILogger _logger { get; set; }
+
         public SuperBot(
-            Bot bot
+            Bot bot,
+            ILogger logger = null
             //ICurrencyDataRepository currencyDataRepository,
             //IVacGameRepository vacGameRepository
             )
@@ -89,6 +92,7 @@ namespace SteamDigiSellerBot.Network
             _steamClient = new SteamClient();
             _manager = new CallbackManager(_steamClient);
             _bot = bot;
+            _logger = logger;
             //_currencyDataRepository = currencyDataRepository;
             //_vacGameRepository = vacGameRepository;
 
@@ -116,6 +120,7 @@ namespace SteamDigiSellerBot.Network
         public DateTime? LastLogin { get; set; }
         public void Login()
         {
+            DebugLog.Enabled = true;
             if (_isRunning)
                 return;
             _isRunning = true;
@@ -241,7 +246,6 @@ namespace SteamDigiSellerBot.Network
         private async void OnConnected(SteamClient.ConnectedCallback callback)
         {
             Console.WriteLine("Connected to Steam! Logging in '{0}'...", _bot.UserName);
-
             // Begin authenticating via credentials
             try
             {
@@ -275,8 +279,9 @@ namespace SteamDigiSellerBot.Network
                 accessToken = pollResponse.AccessToken;
                 refreshToken = pollResponse.RefreshToken;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger?.LogError(ex, $"Bot fail connection: {_bot?.UserName}");
                 Console.WriteLine("Упала авторизация и аутентификация бота");
                 //throw new NotImplementedException();
             }
@@ -285,8 +290,12 @@ namespace SteamDigiSellerBot.Network
         private async void OnLoggedOn(SteamUser.LoggedOnCallback callback)
         {
             _bot.Result = callback.Result;
-
+            _bot.ResultSetTime=DateTime.UtcNow;
             isOk = callback.Result == EResult.OK;
+            if (!isOk)
+            {
+                _logger?.LogWarning($"Bot fail login: {_bot?.UserName} LoggedOnCallback description:\n{System.Text.Json.JsonSerializer.Serialize(callback)}");
+            }
 
             bool isSteamGuard = callback.Result == EResult.AccountLogonDenied;
             bool is2FA = callback.Result == EResult.AccountLoginDeniedNeedTwoFactor;
@@ -349,7 +358,7 @@ namespace SteamDigiSellerBot.Network
 
         private void OnDisconnected(SteamClient.DisconnectedCallback callback)
         {
-            System.Diagnostics.Trace.WriteLine("Disconnected from Steam");
+            _logger?.LogInformation("Disconnected from Steam '{0}'...", _bot.UserName);
             _isRunning = false;
         }
 

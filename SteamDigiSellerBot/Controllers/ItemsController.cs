@@ -42,6 +42,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ILogger<ItemsController> _logger;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly DatabaseContext db;
+        private readonly IGameRepository _gameRepository;
         private readonly IItemBulkUpdateService _itemBulkUpdateService;
 
         public ItemsController(
@@ -54,7 +55,8 @@ namespace SteamDigiSellerBot.Controllers
             ILogger<ItemsController> logger,
             IDigiSellerNetworkService digiSellerNetwork,
             DatabaseContext db,
-            IItemBulkUpdateService itemBulkUpdateService)
+            IItemBulkUpdateService itemBulkUpdateService, 
+            IGameRepository gameRepository)
         {
             _itemRepository = itemRepository;
             _digiSellerNetworkService = digiSellerNetwork;
@@ -68,6 +70,7 @@ namespace SteamDigiSellerBot.Controllers
             this.db = db;
 
             _itemBulkUpdateService = itemBulkUpdateService ?? throw new ArgumentNullException(nameof(itemBulkUpdateService));
+            _gameRepository = gameRepository;
 
             _logger = logger;
         }
@@ -248,11 +251,7 @@ namespace SteamDigiSellerBot.Controllers
                 }
                 else
                 {
-                    //_mapper.Map(item, oldItem);
-                    item.IsDeleted = false;
-                    item.Active = false;
-                    item.AddedDateTime = DateTime.UtcNow;
-                    await _itemRepository.ReplaceAsync(db, oldItem, item);//.EditAsync(oldItem);
+                    throw new Exception("Данный товар уже добавлен. Отредактируйте его.");
                 }
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
@@ -267,6 +266,7 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
             Item item = await _itemRepository.GetByIdAsync(db, id);
+            
             if (item.IsDeleted)
                 return BadRequest();
 
@@ -274,7 +274,7 @@ namespace SteamDigiSellerBot.Controllers
             {
                 User user = await _userManager.GetUserAsync(User);
 
-                Item editedItem = _mapper.Map<AddItemRequest, Item>(model, item);
+                Item editedItem = _mapper.Map(model, item);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
@@ -350,6 +350,7 @@ namespace SteamDigiSellerBot.Controllers
                 if (item != null)
                 {
                     await _itemRepository.DeleteItemAsync(item);
+                    //await _itemRepository.DeleteAsync(db, item);
                 }
             }
 
@@ -398,6 +399,11 @@ namespace SteamDigiSellerBot.Controllers
                 Item item = await _itemRepository.GetByIdAsync(db,id);
                 if (item != null)
                 {
+                   // await _itemRepository.DeleteAsync(db, item);
+                    
+                    /*var game = await _gameRepository.GetByIdAsync(item.Id);
+                    await _gameRepository.DeleteAsync(db, game);*/
+                    
                     await _itemRepository.DeleteItemAsync(item);
                 }
             }

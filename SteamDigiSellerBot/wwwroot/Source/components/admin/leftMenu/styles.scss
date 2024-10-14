@@ -1,5 +1,29 @@
 @import '../../../containers/admin/library';
 
+.toggleButton.closed{
+    left: 10px;
+}
+.toggleButton {
+    position: absolute;
+    top: 10px;
+    left: 265px;
+    width: 30px;
+    height: 30px;
+    background-color: #34495e;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.closed {
+}
+
 .wrapper {
     padding-top: 36px;
     padding-left: 40px;

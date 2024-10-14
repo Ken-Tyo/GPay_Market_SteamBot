@@ -382,7 +382,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<Item> GetByAppIdAndSubId(string appId, string subId)
         {
             await using var db = dbContextFactory.CreateDbContext();
-            return await db.Items.FirstOrDefaultAsync(i => i.AppId == appId && i.SubId == subId);
+            return await db.Items.FirstOrDefaultAsync(i => i.AppId == appId && i.SubId == subId && !i.IsDeleted);
         }
     }
 }

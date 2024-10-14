@@ -1,12 +1,9 @@
-﻿using Castle.Core.Logging;
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Providers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +26,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
 
         [DisableConcurrentExecution(10)]
         [AutomaticRetry(Attempts = 0, LogEvents = false, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-        public async Task ExecuteAsync(HangfireUpdateItemInfoJobCommand hangfireUpdateJobCommand)
+        public async Task ExecuteAsync(HangfireUpdateItemInfoJobCommand hangfireUpdateJobCommand, CancellationToken cancellationToken)
         {
             HttpRequest httpRequest = new()
             {
@@ -57,6 +54,12 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                     {
                         try
                         {
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                _logger.LogInformation("    JOB has been cancelled manually");
+                                return;
+                            }
+
                             _logger.LogInformation("    {num} try", NetworkConst.TriesCount - currentRetryCount + 1);
                             var updateResult = await UpdateItemsInfoService.UpdateItemInfoPostAsync(
                                 new UpdateItemInfoCommand(
@@ -71,6 +74,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                             {
                                 _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoGoodsItem.DigiSellerId);
                                 successCounter++;
+                                var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                                await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
                                 break;
                             }
                             else
@@ -80,8 +85,12 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
 
                             _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
 
-                            var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
-                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
+                            var delayTimeInMsOnErrorResult = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                            if (counter % 1000 == 0) // Делаем длинную паузу после 1000 обновлений 
+                            {
+                                delayTimeInMsOnErrorResult += NetworkConst.RequestDelayAfterLongTimeInMs;
+                            }
+                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMsOnErrorResult, 1000);
                         }
                         catch (HttpException ex)
                         {

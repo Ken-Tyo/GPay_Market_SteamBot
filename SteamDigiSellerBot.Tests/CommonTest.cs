@@ -28,6 +28,7 @@ using SteamDigiSellerBot.Utilities.Models;
 using xNet;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using SteamKit2;
 
 namespace SteamDigiSellerBot.Tests
 {
@@ -350,20 +351,22 @@ namespace SteamDigiSellerBot.Tests
         [Test]
         public async Task Protobuf_CartAddCheck()
         {
+            DebugLog.AddListener((s, e) => Debug.WriteLine("SteamKit logger:" + s + "\n" + e));
+            DebugLog.Enabled = true;
             botSender = new Bot
             {
-                Id = 106,
-                UserName = "anexfodump1979",
+                Id = 51,
+                UserName = "blumio73",
                 IsON = true,
-                Region = "RU",
-                SteamCurrencyId = 5,//RUB
+                Region = "CN",
+                SteamCurrencyId = 23,//RUB
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "i643ui3546y4",
-                ProxyStr = "195.19.199.116:64724:AwJyXm9A:hcnnkmGv",
-                MaFileStr = "{\"shared_secret\":\"jyT9ABWyvo4FJqVJ1FcZCX0cJxg=\",\"serial_number\":\"17394068322834032642\",\"revocation_code\":\"R80801\",\"uri\":\"otpauth://totp/Steam:anexfodump1979?secret=R4SP2AAVWK7I4BJGUVE5IVYZBF6RYJYY&issuer=Steam\",\"server_time\":1622977770,\"account_name\":\"anexfodump1979\",\"token_gid\":\"2881ee06470e760f\",\"identity_secret\":\"wQxO9Gj1xV3pTDCX7Pn9aVNIS9o=\",\"secret_1\":\"h01pUFfA5aeBtwexGHHVqpNTV5M=\",\"status\":0,\"device_id\":\"android:e4a8cd86-4378-7d59-437c-51a779d80d28\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"8b7bdebb0fda4a229136abc4\",\"SteamLogin\":\"76561199175591059%7C%7CC51CEB3B4A37CC20935127E52AEF7CB7B705445F\",\"SteamLoginSecure\":\"76561199175591059%7C%7C3B893C92E355022A7B72924F71EA7E64695C8DE9\",\"WebCookie\":\"4BDA2C310328C2517889086F8A691F1EE1C76E37\",\"OAuthToken\":\"8fbb6d5c4479445549f948df0ed185cd\",\"SteamID\":76561199175591059}}"
+                Password = "D37A823SS6BA",
+                ProxyStr = "176.56.38.82:7158:user129212:21cpft",
+                MaFileStr = "{\"shared_secret\":\"Vsoa4n1GJQKPklLms4cAB3R5hus=\",\"serial_number\":\"3438487121126445838\",\"revocation_code\":\"R65226\",\"uri\":\"otpauth://totp/Steam:blumio73?secret=K3FBVYT5IYSQFD4SKLTLHBYAA52HTBXL&issuer=Steam\",\"server_time\":1721678203,\"account_name\":\"blumio73\",\"token_gid\":\"3aba4c20878e94af\",\"identity_secret\":\"x34angXDkYD/8BxURG1lcGdFisA=\",\"secret_1\":\"4ZWb/nMDMOIhyg+QOGolynFIVI8=\",\"status\":1,\"device_id\":\"android:35fd4699-d40e-4f68-8534-55d71c0f7539\",\"fully_enrolled\":true,\"Session\":{\"SteamID\":76561197998309574,\"AccessToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MEY5MF8yNERDNDlBQ182RERDMiIsICJzdWIiOiAiNzY1NjExOTc5OTgzMDk1NzQiLCAiYXVkIjogWyAid2ViIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MjMxMjQ3NjEsICJuYmYiOiAxNzE0Mzk3MTI4LCAiaWF0IjogMTcyMzAzNzEyOCwgImp0aSI6ICIwRjhFXzI0REM0OUFCXzZFOUM1IiwgIm9hdCI6IDE3MjMwMzcxMjgsICJydF9leHAiOiAxNzQxMDkwMzIyLCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMjEyLjE5My4xNjcuMjQwIiwgImlwX2NvbmZpcm1lciI6ICIyMTIuMTkzLjE2Ny4yNDAiIH0.xYfoB7Y3ZIQwMwrDk00aCjmqFwEmNLqtTIN6MBuiTbAzEwJRM0ZelLPCnZ3A4_pCEAnqpoCh_D8q5RyyOsDuBg\",\"RefreshToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5Nzk5ODMwOTU3NCIsICJhdWQiOiBbICJ3ZWIiLCAicmVuZXciLCAiZGVyaXZlIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3NDEwOTAzMjIsICJuYmYiOiAxNzE0Mzk3MTI4LCAiaWF0IjogMTcyMzAzNzEyOCwgImp0aSI6ICIwRjkwXzI0REM0OUFDXzZEREMyIiwgIm9hdCI6IDE3MjMwMzcxMjgsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIyMTIuMTkzLjE2Ny4yNDAiLCAiaXBfY29uZmlybWVyIjogIjIxMi4xOTMuMTY3LjI0MCIgfQ.PI-megizqOWAmbUxIQDmWxBa96Xar6PApEb2tZNXZmyYhmm2749RpkjSuBOzcmu1mUFaDQzAEIPPLOxGzjk1BA\",\"SessionID\":null}}"
 
             };
             var sb = new SuperBot(botSender);

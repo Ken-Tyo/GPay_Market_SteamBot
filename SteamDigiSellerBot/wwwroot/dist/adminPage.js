@@ -63356,7 +63356,7 @@ const arrowLeft_namespaceObject = __webpack_require__.p + "b1c7335def848f80bcc5.
 const arrowRight_namespaceObject = __webpack_require__.p + "ed4605a092b467216198.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const leftMenu_styles = ({"wrapper":"styles__wrapper--Enr_z","titleSection":"styles__titleSection--GXD_6","title":"styles__title--GJMSN","menuSection":"styles__menuSection--l24r9","menuList":"styles__menuList--VGVfU","menuItem":"styles__menuItem--cB2Wo","icon":"styles__icon--NmqaV","arrowIcon":"styles__arrowIcon--Vx09I","subMenu":"styles__subMenu--EEbna","subMenuItem":"styles__subMenuItem--xVLM8","isOpen":"styles__isOpen--uNqls","filterButton":"styles__filterButton--S1_Lr","massButton":"styles__massButton--XOeJd"});
+/* harmony default export */ const leftMenu_styles = ({"toggleButton":"styles__toggleButton--qG8Pf","closed":"styles__closed--L88sh","wrapper":"styles__wrapper--Enr_z","titleSection":"styles__titleSection--GXD_6","title":"styles__title--GJMSN","menuSection":"styles__menuSection--l24r9","menuList":"styles__menuList--VGVfU","menuItem":"styles__menuItem--cB2Wo","icon":"styles__icon--NmqaV","arrowIcon":"styles__arrowIcon--Vx09I","subMenu":"styles__subMenu--EEbna","subMenuItem":"styles__subMenuItem--xVLM8","isOpen":"styles__isOpen--uNqls","filterButton":"styles__filterButton--S1_Lr","massButton":"styles__massButton--XOeJd"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/menuItem.js
 
 
@@ -64810,286 +64810,301 @@ var leftMenu = function leftMenu() {
     exchageRates = _state$use.exchageRates,
     gameSessionsFilter = _state$use.gameSessionsFilter,
     gameSessionsTotal = _state$use.gameSessionsTotal;
-  var gameSessionsPages = gameSessionsTotal / gameSessionsFilter.size > (gameSessionsTotal / gameSessionsFilter.size).toFixed(0) ? Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0)) + 1 : Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0));
-  var _useState = (0,react.useState)(menuArrData),
+  var _useState = (0,react.useState)(true),
     _useState2 = leftMenu_slicedToArray(_useState, 2),
-    menuData = _useState2[0],
-    setMenuDate = _useState2[1];
-  var _useState3 = (0,react.useState)(false),
+    showMenu = _useState2[0],
+    setShowMenu = _useState2[1];
+  var toggleMenu = function toggleMenu() {
+    return setShowMenu(function (prev) {
+      return !prev;
+    });
+  };
+  var gameSessionsPages = gameSessionsTotal / gameSessionsFilter.size > (gameSessionsTotal / gameSessionsFilter.size).toFixed(0) ? Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0)) + 1 : Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0));
+  var _useState3 = (0,react.useState)(menuArrData),
     _useState4 = leftMenu_slicedToArray(_useState3, 2),
-    confirmMassActiveChangeIsOpen = _useState4[0],
-    setConfirmMassActiveChangeIsOpen = _useState4[1];
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    className: leftMenu_styles.wrapper,
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-      className: leftMenu_styles.titleSection,
-      height: 65,
-      width: 254,
-      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: leftMenu_styles.title,
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("img", {
-          src: G_namespaceObject
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          children: "Pay Panel"
-        })]
-      })
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-      className: leftMenu_styles.menuSection,
-      height: 266,
-      width: 254,
-      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: leftMenu_styles.menuList,
-        children: menuData.map(function (i) {
-          return /*#__PURE__*/(0,jsx_runtime.jsx)(menuItem, leftMenu_objectSpread(leftMenu_objectSpread({}, i), {}, {
-            isOpen: i.isOpen,
-            onClick: function onClick() {
-              if (!i.subMenu || !i.subMenu.length) return;
-              var newMenuData = leftMenu_toConsumableArray(menuData);
-              newMenuData.forEach(function (mi) {
-                if (mi.name === i.name) {
-                  mi.isOpen = !mi.isOpen;
-                } else {
-                  mi.isOpen = false;
-                }
-              });
-              setMenuDate(newMenuData);
-            },
-            onClickOutside: function onClickOutside() {
-              var newMenuData = leftMenu_toConsumableArray(menuData);
-              newMenuData.forEach(function (mi) {
-                mi.isOpen = false;
-              });
-              setMenuDate(newMenuData);
-            }
-          }));
-        })
-      })
-    }), /*#__PURE__*/(0,jsx_runtime.jsxs)(Routes, {
-      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "products",
-        element: !selectedItems || selectedItems.length === 0 ? /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
-          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.massButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              toggleBulkEditPercentModal(true);
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u0441\u043C\u0435\u043D\u0430 \u0446\u0435\u043D"
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.massButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              setConfirmMassActiveChangeIsOpen(true);
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0432\u043A\u043B/\u0432\u044B\u043A\u043B \u0442\u043E\u0432\u0430\u0440\u043E\u0432"
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.massButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              toggleFilterProductsModal(true);
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
-            })
+    menuData = _useState4[0],
+    setMenuDate = _useState4[1];
+  var _useState5 = (0,react.useState)(false),
+    _useState6 = leftMenu_slicedToArray(_useState5, 2),
+    confirmMassActiveChangeIsOpen = _useState6[0],
+    setConfirmMassActiveChangeIsOpen = _useState6[1];
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("button", {
+      className: "".concat(leftMenu_styles.toggleButton, " ").concat(!showMenu ? leftMenu_styles.closed : ''),
+      onClick: toggleMenu,
+      children: showMenu ? '❮' : '❯'
+    }), showMenu && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: leftMenu_styles.wrapper,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+        className: leftMenu_styles.titleSection,
+        height: 65,
+        width: 254,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: leftMenu_styles.title,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+            src: G_namespaceObject
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: "Pay Panel"
           })]
-        }) : null
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "proxy",
-        element: /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-          className: leftMenu_styles.massButton,
-          height: 49,
-          width: 254,
-          onClick: function onClick() {
-            apiDeleteProxyAll();
-          },
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: leftMenu_styles.title,
-            children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u043A\u0441\u0438"
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+        className: leftMenu_styles.menuSection,
+        height: 266,
+        width: 254,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: leftMenu_styles.menuList,
+          children: menuData.map(function (i) {
+            return /*#__PURE__*/(0,jsx_runtime.jsx)(menuItem, leftMenu_objectSpread(leftMenu_objectSpread({}, i), {}, {
+              isOpen: i.isOpen,
+              onClick: function onClick() {
+                if (!i.subMenu || !i.subMenu.length) return;
+                var newMenuData = leftMenu_toConsumableArray(menuData);
+                newMenuData.forEach(function (mi) {
+                  if (mi.name === i.name) {
+                    mi.isOpen = !mi.isOpen;
+                  } else {
+                    mi.isOpen = false;
+                  }
+                });
+                setMenuDate(newMenuData);
+              },
+              onClickOutside: function onClickOutside() {
+                var newMenuData = leftMenu_toConsumableArray(menuData);
+                newMenuData.forEach(function (mi) {
+                  mi.isOpen = false;
+                });
+                setMenuDate(newMenuData);
+              }
+            }));
           })
         })
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "bots",
-        element: /*#__PURE__*/(0,jsx_runtime.jsx)(botStats, {
-          data: bots
-        })
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "orders",
-        element: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          style: {
-            marginTop: '19px'
-          },
-          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_paggination, {
-            val: gameSessionsFilter.page,
-            max: gameSessionsPages > 0 ? gameSessionsPages : 1,
-            onChange: ( /*#__PURE__*/function () {
-              var _ref = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee(page) {
-                return leftMenu_regeneratorRuntime().wrap(function _callee$(_context) {
-                  while (1) switch (_context.prev = _context.next) {
-                    case 0:
-                      _context.next = 2;
-                      return updateGameSessionsFilter({
-                        page: page
-                      });
-                    case 2:
-                    case "end":
-                      return _context.stop();
-                  }
-                }, _callee);
-              }));
-              return function (_x) {
-                return _ref.apply(this, arguments);
-              };
-            }())
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.filterButton,
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)(Routes, {
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "products",
+          element: !selectedItems || selectedItems.length === 0 ? /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.massButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleBulkEditPercentModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u0441\u043C\u0435\u043D\u0430 \u0446\u0435\u043D"
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.massButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                setConfirmMassActiveChangeIsOpen(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0432\u043A\u043B/\u0432\u044B\u043A\u043B \u0442\u043E\u0432\u0430\u0440\u043E\u0432"
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.massButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleFilterProductsModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
+              })
+            })]
+          }) : null
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "proxy",
+          element: /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.massButton,
             height: 49,
             width: 254,
             onClick: function onClick() {
-              toggleFilterOrdersModal(true);
+              apiDeleteProxyAll();
             },
             children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: leftMenu_styles.title,
-              children: "\u0424\u0438\u043B\u044C\u0442\u0440\u044B"
+              children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u043A\u0441\u0438"
             })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.filterButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              toggleEditOrderModal(true);
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "bots",
+          element: /*#__PURE__*/(0,jsx_runtime.jsx)(botStats, {
+            data: bots
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "orders",
+          element: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            style: {
+              marginTop: '19px'
             },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0435\u0441\u0441\u0438\u044E \u0437\u0430\u043A\u0430\u0437\u0430"
-            })
-          })]
-        })
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_paggination, {
+              val: gameSessionsFilter.page,
+              max: gameSessionsPages > 0 ? gameSessionsPages : 1,
+              onChange: ( /*#__PURE__*/function () {
+                var _ref = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee(page) {
+                  return leftMenu_regeneratorRuntime().wrap(function _callee$(_context) {
+                    while (1) switch (_context.prev = _context.next) {
+                      case 0:
+                        _context.next = 2;
+                        return updateGameSessionsFilter({
+                          page: page
+                        });
+                      case 2:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }, _callee);
+                }));
+                return function (_x) {
+                  return _ref.apply(this, arguments);
+                };
+              }())
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.filterButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleFilterOrdersModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u0424\u0438\u043B\u044C\u0442\u0440\u044B"
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.filterButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleEditOrderModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0435\u0441\u0441\u0438\u044E \u0437\u0430\u043A\u0430\u0437\u0430"
+              })
+            })]
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit, {
+        isOpen: editOrderModalIsOpen
+        //value={{}}
+        ,
+        response: editOrderResponse,
+        resetResponse: function resetResponse() {
+          setStateProp('editOrderResponse', {
+            loading: false,
+            errors: []
+          });
+        },
+        onCancel: function onCancel() {
+          toggleEditOrderModal(false);
+        },
+        onSave: function onSave(val) {
+          apiAddGameSession(val);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalShowInfoList, {
+        isOpen: orderCreationInfoIsOpen,
+        title: "Список заказов",
+        onOk: {
+          label: 'OK',
+          action: function action() {
+            toggleOrderCreationInfoModal(false);
+          }
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(bots_modalEdit, {
+        isOpen: editBotModalIsOpen,
+        value: selectedBot,
+        response: editBotResponse,
+        resetResponse: function resetResponse() {
+          setStateProp('editBotResponse', {
+            loading: false,
+            errors: []
+          });
+        },
+        onCancel: function onCancel() {
+          toggleEditBotModal(false);
+          setSelectedBot({});
+        },
+        onSave: function onSave(val) {
+          apiEditBot(val);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalDigisellerEdit, {
+        isOpen: digisellerEditModalIsOpen,
+        value: {
+          digisellerApiKey: user.digisellerApiKey,
+          digisellerId: user.digisellerId
+        },
+        onSave: function onSave(val) {
+          apiChangeDigisellerData(val);
+          toggleDigisellerEditModal(false);
+        },
+        onCancel: function onCancel() {
+          toggleDigisellerEditModal(false);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalChangePassword, {
+        isOpen: changePasswordModalIsOpen,
+        onSave: ( /*#__PURE__*/function () {
+          var _ref2 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee2(val) {
+            return leftMenu_regeneratorRuntime().wrap(function _callee2$(_context2) {
+              while (1) switch (_context2.prev = _context2.next) {
+                case 0:
+                  apiChangeUserPassword(val);
+                case 1:
+                case "end":
+                  return _context2.stop();
+              }
+            }, _callee2);
+          }));
+          return function (_x2) {
+            return _ref2.apply(this, arguments);
+          };
+        }()),
+        onCancel: function onCancel() {
+          toggleChangePasswordModal(false);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates, {
+        isOpen: exchangeRatesModalIsOpen,
+        value: exchageRates,
+        onSave: ( /*#__PURE__*/function () {
+          var _ref3 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee3(val) {
+            return leftMenu_regeneratorRuntime().wrap(function _callee3$(_context3) {
+              while (1) switch (_context3.prev = _context3.next) {
+                case 0:
+                  //console.log('newVal', val);
+                  apiUpdateExchangeDataManual(val);
+                case 1:
+                case "end":
+                  return _context3.stop();
+              }
+            }, _callee3);
+          }));
+          return function (_x3) {
+            return _ref3.apply(this, arguments);
+          };
+        }()),
+        onCancel: function onCancel() {
+          toggleExchangeRatesModal(false);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+        isOpen: confirmMassActiveChangeIsOpen,
+        title: 'Массовое вкл/выкл товаров',
+        content: 'Вы точно хотите включить/выключить все товары?',
+        onConfirm: {
+          text: 'Подтвердить',
+          action: function action() {
+            apiSetItemActiveStatus();
+          }
+        },
+        onCancel: {
+          action: function action() {
+            setConfirmMassActiveChangeIsOpen(false);
+          }
+        }
       })]
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit, {
-      isOpen: editOrderModalIsOpen
-      //value={{}}
-      ,
-      response: editOrderResponse,
-      resetResponse: function resetResponse() {
-        setStateProp('editOrderResponse', {
-          loading: false,
-          errors: []
-        });
-      },
-      onCancel: function onCancel() {
-        toggleEditOrderModal(false);
-      },
-      onSave: function onSave(val) {
-        apiAddGameSession(val);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalShowInfoList, {
-      isOpen: orderCreationInfoIsOpen,
-      title: "Список заказов",
-      onOk: {
-        label: 'OK',
-        action: function action() {
-          toggleOrderCreationInfoModal(false);
-        }
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(bots_modalEdit, {
-      isOpen: editBotModalIsOpen,
-      value: selectedBot,
-      response: editBotResponse,
-      resetResponse: function resetResponse() {
-        setStateProp('editBotResponse', {
-          loading: false,
-          errors: []
-        });
-      },
-      onCancel: function onCancel() {
-        toggleEditBotModal(false);
-        setSelectedBot({});
-      },
-      onSave: function onSave(val) {
-        apiEditBot(val);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalDigisellerEdit, {
-      isOpen: digisellerEditModalIsOpen,
-      value: {
-        digisellerApiKey: user.digisellerApiKey,
-        digisellerId: user.digisellerId
-      },
-      onSave: function onSave(val) {
-        apiChangeDigisellerData(val);
-        toggleDigisellerEditModal(false);
-      },
-      onCancel: function onCancel() {
-        toggleDigisellerEditModal(false);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalChangePassword, {
-      isOpen: changePasswordModalIsOpen,
-      onSave: ( /*#__PURE__*/function () {
-        var _ref2 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee2(val) {
-          return leftMenu_regeneratorRuntime().wrap(function _callee2$(_context2) {
-            while (1) switch (_context2.prev = _context2.next) {
-              case 0:
-                apiChangeUserPassword(val);
-              case 1:
-              case "end":
-                return _context2.stop();
-            }
-          }, _callee2);
-        }));
-        return function (_x2) {
-          return _ref2.apply(this, arguments);
-        };
-      }()),
-      onCancel: function onCancel() {
-        toggleChangePasswordModal(false);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates, {
-      isOpen: exchangeRatesModalIsOpen,
-      value: exchageRates,
-      onSave: ( /*#__PURE__*/function () {
-        var _ref3 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee3(val) {
-          return leftMenu_regeneratorRuntime().wrap(function _callee3$(_context3) {
-            while (1) switch (_context3.prev = _context3.next) {
-              case 0:
-                //console.log('newVal', val);
-                apiUpdateExchangeDataManual(val);
-              case 1:
-              case "end":
-                return _context3.stop();
-            }
-          }, _callee3);
-        }));
-        return function (_x3) {
-          return _ref3.apply(this, arguments);
-        };
-      }()),
-      onCancel: function onCancel() {
-        toggleExchangeRatesModal(false);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
-      isOpen: confirmMassActiveChangeIsOpen,
-      title: 'Массовое вкл/выкл товаров',
-      content: 'Вы точно хотите включить/выключить все товары?',
-      onConfirm: {
-        text: 'Подтвердить',
-        action: function action() {
-          apiSetItemActiveStatus();
-        }
-      },
-      onCancel: {
-        action: function action() {
-          setConfirmMassActiveChangeIsOpen(false);
-        }
-      }
     })]
   });
 };
