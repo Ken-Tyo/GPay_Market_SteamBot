@@ -29,6 +29,7 @@ namespace SteamDigiSellerBot.Database.Entities
         public string PersonName { get; set; }
 
         public string Password { get; set; }
+        public string PasswordC { get; set; }
 
         public string MaFileStr { get; set; }
 

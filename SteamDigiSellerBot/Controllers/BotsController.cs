@@ -17,6 +17,8 @@ using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Extensions;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
+using SteamDigiSellerBot.Utilities.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -29,6 +31,9 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _botPool;
         private readonly IBotSendGameAttemptsRepository _botSendGameAttemptsRepository;
+        private readonly ICryptographyUtilityService _cryptographyUtilityService;
+        private readonly IConfiguration _configuration;
+
         private readonly DatabaseContext db;
 
         private readonly IMapper _mapper;
@@ -40,6 +45,8 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionRepository gameSessionRepository,
             ISuperBotPool botPoolService,
             IBotSendGameAttemptsRepository botSendGameAttemptsRepository,
+            ICryptographyUtilityService cryptographyUtilityService,
+            IConfiguration configuration,
             IMapper mapper,
             DatabaseContext dbContext)
         {
@@ -50,7 +57,9 @@ namespace SteamDigiSellerBot.Controllers
             _botPool = botPoolService;
             _mapper = mapper;
             _botSendGameAttemptsRepository = botSendGameAttemptsRepository;
-            db=dbContext;
+            _cryptographyUtilityService = cryptographyUtilityService;
+            _configuration = configuration;
+            db =dbContext;
         }
 
         [HttpGet, Route("bots/list")]
@@ -62,7 +71,10 @@ namespace SteamDigiSellerBot.Controllers
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
             });
 
-            
+            string key = _configuration.GetSection("encryptionKey").Value;
+
+            await _steamBotRepository.CheckAndEncryptPasswords(key);
+
             return Ok(bots
                 .OrderByDescending(b => b.IsON)
                 .ThenBy(b => b.Region)
@@ -73,6 +85,8 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("bots/add"), ValidationActionFilter]
         public async Task<IActionResult> BotAdd(EditBotRequest model)
         {
+            string key = _configuration.GetSection("encryptionKey").Value;
+
             BadRequestObjectResult createBadRequest()
             {
                 var errors = ModelState.Values.SelectMany(m => m.Errors)
@@ -81,7 +95,10 @@ namespace SteamDigiSellerBot.Controllers
 
                 return BadRequest(new { errors });
             };
+
             Bot bot = _mapper.Map<Bot>(model);
+            bot.PasswordC = _cryptographyUtilityService.Encrypt(model.Password, key);
+
             Bot oldBot = null;
             if (!model.Id.HasValue && model.MaFile is null)
                 ModelState.AddModelError("", "Поле MaFile является обязательным");
@@ -89,7 +106,10 @@ namespace SteamDigiSellerBot.Controllers
             if (model.Id.HasValue)
             {
                 oldBot = await _steamBotRepository.GetByIdAsync(db,model.Id.Value);
-                if ((bot.UserName != oldBot.UserName || bot.Password != oldBot.Password)
+
+                var oldBotPass = _cryptographyUtilityService.Decrypt(oldBot.PasswordC, key);
+
+                if ((bot.UserName != oldBot.UserName || bot.Password != oldBotPass)
                  && model.MaFile is null)
                 {
                     ModelState.AddModelError("", "Поле MaFile является обязательным");
