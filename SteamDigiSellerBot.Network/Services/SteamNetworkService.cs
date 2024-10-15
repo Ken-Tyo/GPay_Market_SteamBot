@@ -319,6 +319,7 @@ namespace SteamDigiSellerBot.Network.Services
             //var gamesList = db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToList();
             for (int t = 0; t < tries; t++)
             {
+                var selectedProxy = "";
                 try
                 {
                     SteamProxy steamProxy = _proxyPull.GetFreeProxy();
@@ -327,6 +328,8 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         request.Proxy = steamProxy.ProxyClient;
                     }
+
+                    selectedProxy = steamProxy?.Host + ":" + steamProxy?.Port;
 
                     string s = request.Get("https://store.steampowered.com/app/" + appId + "?cc=ru").ToString();
                     // Избегаем попадать в лимит при обращении к серверу
@@ -392,7 +395,7 @@ namespace SteamDigiSellerBot.Network.Services
                 }
                 catch (HttpException ex)
                 {
-                    _logger.LogWarning(default, ex, $"At the current time [{DateTime.UtcNow}] the server can't HTTP GET 'SteamGame' {appId}");
+                    _logger.LogWarning(default, ex, $"At the current time [{DateTime.UtcNow}] the server can't HTTP GET 'SteamGame' {appId} proxy({selectedProxy})");
                 }
                 catch (Exception ex)
                 {
