@@ -1840,7 +1840,6 @@ namespace SteamDigiSellerBot.Network
                     res.result = SendeGameResult.error;
                     res.errCode = finalTranStatus.purchaseresultdetail;
                     res.errMessage = $"Бот \"{this.Bot.UserName}\" получил Gift Ban - постоянный лимит на отправку игр. Если это ошибка, передобавьте бота или попробуйте вручную. Последняя сумма отправки игры: {res.finalizeTranStatus.purchasereceipt.formattedTotal} / {countryCode}.";
-                    res.ChangeBot = true;
 
                     sendGame = res;
                     return sendGame;

@@ -44,6 +44,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IConfiguration _configuration;
         private GameSessionCommon _gameSessionManager { get; set; }
         private Dictionary<int, int> _gsFailedAttemptsCounter = new Dictionary<int, int>();
+        private const int _sendAttemptsLimit = 5;
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -1298,7 +1299,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public async Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId)
         {
             await using var db = _gameSessionRepository.GetContext() as DatabaseContext;
-            var gs = await _gameSessionRepository.GetByIdAsync(db,gsId);
+            var gs = await _gameSessionRepository.GetByIdAsync(db, gsId);
             return await SendGame(db, gs);
         }
 
@@ -1465,13 +1466,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
                         else if (sendRes.finalizeTranStatus.purchaseresultdetail == 11)
                         {
-                            if (_gsFailedAttemptsCounter[gs.Id] > 5)
+                            if (GsIsFailedToSend(gs))
                             {
                                 gs.StatusId = GameSessionStatusEnum.BotLimit;
-                            }
-                            else
-                            {
-                                _gsFailedAttemptsCounter[gs.Id]++;
                             }
                         }
                         else
@@ -1633,6 +1630,22 @@ namespace SteamDigiSellerBot.Services.Implementation
             gs.QueueWaitingMinutes = minutesLeft;
             //await _gameSessionRepository.EditAsync(gs);
             await _gameSessionRepository.UpdateQueueInfo(gs);
+        }
+
+        private bool GsIsFailedToSend(GameSession gs)
+        {
+            if (!_gsFailedAttemptsCounter.ContainsKey(gs.Id))
+            {
+                _gsFailedAttemptsCounter.Add(gs.Id, 0);
+            }
+            
+            if (_gsFailedAttemptsCounter[gs.Id]++ > _sendAttemptsLimit)
+            {
+                _gsFailedAttemptsCounter.Remove(gs.Id);
+                return true;
+            }
+
+            return false;
         }
     }
 
