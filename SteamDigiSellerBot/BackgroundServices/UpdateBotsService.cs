@@ -69,8 +69,8 @@ namespace SteamDigiSellerBot.Services
                 GC.Collect();
                 _logger.LogInformation("Bot updates started");
                 var scope = _serviceProvider.CreateScope();
-                await using var db = _botRepository.GetContext();
-                List<Bot> bots = await _botRepository.ListAsync(db, b => b.IsON);
+                await using var db_task = _botRepository.GetContext();
+                List<Bot> bots = await _botRepository.ListAsync(db_task, b => b.IsON);
 
                 //var adminID = _configuration["adminID"];
 
@@ -79,10 +79,11 @@ namespace SteamDigiSellerBot.Services
                 //User user = await _userManager.FindByIdAsync(adminID);
 
                 CurrencyData currencyData = await _currencyDataService.GetCurrencyData();
-                List<VacGame> vacCheckList = await _vacGameRepository.ListAsync(db);
+                List<VacGame> vacCheckList = await _vacGameRepository.ListAsync(db_task);
 
                 var tasks =  bots.Select( async bot => 
                 {
+                    await using var db = _botRepository.GetContext();
                     try
                     {
                         var sb = _superBotPool.GetById(bot.Id);
@@ -92,7 +93,7 @@ namespace SteamDigiSellerBot.Services
                                                 (sb.LastLogin != null &&
                                                  sb.LastLogin < DateTime.UtcNow.AddMinutes(-45))))
                             {
-                                sb.Login();
+                                sb= _superBotPool.ReLogin(sb.Bot);
                             }
 
                             if (!sb.IsOk())

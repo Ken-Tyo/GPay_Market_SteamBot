@@ -120,7 +120,7 @@ namespace SteamDigiSellerBot.Network
         public DateTime? LastLogin { get; set; }
         public void Login()
         {
-            DebugLog.Enabled = true;
+            //DebugLog.Enabled = true;
             if (_isRunning)
                 return;
             _isRunning = true;
@@ -360,6 +360,7 @@ namespace SteamDigiSellerBot.Network
         {
             _logger?.LogInformation("Disconnected from Steam '{0}'...", _bot.UserName);
             _isRunning = false;
+            isOk=false;
         }
 
         private CookieDictionary GetWebCookiesNonce(string myLoginKey) // depricated

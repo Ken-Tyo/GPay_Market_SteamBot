@@ -160,11 +160,13 @@ namespace SteamDigiSellerBot.Network
                 {
                     if (_bot.IsON && LastLogin != null && LastLogin < DateTime.UtcNow.AddMinutes(-45))
                     {
+                        this._isRunning = false;
                         this.Login();
+                        await Task.Delay(TimeSpan.FromSeconds(5));
                     }
                     if (_bot.Result != EResult.OK)
                     {
-                        logger.LogWarning($"BalanceMonitor: {_bot.UserName} offline ({nameof(GetBotBalance_Proto)})");
+                        logger?.LogWarning($"BalanceMonitor: {_bot.UserName} offline ({nameof(GetBotBalance_Proto)})");
                         return (false, 0);
                     }
                 }
@@ -187,6 +189,7 @@ namespace SteamDigiSellerBot.Network
                     {
                         if (repeat && LastLogin!=null && LastLogin < DateTime.UtcNow.AddMinutes(-30))
                         {
+                            this._isRunning = false;
                             this.Login();
                             await Task.Delay(TimeSpan.FromSeconds(5));
                             return await _GetBotBalance_Proto(logger, false);

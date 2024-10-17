@@ -356,7 +356,7 @@ namespace SteamDigiSellerBot.Tests
             botSender = new Bot
             {
                 Id = 51,
-                UserName = "blumio73",
+                UserName = "summersrein",
                 IsON = true,
                 Region = "CN",
                 SteamCurrencyId = 23,//RUB
@@ -364,9 +364,9 @@ namespace SteamDigiSellerBot.Tests
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "D37A823SS6BA",
-                ProxyStr = "176.56.38.82:7158:user129212:21cpft",
-                MaFileStr = "{\"shared_secret\":\"Vsoa4n1GJQKPklLms4cAB3R5hus=\",\"serial_number\":\"3438487121126445838\",\"revocation_code\":\"R65226\",\"uri\":\"otpauth://totp/Steam:blumio73?secret=K3FBVYT5IYSQFD4SKLTLHBYAA52HTBXL&issuer=Steam\",\"server_time\":1721678203,\"account_name\":\"blumio73\",\"token_gid\":\"3aba4c20878e94af\",\"identity_secret\":\"x34angXDkYD/8BxURG1lcGdFisA=\",\"secret_1\":\"4ZWb/nMDMOIhyg+QOGolynFIVI8=\",\"status\":1,\"device_id\":\"android:35fd4699-d40e-4f68-8534-55d71c0f7539\",\"fully_enrolled\":true,\"Session\":{\"SteamID\":76561197998309574,\"AccessToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MEY5MF8yNERDNDlBQ182RERDMiIsICJzdWIiOiAiNzY1NjExOTc5OTgzMDk1NzQiLCAiYXVkIjogWyAid2ViIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MjMxMjQ3NjEsICJuYmYiOiAxNzE0Mzk3MTI4LCAiaWF0IjogMTcyMzAzNzEyOCwgImp0aSI6ICIwRjhFXzI0REM0OUFCXzZFOUM1IiwgIm9hdCI6IDE3MjMwMzcxMjgsICJydF9leHAiOiAxNzQxMDkwMzIyLCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMjEyLjE5My4xNjcuMjQwIiwgImlwX2NvbmZpcm1lciI6ICIyMTIuMTkzLjE2Ny4yNDAiIH0.xYfoB7Y3ZIQwMwrDk00aCjmqFwEmNLqtTIN6MBuiTbAzEwJRM0ZelLPCnZ3A4_pCEAnqpoCh_D8q5RyyOsDuBg\",\"RefreshToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5Nzk5ODMwOTU3NCIsICJhdWQiOiBbICJ3ZWIiLCAicmVuZXciLCAiZGVyaXZlIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3NDEwOTAzMjIsICJuYmYiOiAxNzE0Mzk3MTI4LCAiaWF0IjogMTcyMzAzNzEyOCwgImp0aSI6ICIwRjkwXzI0REM0OUFDXzZEREMyIiwgIm9hdCI6IDE3MjMwMzcxMjgsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIyMTIuMTkzLjE2Ny4yNDAiLCAiaXBfY29uZmlybWVyIjogIjIxMi4xOTMuMTY3LjI0MCIgfQ.PI-megizqOWAmbUxIQDmWxBa96Xar6PApEb2tZNXZmyYhmm2749RpkjSuBOzcmu1mUFaDQzAEIPPLOxGzjk1BA\",\"SessionID\":null}}"
+                Password = "Lo3N9aQw",
+                ProxyStr = "176.56.38.128:9644:user129212:21cpft",
+                MaFileStr = "{\"shared_secret\":\"a4694hwdOv4IzpDSFlQ4LeZMsXM=\",\"serial_number\":\"12823695674239706368\",\"revocation_code\":\"R79911\",\"uri\":\"otpauth://totp/Steam:summersrein?secret=NOHL3YQ4DU5P4CGOSDJBMVBYFXTEZMLT&issuer=Steam\",\"server_time\":1723739846,\"account_name\":\"summersrein\",\"token_gid\":\"33ae4e57fdd59636\",\"identity_secret\":\"0XR3DTIvGuYr7HD3FNSKzyAWfOE=\",\"secret_1\":\"zYzCgiF4MdD1Vyobr1pAYrSJtkQ=\",\"status\":1,\"device_id\":\"android:de15cb1a-673c-47de-bac1-7050c2c496f6\",\"fully_enrolled\":true,\"Session\":{\"SteamID\":76561198007831418,\"AccessToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTgzMV8yNEU2RTE2RV80RjlFNSIsICJzdWIiOiAiNzY1NjExOTgwMDc4MzE0MTgiLCAiYXVkIjogWyAid2ViIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MjQyNTMzOTIsICJuYmYiOiAxNzE1NTI1MzYzLCAiaWF0IjogMTcyNDE2NTM2MywgImp0aSI6ICIxNkNBXzI0RTZFMDBBXzVDNDNFIiwgIm9hdCI6IDE3MjQxNjUzNjMsICJydF9leHAiOiAxNzQyMTY2Mzg1LCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMjEyLjE5My4xNjcuMjQwIiwgImlwX2NvbmZpcm1lciI6ICIyMTIuMTkzLjE2Ny4yNDAiIH0.DkiOoiuuuGafK5GH6RFdchMkmOUfN3qsDOTCoVUVF285eywOPG2Rj6KFRE3X7-WmaLpgwFfYKliijxMAMfj7Cw\",\"RefreshToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5ODAwNzgzMTQxOCIsICJhdWQiOiBbICJ3ZWIiLCAicmVuZXciLCAiZGVyaXZlIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3NDIxNjYzODUsICJuYmYiOiAxNzE1NTI1MzYzLCAiaWF0IjogMTcyNDE2NTM2MywgImp0aSI6ICIxODMxXzI0RTZFMTZFXzRGOUU1IiwgIm9hdCI6IDE3MjQxNjUzNjMsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIyMTIuMTkzLjE2Ny4yNDAiLCAiaXBfY29uZmlybWVyIjogIjIxMi4xOTMuMTY3LjI0MCIgfQ.wUiUlTQ2oefPhYMrEB9P7QUrUIgu0LS_tlf9XoLSEszNu2gw9a8G-KF6wzUh5cQvzCt37tjm3nenJMfWaFnBDQ\",\"SessionID\":null}}"
 
             };
             var sb = new SuperBot(botSender);
@@ -375,6 +375,7 @@ namespace SteamDigiSellerBot.Tests
             var session0 = await sb.GetSessiondId();
             sb.Login();
             var b= sb.IsOk();var session = await sb.GetSessiondId();
+            var balance= await sb.GetBotBalance_Proto();
 
             await sb.SendInvitationViaAddAsFriend(new ProfileDataRes()
             {
