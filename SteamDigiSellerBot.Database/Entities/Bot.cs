@@ -66,7 +66,9 @@ namespace SteamDigiSellerBot.Database.Entities
         public EResult? LoginResult { get; set; }
 
         [NotMapped]
-        public EResult Result { get; set; }
+        public EResult? Result { get; set; }
+        [NotMapped]
+        public EResult? ResultExtDescription { get; set; }
         [NotMapped]
         public DateTime? ResultSetTime { get; set; }
 

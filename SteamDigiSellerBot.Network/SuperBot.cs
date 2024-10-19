@@ -295,6 +295,7 @@ namespace SteamDigiSellerBot.Network
             if (!isOk)
             {
                 _logger?.LogWarning($"Bot fail login: {_bot?.UserName} LoggedOnCallback description:\n{System.Text.Json.JsonSerializer.Serialize(callback)}");
+                _bot.ResultExtDescription = callback.ExtendedResult;
             }
 
             bool isSteamGuard = callback.Result == EResult.AccountLogonDenied;

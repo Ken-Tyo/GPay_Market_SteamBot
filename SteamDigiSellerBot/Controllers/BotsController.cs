@@ -160,7 +160,7 @@ namespace SteamDigiSellerBot.Controllers
                 
                 if (!botAuthOK)
                 {
-                    ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + bot.Result.ToString());
+                    ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + (bot.Result?.ToString() ?? "не установлено" ) + (bot.ResultExtDescription !=null ? "("+bot.ResultExtDescription.ToString()+")" :""));
                     return createBadRequest();
                 }
 
@@ -238,7 +238,7 @@ namespace SteamDigiSellerBot.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + bot.Result.ToString());
+                ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + (bot.Result?.ToString() ?? "не установлено") + (bot.ResultExtDescription != null ? "(" + bot.ResultExtDescription.ToString() + ")" : ""));
             }
 
             return this.CreateBadRequest();
