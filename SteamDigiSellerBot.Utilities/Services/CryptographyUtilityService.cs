@@ -4,16 +4,11 @@ using System.Text;
 
 namespace SteamDigiSellerBot.Utilities.Services
 {
-    public interface ICryptographyUtilityService
+    public static class CryptographyUtilityService
     {
-        string GetSha256(string source);
-        string Encrypt(string input, string key);
-        string Decrypt(string input, string key);
-    }
+        private static byte[] _keybytes = new byte[] { 48, 193, 7, 117, 220, 158, 12, 203, 52, 194, 196, 234, 147, 122, 155, 164, 33, 126, 33, 24, 193, 248, 186, 227, 92, 218, 146, 237, 189, 155, 7, 30 };
 
-    public class CryptographyUtilityService : ICryptographyUtilityService
-    {
-        public string GetSha256(string source)
+        public static string GetSha256(string source)
         {
             SHA256Managed crypt = new SHA256Managed();
             StringBuilder hash = new StringBuilder();
@@ -26,26 +21,31 @@ namespace SteamDigiSellerBot.Utilities.Services
             return hash.ToString();
         }
 
-        public string Encrypt(string input, string key)
+        public static string Encrypt(string input)
         {
-            var keyb = Convert.FromBase64String(key);
+            if (string.IsNullOrEmpty(input))
+                return "";
 
-            var (ciphertext, nonce, tag) = EncryptAesGcm(input, keyb);
+            var (ciphertext, nonce, tag) = EncryptAesGcm(input, _keybytes);
 
             return $"{Convert.ToBase64String(ciphertext)};{Convert.ToBase64String(nonce)};{Convert.ToBase64String(tag)}";
         }
 
-        public string Decrypt(string input, string key)
+        public static string Decrypt(string input)
         {
-            var keyb = Convert.FromBase64String(key);
+            if (string.IsNullOrEmpty(input))
+                return "";
 
-            var splited = input.Split(';');
+            var splited = input.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+            if (splited.Length < 3)
+                return input;
 
             var ciphertext = Convert.FromBase64String(splited[0]);
             var nonce = Convert.FromBase64String(splited[1]);
             var tag = Convert.FromBase64String(splited[2]);
 
-            return DecryptAesGcm(ciphertext, nonce, tag, keyb);
+            return DecryptAesGcm(ciphertext, nonce, tag, _keybytes);
         }
 
         private static (byte[] ciphertext, byte[] nonce, byte[] tag) EncryptAesGcm(string plaintext, byte[] key)

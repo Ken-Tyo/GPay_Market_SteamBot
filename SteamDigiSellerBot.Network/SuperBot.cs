@@ -32,6 +32,7 @@ using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Utilities.Services;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -246,7 +247,7 @@ namespace SteamDigiSellerBot.Network
                 var authSession = await _steamClient.Authentication.BeginAuthSessionViaCredentialsAsync(new AuthSessionDetails
                 {
                     Username = _bot.UserName,
-                    Password = _bot.Password,
+                    Password = CryptographyUtilityService.Decrypt(_bot.Password),
                     IsPersistentSession = false,
                     //PlatformType = EAuthTokenPlatformType.k_EAuthTokenPlatformType_MobileApp,
                     //ClientOSType = EOSType.Android9,

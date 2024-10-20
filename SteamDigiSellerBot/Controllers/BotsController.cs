@@ -31,7 +31,6 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _botPool;
         private readonly IBotSendGameAttemptsRepository _botSendGameAttemptsRepository;
-        private readonly ICryptographyUtilityService _cryptographyUtilityService;
         private readonly IConfiguration _configuration;
 
         private readonly DatabaseContext db;
@@ -45,7 +44,6 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionRepository gameSessionRepository,
             ISuperBotPool botPoolService,
             IBotSendGameAttemptsRepository botSendGameAttemptsRepository,
-            ICryptographyUtilityService cryptographyUtilityService,
             IConfiguration configuration,
             IMapper mapper,
             DatabaseContext dbContext)
@@ -57,7 +55,6 @@ namespace SteamDigiSellerBot.Controllers
             _botPool = botPoolService;
             _mapper = mapper;
             _botSendGameAttemptsRepository = botSendGameAttemptsRepository;
-            _cryptographyUtilityService = cryptographyUtilityService;
             _configuration = configuration;
             db =dbContext;
         }
@@ -69,11 +66,11 @@ namespace SteamDigiSellerBot.Controllers
             bots.ForEach(e =>
             {
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
+                e.Password = CryptographyUtilityService.Decrypt(e.Password);
+                e.ProxyStr = CryptographyUtilityService.Decrypt(e.ProxyStr);
             });
 
-            string key = _configuration.GetSection("encryptionKey").Value;
-
-            await _steamBotRepository.CheckAndEncryptPasswords(key);
+            await _steamBotRepository.CheckAndEncryptPasswords();
 
             return Ok(bots
                 .OrderByDescending(b => b.IsON)
@@ -85,8 +82,6 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("bots/add"), ValidationActionFilter]
         public async Task<IActionResult> BotAdd(EditBotRequest model)
         {
-            string key = _configuration.GetSection("encryptionKey").Value;
-
             BadRequestObjectResult createBadRequest()
             {
                 var errors = ModelState.Values.SelectMany(m => m.Errors)
@@ -97,19 +92,22 @@ namespace SteamDigiSellerBot.Controllers
             };
 
             Bot bot = _mapper.Map<Bot>(model);
-            bot.PasswordC = _cryptographyUtilityService.Encrypt(model.Password, key);
+            bot.PasswordC = model.Password;
+            bot.Password = CryptographyUtilityService.Encrypt(model.Password);
+            bot.ProxyStrC = model.Proxy;
+            bot.ProxyStr = CryptographyUtilityService.Encrypt(model.Proxy);
 
             Bot oldBot = null;
             if (!model.Id.HasValue && model.MaFile is null)
                 ModelState.AddModelError("", "Поле MaFile является обязательным");
-            
+
             if (model.Id.HasValue)
             {
                 oldBot = await _steamBotRepository.GetByIdAsync(db,model.Id.Value);
 
-                var oldBotPass = _cryptographyUtilityService.Decrypt(oldBot.PasswordC, key);
+                var oldBotPass = CryptographyUtilityService.Decrypt(oldBot.Password);
 
-                if ((bot.UserName != oldBot.UserName || bot.Password != oldBotPass)
+                if ((bot.UserName != oldBot.UserName || bot.PasswordC != oldBotPass)
                  && model.MaFile is null)
                 {
                     ModelState.AddModelError("", "Поле MaFile является обязательным");

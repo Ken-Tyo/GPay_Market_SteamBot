@@ -68,8 +68,6 @@ namespace SteamDigiSellerBot
             services.AddTransient<TagTypeReplacementService>();
             services.AddTransient<TagPromoReplacementService>();
 
-            services.AddSingleton<ICryptographyUtilityService, CryptographyUtilityService>();
-
             services.AddSingleton<ISteamNetworkService, SteamNetworkService>();
             services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();
             services.AddSingleton<IItemNetworkService, ItemNetworkService>();
