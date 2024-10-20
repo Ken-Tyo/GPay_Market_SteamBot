@@ -29,6 +29,8 @@ using xNet;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using SteamKit2;
+using SteamKit2.WebUI.Internal;
+using System.Net.Http;
 
 namespace SteamDigiSellerBot.Tests
 {
@@ -460,6 +462,35 @@ namespace SteamDigiSellerBot.Tests
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
+        }
+
+        [Test]
+        public async Task Protobuf_ItemsSells()
+        {
+
+            using HttpClient client = new HttpClient();
+            SteamApiClient apiClient = new SteamApiClient(client);
+            var r = new CStoreBrowse_GetItems_Request()
+            {
+                context = new()
+                {
+                    country_code = "US"
+                },
+                data_request = new StoreBrowseItemDataRequest()
+                {
+                    include_all_purchase_options = true,
+                    include_release = true,
+                    include_included_items = true,
+
+                }
+            };
+            r.ids.Add(new StoreItemID()
+            {
+                appid = 1614550
+            });
+            var response = await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,
+                null);
+
         }
 
     }

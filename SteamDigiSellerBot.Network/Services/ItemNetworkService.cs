@@ -317,7 +317,7 @@ namespace SteamDigiSellerBot.Network.Services
                     currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
                 }
 
-                await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
+                await _steamNetworkService.SetSteamPrices_Proto(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
 
                 //before update Digiseller price
                 var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
@@ -446,7 +446,7 @@ namespace SteamDigiSellerBot.Network.Services
                     }
                 }
 
-                if (digiSellerEnable)
+                if (digiSellerEnable && false)
                 {
                     if (sendToDigiSeller)
                         await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);
