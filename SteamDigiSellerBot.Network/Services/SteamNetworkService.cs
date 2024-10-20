@@ -168,13 +168,13 @@ namespace SteamDigiSellerBot.Network.Services
                                     //если цена уже была и устанавливается вручную, пропускаем
                                     if (targetPrice.IsManualSet)
                                         continue;
-                                    if (targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100
-                                        || targetPrice.CurrentSteamPrice != po.final_price_in_cents / 100)
+                                    if (targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M
+                                        || targetPrice.CurrentSteamPrice != po.final_price_in_cents / 100M)
                                     {
                                         _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)}: {c.CountryCode} Изменение цены {appId} с {targetPrice.CurrentSteamPrice}  на {po.final_price_in_cents / 100}");
 
-                                        targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100;
-                                        targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100;
+                                        targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
+                                        targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
                                         targetPrice.LastUpdate = DateTime.UtcNow;
                                         
                                     }
