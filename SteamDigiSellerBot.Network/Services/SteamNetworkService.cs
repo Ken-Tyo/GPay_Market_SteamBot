@@ -117,10 +117,10 @@ namespace SteamDigiSellerBot.Network.Services
                         game.GamePrices.RemoveAll(e => needToDelete.Contains(e));
                     }
                 }
-
+                SteamApiClient apiClient = new SteamApiClient(_proxyPull.GetFreeProxy());
                 foreach (var c in currencies)
                 {
-                    SteamApiClient apiClient = new SteamApiClient(_proxyPull.GetFreeProxy());
+                    
                     var r = new CStoreBrowse_GetItems_Request()
                     {
                         context = new()
@@ -171,7 +171,7 @@ namespace SteamDigiSellerBot.Network.Services
                                     if (targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M
                                         || targetPrice.CurrentSteamPrice != po.final_price_in_cents / 100M)
                                     {
-                                        _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение цены {appId} с {targetPrice.CurrentSteamPrice}  на {po.final_price_in_cents / 100}");
+                                        _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение цены {appId} с {targetPrice.CurrentSteamPrice}  на {po.final_price_in_cents / 100M}");
 
                                         targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
                                         targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
@@ -206,13 +206,15 @@ namespace SteamDigiSellerBot.Network.Services
                                             db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
                                         }
                                     }
-
-                                    if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper.DiscountTimerInAdvanceMinutes) <
-                                        SteamHelper.GetUtcNow()
-                                        && targetPrice.OriginalSteamPrice > 0)
-                                    {
-                                        targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
-                                    }
+                                    if (game.DiscountEndTimeUtc.Year>2000)
+                                        if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper
+                                                .DiscountTimerInAdvanceMinutes) <
+                                            SteamHelper.GetUtcNow()
+                                            && targetPrice.OriginalSteamPrice > 0)
+                                        {
+                                            _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Конец скидки {appId} с {game.DiscountEndTimeUtc}");
+                                            targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
+                                        }
 
                                 }
                             }
@@ -237,7 +239,7 @@ namespace SteamDigiSellerBot.Network.Services
             }
             catch(Exception ex)
             {
-                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId}");
+                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId}\n{ex.Message}\n{ex.StackTrace}\n{ex.InnerException?.Message}\n{ex.InnerException?.StackTrace}\n");
                 await SetSteamPrices(appId, gamesList, currencies, db, tries);
             }
         }
