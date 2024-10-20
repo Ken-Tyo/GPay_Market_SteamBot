@@ -171,7 +171,7 @@ namespace SteamDigiSellerBot.Network.Services
                                     if (targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M
                                         || targetPrice.CurrentSteamPrice != po.final_price_in_cents / 100M)
                                     {
-                                        _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)}: {c.CountryCode} Изменение цены {appId} с {targetPrice.CurrentSteamPrice}  на {po.final_price_in_cents / 100}");
+                                        _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение цены {appId} с {targetPrice.CurrentSteamPrice}  на {po.final_price_in_cents / 100}");
 
                                         targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
                                         targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
@@ -201,7 +201,7 @@ namespace SteamDigiSellerBot.Network.Services
                                             : DateTime.MinValue;
                                         if (tDate != game.DiscountEndTimeUtc)
                                         {
-                                            _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)}: {c.CountryCode} Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
+                                            _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
                                             game.DiscountEndTimeUtc = tDate;
                                             db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
                                         }
