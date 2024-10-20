@@ -3,11 +3,13 @@ using Newtonsoft.Json;
 using Org.Mentalis.Network.ProxySocket.Models;
 using SteamAuthCore;
 using SteamDigiSellerBot.Database.Enums;
+using SteamDigiSellerBot.Utilities.Services;
 using SteamKit2;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -29,12 +31,17 @@ namespace SteamDigiSellerBot.Database.Entities
         public string PersonName { get; set; }
 
         public string Password { get; set; }
+        
+        [IgnoreDataMember]
+        public string PasswordC { get; set; }
 
         public string MaFileStr { get; set; }
 
         public string UserAgent { get; set; }
 
         public string ProxyStr { get; set; }
+        [IgnoreDataMember]
+        public string ProxyStrC { get; set; }
 
         public string SteamCookiesStr { get; set; }
 
@@ -100,7 +107,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
                 if (!string.IsNullOrWhiteSpace(ProxyStr))
                 {
-                    steamHttpRequest.Proxy = HttpProxyClient.Parse(ProxyStr);
+                    steamHttpRequest.Proxy = HttpProxyClient.Parse(CryptographyUtilityService.Decrypt(ProxyStr));
                 }
 
                 return steamHttpRequest;
@@ -114,7 +121,7 @@ namespace SteamDigiSellerBot.Database.Entities
             {
                 if (!string.IsNullOrWhiteSpace(ProxyStr))
                 {
-                    return new Proxy(ProxyStr);
+                    return new Proxy(CryptographyUtilityService.Decrypt(ProxyStr));
                 }
 
                 return null;

@@ -1,5 +1,7 @@
 ﻿using DatabaseRepository.Entities;
+using SteamDigiSellerBot.Utilities.Services;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -14,6 +16,9 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public string Password { get; set; }
 
+        [IgnoreDataMember]
+        public string PasswordC { get; set; }
+
         [NotMapped]
         public ProxyClient ProxyClient
         {
@@ -25,6 +30,8 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public override string ToString()
         {
+            var decrypted = CryptographyUtilityService.Decrypt(Password);
+
             return $"{Host}:{Port}:{UserName}:{Password}";
         }
     }
