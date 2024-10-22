@@ -1055,13 +1055,18 @@ namespace SteamDigiSellerBot.Network
                 //vacBanByVacGameIdDict[game.Name] = false;
                 try
                 {
-                    var (shoppingCartGID, _) = await AddToCart(game.AppId, game.SubId);
-                    if (string.IsNullOrEmpty(shoppingCartGID))
+                    //Пока не работает
+                    return (false, null);
+                    if (_cartInProcess)
+                        return (false, null);
+                    await DeleteCart(await GetSessiondId());
+                    var (ShoppingCart, shoppingCartGID) = await AddToCart_Proto(region, uint.Parse(game.SubId), reciverId: 28365100);
+                    if (shoppingCartGID==0)
                         return (false, null);
 
                     HttpRequest request = _bot.SteamHttpRequest;
                     var c = _bot.SteamCookies;
-                    c.Add("shoppingCartGID", shoppingCartGID);
+                    c.Add("shoppingCartGID", shoppingCartGID.ToString());
                     request.Cookies = c;
                     var cart = request.Post(cartUrlStr).ToString();
 
@@ -1921,10 +1926,10 @@ namespace SteamDigiSellerBot.Network
         public int purchaseresultdetail;
         public int paymentmethod;
         public string transid;
-        public int transactionprovider;
-        public string paymentmethodcountrycode;
+        public int transactionprovider=6;
+        public string paymentmethodcountrycode="RU";
         public string paypaltoken;
-        public int packagewitherror;
+        public int packagewitherror=-1;
         public int appcausingerror;
         public int pendingpurchasepaymentmethod;
         public string authorizationurl;

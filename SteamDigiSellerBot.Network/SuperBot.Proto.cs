@@ -272,7 +272,7 @@ namespace SteamDigiSellerBot.Network
             return args;
         }
 
-
+        private bool _cartInProcess = false;
         public async Task<SendGameResponse> SendGameProto(
             uint appId, uint subId, bool isBundle, string gifteeAccountId, string receiverName, string comment,
             string countryCode)
@@ -281,6 +281,7 @@ namespace SteamDigiSellerBot.Network
 
             try
             {
+                _cartInProcess = true;
                 var sessionId = await GetSessiondId();
                 var res = new SendGameResponse();
 
@@ -407,7 +408,7 @@ namespace SteamDigiSellerBot.Network
 
             finally
             {
-
+                _cartInProcess = false;
             }
 
             //return new SendGameResponse()

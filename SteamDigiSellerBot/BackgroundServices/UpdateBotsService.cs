@@ -225,6 +225,7 @@ namespace SteamDigiSellerBot.Services
                             $"Error while update bot: {bot.Id} {bot.UserName} , Marker:{id}");
                     }
                 }).ToList();
+                _logger.LogInformation($"UpdateBotsService: Bots {tasks.Count} to update");
                 foreach (var b in tasks.Batch(8))
                     await Task.WhenAll(b);
                 _logger.LogInformation("UpdateBotsService: Bot updates finished");
