@@ -446,7 +446,7 @@ namespace SteamDigiSellerBot.Network.Services
                     }
                 }
 
-                if (digiSellerEnable && false)
+                if (digiSellerEnable)
                 {
                     if (sendToDigiSeller)
                         await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);

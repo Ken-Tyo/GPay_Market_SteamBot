@@ -365,3 +365,6 @@ insert into "TagTypeReplacements" ("Id", "IsDlc") values (2, true)
 insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'ru-RU', 'дополнение')
 insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'en-US', 'DLC')
 
+ALTER TABLE "Bots" ADD "PasswordC" text NULL;
+ALTER TABLE "Bots" ADD "ProxyStrC" text NULL;
+ALTER TABLE "SteamProxies" ADD "PasswordC" text NULL;
