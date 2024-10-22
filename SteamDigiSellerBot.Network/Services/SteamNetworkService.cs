@@ -143,10 +143,8 @@ namespace SteamDigiSellerBot.Network.Services
                     try
                     {
                         var response =
-                            await apiClient
-                                .CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
-                                    System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,
-                                    null);
+                            await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
+                                System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1, null);
 
 
                         if (response != null && response.store_items.Count == 1)
@@ -264,6 +262,7 @@ namespace SteamDigiSellerBot.Network.Services
                     }
                     catch (Exception ex)
                     {
+                        await Task.Delay(400);
                         if (gamesList.Select(x => x.SteamCurrencyId).Distinct().Any(x => x == c.Id))
                         {
                             throw;
@@ -279,9 +278,11 @@ namespace SteamDigiSellerBot.Network.Services
             }
             catch(Exception ex)
             {
+                await Task.Delay(400);
                 _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}");
                 await SetSteamPrices(appId, gamesList, currencies, db, tries);
             }
+            await Task.Delay(25);
         }
 
 
