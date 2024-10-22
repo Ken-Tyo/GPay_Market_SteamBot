@@ -118,7 +118,9 @@ namespace SteamDigiSellerBot.Network.Services
                         game.GamePrices.RemoveAll(e => needToDelete.Contains(e));
                     }
                 }
-                SteamApiClient apiClient = new SteamApiClient(_proxyPull.GetFreeProxy());
+
+                var proxy = _proxyPull.GetFreeProxy();
+                SteamApiClient apiClient = new SteamApiClient(proxy);
                 foreach (var c in currencies)
                 {
                     lastCurrency = c;
@@ -265,7 +267,8 @@ namespace SteamDigiSellerBot.Network.Services
                         await Task.Delay(400);
                         if (gamesList.Select(x => x.SteamCurrencyId).Distinct().Any(x => x == c.Id))
                         {
-                            throw;
+                            _logger?.LogError(ex,$"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}\n{System.Text.Json.JsonSerializer.Serialize(r)}");
+                            await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
                         }
                         else
                         {

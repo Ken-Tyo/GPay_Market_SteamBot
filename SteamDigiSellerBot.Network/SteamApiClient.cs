@@ -7,12 +7,14 @@ using ProtoBuf;
 using SteamDigiSellerBot.Database.Entities;
 using System.Net;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace SteamDigiSellerBot.Network
 {
     public class SteamApiClient
     {
         private readonly HttpClient _client;
+        private string proxyStr { get; set; }
 
         public SteamApiClient(HttpClient client)
         {
@@ -22,7 +24,7 @@ namespace SteamDigiSellerBot.Network
         public SteamApiClient(SteamProxy steamProxy)
         {
             var clientHandler = new System.Net.Http.HttpClientHandler();
-            var proxyStr = "";
+            proxyStr = "";
             if (steamProxy != null)
             {
                 proxyStr = $"{steamProxy.Host}:{steamProxy.Port}";
@@ -63,6 +65,9 @@ namespace SteamDigiSellerBot.Network
                 AddItemToArgs(input, args);
             }
             HttpResponseMessage response = await CallAsyncInternal(method, func, version, args, "protobuf_raw");
+            if (!response.IsSuccessStatusCode)
+                throw new BadHttpRequestException(
+                    $"Ошибка запроса Protobuf {proxyStr} {method.Method} {func} obj: {System.Text.Json.JsonSerializer.Serialize(input)} query:{System.Text.Json.JsonSerializer.Serialize(args)} ");
 
             Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             T body;

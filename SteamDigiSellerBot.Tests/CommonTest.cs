@@ -353,38 +353,56 @@ namespace SteamDigiSellerBot.Tests
         [Test]
         public async Task Protobuf_CartAddCheck()
         {
-            DebugLog.AddListener((s, e) => Debug.WriteLine("SteamKit logger:" + s + "\n" + e));
-            DebugLog.Enabled = true;
+     
+            //botSender = new Bot
+            //{
+            //    Id = 51,
+            //    UserName = "oaggdjtbjbvz",
+            //    IsON = true,
+            //    Region = "RU",
+            //    SteamCurrencyId = 5,//RUB
+            //    SendedGiftsSum = 0,
+            //    MaxSendedGiftsSum = 10000,
+            //    VacGames = new List<Bot.VacGame>(),
+            //    State = Database.Enums.BotState.active,
+            //    Password = "Ji975thiyHUYT",
+            //    ProxyStr = "45.155.61.110:63956:AwJyXm9A:hcnnkmGv",
+            //    MaFileStr = "{\"shared_secret\":\"QQXWHjVPXCIgwVLmz2HWD+Vmt4I=\",\"serial_number\":\"5906418840149666516\",\"revocation_code\":\"R00728\",\"uri\":\"otpauth://totp/Steam:oaggdjtbjbvz?secret=IEC5MHRVJ5OCEIGBKLTM6YOWB7SWNN4C&issuer=Steam\",\"server_time\":1605835588,\"account_name\":\"oaggdjtbjbvz\",\"token_gid\":\"27bddde03aa37366\",\"identity_secret\":\"kGYaB6Nnb2amSezmCyD/WJMOm38=\",\"secret_1\":\"Frme68yYr3tnZ8XF510ZlY0gqtw=\",\"status\":0,\"device_id\":\"android:de73bb14-48ea-cbaf-3dbd-d467abd16a60\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"a27c9d10d7fb18a57e74eb3a\",\"SteamLogin\":\"76561199107384279%7C%7CE1246248FF37C48730BF5B6CFFF718E54BB44DD8\",\"SteamLoginSecure\":\"76561199107384279%7C%7CFD361D553E4670BF93535B47A89A93C3888E7923\",\"WebCookie\":\"74C66D0E9ED5A16E64193D678AE0DEAB63EADEE9\",\"OAuthToken\":\"393bda8d59f0b619ffe33eae1c059eeb\",\"SteamID\":76561199107384279}}"
+
+            //};
             botSender = new Bot
             {
                 Id = 51,
-                UserName = "summersrein",
+                UserName = "abseaketbra1975",
                 IsON = true,
-                Region = "CN",
-                SteamCurrencyId = 23,//RUB
+                Region = "RU",
+                SteamCurrencyId = 5,//RUB
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "Lo3N9aQw",
-                ProxyStr = "176.56.38.128:9644:user129212:21cpft",
-                MaFileStr = "{\"shared_secret\":\"a4694hwdOv4IzpDSFlQ4LeZMsXM=\",\"serial_number\":\"12823695674239706368\",\"revocation_code\":\"R79911\",\"uri\":\"otpauth://totp/Steam:summersrein?secret=NOHL3YQ4DU5P4CGOSDJBMVBYFXTEZMLT&issuer=Steam\",\"server_time\":1723739846,\"account_name\":\"summersrein\",\"token_gid\":\"33ae4e57fdd59636\",\"identity_secret\":\"0XR3DTIvGuYr7HD3FNSKzyAWfOE=\",\"secret_1\":\"zYzCgiF4MdD1Vyobr1pAYrSJtkQ=\",\"status\":1,\"device_id\":\"android:de15cb1a-673c-47de-bac1-7050c2c496f6\",\"fully_enrolled\":true,\"Session\":{\"SteamID\":76561198007831418,\"AccessToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTgzMV8yNEU2RTE2RV80RjlFNSIsICJzdWIiOiAiNzY1NjExOTgwMDc4MzE0MTgiLCAiYXVkIjogWyAid2ViIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MjQyNTMzOTIsICJuYmYiOiAxNzE1NTI1MzYzLCAiaWF0IjogMTcyNDE2NTM2MywgImp0aSI6ICIxNkNBXzI0RTZFMDBBXzVDNDNFIiwgIm9hdCI6IDE3MjQxNjUzNjMsICJydF9leHAiOiAxNzQyMTY2Mzg1LCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMjEyLjE5My4xNjcuMjQwIiwgImlwX2NvbmZpcm1lciI6ICIyMTIuMTkzLjE2Ny4yNDAiIH0.DkiOoiuuuGafK5GH6RFdchMkmOUfN3qsDOTCoVUVF285eywOPG2Rj6KFRE3X7-WmaLpgwFfYKliijxMAMfj7Cw\",\"RefreshToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5ODAwNzgzMTQxOCIsICJhdWQiOiBbICJ3ZWIiLCAicmVuZXciLCAiZGVyaXZlIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3NDIxNjYzODUsICJuYmYiOiAxNzE1NTI1MzYzLCAiaWF0IjogMTcyNDE2NTM2MywgImp0aSI6ICIxODMxXzI0RTZFMTZFXzRGOUU1IiwgIm9hdCI6IDE3MjQxNjUzNjMsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIyMTIuMTkzLjE2Ny4yNDAiLCAiaXBfY29uZmlybWVyIjogIjIxMi4xOTMuMTY3LjI0MCIgfQ.wUiUlTQ2oefPhYMrEB9P7QUrUIgu0LS_tlf9XoLSEszNu2gw9a8G-KF6wzUh5cQvzCt37tjm3nenJMfWaFnBDQ\",\"SessionID\":null}}"
+                Password = "9g69i7ejti45",
+                ProxyStr = "91.220.206.224:63674:AwJyXm9A:hcnnkmGv",
+                MaFileStr = "{\"shared_secret\":\"jWJkiEt0chy9tLXy1snmuYLkc88=\",\"serial_number\":\"12026198475570881877\",\"revocation_code\":\"R57428\",\"uri\":\"otpauth://totp/Steam:abseaketbra1975?secret=RVRGJCCLORZBZPNUWXZNNSPGXGBOI46P&issuer=Steam\",\"server_time\":1622978154,\"account_name\":\"abseaketbra1975\",\"token_gid\":\"24b5ee06471a446e\",\"identity_secret\":\"8cIatcKHUpgB5mJqz/CRxkrdACw=\",\"secret_1\":\"Se1+mEjGFgFGaYCHWxMWz0fT8yU=\",\"status\":0,\"device_id\":\"android:7eeb57b4-5ab5-76c5-7155-297c05123c64\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"dcd298ac9389a1734fc2faa0\",\"SteamLogin\":\"76561199175663967%7C%7C176864A188E98D0AE98E886303F69B035BC38BD4\",\"SteamLoginSecure\":\"76561199175663967%7C%7C817E7AE679A54BF60BC2C68B3FE8CBE53AD6FDFD\",\"WebCookie\":\"8E825F7803E5371C2A286C5225657826B84E9043\",\"OAuthToken\":\"d470fe471f8dad6b2d0ac587def918fa\",\"SteamID\":76561199175663967}}"
 
             };
             var sb = new SuperBot(botSender);
 
-            var (appId, subId) = ("220240", "17982");
+            var (appId, subId) = ("252490", "244390");
             var session0 = await sb.GetSessiondId();
             sb.Login();
+            var t = await sb.GetPageHtml("https://store.steampowered.com/pointssummary/ajaxgetasyncconfig");
             var b= sb.IsOk();var session = await sb.GetSessiondId();
             var balance= await sb.GetBotBalance_Proto();
-
             await sb.SendInvitationViaAddAsFriend(new ProfileDataRes()
             {
                 sessionId = session,
                 steamid = "76561197988630828",
                 url = "https://steamcommunity.com/profiles/76561197988630828/"
             });
+
+            //await sb.GetBotVacGames(
+            //    new List<VacGame>() { new VacGame() { AppId = "252490", SubId = "244390", Name = "RUST", Id = 1 } }, "RU");
 
             var sendResult = await sb.SendGameProto(uint.Parse(appId), uint.Parse(subId), false, "28365100", "______", "Тест", botSender.Region);
         }
