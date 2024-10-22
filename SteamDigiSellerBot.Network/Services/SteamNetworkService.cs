@@ -19,7 +19,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using SteamKit2.Internal;
+using SteamKit2.WebUI.Internal;
 using xNet;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
 using static SteamDigiSellerBot.Network.Models.SteamAppDetails.InnerData.PackageGroup;
@@ -107,6 +107,7 @@ namespace SteamDigiSellerBot.Network.Services
             DatabaseContext db,
             int tries = 10)
         {
+            Currency? lastCurrency=null;
             try
             {
                 foreach (var game in gamesList)
@@ -120,7 +121,7 @@ namespace SteamDigiSellerBot.Network.Services
                 SteamApiClient apiClient = new SteamApiClient(_proxyPull.GetFreeProxy());
                 foreach (var c in currencies)
                 {
-                    
+                    lastCurrency = c;
                     var r = new CStoreBrowse_GetItems_Request()
                     {
                         context = new()
@@ -139,109 +140,146 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         appid = uint.Parse(appId),
                     });
-                    var response = await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,
-                        null);
-                    if (response != null && response.store_items.Count == 1)
+                    try
                     {
-                        var data = response.store_items[0];
-                        if (!data.unvailable_for_country_restriction)
+                        var response =
+                            await apiClient
+                                .CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
+                                    System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,
+                                    null);
+
+
+                        if (response != null && response.store_items.Count == 1)
                         {
-                            foreach (var po in data.purchase_options)
+                            var data = response.store_items[0];
+                            if (!data.unvailable_for_country_restriction)
                             {
-                              
-                                var games = gamesList.Where(x => x.SubId == (po.packageid == 0 ? po.bundleid : po.packageid).ToString()).ToList();
+                                foreach (var po in data.purchase_options)
+                                {
+                                    if (po.original_price_in_cents == 0 && po.final_price_in_cents > 0)
+                                        po.original_price_in_cents = po.final_price_in_cents;
+                                    var games = gamesList.Where(x =>
+                                            x.SubId == (po.packageid == 0 ? po.bundleid : po.packageid).ToString())
+                                        .ToList();
+                                    foreach (var game in games)
+                                    {
+                                        var targetPrice =
+                                            game.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == c.SteamId);
+                                        if (targetPrice is null)
+                                        {
+                                            targetPrice = new GamePrice()
+                                            {
+                                                GameId = game.Id,
+                                                SteamCurrencyId = c.SteamId,
+                                                IsManualSet = false
+                                            };
+                                            game.GamePrices.Add(targetPrice);
+                                        }
+
+                                        //если цена уже была и устанавливается вручную, пропускаем
+                                        if (targetPrice.IsManualSet)
+                                            continue;
+                                        if (Math.Round(targetPrice.OriginalSteamPrice, 2) !=
+                                            (po.original_price_in_cents / 100M)
+                                            || Math.Round(targetPrice.CurrentSteamPrice, 2) !=
+                                            (po.final_price_in_cents / 100M))
+                                        {
+                                            _logger?.LogInformation(
+                                                $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}: Изменение цены" +
+                                                $"{(targetPrice.OriginalSteamPrice != (po.original_price_in_cents / 100M) ? $" Оригинал: {targetPrice.OriginalSteamPrice} / {po.original_price_in_cents / 100M}" : "")}" +
+                                                $"{(targetPrice.CurrentSteamPrice != (po.final_price_in_cents / 100M) ? $" Скидка: {targetPrice.CurrentSteamPrice} / {po.final_price_in_cents / 100M}" : "")}");
+
+                                            targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
+                                            targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
+                                            targetPrice.LastUpdate = DateTime.UtcNow;
+
+                                        }
+
+                                        if (game.SteamCurrencyId == c.SteamId && game.IsPriceParseError)
+                                        {
+                                            game.IsPriceParseError = false;
+                                            db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                                        }
+
+                                        if (targetPrice.Id == 0)
+                                            db.Entry(targetPrice).State = EntityState.Added;
+                                        else
+                                            db.Entry(targetPrice).State = EntityState.Modified;
+
+
+                                        game.UpdateIsDiscount(db, po.discount_pct != 0);
+                                        if (po.discount_pct != 0 && game.SteamCurrencyId == c.SteamId)
+                                        {
+                                            var discountDate = po.active_discounts
+                                                ?.OrderByDescending(x =>
+                                                    po.original_price_in_cents - po.final_price_in_cents ==
+                                                    x.discount_amount).ThenBy(x => x.discount_end_date).FirstOrDefault()
+                                                ?.discount_end_date;
+                                            var tDate = discountDate is not 0 and not null
+                                                ? DateTimeOffset.FromUnixTimeSeconds((long)discountDate)
+                                                    .ToUniversalTime()
+                                                    .DateTime
+                                                : DateTime.MinValue;
+                                            if (tDate != game.DiscountEndTimeUtc)
+                                            {
+                                                _logger?.LogInformation(
+                                                    $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
+                                                game.DiscountEndTimeUtc = tDate;
+                                                db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
+                                            }
+                                        }
+
+                                        if (game.DiscountEndTimeUtc.Year > 2000)
+                                            if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper
+                                                    .DiscountTimerInAdvanceMinutes) <
+                                                SteamHelper.GetUtcNow()
+                                                && targetPrice.OriginalSteamPrice > 0)
+                                            {
+                                                _logger?.LogInformation(
+                                                    $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Конец скидки {appId} с {game.DiscountEndTimeUtc}");
+                                                targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
+                                            }
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                _logger?.LogWarning(
+                                    $"{nameof(SetSteamPrices_Proto)}: Недоступен {appId} в {c.CountryCode}");
+                                var games = gamesList.Where(x => x.SteamCurrencyId == c.SteamId).ToList();
                                 foreach (var game in games)
                                 {
-                                    var targetPrice =
-                                        game.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == c.SteamId);
-                                    if (targetPrice is null)
-                                    {
-                                        targetPrice = new GamePrice()
-                                        {
-                                            GameId = game.Id,
-                                            SteamCurrencyId = c.SteamId,
-                                            IsManualSet = false
-                                        };
-                                        game.GamePrices.Add(targetPrice);
-                                    }
-
-                                    //если цена уже была и устанавливается вручную, пропускаем
-                                    if (targetPrice.IsManualSet)
-                                        continue;
-                                    if (Math.Round(targetPrice.OriginalSteamPrice,2) != (po.original_price_in_cents / 100M)
-                                                   || Math.Round(targetPrice.CurrentSteamPrice,2) != (po.final_price_in_cents / 100M))
-                                    {
-                                        _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}: Изменение цены" +
-                                                                $"{(targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M ? $" Оригинал: {targetPrice.OriginalSteamPrice} / {po.original_price_in_cents / 100M}" : "")}" +
-                                                                $"{(targetPrice.CurrentSteamPrice != po.final_price_in_cents / 100M ? $" Скидка: {targetPrice.CurrentSteamPrice} / {po.final_price_in_cents / 100M}" : "")}");
-
-                                        targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
-                                        targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
-                                        targetPrice.LastUpdate = DateTime.UtcNow;
-                                        
-                                    }
-
-                                    if (game.SteamCurrencyId == c.SteamId && game.IsPriceParseError)
-                                    {
-                                        game.IsPriceParseError = false;
-                                        db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
-                                    }
-
-                                    if (targetPrice.Id == 0)
-                                        db.Entry(targetPrice).State = EntityState.Added;
-                                    else
-                                        db.Entry(targetPrice).State = EntityState.Modified;
-
-
-                                    game.UpdateIsDiscount(db, po.discount_pct != 0);
-                                    if (po.discount_pct != 0 && game.SteamCurrencyId== c.SteamId)
-                                    {
-                                        var discountDate = po.active_discounts?.OrderByDescending(x=> po.original_price_in_cents - po.final_price_in_cents == x.discount_amount).ThenBy(x=> x.discount_end_date).FirstOrDefault()?.discount_end_date;
-                                        var tDate = discountDate is not 0 and not null
-                                            ? DateTimeOffset.FromUnixTimeSeconds((long)discountDate).ToUniversalTime()
-                                                .DateTime
-                                            : DateTime.MinValue;
-                                        if (tDate != game.DiscountEndTimeUtc)
-                                        {
-                                            _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
-                                            game.DiscountEndTimeUtc = tDate;
-                                            db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
-                                        }
-                                    }
-                                    if (game.DiscountEndTimeUtc.Year>2000)
-                                        if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper
-                                                .DiscountTimerInAdvanceMinutes) <
-                                            SteamHelper.GetUtcNow()
-                                            && targetPrice.OriginalSteamPrice > 0)
-                                        {
-                                            _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Конец скидки {appId} с {game.DiscountEndTimeUtc}");
-                                            targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
-                                        }
-
+                                    game.IsPriceParseError = true;
+                                    db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
                                 }
                             }
                         }
                         else
                         {
-                            _logger?.LogWarning($"{nameof(SetSteamPrices_Proto)}: Недоступен {appId} в {c.CountryCode}");
-                            var games = gamesList.Where(x => x.SteamCurrencyId == c.SteamId).ToList();
-                            foreach (var game in games)
-                            {
-                                game.IsPriceParseError = true;
-                                db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
-                            }
+                            _logger?.LogWarning(
+                                $"{nameof(SetSteamPrices_Proto)}: Странный результат парсинга appId: {appId}\n{System.Text.Json.JsonSerializer.Serialize(response)}");
+                            await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _logger?.LogWarning($"{nameof(SetSteamPrices_Proto)}: Странный результат парсинга appId: {appId}\n{System.Text.Json.JsonSerializer.Serialize(response)}");
-                        await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
+                        if (gamesList.Select(x => x.SteamCurrencyId).Distinct().Any(x => x == c.Id))
+                        {
+                            throw;
+                        }
+                        else
+                        {
+                            _logger?.LogWarning($"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.Code}");
+                            await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
+                        }
+
                     }
                 }
             }
             catch(Exception ex)
             {
-                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId}");
+                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.Code}");
                 await SetSteamPrices(appId, gamesList, currencies, db, tries);
             }
         }
