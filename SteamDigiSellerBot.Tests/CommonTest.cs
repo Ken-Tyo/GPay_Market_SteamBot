@@ -489,8 +489,8 @@ namespace SteamDigiSellerBot.Tests
             using HttpClient client = new HttpClient();
             SteamApiClient apiClient = new SteamApiClient(new SteamProxy()
             {
-                Host = "194.226.112.156",
-                Port = 63320,
+                Host = "195.19.168.10",
+                Port = 64234,
                 UserName = "6nEpBYwR",
                 Password = "v7YFz1pt"
             });

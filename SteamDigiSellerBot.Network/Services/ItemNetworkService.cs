@@ -317,8 +317,8 @@ namespace SteamDigiSellerBot.Network.Services
                     currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
                 }
 
-                //await _steamNetworkService.SetSteamPrices_Proto(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
-                await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse, db, 5);
+                await _steamNetworkService.SetSteamPrices_Proto(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
+                //await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse, db, 5);
 
 
                 //before update Digiseller price
