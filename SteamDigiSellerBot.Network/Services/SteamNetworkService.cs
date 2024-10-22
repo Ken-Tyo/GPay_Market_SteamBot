@@ -118,7 +118,6 @@ namespace SteamDigiSellerBot.Network.Services
                     }
                 }
                 SteamApiClient apiClient = new SteamApiClient(_proxyPull.GetFreeProxy());
-                _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {appId}: Обновление {currencies.Count} валют");
                 foreach (var c in currencies)
                 {
                     
@@ -169,12 +168,12 @@ namespace SteamDigiSellerBot.Network.Services
                                     //если цена уже была и устанавливается вручную, пропускаем
                                     if (targetPrice.IsManualSet)
                                         continue;
-                                    if (Math.Round(targetPrice.OriginalSteamPrice,2) != po.original_price_in_cents / 100M
-                                                   || Math.Round(targetPrice.CurrentSteamPrice,2) != po.final_price_in_cents / 100M)
+                                    if (Math.Round(targetPrice.OriginalSteamPrice,2) != (po.original_price_in_cents / 100M)
+                                                   || Math.Round(targetPrice.CurrentSteamPrice,2) != (po.final_price_in_cents / 100M))
                                     {
                                         _logger?.LogInformation($"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}: Изменение цены" +
-                                                                $"{(targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M ? $" Оригинал: {targetPrice.CurrentSteamPrice} на {po.final_price_in_cents / 100M}" : "")}" +
-                                                                $"{(targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M ? $" Скидка: {targetPrice.CurrentSteamPrice} на {po.final_price_in_cents / 100M}" : "")}");
+                                                                $"{(targetPrice.OriginalSteamPrice != po.original_price_in_cents / 100M ? $" Оригинал: {targetPrice.OriginalSteamPrice} / {po.original_price_in_cents / 100M}" : "")}" +
+                                                                $"{(targetPrice.CurrentSteamPrice != po.final_price_in_cents / 100M ? $" Скидка: {targetPrice.CurrentSteamPrice} / {po.final_price_in_cents / 100M}" : "")}");
 
                                         targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
                                         targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;

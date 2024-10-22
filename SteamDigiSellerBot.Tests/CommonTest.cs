@@ -469,27 +469,41 @@ namespace SteamDigiSellerBot.Tests
         {
 
             using HttpClient client = new HttpClient();
-            SteamApiClient apiClient = new SteamApiClient(client);
+            SteamApiClient apiClient = new SteamApiClient(new SteamProxy()
+            {
+                Host = "194.226.112.156",
+                Port = 63320,
+                UserName = "6nEpBYwR",
+                Password = "v7YFz1pt"
+            });
             var r = new CStoreBrowse_GetItems_Request()
             {
                 context = new()
                 {
-                    country_code = "US"
+                    country_code = "KZ"
                 },
                 data_request = new StoreBrowseItemDataRequest()
                 {
                     include_all_purchase_options = true,
                     include_release = true,
                     include_included_items = true,
-
                 }
             };
             r.ids.Add(new StoreItemID()
             {
-                appid = 3157030
+                appid = 580600,
+                
             });
-            var response = await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,
-                null);
+            try
+            {
+                var response =
+                    await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
+                        System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,null);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
 

@@ -6,6 +6,7 @@ using System.Net.Http;
 using ProtoBuf;
 using SteamDigiSellerBot.Database.Entities;
 using System.Net;
+using System.Web;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -47,6 +48,7 @@ namespace SteamDigiSellerBot.Network
             url += $"format={format}";
 
             HttpRequestMessage request = new HttpRequestMessage(method, url);
+            request.Headers.Add("Cookie", "wants_mature_content=1");
             return await _client.SendAsync(request);
         }
 
@@ -93,7 +95,7 @@ namespace SteamDigiSellerBot.Network
             Serializer.Serialize<T>(inputPayload, request);
             var barray = inputPayload.ToArray();
             var base64 = Convert.ToBase64String(barray);
-            args.Add("input_protobuf_encoded", base64);
+            args.Add("input_protobuf_encoded", HttpUtility.UrlEncode(base64));
         }
     }
 }
