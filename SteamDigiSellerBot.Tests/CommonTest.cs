@@ -498,7 +498,7 @@ namespace SteamDigiSellerBot.Tests
             {
                 context = new()
                 {
-                    country_code = "KZ"
+                    country_code = "CN"
                 },
                 data_request = new StoreBrowseItemDataRequest()
                 {

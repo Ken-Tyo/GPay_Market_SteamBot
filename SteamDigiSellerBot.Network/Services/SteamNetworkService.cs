@@ -113,7 +113,7 @@ namespace SteamDigiSellerBot.Network.Services
                 foreach (var game in gamesList)
                 {
                     var needToDelete = game.GamePrices.ExceptBy(currencies.Select(e => e.SteamId), e => e.SteamCurrencyId).ToList();
-                    if (needToDelete.Any())
+                    if (needToDelete.Any() && currencies.Count>1)
                     {
                         game.GamePrices.RemoveAll(e => needToDelete.Contains(e));
                     }
