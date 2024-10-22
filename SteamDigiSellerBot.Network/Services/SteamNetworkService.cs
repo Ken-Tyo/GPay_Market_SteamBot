@@ -270,7 +270,7 @@ namespace SteamDigiSellerBot.Network.Services
                         }
                         else
                         {
-                            _logger?.LogWarning($"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.Code}");
+                            _logger?.LogWarning($"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}\n{System.Text.Json.JsonSerializer.Serialize(r)}");
                             await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
                         }
 
@@ -279,7 +279,7 @@ namespace SteamDigiSellerBot.Network.Services
             }
             catch(Exception ex)
             {
-                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.Code}");
+                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}");
                 await SetSteamPrices(appId, gamesList, currencies, db, tries);
             }
         }
