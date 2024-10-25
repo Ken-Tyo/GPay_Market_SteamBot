@@ -1,27 +1,377 @@
 .footer {
-  display: flex;
-  justify-content: space-between;
-  flex: 0 1 auto;
-  padding: 30px 87px 40px;
+    display: flex;
+    justify-content: space-between;
+    flex: 0 1 auto;
+    padding: 30px 87px 40px;
+}
+
+@media screen and (min-width: 500px) {
+    .footer {
+        .tg_hint {
+            position: absolute;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+            animation-name: tg_hint_anim;
+            animation-duration: 12s;
+            animation-delay: 4s;
+            animation-fill-mode: forwards;
+            width: 0;
+            padding: 0;
+            z-index: 3;
+
+            div {
+                color: white;
+                font-size: 18px;
+                position: absolute;
+                transform: translateY(-50%);
+                text-align: center;
+                animation-name: tg_hint_span_anim;
+                animation-duration: 12s;
+                animation-delay: 4s;
+                animation-fill-mode: forwards;
+                white-space: nowrap;
+                width: 0;
+                opacity: 0;
+                overflow: hidden;
+                letter-spacing: -0.01em;
+                z-index: 2;
+            }
+        }
+
+        @keyframes tg_hint_anim {
+            from {
+                width: 0;
+                padding: 0;
+                left: 115px;
+                bottom: 60px;
+                background-color: white;
+            }
+
+            0.5% {
+                width: 20px;
+                left: 132px;
+                bottom: 83px;
+                background-color: white;
+            }
+
+            2% {
+                width: 322px;
+                padding: 44px 19px;
+                left: 132px;
+                bottom: 83px;
+                background-color: #b721ff;
+            }
+
+            3% {
+                width: 272px;
+                padding: 28px 19px;
+                left: 132px;
+                bottom: 83px;
+                background-color: #b721ff;
+            }
+
+            9% {
+                width: 272px;
+                padding: 28px 19px;
+                left: 132px;
+                bottom: 83px;
+                background-color: #b721ff;
+            }
+
+            95% {
+                width: 272px;
+                padding: 28px 19px;
+                left: 132px;
+                bottom: 83px;
+                background-color: #b721ff;
+            }
+
+            96% {
+                width: 292px;
+                padding: 44px 19px;
+                left: 132px;
+                bottom: 83px;
+                background-color: #b721ff;
+            }
+
+            98% {
+                width: 20px;
+                left: 132px;
+                bottom: 83px;
+                background-color: #b721ff;
+            }
+
+            99.9% {
+                width: 0;
+                padding: 0;
+                left: 115px;
+                bottom: 60px;
+                background-color: white;
+            }
+
+            to {
+                width: 0;
+                height: 0;
+                padding: 0;
+                margin: 0;
+                display: none;
+            }
+        }
+
+        @keyframes tg_hint_span_anim {
+            from {
+                width: 0;
+                opacity: 0;
+            }
+
+            0.5% {
+                width: 272px;
+                height: auto;
+                opacity: 0.2;
+            }
+
+            2% {
+                width: 272px;
+                height: auto;
+                opacity: 0.4;
+            }
+
+            3% {
+                width: 272px;
+                height: auto;
+                opacity: 0.6;
+            }
+
+            9% {
+                width: 272px;
+                height: auto;
+                opacity: 1;
+            }
+
+            95% {
+                width: 272px;
+                height: auto;
+                opacity: 1;
+            }
+
+            96% {
+                width: 272px;
+                height: auto;
+                opacity: 0.3;
+            }
+
+            to {
+                width: 0;
+                height: 0;
+                padding: 0;
+                margin: 0;
+                display: none;
+                opacity: 0;
+            }
+        }
+    }
 }
 
 .telegram {
-  display: block;
-  width: 41px;
+    display: block;
+    width: 41px;
 }
 
 @media screen and (max-width: 500px) {
-  .footer {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column-reverse;
-    padding: 30px 0 22px 0;
-  }
-  .telegram {
-    width: 31px;
-    margin-top: 24px;
-    img {
-      width: 31px;
+    .footer {
+        justify-content: center;
+        align-items: center;
+        flex-direction: column-reverse;
+        padding: 30px 0 22px 0;
+
+        .tg_hint {
+            position: absolute;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+            animation-name: tg_hint_anim;
+            animation-duration: 12s;
+            animation-delay: 4s;
+            animation-fill-mode: forwards;
+            z-index: 3;
+            width: 0;
+            background-color: #b721ff;
+            padding: 0;
+
+            div {
+                color: white;
+                font-size: 10px;
+                text-align: center;
+                animation-name: tg_hint_text_anim;
+                animation-duration: 12s;
+                animation-delay: 4s;
+                animation-fill-mode: forwards;
+                white-space: nowrap;
+                overflow: hidden;
+                letter-spacing: -0.01em;
+                z-index: 2;
+                width: auto;
+                align-items: center;
+                justify-content: center;
+                display: flex;
+            }
+
+            span {
+                display: none;
+            }
+
+            @keyframes tg_hint_anim {
+                from {
+                    width: 0;
+                    height: auto;
+                    padding: 8px 11px;
+                    left: calc(50%);
+                    bottom: 38px;
+                    background-color: white;
+                }
+
+                1% {
+                    width: auto;
+                    height: auto;
+                    transform: scale3d(1.1, 1.1, 1.1);
+                    transform-origin: bottom left;
+                    padding: 8px 11px;
+                    left: calc(50% + 22px);
+                    bottom: 44px;
+                    background-color: #b721ff;
+                }
+
+                3% {
+                    width: auto;
+                    height: auto;
+                    transform: scale3d(1.1, 1.1, 1.1);
+                    transform-origin: bottom left;
+                    padding: 8px 11px;
+                    left: calc(50% + 22px);
+                    bottom: 44px;
+                    background-color: #b721ff;
+                }
+
+
+                6% {
+                    width: auto;
+                    height: auto;
+                    transform: none;
+                    padding: 8px 11px;
+                    left: calc(50% + 22px);
+                    bottom: 44px;
+                    background-color: #b721ff;
+                }
+
+                93% {
+                    width: auto;
+                    height: auto;
+                    transform: none;
+                    padding: 8px 11px;
+                    left: calc(50% + 22px);
+                    bottom: 44px;
+                    background-color: #b721ff;
+                }
+
+                97% {
+                    width: auto;
+                    height: auto;
+                    transform: scale3d(1.1, 1.1, 1.1);
+                    transform-origin: bottom left;
+                    padding: 8px 11px;
+                    left: calc(50% + 22px);
+                    bottom: 44px;
+                    background-color: #b721ff;
+                }
+
+                99% {
+                    width: auto;
+                    height: auto;
+                    transform: scale3d(1.1, 1.1, 1.1);
+                    transform-origin: bottom left;
+                    padding: 8px 11px;
+                    left: calc(50% + 22px);
+                    bottom: 44px;
+                    background-color: #b721ff;
+                }
+
+                to {
+                    min-width: 0;
+                    width: 0;
+                    height: 0;
+                    padding: 0;
+                    margin: 0;
+                    display: none;
+                }
+            }
+
+            @keyframes tg_hint_text_anim {
+                from {
+                    width: 1px;
+                    height: auto;
+                    opacity: 0;
+                }
+
+                1% {
+                    width: auto;
+                    height: auto;
+                    opacity: 0.3;
+                }
+
+                3% {
+                    width: auto;
+                    height: auto;
+                    opacity: 0.7;
+                }
+
+                5% {
+                    min-width: 96px;
+                    width: auto;
+                    height: auto;
+                    opacity: 1;
+                }
+
+                95% {
+                    min-width: 96px;
+                    width: auto;
+                    height: auto;
+                    opacity: 1;
+                }
+
+                97% {
+                    min-width: 40px;
+                    width: auto;
+                    height: auto;
+                    opacity: 0.7;
+                }
+
+                99% {
+                    min-width: 20px;
+                    width: auto;
+                    height: auto;
+                    opacity: 0.3;
+                }
+
+                to {
+                    min-width: 0;
+                    width: 0;
+                    height: 0;
+                    padding: 0;
+                    margin: 0;
+                    display: none;
+                    opacity: 0;
+                }
+            }
+        }
     }
-  }
+
+    .telegram {
+        width: 31px;
+        margin-top: 24px;
+
+        img {
+            width: 31px;
+        }
+    }
 }
