@@ -156,91 +156,11 @@ namespace SteamDigiSellerBot.Network.Services
                             {
                                 foreach (var po in data.purchase_options)
                                 {
-                                    if (po.original_price_in_cents == 0 && po.final_price_in_cents > 0)
-                                        po.original_price_in_cents = po.final_price_in_cents;
-                                    var games = gamesList.Where(x =>
-                                            x.SubId == (po.packageid == 0 ? po.bundleid : po.packageid).ToString())
-                                        .ToList();
-                                    foreach (var game in games)
-                                    {
-                                        var targetPrice =
-                                            game.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == c.SteamId);
-                                        if (targetPrice is null)
-                                        {
-                                            targetPrice = new GamePrice()
-                                            {
-                                                GameId = game.Id,
-                                                SteamCurrencyId = c.SteamId,
-                                                IsManualSet = false
-                                            };
-                                            game.GamePrices.Add(targetPrice);
-                                        }
-
-                                        //если цена уже была и устанавливается вручную, пропускаем
-                                        if (targetPrice.IsManualSet)
-                                            continue;
-                                        if (Math.Round(targetPrice.OriginalSteamPrice, 2) !=
-                                            (po.original_price_in_cents / 100M)
-                                            || Math.Round(targetPrice.CurrentSteamPrice, 2) !=
-                                            (po.final_price_in_cents / 100M))
-                                        {
-                                            _logger?.LogInformation(
-                                                $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}: Изменение цены" +
-                                                $"{(targetPrice.OriginalSteamPrice != (po.original_price_in_cents / 100M) ? $" Оригинал: {targetPrice.OriginalSteamPrice} / {po.original_price_in_cents / 100M}" : "")}" +
-                                                $"{(targetPrice.CurrentSteamPrice != (po.final_price_in_cents / 100M) ? $" Скидка: {targetPrice.CurrentSteamPrice} / {po.final_price_in_cents / 100M}" : "")}");
-
-                                            targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
-                                            targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
-                                            targetPrice.LastUpdate = DateTime.UtcNow;
-
-                                        }
-
-                                        if (game.SteamCurrencyId == c.SteamId && game.IsPriceParseError)
-                                        {
-                                            game.IsPriceParseError = false;
-                                            db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
-                                        }
-
-                                        if (targetPrice.Id == 0)
-                                            db.Entry(targetPrice).State = EntityState.Added;
-                                        else
-                                            db.Entry(targetPrice).State = EntityState.Modified;
-
-
-                                        game.UpdateIsDiscount(db, po.discount_pct != 0);
-                                        if (po.discount_pct != 0 && game.SteamCurrencyId == c.SteamId)
-                                        {
-                                            var discountDate = po.active_discounts
-                                                ?.OrderByDescending(x =>
-                                                    po.original_price_in_cents - po.final_price_in_cents ==
-                                                    x.discount_amount).ThenBy(x => x.discount_end_date).FirstOrDefault()
-                                                ?.discount_end_date;
-                                            var tDate = discountDate is not 0 and not null
-                                                ? DateTimeOffset.FromUnixTimeSeconds((long)discountDate)
-                                                    .ToUniversalTime()
-                                                    .DateTime
-                                                : DateTime.MinValue;
-                                            if (tDate != game.DiscountEndTimeUtc)
-                                            {
-                                                _logger?.LogInformation(
-                                                    $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
-                                                game.DiscountEndTimeUtc = tDate;
-                                                db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
-                                            }
-                                        }
-
-                                        if (game.DiscountEndTimeUtc.Year > 2000)
-                                            if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper
-                                                    .DiscountTimerInAdvanceMinutes) <
-                                                SteamHelper.GetUtcNow()
-                                                && targetPrice.OriginalSteamPrice > 0)
-                                            {
-                                                _logger?.LogInformation(
-                                                    $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Конец скидки {appId} с {game.DiscountEndTimeUtc}");
-                                                targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
-                                            }
-
-                                    }
+                                    purchase_options_process(appId, gamesList, db, po, c);
+                                }
+                                foreach (var po in data.accessories)
+                                {
+                                    purchase_options_process(appId, gamesList, db, po, c);
                                 }
                             }
                             else
@@ -286,6 +206,94 @@ namespace SteamDigiSellerBot.Network.Services
                 await SetSteamPrices(appId, gamesList, currencies, db, tries);
             }
             await Task.Delay(25);
+        }
+
+        private void purchase_options_process(string appId, List<Game> gamesList, DatabaseContext db, StoreItem_PurchaseOption po,
+            Currency c)
+        {
+            if (po.original_price_in_cents == 0 && po.final_price_in_cents > 0)
+                po.original_price_in_cents = po.final_price_in_cents;
+            var games = gamesList.Where(x =>
+                    x.SubId == (po.packageid == 0 ? po.bundleid : po.packageid).ToString())
+                .ToList();
+            foreach (var game in games)
+            {
+                var targetPrice =
+                    game.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == c.SteamId);
+                if (targetPrice is null)
+                {
+                    targetPrice = new GamePrice()
+                    {
+                        GameId = game.Id,
+                        SteamCurrencyId = c.SteamId,
+                        IsManualSet = false
+                    };
+                    game.GamePrices.Add(targetPrice);
+                }
+
+                //если цена уже была и устанавливается вручную, пропускаем
+                if (targetPrice.IsManualSet)
+                    continue;
+                if (Math.Round(targetPrice.OriginalSteamPrice, 2) !=
+                    (po.original_price_in_cents / 100M)
+                    || Math.Round(targetPrice.CurrentSteamPrice, 2) !=
+                    (po.final_price_in_cents / 100M))
+                {
+                    _logger?.LogInformation(
+                        $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}: Изменение цены" +
+                        $"{(targetPrice.OriginalSteamPrice != (po.original_price_in_cents / 100M) ? $" Оригинал: {targetPrice.OriginalSteamPrice} / {po.original_price_in_cents / 100M}" : "")}" +
+                        $"{(targetPrice.CurrentSteamPrice != (po.final_price_in_cents / 100M) ? $" Скидка: {targetPrice.CurrentSteamPrice} / {po.final_price_in_cents / 100M}" : "")}");
+
+                    targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
+                    targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
+                    targetPrice.LastUpdate = DateTime.UtcNow;
+                }
+
+                if (game.SteamCurrencyId == c.SteamId && game.IsPriceParseError)
+                {
+                    game.IsPriceParseError = false;
+                    db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                }
+
+                if (targetPrice.Id == 0)
+                    db.Entry(targetPrice).State = EntityState.Added;
+                else
+                    db.Entry(targetPrice).State = EntityState.Modified;
+
+
+                game.UpdateIsDiscount(db, po.discount_pct != 0);
+                if (po.discount_pct != 0 && game.SteamCurrencyId == c.SteamId)
+                {
+                    var discountDate = po.active_discounts
+                        ?.OrderByDescending(x =>
+                            po.original_price_in_cents - po.final_price_in_cents ==
+                            x.discount_amount).ThenBy(x => x.discount_end_date).FirstOrDefault()
+                        ?.discount_end_date;
+                    var tDate = discountDate is not 0 and not null
+                        ? DateTimeOffset.FromUnixTimeSeconds((long)discountDate)
+                            .ToUniversalTime()
+                            .DateTime
+                        : DateTime.MinValue;
+                    if (tDate != game.DiscountEndTimeUtc)
+                    {
+                        _logger?.LogInformation(
+                            $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
+                        game.DiscountEndTimeUtc = tDate;
+                        db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
+                    }
+                }
+
+                if (game.DiscountEndTimeUtc.Year > 2000)
+                    if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper
+                            .DiscountTimerInAdvanceMinutes) <
+                        SteamHelper.GetUtcNow()
+                        && targetPrice.OriginalSteamPrice > 0)
+                    {
+                        _logger?.LogInformation(
+                            $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Конец скидки {appId} с {game.DiscountEndTimeUtc}");
+                        targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
+                    }
+            }
         }
 
 
