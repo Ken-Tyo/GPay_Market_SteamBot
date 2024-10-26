@@ -75,6 +75,10 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                                 _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoGoodsItem.DigiSellerId);
                                 successCounter++;
                                 var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                                if (counter % 1000 == 0) // Делаем длинную паузу после 1000 обновлений 
+                                {
+                                    delayTimeInMs += NetworkConst.RequestDelayAfterLongTimeInMs;
+                                }
                                 await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
                                 break;
                             }
