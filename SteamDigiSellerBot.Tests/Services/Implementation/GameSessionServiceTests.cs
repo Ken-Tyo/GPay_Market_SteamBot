@@ -76,7 +76,10 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
         [TestCase(5.0, GameSessionStatusEnum.WaitingToConfirm, false)] // not expired game session
         [TestCase(0.0, GameSessionStatusEnum.ExpiredDiscount, true)]
         [TestCase(-5.0, GameSessionStatusEnum.ExpiredDiscount, true)]
-        public async Task CheckGameSessionExpiredAndHandle_CheckOnGamesStatusIsExpiredDiscountWhenDiscountEndTimeUtcLowerThenNowUtc_ShouldBeAsExpectedAsync(double deltaTime, GameSessionStatusEnum gsSessionStatus, bool isExpired)
+        public async Task CheckGameSessionExpiredAndHandle_CheckOnGamesStatusIsExpiredDiscountWhenDiscountEndTimeUtcLowerThenNowUtc_ShouldBeAsExpectedAsync(
+            double deltaTime, 
+            GameSessionStatusEnum gsSessionStatus, 
+            bool isExpired)
         {
             // Arrange
             var nowUtc = DateTime.UtcNow.ToUniversalTime();
@@ -128,9 +131,62 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
             _wsNotificationSenderMock.Verify(ws => ws.GameSessionChangedAsync(gs.UniqueCode), Times.Once);
         }
 
-        [Test]
-        public async Task CheckGameSessionExpiredAndHandle_CheckOnGamesStatusIsExpiredDiscountWherePriceBecameLower_ShouldBeAsExpectedAsync()
-        { 
+        [TestCase(110, 100, true)]
+        [TestCase(100, 110, false)]
+        public async Task CheckGameSessionExpiredAndHandle_CheckOnGamesStatusIsExpiredDiscountWhereDealPriceBecameLower_ShouldBeAsExpectedAsync(
+            decimal dealPriceUsd, 
+            decimal currentPriceUsd, 
+            bool isExpired)
+        {
+            // Arrange
+            var nowUtc = DateTime.UtcNow.ToUniversalTime();
+            var gs = new GameSession
+            {
+                Id = 1,
+                StatusId = GameSessionStatusEnum.WaitingToConfirm,
+                DigiSellerDealPriceUsd = dealPriceUsd,
+                Item = new Item()
+                {
+                    Id = 1,
+                    CurrentDigiSellerPriceUsd = currentPriceUsd,
+                    IsDiscount = true,
+                    DiscountEndTimeUtc = nowUtc.AddMinutes(-5),
+                    AppId = Guid.NewGuid().ToString(),
+                    SteamPercent = 10,
+                    IsFixedPrice = false,
+                },
+                User = new UserDB
+                {
+                    AspNetUser = new User
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                    }
+                },
+                DigiSellerDealId = Guid.NewGuid().ToString(),
+                UniqueCode = Guid.NewGuid().ToString(),
+            };
+
+            _gameSessionRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(It.IsAny<DatabaseContext>(), gs.Id))
+                .ReturnsAsync(gs);
+
+            // Act
+            var result = await _service.CheckGameSessionExpiredAndHandle(gs);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(isExpired));
+            Assert.That(gs.StatusId, Is.EqualTo(GameSessionStatusEnum.ExpiredDiscount));
+
+            if (!isExpired)
+                return; // when not expired, skip last checks
+
+            _gameSessionRepositoryMock.Verify(repo => repo.UpdateFieldAsync(
+                It.IsAny<DatabaseContext>(),
+                It.IsAny<GameSession>(),
+                It.IsAny<Expression<Func<GameSession, GameSessionStatusEnum>>>())
+            , Times.Once);
+            _wsNotificationSenderMock.Verify(ws => ws.GameSessionChanged(It.IsAny<string>(), gs.Id), Times.Once);
+            _wsNotificationSenderMock.Verify(ws => ws.GameSessionChangedAsync(gs.UniqueCode), Times.Once);
         }
     }
 }
