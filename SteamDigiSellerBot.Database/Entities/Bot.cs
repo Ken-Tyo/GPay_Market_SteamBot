@@ -37,13 +37,20 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public string MaFileStr { get; set; }
 
+        [IgnoreDataMember]
+        public string MaFileStrC { get; set; }
+
         public string UserAgent { get; set; }
 
         public string ProxyStr { get; set; }
+
         [IgnoreDataMember]
         public string ProxyStrC { get; set; }
 
         public string SteamCookiesStr { get; set; }
+
+        [IgnoreDataMember]
+        public string SteamCookiesStrC { get; set; }
 
         public string Region { get; set; }
         public string SteamId { get; set; }
@@ -86,11 +93,11 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             get
             {
-                return new CookieDictionary(SteamCookiesStr);
+                return new CookieDictionary(string.IsNullOrEmpty(SteamCookiesStrC) ? SteamCookiesStr : CryptographyUtilityService.Decrypt(SteamCookiesStr));
             }
             set
             {
-                SteamCookiesStr = value.ToString();
+                SteamCookiesStr = CryptographyUtilityService.Encrypt(value.ToString());
             }
         }
 
@@ -135,7 +142,7 @@ namespace SteamDigiSellerBot.Database.Entities
             {
                 if (!string.IsNullOrWhiteSpace(MaFileStr))
                 {
-                    return JsonConvert.DeserializeObject<SteamGuardAccount>(MaFileStr);
+                    return JsonConvert.DeserializeObject<SteamGuardAccount>(CryptographyUtilityService.Decrypt(MaFileStr));
                 }
 
                 return null;

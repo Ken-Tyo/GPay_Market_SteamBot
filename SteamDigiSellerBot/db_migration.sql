@@ -367,4 +367,10 @@ insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", 
 
 ALTER TABLE "Bots" ADD "PasswordC" text NULL;
 ALTER TABLE "Bots" ADD "ProxyStrC" text NULL;
+ALTER TABLE "Bots" ADD "MaFileStrC" text NULL;
+ALTER TABLE "Bots" ADD "SteamCookiesStrC" text NULL;
 ALTER TABLE "SteamProxies" ADD "PasswordC" text NULL;
+ALTER TABLE "AspNetUsers" ADD "DigisellerIDC" text NULL;
+ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
+ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
+ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;

@@ -28,7 +28,7 @@ namespace SteamDigiSellerBot.Network.Providers
              && user.DigisellerTokenExp > DateTimeOffset.UtcNow)
                 return user.DigisellerToken;
 
-            var newToken = GenerateNewToken(user.DigisellerApiKey, user.DigisellerID);
+            var newToken = GenerateNewToken(CryptographyUtilityService.Decrypt(user.DigisellerApiKey), CryptographyUtilityService.Decrypt(user.DigisellerID));
             if (newToken.Retval == 0)
             {
                 user.DigisellerToken = newToken.Token;

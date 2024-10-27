@@ -13,12 +13,12 @@ namespace SteamDigiSellerBot.MappingProfiles
         public SteamBotMappingProfile()
         {
             CreateMap<AddSteamBotViewModel, Bot>()
-                .ForMember(x => x.MaFileStr, x => x.MapFrom(x => x.MaFile.ReadAsStringAsync().Result))
+                //.ForMember(x => x.MaFileStr, x => x.MapFrom(x => x.MaFile.ReadAsStringAsync().Result))
                 //.ForMember(x => x.ProxyStr, x => x.MapFrom(x => x.Proxy))
                 .AfterMap<SteamBotMappingAction>(); ;
 
             CreateMap<EditBotRequest, Bot>()
-                .ForMember(x => x.MaFileStr, x => x.MapFrom(x => x.MaFile.ReadAsStringAsync().Result))
+                //.ForMember(x => x.MaFileStr, x => x.MapFrom(x => x.MaFile.ReadAsStringAsync().Result))
                 //.ForMember(x => x.ProxyStr, x => x.MapFrom(x => x.Proxy))
                 .AfterMap<EditBotRequestMappingAction>();
         }
@@ -30,14 +30,21 @@ namespace SteamDigiSellerBot.MappingProfiles
         {
             destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
+
+            destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
+            destination.MaFileStr = CryptographyUtilityService.Encrypt(source.MaFile.ReadAsStringAsync().Result);
         }
     }
+
     public class EditBotRequestMappingAction : IMappingAction<EditBotRequest, Bot>
     {
         public void Process(EditBotRequest source, Bot destination, ResolutionContext context)
         {
             destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
+
+            destination.MaFileStrC = source.Proxy;
+            destination.MaFileStr = CryptographyUtilityService.Encrypt(source.MaFile.ReadAsStringAsync().Result);
         }
     }
 }
