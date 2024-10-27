@@ -4,6 +4,7 @@ using SteamDigiSellerBot.ActionFilters;
 using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Models.Users;
+using SteamDigiSellerBot.Utilities.Services;
 using SteamDigiSellerBot.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,11 +31,15 @@ namespace SteamDigiSellerBot.Controllers
             User user = await _userManager.GetUserAsync(User);
             var u = await _userDBRepository.GetByAspNetUserId(user.Id);
 
-            user.DigisellerID = request.DigisellerID;
-            user.DigisellerApiKey = request.DigisellerApiKey;
+            user.DigisellerID = CryptographyUtilityService.Encrypt(request.DigisellerID);
+            user.DigisellerIDC = request.DigisellerID;
+            user.DigisellerApiKey = CryptographyUtilityService.Encrypt(request.DigisellerApiKey);
+            user.DigisellerApiKeyC = request.DigisellerApiKey;
 
-            u.DigisellerID = request.DigisellerID;
-            u.DigisellerApiKey = request.DigisellerApiKey;
+            u.DigisellerID = CryptographyUtilityService.Encrypt(request.DigisellerID);
+            u.DigisellerIDC = request.DigisellerID;
+            u.DigisellerApiKey = CryptographyUtilityService.Encrypt(request.DigisellerApiKey);
+            u.DigisellerApiKeyC = request.DigisellerApiKey;
 
             await _userManager.UpdateAsync(user);
             await _userDBRepository.EditAsync(db, u);
@@ -88,8 +93,8 @@ namespace SteamDigiSellerBot.Controllers
             User user = await _userManager.GetUserAsync(User);
 
             return Ok(new {
-                digisellerId = user.DigisellerID,
-                digisellerApiKey = user.DigisellerApiKey
+                digisellerId = CryptographyUtilityService.Decrypt(user.DigisellerID),
+                digisellerApiKey = CryptographyUtilityService.Decrypt(user.DigisellerApiKey)
             });
         }
     }
