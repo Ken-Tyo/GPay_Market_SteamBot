@@ -131,11 +131,12 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
             _wsNotificationSenderMock.Verify(ws => ws.GameSessionChangedAsync(gs.UniqueCode), Times.Once);
         }
 
-        [TestCase(110, 100, true)]
-        [TestCase(100, 110, false)]
+        [TestCase(110, 100, GameSessionStatusEnum.ExpiredDiscount, true)]
+        [TestCase(100, 110, GameSessionStatusEnum.WaitingToConfirm, false)]
         public async Task CheckGameSessionExpiredAndHandle_CheckOnGamesStatusIsExpiredDiscountWhereDealPriceBecameLower_ShouldBeAsExpectedAsync(
             decimal dealPriceUsd, 
-            decimal currentPriceUsd, 
+            decimal currentPriceUsd,
+            GameSessionStatusEnum newGSStatus,
             bool isExpired)
         {
             // Arrange
@@ -175,7 +176,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
 
             // Assert
             Assert.That(result, Is.EqualTo(isExpired));
-            Assert.That(gs.StatusId, Is.EqualTo(GameSessionStatusEnum.ExpiredDiscount));
+            Assert.That(gs.StatusId, Is.EqualTo(newGSStatus));
 
             if (!isExpired)
                 return; // when not expired, skip last checks
