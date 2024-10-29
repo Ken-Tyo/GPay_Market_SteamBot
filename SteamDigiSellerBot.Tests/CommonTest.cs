@@ -373,7 +373,7 @@ namespace SteamDigiSellerBot.Tests
             botSender = new Bot
             {
                 Id = 51,
-                UserName = "abseaketbra1975",
+                UserName = "rrjmhxuxjgctz",
                 IsON = true,
                 Region = "RU",
                 SteamCurrencyId = 5,//RUB
@@ -381,9 +381,9 @@ namespace SteamDigiSellerBot.Tests
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "9g69i7ejti45",
+                Password = "M8&ho898554",
                 ProxyStr = "91.220.206.224:63674:AwJyXm9A:hcnnkmGv",
-                MaFileStr = "{\"shared_secret\":\"jWJkiEt0chy9tLXy1snmuYLkc88=\",\"serial_number\":\"12026198475570881877\",\"revocation_code\":\"R57428\",\"uri\":\"otpauth://totp/Steam:abseaketbra1975?secret=RVRGJCCLORZBZPNUWXZNNSPGXGBOI46P&issuer=Steam\",\"server_time\":1622978154,\"account_name\":\"abseaketbra1975\",\"token_gid\":\"24b5ee06471a446e\",\"identity_secret\":\"8cIatcKHUpgB5mJqz/CRxkrdACw=\",\"secret_1\":\"Se1+mEjGFgFGaYCHWxMWz0fT8yU=\",\"status\":0,\"device_id\":\"android:7eeb57b4-5ab5-76c5-7155-297c05123c64\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"dcd298ac9389a1734fc2faa0\",\"SteamLogin\":\"76561199175663967%7C%7C176864A188E98D0AE98E886303F69B035BC38BD4\",\"SteamLoginSecure\":\"76561199175663967%7C%7C817E7AE679A54BF60BC2C68B3FE8CBE53AD6FDFD\",\"WebCookie\":\"8E825F7803E5371C2A286C5225657826B84E9043\",\"OAuthToken\":\"d470fe471f8dad6b2d0ac587def918fa\",\"SteamID\":76561199175663967}}"
+                MaFileStr = "{\"shared_secret\":\"gojt7eeVrw2QEnd8LOrW4oSlnmI=\",\"serial_number\":\"7015747733681894824\",\"revocation_code\":\"R72448\",\"uri\":\"otpauth://totp/Steam:rrjmhxuxjgctz?secret=QKEO33PHSWXQ3EASO56CZ2WW4KCKLHTC&issuer=Steam\",\"server_time\":1605834514,\"account_name\":\"rrjmhxuxjgctz\",\"token_gid\":\"24f5dde04538248d\",\"identity_secret\":\"AO3phpaiTECOHs2/s5a8G9E+udo=\",\"secret_1\":\"NOvazrJWvphNpwGUu1cOV767ogo=\",\"status\":0,\"device_id\":\"android:dfc31d94-120c-b6fb-658a-5c21757b00d8\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"4d9122e664e81f1663df0f04\",\"SteamLogin\":\"76561199107283477%7C%7C471F5518BC4315421C33CFEE5E6BC8E47E344FCC\",\"SteamLoginSecure\":\"76561199107283477%7C%7C500B94061BBEA5FA6E78846CEB9DCC77A7241751\",\"WebCookie\":\"D479C6296F6D0A494603A24AA8FA4186AD4ECE33\",\"OAuthToken\":\"20c6bfb5ea21f28f083d69f3ac082e8c\",\"SteamID\":76561199107283477}}"
 
             };
             var sb = new SuperBot(botSender);
@@ -487,18 +487,20 @@ namespace SteamDigiSellerBot.Tests
         {
 
             using HttpClient client = new HttpClient();
-            SteamApiClient apiClient = new SteamApiClient(new SteamProxy()
-            {
-                Host = "195.19.168.10",
-                Port = 64234,
-                UserName = "6nEpBYwR",
-                Password = "v7YFz1pt"
-            });
+            //SteamApiClient apiClient = new SteamApiClient(new SteamProxy()
+            //{
+            //    Host = "195.19.168.10",
+            //    Port = 64234,
+            //    UserName = "6nEpBYwR",
+            //    Password = "v7YFz1pt"
+            //});
+            SteamApiClient apiClient = new SteamApiClient(client);
             var r = new CStoreBrowse_GetItems_Request()
             {
                 context = new()
                 {
-                    country_code = "CN"
+                    country_code = "UA",
+                    
                 },
                 data_request = new StoreBrowseItemDataRequest()
                 {
@@ -509,7 +511,7 @@ namespace SteamDigiSellerBot.Tests
             };
             r.ids.Add(new StoreItemID()
             {
-                appid = 580600,
+                appid = 311210,
                 
             });
             try
@@ -517,6 +519,8 @@ namespace SteamDigiSellerBot.Tests
                 var response =
                     await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
                         System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,null);
+                var po = response.store_items.SelectMany(x => x.purchase_options)
+                    .Select(x => x.packageid != 0 ? x.packageid : x.bundleid);
             }
             catch (Exception ex)
             {

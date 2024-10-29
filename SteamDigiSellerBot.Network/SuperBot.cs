@@ -1469,13 +1469,13 @@ namespace SteamDigiSellerBot.Network
         private async Task<(InitTranResponse,string)> InitSendGameTransaction(
             string gidShoppingCart, string sessionId, string gifteeAccountId, 
             string receiverName, string comment, string wishes, string signature,
-            string countryCode)
+            string countryCode, bool secondTry)
         {
             if (string.IsNullOrWhiteSpace(sessionId))
                 return (null,null);
 
             var initTranUrl = "https://checkout.steampowered.com/checkout/inittransaction/";
-            var formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+            var formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
 
             var initTran = new Uri(initTranUrl);
             var reqMes = new HttpRequestMessage(HttpMethod.Post, initTran);
@@ -1486,6 +1486,8 @@ namespace SteamDigiSellerBot.Network
                 { "shoppingCartGID", gidShoppingCart },
                 { "wants_mature_content", "1" }
             };
+            if (secondTry)
+                cookies.Add("beginCheckoutCart", "-1");
             HttpResponseMessage response;
             using var client = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler handler, cookies);
             try
@@ -1496,7 +1498,7 @@ namespace SteamDigiSellerBot.Network
             {
                 await Task.Delay(TimeSpan.FromSeconds(40));
                 sessionId = await GetSessiondId("https://checkout.steampowered.com");
-                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
                 var reqMes2 = new HttpRequestMessage(HttpMethod.Post, initTran);
                 reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
                 cookies = new Dictionary<string, string>() {
@@ -1511,7 +1513,7 @@ namespace SteamDigiSellerBot.Network
             {
                 await Task.Delay(TimeSpan.FromSeconds(40));
                 sessionId= await GetSessiondId("https://checkout.steampowered.com");
-                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
                 var reqMes2 = new HttpRequestMessage(HttpMethod.Post, initTran);
                 reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
                 cookies = new Dictionary<string, string>() {
@@ -1536,7 +1538,7 @@ namespace SteamDigiSellerBot.Network
         }
 
         private static RequestParams transactionParams(string gidShoppingCart, string sessionId, string gifteeAccountId,
-            string receiverName, string comment, string wishes, string signature, string countryCode)
+            string receiverName, string comment, string wishes, string signature, string countryCode, bool secondTry)
         {
             var formParams = new RequestParams
             {
@@ -1570,8 +1572,8 @@ namespace SteamDigiSellerBot.Network
                 ["ShippingState"] = "",
                 ["ShippingPostalCode"] = "",
                 ["ShippingPhone"] = "",
-                ["bIsGift"] = 1,
-                ["GifteeAccountID"] = gifteeAccountId,
+                ["bIsGift"] = secondTry ? 0 : 1,
+                ["GifteeAccountID"] = secondTry ? 0 : gifteeAccountId,
                 ["GifteeEmail"] = "",
                 ["GifteeName"] = receiverName,
                 ["GiftMessage"] = comment,
@@ -1760,11 +1762,24 @@ namespace SteamDigiSellerBot.Network
                 comment: comment,
                 wishes: "Счастливой игры",
                 signature: "GPay market",
-                countryCode);
+                countryCode, false);
 
             res.initTranRes = initResp;
 
             var mes = "";
+            if (initResp.success == 2)
+            {
+                (initResp, rI) = await InitSendGameTransaction(
+                    gidShoppingCart,
+                    sessionId,
+                    gifteeAccountId,
+                    receiverName,
+                    comment: comment,
+                    wishes: "Счастливой игры",
+                    signature: "GPay market",
+                    countryCode, true);
+                res.initTranRes = initResp;
+            }
             if (initResp.success != 1)
             {
                 if (mesDict.ContainsKey(initResp.purchaseresultdetail))
