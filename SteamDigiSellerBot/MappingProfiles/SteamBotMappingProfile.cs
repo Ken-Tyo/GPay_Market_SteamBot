@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using ProtoBuf.Meta;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Extensions;
@@ -43,6 +44,7 @@ namespace SteamDigiSellerBot.MappingProfiles
             destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
+            Console.WriteLine($"BotEncrytpZone {nameof(EditBotRequestMappingAction)} {destination.UserName} {source.Proxy}");
             if (source.MaFile != null)
             {
                 destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;

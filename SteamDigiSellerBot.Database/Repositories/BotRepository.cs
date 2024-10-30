@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Utilities.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,6 +85,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             List<Bot> botsMaFiles = await db.Bots.Where(x => string.IsNullOrEmpty(x.MaFileStrC)).ToListAsync();
             botsMaFiles.ForEach(e =>
             {
+                Console.WriteLine($"BotEncrytpZone {nameof(CheckAndEncryptPasswords)} {e.UserName} {e.MaFileStr}");
                 e.MaFileStrC = e.MaFileStr;
                 e.MaFileStr = CryptographyUtilityService.Encrypt(e.MaFileStrC);
             });
