@@ -87,16 +87,16 @@ namespace SteamDigiSellerBot.Database.Repositories
                 e.MaFileStr = CryptographyUtilityService.Encrypt(e.MaFileStrC);
             });
 
-            List<Bot> botsSteamCooks = await db.Bots.Where(x => !string.IsNullOrEmpty(x.SteamCookiesStrC)).ToListAsync();
-            botsSteamCooks.ForEach(e =>
-            {
-                var decrscs = CryptographyUtilityService.Decrypt(e.SteamCookiesStr);
+            //List<Bot> botsSteamCooks = await db.Bots.Where(x => !string.IsNullOrEmpty(x.SteamCookiesStrC)).ToListAsync();
+            //botsSteamCooks.ForEach(e =>
+            //{
+            //    var decrscs = CryptographyUtilityService.Decrypt(e.SteamCookiesStr);
 
-                if (decrscs != e.SteamCookiesStrC)
-                {
-                    _logger.LogWarning($"CheckAndEncryptPasswords SteamCookiesStr not match at botId={e.Id}");
-                }
-            });
+            //    if (decrscs != e.SteamCookiesStrC)
+            //    {
+            //        _logger.LogWarning($"CheckAndEncryptPasswords SteamCookiesStr not match at botId={e.Id}");
+            //    }
+            //});
 
             List<Bot> botsSteamCks = await db.Bots.Where(x => string.IsNullOrEmpty(x.SteamCookiesStrC)).ToListAsync();
             botsSteamCks.ForEach(e =>
