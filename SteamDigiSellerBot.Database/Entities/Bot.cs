@@ -93,7 +93,8 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             get
             {
-                return new CookieDictionary(string.IsNullOrEmpty(SteamCookiesStrC) ? SteamCookiesStr : CryptographyUtilityService.Decrypt(SteamCookiesStr));
+                //return new CookieDictionary(string.IsNullOrEmpty(SteamCookiesStrC) ? SteamCookiesStr : CryptographyUtilityService.Decrypt(SteamCookiesStr));
+                return new CookieDictionary(CryptographyUtilityService.Decrypt(SteamCookiesStr));
             }
             set
             {
