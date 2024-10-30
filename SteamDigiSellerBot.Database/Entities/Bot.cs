@@ -1,5 +1,4 @@
 ﻿using DatabaseRepository.Entities;
-using Newtonsoft.Json;
 using Org.Mentalis.Network.ProxySocket.Models;
 using SteamAuthCore;
 using SteamDigiSellerBot.Database.Enums;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -146,7 +146,7 @@ namespace SteamDigiSellerBot.Database.Entities
             {
                 if (!string.IsNullOrWhiteSpace(MaFileStr))
                 {
-                    return JsonConvert.DeserializeObject<SteamGuardAccount>(CryptographyUtilityService.Decrypt(MaFileStr));
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamGuardAccount>(CryptographyUtilityService.Decrypt(MaFileStr));
                 }
 
                 return null;

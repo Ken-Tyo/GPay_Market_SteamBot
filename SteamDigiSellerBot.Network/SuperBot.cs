@@ -1474,7 +1474,7 @@ namespace SteamDigiSellerBot.Network
         {
             if (string.IsNullOrWhiteSpace(sessionId))
             {
-                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot, new JsonSerializerOptions() { MaxDepth = 1}));
+                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot, new JsonSerializerOptions() { MaxDepth = 2}));
                 return (null, null);
             }
 
