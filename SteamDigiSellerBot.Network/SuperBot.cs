@@ -123,12 +123,17 @@ namespace SteamDigiSellerBot.Network
         public DateTime? LastLogin { get; set; }
         public void Login()
         {
-            //DebugLog.Enabled = true;
+            DebugLog.Enabled = true;
             if (_isRunning)
                 return;
             _isRunning = true;
-           
-            _steamClient.Connect(proxy: _bot.Proxy);
+
+            var proxy = _bot.Proxy;
+            if (IsOk())
+            {
+                _logger.LogInformation($"Steam: релог {_bot.UserName} прокси: {proxy?.Host} {proxy?.Port} {proxy?.UserName} {proxy?.Password}");
+            }
+            _steamClient.Connect(proxy: proxy);
 
             for (int i = 0; i < 30 && _isRunning; i++)
             {
