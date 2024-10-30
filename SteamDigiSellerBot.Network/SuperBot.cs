@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1473,7 +1474,7 @@ namespace SteamDigiSellerBot.Network
         {
             if (string.IsNullOrWhiteSpace(sessionId))
             {
-                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot));
+                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot, new JsonSerializerOptions() { MaxDepth = 2}));
                 return (null, null);
             }
 
