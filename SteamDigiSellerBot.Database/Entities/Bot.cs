@@ -98,6 +98,8 @@ namespace SteamDigiSellerBot.Database.Entities
             }
             set
             {
+                //При отказе от незашифрованного значения закомментировать
+                SteamCookiesStrC = value.ToString();
                 SteamCookiesStr = CryptographyUtilityService.Encrypt(value.ToString());
             }
         }

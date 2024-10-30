@@ -98,12 +98,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             //    }
             //});
 
-            List<Bot> botsSteamCks = await db.Bots.Where(x => string.IsNullOrEmpty(x.SteamCookiesStrC)).ToListAsync();
-            botsSteamCks.ForEach(e =>
-            {
-                e.SteamCookiesStrC = e.SteamCookiesStr;
-                e.SteamCookiesStr = CryptographyUtilityService.Encrypt(e.SteamCookiesStrC);
-            });
+            //List<Bot> botsSteamCks = await db.Bots.Where(x => string.IsNullOrEmpty(x.SteamCookiesStrC)).ToListAsync();
+            //botsSteamCks.ForEach(e =>
+            //{
+            //    e.SteamCookiesStrC = e.SteamCookiesStr;
+            //    e.SteamCookiesStr = CryptographyUtilityService.Encrypt(e.SteamCookiesStrC);
+            //});
 
             // SteamProxy
             /*List<SteamProxy> stmproxy = await db.SteamProxies.Where(x => !string.IsNullOrEmpty(x.PasswordC)).ToListAsync();
