@@ -34,6 +34,7 @@ using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Utilities.Services;
+using System.Text.Json.Serialization;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -1474,7 +1475,7 @@ namespace SteamDigiSellerBot.Network
         {
             if (string.IsNullOrWhiteSpace(sessionId))
             {
-                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot, new JsonSerializerOptions() { MaxDepth = 2}));
+                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot, new JsonSerializerOptions() { MaxDepth = 2, ReferenceHandler= ReferenceHandler.Preserve}));
                 return (null, null);
             }
 
