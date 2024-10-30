@@ -92,18 +92,37 @@ namespace SteamDigiSellerBot.Network
             //IVacGameRepository vacGameRepository
             )
         {
-            _steamClient = new SteamClient();
-            _manager = new CallbackManager(_steamClient);
             _bot = bot;
             _logger = logger;
+
+
             //_currencyDataRepository = currencyDataRepository;
             //_vacGameRepository = vacGameRepository;
 
+            SetSteamClient();
+        }
+
+        private void SetSteamClient()
+        {
+            _steamClient = new SteamClient();
+            _manager = new CallbackManager(_steamClient);
+
+
             _steamUser = _steamClient.GetHandler<SteamUser>();
-            
+
             _manager.Subscribe<SteamClient.ConnectedCallback>(OnConnected);
             _manager.Subscribe<SteamClient.DisconnectedCallback>(OnDisconnected);
             _manager.Subscribe<SteamUser.LoggedOnCallback>(OnLoggedOn);
+        }
+
+        public void ResetSteamClient()
+        {
+            _isRunning = false;
+            isOk = false;
+            _steamClient?.Disconnect();
+            Task.Delay(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult();
+            SetSteamClient();
+            Login();
         }
 
         public Bot Bot => _bot;

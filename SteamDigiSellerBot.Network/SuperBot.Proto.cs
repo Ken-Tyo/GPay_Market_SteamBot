@@ -367,9 +367,9 @@ namespace SteamDigiSellerBot.Network
                 sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
                 if (string.IsNullOrWhiteSpace(sessionId))
                 {
-                    _isRunning = false;
-                    Login();
-                    await Task.Delay(TimeSpan.FromSeconds(5));
+                  
+                    ResetSteamClient();
+                    await Task.Delay(TimeSpan.FromSeconds(3));
                     _logger.LogInformation(
                         $"BOT {Bot.UserName} is logged ON on SendGame {comment} - status: {Bot.Result + (Bot.ResultSetTime != null ? " " + Bot.ResultSetTime.Value.ToShortTimeString() : " не было авторизации") + (_isRunning ? "" : " (не запущен)")}");
                     _logger.LogInformation(new string('-', 70));
