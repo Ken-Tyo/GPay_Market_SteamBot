@@ -365,7 +365,7 @@ namespace SteamDigiSellerBot.Network
                 }
 
                 sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
-                if (sessionId is null)
+                if (string.IsNullOrWhiteSpace(sessionId))
                 {
                     _isRunning = false;
                     Login();
