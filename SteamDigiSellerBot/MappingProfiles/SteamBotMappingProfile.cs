@@ -32,7 +32,7 @@ namespace SteamDigiSellerBot.MappingProfiles
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
             destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
-            destination.MaFileStr = CryptographyUtilityService.Encrypt(source.MaFile.ReadAsStringAsync().Result);
+            destination.MaFileStr = CryptographyUtilityService.Encrypt(destination.MaFileStrC);
         }
     }
 
@@ -43,8 +43,8 @@ namespace SteamDigiSellerBot.MappingProfiles
             destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
-            destination.MaFileStrC = source.Proxy;
-            destination.MaFileStr = CryptographyUtilityService.Encrypt(source.MaFile.ReadAsStringAsync().Result);
+            destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
+            destination.MaFileStr = CryptographyUtilityService.Encrypt(destination.MaFileStrC);
         }
     }
 }

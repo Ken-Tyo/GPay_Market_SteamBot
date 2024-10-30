@@ -1472,7 +1472,10 @@ namespace SteamDigiSellerBot.Network
             string countryCode, bool secondTry)
         {
             if (string.IsNullOrWhiteSpace(sessionId))
-                return (null,null);
+            {
+                _logger?.LogWarning("Bot session error: "+ System.Text.Json.JsonSerializer.Serialize(_bot));
+                return (null, null);
+            }
 
             var initTranUrl = "https://checkout.steampowered.com/checkout/inittransaction/";
             var formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
