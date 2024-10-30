@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -65,6 +65,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public bool IsProblemRegion { get; set; }
         public bool HasProblemPurchase { get; set; }
+        [JsonIgnore]
         public virtual BotRegionSetting BotRegionSetting { get; set; }
 
         public bool IsON { get; set; }
@@ -73,7 +74,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
         [Column(TypeName = "json")]
         public IEnumerable<VacGame> VacGames { get; set; }
-
+        [JsonIgnore]
         public virtual List<BotSendGameAttempts> SendGameAttempts { get; set; }
 
         //public string CountryCode { get; set; }
@@ -105,7 +106,7 @@ namespace SteamDigiSellerBot.Database.Entities
         }
 
         [NotMapped]
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public HttpRequest SteamHttpRequest
         {
@@ -127,6 +128,7 @@ namespace SteamDigiSellerBot.Database.Entities
         }
 
         [NotMapped]
+        [JsonIgnore]
         public Proxy Proxy
         {
             get
