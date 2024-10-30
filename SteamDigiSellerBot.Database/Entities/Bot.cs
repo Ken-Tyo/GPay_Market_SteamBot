@@ -105,6 +105,7 @@ namespace SteamDigiSellerBot.Database.Entities
         }
 
         [NotMapped]
+        [JsonIgnore]
         public HttpRequest SteamHttpRequest
         {
             get
