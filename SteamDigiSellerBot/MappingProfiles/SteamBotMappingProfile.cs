@@ -43,8 +43,11 @@ namespace SteamDigiSellerBot.MappingProfiles
             destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
-            destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
-            destination.MaFileStr = CryptographyUtilityService.Encrypt(destination.MaFileStrC);
+            if (source.MaFile != null)
+            {
+                destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
+                destination.MaFileStr = CryptographyUtilityService.Encrypt(destination.MaFileStrC);
+            }
         }
     }
 }

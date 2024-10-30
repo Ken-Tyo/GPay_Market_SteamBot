@@ -165,9 +165,11 @@ namespace SteamDigiSellerBot.Network.Services
                             }
                             else
                             {
-                                _logger?.LogWarning(
-                                    $"{nameof(SetSteamPrices_Proto)}: Недоступен {appId} в {c.CountryCode}");
+                                
                                 var games = gamesList.Where(x => x.SteamCurrencyId == c.SteamId).ToList();
+                                if (games.Any())
+                                    _logger?.LogWarning(
+                                        $"{nameof(SetSteamPrices_Proto)}: Недоступен {appId} в {c.CountryCode}");
                                 foreach (var game in games)
                                 {
                                     game.IsPriceParseError = true;
