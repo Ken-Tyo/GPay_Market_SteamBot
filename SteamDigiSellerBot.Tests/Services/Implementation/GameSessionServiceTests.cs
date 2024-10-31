@@ -321,5 +321,141 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
             Assert.That(gs.StatusId == GameSessionStatusEnum.UnknownError, Is.True);
             Assert.That(sendStatus == (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch));
         }
+
+        
+        [TestCase(100, 110, GameSessionStatusEnum.UnknownError)]
+        [TestCase(110, 100, GameSessionStatusEnum.ExpiredDiscount)]
+        public async Task SendGame_InvalidBotWithCheckOnGamesStatusIsExpiredDiscountWhereDealPriceBecameLower_ShouldBeAsExpectedAsync(
+            decimal dealPriceUsd,
+            decimal currentPriceUsd,
+            GameSessionStatusEnum newGSStatus)
+        {
+            // Arrange
+            var nowUtc = DateTime.UtcNow.ToUniversalTime();
+            int steamGamePrice = 5;
+            var user = new UserDB { AspNetUser = new User { Id = "1" } };
+            // Можно использовать актуального доступного бота для тестов
+            var botUserName = "not_valid_bot_name";
+            _botSender = new Bot
+            {
+                Id = 106,
+                UserName = botUserName,
+                IsON = true,
+                Region = "RU",
+                SteamCurrencyId = 5,
+                SendedGiftsSum = 0,
+                MaxSendedGiftsSum = 10000,
+                VacGames = new List<Bot.VacGame>(),
+                State = Database.Enums.BotState.active,
+                LastTimeUpdated = DateTime.UtcNow.AddMinutes(-5), // для проверки на последнее обновление
+                Password = "MN86^ghjfu8D",
+                ProxyStr = "195.19.169.9:62530:AwJyXm9A:hcnnkmGv",
+                MaFileStr = "{\"shared_secret\":\"e2GxqeoBMotoE7h4+hAjvLCQEK4=\"," +
+                    "\"serial_number\":\"4762780954051992012\"," +
+                    "\"revocation_code\":\"R09973\"," +
+                    "\"uri\":\"otpauth://totp/Steam:" + botUserName + "?secret=PNQ3DKPKAEZIW2ATXB4PUEBDXSYJAEFO&issuer=Steam\"," +
+                    "\"server_time\":1605835260," +
+                    "\"account_name\":\"" + botUserName + "\"," +
+                    "\"token_gid\":\"2669dde0444363cf\"," +
+                    "\"identity_secret\":\"6BItb2HgJqNTKXRm3DPvF495nsQ=\"," +
+                    "\"secret_1\":\"SrpKQPX0GUBk8R51lslshxKN580=\"," +
+                    "\"status\":0," +
+                    "\"device_id\":\"android:f623e2d3-da2f-85d2-574e-640c91405995\"," +
+                    "\"fully_enrolled\":true," +
+                    "\"Session\":" +
+                    "{\"SessionID\":\"7d6472a2a594e4a0868b8e4d\"," +
+                    "\"SteamLogin\":\"76561199107382870%7C%7CE0D4AD34842D8983848E949F2283CF39A9E09BE9\"," +
+                    "\"SteamLoginSecure\":\"76561199107382870%7C%7CD5EBD280891B4AEAE816C836EEB484CE3EBD1038\"," +
+                    "\"WebCookie\":\"0B496766FF5DAB06186B8C20F6926FEC82706172\"," +
+                    "\"OAuthToken\":\"e4be6d8572f74aac6eb067b31c5d8a72\"," +
+                    "\"SteamID\":76561199107382870}}"
+            };
+
+            var barroGTItem = new Item
+            {
+                Id = 1,
+                IsDiscount = true,
+                DiscountEndTimeUtc = nowUtc.AddMinutes(-5),
+                IsBundle = false,
+                SteamCurrencyId = 5,
+                AppId = "1990740",
+                SubId = "718719",
+                CurrentDigiSellerPriceUsd = currentPriceUsd,
+                GamePrices = new List<GamePrice>
+                {
+                    new GamePrice
+                    {
+                        SteamCurrencyId = 5,
+                        CurrentSteamPrice = steamGamePrice,
+                        OriginalSteamPrice = steamGamePrice,
+                        LastUpdate = DateTime.Now,
+                        GameId = 1
+                    }
+                }
+            };
+            decimal gamePrice = barroGTItem.GetPrice().CurrentSteamPrice;
+
+            var gs = new GameSession
+            {
+                StatusId = GameSessionStatusEnum.SendingGame,
+                Item = barroGTItem,
+                DigiSellerDealId = "not null",
+                DigiSellerDealPriceUsd = dealPriceUsd,
+                PriorityPrice = gamePrice,
+                Bot = _botSender,
+                SteamProfileGifteeAccountID = "1147147381",
+                SteamProfileName = "Decaiah",
+                User = user
+            };
+
+            var inMemoryDatabaseContext = InMemoryDatabaseGenerator.CreateAndReturn();
+            var itemRepositoryMock = new Mock<IItemRepository>();
+            _botPoolMock
+                .Setup(p => p.GetById(gs.Bot.Id))
+                .Returns(() =>
+                {
+                    var superBot = new SuperBot(_botSender);
+                    superBot.Login();
+                    superBot._isRunning = true;
+
+                    return superBot;
+                });
+            _steamCountryCodeRepositoryMock
+                .Setup(r => r.GetByCurrencies().Result)
+                .Returns(new List<SteamCountryCode> { new SteamCountryCode { Code = "RU", Name = "Russia" } });
+            _currencyDataServiceMock
+                .Setup(s => s.GetCurrencyDictionary().Result)
+                .Returns(CurrencyDataRepository.DefaultSteamCurrencies.ToDictionary(p => p.SteamId));
+            _currencyDataServiceMock
+                .Setup(s => s.ConvertRUBto(It.IsAny<decimal>(), It.IsAny<int>()).Result)
+                .Returns(gamePrice);
+            _gameSessionRepositoryMock
+                .Setup(r => r.UpdateFieldAsync(new GameSession(), gs => gs.Id).Result)
+                .Returns(true);
+            _botRepositoryMock
+                .Setup(r => r.GetContext())
+                .Returns(inMemoryDatabaseContext);
+            itemRepositoryMock
+                .Setup(r => r.GetContext())
+                .Returns(inMemoryDatabaseContext);
+
+            _gameSessionRepositoryMock
+                .Setup(repo => repo.GetByIdAsync(It.IsAny<DatabaseContext>(), gs.Id))
+                .ReturnsAsync(gs);
+            _botRepositoryMock
+                .Setup(br => br.ListAsync(inMemoryDatabaseContext, It.IsAny<Expression<Func<Bot, bool>>>()).Result)
+                .Returns(new List<Bot> { _botSender });
+            itemRepositoryMock
+                .Setup(x => x.ListAsync(inMemoryDatabaseContext, It.IsAny<Expression<Func<Item, bool>>>()))
+                .ReturnsAsync(new List<Item> { barroGTItem });
+            var db = itemRepositoryMock.Object.GetContext() as DatabaseContext;
+
+            // Act
+            var sendStatus = await _service.SendGame(db, gs);
+
+            // Assert
+            Assert.That(gs.StatusId == newGSStatus, Is.True);
+            Assert.That(sendStatus == (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch));
+        }
     }
 }
