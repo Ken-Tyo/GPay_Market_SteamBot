@@ -369,11 +369,18 @@ namespace SteamDigiSellerBot.Network
                 {
                   
                     ResetSteamClient();
-                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await Task.Delay(TimeSpan.FromSeconds(5));
                     _logger.LogInformation(
                         $"BOT {Bot.UserName} is logged ON on SendGame {comment} - status: {Bot.Result + (Bot.ResultSetTime != null ? " " + Bot.ResultSetTime.Value.ToShortTimeString() : " не было авторизации") + (_isRunning ? "" : " (не запущен)")}");
                     _logger.LogInformation(new string('-', 70));
                     sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
+                    if (string.IsNullOrEmpty(sessionId) && !IsOk())
+                    {
+                        res.result = SendeGameResult.error;
+                        res.errMessage = "Не удалось авторизоваться на этапе оплаты";
+                        res.ChangeBot = true;
+                        return res;
+                    }
                 }
                 var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
                     sessionId, res);

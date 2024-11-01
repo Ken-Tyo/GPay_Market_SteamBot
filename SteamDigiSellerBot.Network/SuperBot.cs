@@ -119,6 +119,7 @@ namespace SteamDigiSellerBot.Network
         {
             _isRunning = false;
             isOk = false;
+            _bot.Result = EResult.Invalid;
             _steamClient?.Disconnect();
             Task.Delay(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult();
             SetSteamClient();
