@@ -26077,7 +26077,7 @@ module.exports = __webpack_require__.p + "bcc82b02d812598618ea.svg";
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "847a940358458ad0bc8c.svg";
+module.exports = __webpack_require__.p + "f5b93a5daffcd9703f73.svg";
 
 /***/ }),
 
@@ -26800,7 +26800,7 @@ const additem_namespaceObject = __webpack_require__.p + "9d88c3f77df1537c88cf.sv
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/warning.svg
 const warning_namespaceObject = __webpack_require__.p + "52bd48a2bcd82103b7f3.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/infinity.svg
-const infinity_namespaceObject = __webpack_require__.p + "83b97d4f7b7230bd8ee1.svg";
+const infinity_namespaceObject = __webpack_require__.p + "fc22708812c38683fc50.svg";
 // EXTERNAL MODULE: ./node_modules/use-sync-external-store/shim/with-selector.js
 var with_selector = __webpack_require__(9242);
 ;// CONCATENATED MODULE: ./node_modules/simpler-state/es/utils.js
@@ -44405,9 +44405,9 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref3) {
 };
 /* harmony default export */ const modalBulkPercentEdit = (ModalBulkPercentEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/sortAsc.svg
-const sortAsc_namespaceObject = __webpack_require__.p + "6d275cbfdadb8088aebc.svg";
+const sortAsc_namespaceObject = __webpack_require__.p + "4f79e53b8b75a873f823.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/sortDesc.svg
-const sortDesc_namespaceObject = __webpack_require__.p + "ff86e8d945a06c94f745.svg";
+const sortDesc_namespaceObject = __webpack_require__.p + "186d4fc1d1af4a5fbd92.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalSort/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalSort_styles = ({"sortPriceDropDown":"styles__sortPriceDropDown--yHMvJ","sortPriceDropDownItem":"styles__sortPriceDropDownItem--CJNbJ"});
@@ -61119,6 +61119,10 @@ var modalBotDetails = function modalBotDetails(_ref) {
     4: {
       name: 'Заблокирован',
       color: '#CA2929'
+    },
+    5: {
+      name: 'Отключен вручную',
+      color: '#A09F9B'
     }
   };
   var renderItem = function renderItem(name, val, _onClick) {
@@ -63466,6 +63470,11 @@ var BotStats = function BotStats(_ref) {
       name: 'Активных',
       count: 0,
       color: '#3C965A'
+    },
+    5: {
+      name: 'Отключен вручную',
+      count: 0,
+      color: '#A09F9B'
     },
     2: {
       name: 'Временный лимит',

@@ -20,6 +20,7 @@ using SteamDigiSellerBot.Utilities;
 using SteamDigiSellerBot.Utilities.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Database.Enums;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -72,6 +73,8 @@ namespace SteamDigiSellerBot.Controllers
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
                 e.Password = CryptographyUtilityService.Decrypt(e.Password);
                 e.ProxyStr = CryptographyUtilityService.Decrypt(e.ProxyStr);
+                if (e.State == BotState.active && !e.IsON)
+                    e.State = BotState.off;
             });
 
             await _steamBotRepository.CheckAndEncryptPasswords();

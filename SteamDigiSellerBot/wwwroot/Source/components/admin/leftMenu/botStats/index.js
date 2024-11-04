@@ -8,6 +8,11 @@ const BotStats = ({ data }) => {
       name: 'Активных',
       count: 0,
       color: '#3C965A',
+      },
+    5: {
+        name: 'Отключен вручную',
+        count: 0,
+        color: '#A09F9B',
     },
     2: {
       name: 'Временный лимит',

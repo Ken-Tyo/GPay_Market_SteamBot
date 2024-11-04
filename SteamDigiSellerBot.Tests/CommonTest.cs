@@ -494,6 +494,7 @@ namespace SteamDigiSellerBot.Tests
             //    UserName = "6nEpBYwR",
             //    Password = "v7YFz1pt"
             //});
+
             SteamApiClient apiClient = new SteamApiClient(client);
             var r = new CStoreBrowse_GetItems_Request()
             {
@@ -511,7 +512,7 @@ namespace SteamDigiSellerBot.Tests
             };
             r.ids.Add(new StoreItemID()
             {
-                appid = 311210,
+                appid = 1817190,
                 
             });
             try
