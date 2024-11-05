@@ -21,6 +21,7 @@ using SteamDigiSellerBot.Utilities.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
 using static SteamDigiSellerBot.Network.SuperBot;
@@ -817,7 +818,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 if (isError)
                 {
                     superBot = _botPool.ReLogin(bot);
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 3; i++)
                     {
                         if (superBot.IsOk())
                         {
@@ -826,7 +827,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
                         else
                         {
-                            await Task.Delay(500);
+                            await Task.Delay(1000);
                             superBot.Login();
                         }
                     }
@@ -845,6 +846,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                         botId = bot.Id,
                         botName = bot.UserName
                     };
+                }
+                else if (valueJson.message == "Проблема с подключением к стим")
+                {
+                    gs.StatusId= GameSessionStatusEnum.SwitchBot;
+                    gs.BotSwitchList.Add(gs.BotId.Value);
+                    await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BotSwitchList);
                 }
                 else
                 {
@@ -897,21 +904,23 @@ namespace SteamDigiSellerBot.Services.Implementation
         private async Task<(bool, ValueJson)> AddToFriendBySteamContactType(
             GameSession gs, ProfileDataRes profileData, Bot bot, SuperBot superBot)
         {
-            InviteRes res = null;
-            ValueJson valueJson = null;
-            bool isError = false;
-            switch (gs.SteamContactType)
+            try
             {
-                case SteamContactType.profileUrl:
-                case SteamContactType.steamId:
-                case SteamContactType.steamIdCustom:
+                InviteRes res = null;
+                ValueJson valueJson = null;
+                bool isError = false;
+                switch (gs.SteamContactType)
+                {
+                    case SteamContactType.profileUrl:
+                    case SteamContactType.steamId:
+                    case SteamContactType.steamIdCustom:
                     {
                         var r = await superBot.SendInvitationViaAddAsFriend(profileData);
                         res = r;
 
                         if (r.success == 1)
                         {
-                            gs.StatusId = GameSessionStatusEnum.RequestSent;//заявка отправлена
+                            gs.StatusId = GameSessionStatusEnum.RequestSent; //заявка отправлена
                             valueJson = new GameSessionStatusLog.ValueJson
                             {
                                 userNickname = profileData.personaname,
@@ -925,7 +934,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         else
                         {
                             _logger.LogError(
-                                    $"GS ID {gs.Id} error while try add user with direct link - reponse\n {JsonConvert.SerializeObject(res)}");
+                                $"GS ID {gs.Id} error while try add user with direct link - reponse\n {JsonConvert.SerializeObject(res)}");
                             isError = true;
                             valueJson = new GameSessionStatusLog.ValueJson
                             {
@@ -941,7 +950,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                         break;
                     }
-                case SteamContactType.friendInvitationUrl:
+                    case SteamContactType.friendInvitationUrl:
                     {
                         var r = await superBot.SendInvitationViaInvitationLink(gs.SteamContactValue, profileData);
                         res = r;
@@ -949,20 +958,20 @@ namespace SteamDigiSellerBot.Services.Implementation
                         if (r.success == 1)
                         {
                             //gs.StatusId = 19;//Очередь
-                            gs.StatusId = GameSessionStatusEnum.SendingGame;//Отправка игры
-                                             //valueJson = new GameSessionStatusLog.ValueJson { botId = bot.Id, botName = bot.UserName };
+                            gs.StatusId = GameSessionStatusEnum.SendingGame; //Отправка игры
+                            //valueJson = new GameSessionStatusLog.ValueJson { botId = bot.Id, botName = bot.UserName };
                         }
                         else
                         {
                             _logger.LogError(
-                                    $" GS ID {gs.Id} error while try add user with invitation link - response\n {JsonConvert.SerializeObject(res)}");
+                                $" GS ID {gs.Id} error while try add user with invitation link - response\n {JsonConvert.SerializeObject(res)}");
 
                             //ссылка утратилась, пробуем добавить по обычной
                             var afr = await superBot.SendInvitationViaAddAsFriend(profileData);
 
                             if (afr.success == 1)
                             {
-                                gs.StatusId = GameSessionStatusEnum.RequestSent;//заявка отправлена
+                                gs.StatusId = GameSessionStatusEnum.RequestSent; //заявка отправлена
                                 valueJson = new GameSessionStatusLog.ValueJson
                                 {
                                     userNickname = profileData.personaname,
@@ -993,9 +1002,35 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                         break;
                     }
-            }
+                }
 
-            return (isError, valueJson);
+                return (isError, valueJson);
+            }
+            catch (Exception ex)
+            {
+                if (ex is TaskCanceledException or HttpRequestException)
+                    return (true, new ValueJson()
+                    {
+                        userNickname = profileData.personaname,
+                        userProfileUrl = profileData.url,
+                        botId = bot.Id,
+                        botName = bot.UserName,
+                        botRegionName = await GetBotRegionName(bot),
+                        botRegionCode = bot.Region,
+                        message = "Проблема с подключением к стим",
+                    });
+                else
+                    return (true, new ValueJson()
+                    {
+                        userNickname = profileData.personaname,
+                        userProfileUrl = profileData.url,
+                        botId = bot.Id,
+                        botName = bot.UserName,
+                        botRegionName = await GetBotRegionName(bot),
+                        botRegionCode = bot.Region,
+                        message = $"Ошибка: {ex.GetType()} {ex.Message}:\n\n{ex.StackTrace}",
+                    });
+            }
         }
 
         public async Task<CheckFriendAddedResult> CheckFriendAddedStatus(int gsId)

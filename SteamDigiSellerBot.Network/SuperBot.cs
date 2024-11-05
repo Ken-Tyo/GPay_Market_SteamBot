@@ -1375,7 +1375,7 @@ namespace SteamDigiSellerBot.Network
             var reqMes2 = new HttpRequestMessage(HttpMethod.Post, addFriendAjaxUrl);
             reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
 
-            var response2 = client2.Send(reqMes2);
+            var response2 = await client2.SendAsync(reqMes2);
             if (response2.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 var failRes = "";
