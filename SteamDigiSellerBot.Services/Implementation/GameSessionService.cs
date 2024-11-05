@@ -817,7 +817,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 (isError, valueJson) = await AddToFriendBySteamContactType(gs, profileData, bot, superBot);
                 if (isError)
                 {
-                    superBot = _botPool.ReLogin(bot);
+                    if (superBot.LastLogin != null && superBot.LastLogin.Value < DateTime.UtcNow.AddMinutes(-40))
+                        superBot = _botPool.ReLogin(bot);
                     for (int i = 0; i < 3; i++)
                     {
                         if (superBot.IsOk())
@@ -1064,12 +1065,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var sbot = _botPool.GetById(gs.Bot.Id);
                 if (!sbot.IsOk())
                 {
-                    gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
-                    await updateGsStatus(gs, new ValueJson
+                    if (sbot.LastLogin == null || sbot.LastLogin.Value < DateTime.UtcNow.AddMinutes(-5))
+                        sbot = _botPool.ReLogin(sbot.Bot);
+                    if (!sbot.IsOk())
                     {
-                        message = $"Ошибка при попытке логина в аккаунт {sbot.Bot.UserName}"
-                    });
-                    return CheckFriendAddedResult.botIsNotOk;
+                        gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+                        await updateGsStatus(gs, new ValueJson
+                        {
+                            message = $"Ошибка при попытке логина в аккаунт {sbot.Bot.UserName}"
+                        });
+                        return CheckFriendAddedResult.botIsNotOk;
+                    }
                 }
 
                 bool? res = null;
