@@ -1127,6 +1127,14 @@ namespace SteamDigiSellerBot.Services.Implementation
                     res = checkFriendRes;
                 }
 
+                await using (var db = _userDBRepository.GetContext())
+                {
+                    var gs2 = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
+                    if (gs2.Stage != GameSessionStage.CheckFriend)
+                        throw new Exception(
+                            $"Вызов ошибки контроля статуса, текущая стадия заявки {gs2.Stage} вместо {GameSessionStage.CheckFriend}");
+                }
+
                 //var gs = await _gameSessionRepository.GetByIdAsync((int)gs.Id);
                 if (res == false && needAcceptUserRequest)
                 {
