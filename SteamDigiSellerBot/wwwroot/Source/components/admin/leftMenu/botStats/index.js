@@ -9,11 +9,11 @@ const BotStats = ({ data }) => {
       count: 0,
       color: '#3C965A',
       },
-    5: {
-        name: 'Отключен вручную',
-        count: 0,
-        color: '#A09F9B',
-    },
+    //5: {
+    //    name: 'Отключен вручную',
+    //    count: 0,
+    //    color: '#A09F9B',
+    //},
     2: {
       name: 'Временный лимит',
       count: 0,
@@ -28,14 +28,19 @@ const BotStats = ({ data }) => {
       name: 'Заблокированных',
       count: 0,
       color: '#CA2929',
-    },
+    }
   };
 
   (data || []).forEach((bot) => {
     if (!bot.state) return;
-
-    val[bot.state].count++;
-  });
+    try {
+        if (bot.state==1 && bot.isON)
+            val[bot.state].count++;
+        else 
+            val[bot.state].count++;
+    } catch (ex) {
+    }
+});
 
   let states = [];
   for (let prop in val) states.push(val[prop]);

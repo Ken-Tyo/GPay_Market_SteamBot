@@ -61119,10 +61119,6 @@ var modalBotDetails = function modalBotDetails(_ref) {
     4: {
       name: 'Заблокирован',
       color: '#CA2929'
-    },
-    5: {
-      name: 'Отключен вручную',
-      color: '#A09F9B'
     }
   };
   var renderItem = function renderItem(name, val, _onClick) {
@@ -63471,11 +63467,11 @@ var BotStats = function BotStats(_ref) {
       count: 0,
       color: '#3C965A'
     },
-    5: {
-      name: 'Отключен вручную',
-      count: 0,
-      color: '#A09F9B'
-    },
+    //5: {
+    //    name: 'Отключен вручную',
+    //    count: 0,
+    //    color: '#A09F9B',
+    //},
     2: {
       name: 'Временный лимит',
       count: 0,
@@ -63494,7 +63490,9 @@ var BotStats = function BotStats(_ref) {
   };
   (data || []).forEach(function (bot) {
     if (!bot.state) return;
-    val[bot.state].count++;
+    try {
+      if (bot.state == 1 && bot.isON) val[bot.state].count++;else val[bot.state].count++;
+    } catch (ex) {}
   });
   var states = [];
   for (var prop in val) states.push(val[prop]);

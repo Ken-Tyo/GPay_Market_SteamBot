@@ -28,11 +28,7 @@ const modalBotDetails = ({ isOpen, onCancel, data }) => {
     4: {
       name: 'Заблокирован',
       color: '#CA2929',
-      },
-    5: {
-        name: 'Отключен вручную',
-        color: '#A09F9B',
-    },
+      }
   };
 
   const renderItem = (name, val, onClick) => {
