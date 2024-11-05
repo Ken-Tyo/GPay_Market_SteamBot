@@ -34,9 +34,10 @@ const BotStats = ({ data }) => {
   (data || []).forEach((bot) => {
     if (!bot.state) return;
     try {
-        if (bot.state==1 && bot.isON)
-            val[bot.state].count++;
-        else 
+        if (bot.state == 1) {
+            if (bot.isON)
+                val[bot.state].count++;
+        } else
             val[bot.state].count++;
     } catch (ex) {
     }

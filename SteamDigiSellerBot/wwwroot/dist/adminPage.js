@@ -63491,7 +63491,9 @@ var BotStats = function BotStats(_ref) {
   (data || []).forEach(function (bot) {
     if (!bot.state) return;
     try {
-      if (bot.state == 1 && bot.isON) val[bot.state].count++;else val[bot.state].count++;
+      if (bot.state == 1) {
+        if (bot.isON) val[bot.state].count++;
+      } else val[bot.state].count++;
     } catch (ex) {}
   });
   var states = [];
