@@ -284,6 +284,7 @@ namespace SteamDigiSellerBot.Network
                 _cartInProcess = true;
                 var sessionId = await GetSessiondId();
                 var res = new SendGameResponse();
+                int retryCount = 1;
 
                 //добаляем в корзину
                 bool errorRepeat = false;
@@ -360,7 +361,6 @@ namespace SteamDigiSellerBot.Network
                     {
                         errorRepeat = true;
                         await Task.Delay(TimeSpan.FromSeconds(15));
-                        goto cartRepeat;
                     }
                 }
 
@@ -384,6 +384,24 @@ namespace SteamDigiSellerBot.Network
                 }
                 var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
                     sessionId, res);
+                if ((result.errCode is 7 or 3 or 8 or 9 or 11 or 57)   && retryCount > 0)
+                {
+                    var attemptsCount = _bot.Attempt_Add(DateTimeOffset.UtcNow.ToUniversalTime(),false);
+                    if (attemptsCount < 10)
+                    {
+                        _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} send result {result.errCode} повторная попытка");
+                        retryCount--;
+                        await Task.Delay(TimeSpan.FromMinutes(3));
+                        await DeleteCart(sessionId);
+                        goto cartRepeat;
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} send result {result.errCode} смена бота");
+                        result.ChangeBot = true;
+                    }
+                }
+
                 return result;
             }
             catch (TaskCanceledException ex)
