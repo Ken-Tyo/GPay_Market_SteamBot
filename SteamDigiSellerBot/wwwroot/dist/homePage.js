@@ -34607,7 +34607,20 @@ function lastOrders_toPrimitive(t, r) { if ("object" != lastOrders_typeof(t) || 
 
 var lastOrders = function lastOrders() {
   var _state$use = state.use(),
+    gameSession = _state$use.gameSession,
     lastOrders = _state$use.lastOrders;
+    if (_state$use.gameSession == null) {
+        return null;
+    }
+    if (_state$use.gameSession.addedDateTime) {
+        const now = new Date();
+        const orderDate = new Date(_state$use.gameSession.addedDateTime);
+        const threeDaysInMillis = 3 * 24 * 60 * 60 * 1000;
+        const differenceInMillis = now - orderDate;
+        if (differenceInMillis > threeDaysInMillis) {
+            return null;
+        }
+    }
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
     children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
