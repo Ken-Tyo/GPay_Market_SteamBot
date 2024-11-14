@@ -32,14 +32,14 @@ namespace SteamDigiSellerBot.Controllers
             var u = await _userDBRepository.GetByAspNetUserId(user.Id);
 
             user.DigisellerID = CryptographyUtilityService.Encrypt(request.DigisellerID);
-            user.DigisellerIDC = request.DigisellerID;
+            //user.DigisellerIDC = request.DigisellerID;
             user.DigisellerApiKey = CryptographyUtilityService.Encrypt(request.DigisellerApiKey);
-            user.DigisellerApiKeyC = request.DigisellerApiKey;
+            //user.DigisellerApiKeyC = request.DigisellerApiKey;
 
             u.DigisellerID = CryptographyUtilityService.Encrypt(request.DigisellerID);
-            u.DigisellerIDC = request.DigisellerID;
+            //u.DigisellerIDC = request.DigisellerID;
             u.DigisellerApiKey = CryptographyUtilityService.Encrypt(request.DigisellerApiKey);
-            u.DigisellerApiKeyC = request.DigisellerApiKey;
+            //u.DigisellerApiKeyC = request.DigisellerApiKey;
 
             await _userManager.UpdateAsync(user);
             await _userDBRepository.EditAsync(db, u);

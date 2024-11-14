@@ -503,7 +503,7 @@ namespace SteamDigiSellerBot.Network.Services
             steamProxy.Host = notRfBot.Proxy.Host;
             steamProxy.Port = notRfBot.Proxy.Port;
             steamProxy.UserName = notRfBot.Proxy.UserName;
-            steamProxy.PasswordC = notRfBot.Proxy.Password;
+            //steamProxy.PasswordC = notRfBot.Proxy.Password;
             steamProxy.Password = notRfBot.Proxy.Password;
             await ParsePrices(appId, invalidCurrencies, db, PerformWithCustomHttpClient, false, gamesList);
         }

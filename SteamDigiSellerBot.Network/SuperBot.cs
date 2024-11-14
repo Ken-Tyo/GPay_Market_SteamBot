@@ -1375,7 +1375,7 @@ namespace SteamDigiSellerBot.Network
             var reqMes2 = new HttpRequestMessage(HttpMethod.Post, addFriendAjaxUrl);
             reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
 
-            var response2 = await client2.SendAsync(reqMes2);
+            var response2 = client2.Send(reqMes2);
             if (response2.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 var failRes = "";
@@ -1726,7 +1726,9 @@ namespace SteamDigiSellerBot.Network
             [0] = "Неизвестная ошибка.",
             [2] = "Недостаточно средств.",
             [13]= "Ваша покупка не может быть завершена, так как в вашей корзине находятся товары, недоступные в вашей стране",
+            [24]= "Вы можете добавить этот продукт в свой аккаунт Steam, только если у вас есть основной продукт.",
             [53] = "За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.",
+            [70] = "У получателя уже есть этот продукт.",
             [71] = "Подарок недействителен для региона получателя.",
             [72] = "Подарок невозможно отправить, так как цена в регионе получателя значительно отличается от вашей цены.",
             [73] = "Не удалось назначить получателя подарка",
@@ -1812,6 +1814,7 @@ namespace SteamDigiSellerBot.Network
             }
             if (initResp.success != 1)
             {
+#warning оформить 70 код под продукт уже есть
                 if (mesDict.ContainsKey(initResp.purchaseresultdetail))
                     mes = mesDict[initResp.purchaseresultdetail];
 
