@@ -141,6 +141,8 @@ namespace SteamDigiSellerBot.Controllers
             if (req.StatusId == GameSessionStatusEnum.Done || req.StatusId == GameSessionStatusEnum.Closed)
             {
                 _gameSessionManager.RemoveWithStatus(gs.Id, req.StatusId);
+                gs.BlockOrder = true;
+                await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BlockOrder);
                 //_gameSessionManager.Remove(gs.Id);
                 //gs.Stage = GameSessionStage.Done;
                 //await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.Stage);
