@@ -1131,8 +1131,22 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
                     var gs2 = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
                     if (gs2.Stage != GameSessionStage.CheckFriend)
-                        throw new Exception(
-                            $"Вызов ошибки контроля статуса, текущая стадия заявки {gs2.Stage} вместо {GameSessionStage.CheckFriend}");
+                    {
+                        if (gs.Stage == GameSessionStage.Done)
+                        {
+                            gs.BlockOrder = true;
+                            await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BlockOrder);
+                        }
+
+                        log = new GameSessionStatusLog
+                        {
+                            GameSessionId = gs.Id,
+                            StatusId = gs.StatusId,
+                            Value = new ValueJson() { message = $"Вызов ошибки контроля статуса, текущая стадия заявки {gs2.Stage} вместо {GameSessionStage.CheckFriend}."+(gs.BlockOrder ? " Заказ заблокирован": "") }
+                        };
+                        await _gameSessionStatusLogRepository.AddAsync(log);
+                        return CheckFriendAddedResult.breakThread;
+                    }
                 }
 
                 //var gs = await _gameSessionRepository.GetByIdAsync((int)gs.Id);
@@ -1677,7 +1691,8 @@ namespace SteamDigiSellerBot.Services.Implementation
         onCheck,
         rejected,
         added,
-        unknowErr
+        unknowErr,
+        breakThread
     }
 
     public enum GameReadyToSendStatus

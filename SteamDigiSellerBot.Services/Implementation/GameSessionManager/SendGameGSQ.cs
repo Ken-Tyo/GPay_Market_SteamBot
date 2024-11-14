@@ -120,7 +120,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public override void Add(int gsId)
         {
             base.Add(gsId);
-            if (ProcessOnAdd.Contains(gsId))
+            if (ProcessOnAdd.Contains(gsId) || BanOnAdd.Contains(gsId))
                 return;
             _ = Task.Run(async () =>
             {
@@ -128,6 +128,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
 
                     ProcessOnAdd.Add(gsId);
+                    BanOnAdd.Add(gsId);
                     await Task.Delay(TimeSpan.FromSeconds(5));
                     var gs = await gsr.GetByIdAsync(gsId);
                     if (gs != null && gs.Stage == GameSessionStage.SendGame)
