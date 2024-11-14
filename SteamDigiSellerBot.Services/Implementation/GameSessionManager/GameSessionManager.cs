@@ -432,6 +432,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.StatusId = lastStatusId.Value;
 
             await _gsRepo.UpdateFieldAsync(gs, gs => gs.Stage);
+            if (stage is GameSessionStage.Done)
+            {
+                gs.BlockOrder = true;
+                await _gsRepo.UpdateFieldAsync(gs, gs => gs.BlockOrder);
+            }
+
             return true;
         }
     }
