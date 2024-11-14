@@ -109,6 +109,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         public override void Add(int gsId)
         {
+            return;
             base.Add(gsId);
             if (ProcessOnAdd.Contains(gsId) || BanOnAdd.Contains(gsId))
                 return;

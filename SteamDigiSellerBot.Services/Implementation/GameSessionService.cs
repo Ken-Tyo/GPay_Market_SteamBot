@@ -905,8 +905,8 @@ namespace SteamDigiSellerBot.Services.Implementation
         private async Task<(bool, ValueJson)> AddToFriendBySteamContactType(
             GameSession gs, ProfileDataRes profileData, Bot bot, SuperBot superBot)
         {
-            try
-            {
+            //try
+            //{
                 InviteRes res = null;
                 ValueJson valueJson = null;
                 bool isError = false;
@@ -1006,32 +1006,32 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
 
                 return (isError, valueJson);
-            }
-            catch (Exception ex)
-            {
-                if (ex is TaskCanceledException or HttpRequestException)
-                    return (true, new ValueJson()
-                    {
-                        userNickname = profileData.personaname,
-                        userProfileUrl = profileData.url,
-                        botId = bot.Id,
-                        botName = bot.UserName,
-                        botRegionName = await GetBotRegionName(bot),
-                        botRegionCode = bot.Region,
-                        message = "Проблема с подключением к стим",
-                    });
-                else
-                    return (true, new ValueJson()
-                    {
-                        userNickname = profileData.personaname,
-                        userProfileUrl = profileData.url,
-                        botId = bot.Id,
-                        botName = bot.UserName,
-                        botRegionName = await GetBotRegionName(bot),
-                        botRegionCode = bot.Region,
-                        message = $"Ошибка: {ex.GetType()} {ex.Message}:\n\n{ex.StackTrace}",
-                    });
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    if (ex is TaskCanceledException or HttpRequestException)
+            //        return (true, new ValueJson()
+            //        {
+            //            userNickname = profileData.personaname,
+            //            userProfileUrl = profileData.url,
+            //            botId = bot.Id,
+            //            botName = bot.UserName,
+            //            botRegionName = await GetBotRegionName(bot),
+            //            botRegionCode = bot.Region,
+            //            message = "Проблема с подключением к стим",
+            //        });
+            //    else
+            //        return (true, new ValueJson()
+            //        {
+            //            userNickname = profileData.personaname,
+            //            userProfileUrl = profileData.url,
+            //            botId = bot.Id,
+            //            botName = bot.UserName,
+            //            botRegionName = await GetBotRegionName(bot),
+            //            botRegionCode = bot.Region,
+            //            message = $"Ошибка: {ex.GetType()} {ex.Message}:\n\n{ex.StackTrace}",
+            //        });
+            //}
         }
 
         public async Task<CheckFriendAddedResult> CheckFriendAddedStatus(int gsId)
