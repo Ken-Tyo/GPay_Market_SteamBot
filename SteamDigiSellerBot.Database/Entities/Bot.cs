@@ -101,7 +101,7 @@ namespace SteamDigiSellerBot.Database.Entities
             {
                 Console.WriteLine($"BotEncrytpZone {nameof(SteamCookies)} {UserName} {value}");
                 //При отказе от незашифрованного значения закомментировать
-                SteamCookiesStrC = value.ToString();
+                //SteamCookiesStrC = value.ToString();
                 SteamCookiesStr = CryptographyUtilityService.Encrypt(value.ToString());
             }
         }

@@ -29,11 +29,11 @@ namespace SteamDigiSellerBot.MappingProfiles
     {
         public void Process(AddSteamBotViewModel source, Bot destination, ResolutionContext context)
         {
-            destination.ProxyStrC = source.Proxy;
+            //destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
-            destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
-            destination.MaFileStr = CryptographyUtilityService.Encrypt(destination.MaFileStrC);
+            var maFileStr = source.MaFile.ReadAsStringAsync().Result;
+            destination.MaFileStr = CryptographyUtilityService.Encrypt(maFileStr);
         }
     }
 
@@ -41,14 +41,14 @@ namespace SteamDigiSellerBot.MappingProfiles
     {
         public void Process(EditBotRequest source, Bot destination, ResolutionContext context)
         {
-            destination.ProxyStrC = source.Proxy;
+            //destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
             Console.WriteLine($"BotEncrytpZone {nameof(EditBotRequestMappingAction)} {destination.UserName} {source.Proxy}");
             if (source.MaFile != null)
             {
-                destination.MaFileStrC = source.MaFile.ReadAsStringAsync().Result;
-                destination.MaFileStr = CryptographyUtilityService.Encrypt(destination.MaFileStrC);
+                var maFileStr = source.MaFile.ReadAsStringAsync().Result;
+                destination.MaFileStr = CryptographyUtilityService.Encrypt(maFileStr);
             }
         }
     }
