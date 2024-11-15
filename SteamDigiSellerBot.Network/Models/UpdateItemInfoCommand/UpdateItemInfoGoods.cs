@@ -6,8 +6,11 @@ namespace SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand
 {
     public class UpdateItemInfoGoods
     {
-        [JsonProperty("digiSellerId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-        public int DigiSellerId { get; init; }
+        [JsonProperty("digiSellerIds", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        public int[] DigiSellerIds { get; init; }
+
+        [JsonProperty("itemId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        public int ItemId { get; init; }
 
         [JsonProperty("name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public List<LocaleValuePair> Name { get; set; }
