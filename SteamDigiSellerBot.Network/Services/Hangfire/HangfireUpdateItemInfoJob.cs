@@ -4,6 +4,7 @@ using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Providers;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,84 +46,87 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                 int successCounter = 0;
                 foreach (var updateItemInfoGoodsItem in hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods)
                 {
-                    _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ({counter}/{total})",
-                        updateItemInfoGoodsItem.DigiSellerId,
+                    foreach(var digiSellerId in updateItemInfoGoodsItem.DigiSellerIds)
+                    {
+                        _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ({counter}/{total})",
+                        digiSellerId,
                         counter,
                         hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count);
-                    var currentRetryCount = NetworkConst.TriesCount;
-                    while (currentRetryCount > 0)
-                    {
-                        try
+                        var currentRetryCount = NetworkConst.TriesCount;
+                        while (currentRetryCount > 0)
                         {
-                            if (cancellationToken.IsCancellationRequested)
+                            try
                             {
-                                _logger.LogInformation("    JOB has been cancelled manually");
-                                return;
-                            }
+                                if (cancellationToken.IsCancellationRequested)
+                                {
+                                    _logger.LogInformation("    JOB has been cancelled manually");
+                                    return;
+                                }
 
-                            _logger.LogInformation("    {num} try", NetworkConst.TriesCount - currentRetryCount + 1);
-                            var updateResult = await UpdateItemsInfoService.UpdateItemInfoPostAsync(
-                                new UpdateItemInfoCommand(
-                                    digiSellerId: updateItemInfoGoodsItem.DigiSellerId,
-                                    name: updateItemInfoGoodsItem.Name,
-                                    infoData: hangfireUpdateJobCommand.UpdateItemInfoCommands.InfoData,
-                                    additionalInfoData: hangfireUpdateJobCommand.UpdateItemInfoCommands.AdditionalInfoData),
-                                token,
-                                httpRequest);
+                                _logger.LogInformation("    {num} try", NetworkConst.TriesCount - currentRetryCount + 1);
+                                var updateResult = await UpdateItemsInfoService.UpdateItemInfoPostAsync(
+                                    new UpdateItemInfoCommand(
+                                        digiSellerId: digiSellerId,
+                                        name: updateItemInfoGoodsItem.Name,
+                                        infoData: hangfireUpdateJobCommand.UpdateItemInfoCommands.InfoData,
+                                        additionalInfoData: hangfireUpdateJobCommand.UpdateItemInfoCommands.AdditionalInfoData),
+                                    token,
+                                    httpRequest);
 
-                            if (updateResult.Contains("\"status\":\"Success\""))
-                            {
-                                _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", updateItemInfoGoodsItem.DigiSellerId);
-                                successCounter++;
-                                var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                                if (updateResult.Contains("\"status\":\"Success\""))
+                                {
+                                    _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", digiSellerId);
+                                    successCounter++;
+                                    var delayTimeInMs = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
+                                    if (counter % 1000 == 0) // Делаем длинную паузу после 1000 обновлений 
+                                    {
+                                        delayTimeInMs += NetworkConst.RequestDelayAfterLongTimeInMs;
+                                    }
+                                    await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
+                                    break;
+                                }
+                                else
+                                {
+                                    _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. Retry.", digiSellerId);
+                                }
+
+                                _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", digiSellerId);
+
+                                var delayTimeInMsOnErrorResult = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
                                 if (counter % 1000 == 0) // Делаем длинную паузу после 1000 обновлений 
                                 {
-                                    delayTimeInMs += NetworkConst.RequestDelayAfterLongTimeInMs;
+                                    delayTimeInMsOnErrorResult += NetworkConst.RequestDelayAfterLongTimeInMs;
                                 }
-                                await RandomDelayStaticProvider.DelayAsync(delayTimeInMs, 1000);
-                                break;
+                                await RandomDelayStaticProvider.DelayAsync(delayTimeInMsOnErrorResult, 1000);
                             }
-                            else
+                            catch (HttpException ex)
                             {
-                                _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. Retry.", updateItemInfoGoodsItem.DigiSellerId);
+                                _logger.LogError(default, ex, "HangfireUpdateItemInfoJob.ExecuteAsync");
+                                // delayTime = 7 + e^[0, 1, 2, 3, 4, 0, 1, 2, 3, 4] seconds
+                                // max(delayTime) ~ 1min
+                                var delayTimeInMs = (NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds + Math.Exp((NetworkConst.TriesCount - currentRetryCount) % 5)) * 1000;
+                                await RandomDelayStaticProvider.DelayAsync((int)Math.Round(delayTimeInMs), 1000);
+
+                                if (currentRetryCount == 1)
+                                {
+                                    sbNotUpdatedIds.Append($"{digiSellerId},");
+                                }
+
+                                if (ex.HttpStatusCode == HttpStatusCode.Unauthorized)
+                                {
+                                    _logger.LogInformation("Токен протух. Генерация нового токена.");
+                                    token = await _digisellerTokenProvider.GetDigisellerTokenAsync(hangfireUpdateJobCommand.AspNetUserId, CancellationToken.None);
+                                    continue;
+                                }
                             }
-
-                            _logger.LogWarning("    ERROR UPDATING item digisellerId = {digisellerId}. No count to retry.", updateItemInfoGoodsItem.DigiSellerId);
-
-                            var delayTimeInMsOnErrorResult = NetworkConst.RequestRetryPauseDurationWithoutErrorInSeconds * 1000;
-                            if (counter % 1000 == 0) // Делаем длинную паузу после 1000 обновлений 
+                            finally
                             {
-                                delayTimeInMsOnErrorResult += NetworkConst.RequestDelayAfterLongTimeInMs;
-                            }
-                            await RandomDelayStaticProvider.DelayAsync(delayTimeInMsOnErrorResult, 1000);
-                        }
-                        catch (HttpException ex)
-                        {
-                            _logger.LogError(default, ex, "HangfireUpdateItemInfoJob.ExecuteAsync");
-                            // delayTime = 7 + e^[0, 1, 2, 3, 4, 0, 1, 2, 3, 4] seconds
-                            // max(delayTime) ~ 1min
-                            var delayTimeInMs = (NetworkConst.RequestRetryPauseDurationAfterErrorInSeconds + Math.Exp((NetworkConst.TriesCount - currentRetryCount) % 5)) * 1000;
-                            await RandomDelayStaticProvider.DelayAsync((int)Math.Round(delayTimeInMs), 1000);
-
-                            if (currentRetryCount == 1)
-                            {
-                                sbNotUpdatedIds.Append($"{updateItemInfoGoodsItem.DigiSellerId},");
-                            }
-
-                            if (ex.HttpStatusCode == HttpStatusCode.Unauthorized)
-                            {
-                                _logger.LogInformation("Токен протух. Генерация нового токена.");
-                                token = await _digisellerTokenProvider.GetDigisellerTokenAsync(hangfireUpdateJobCommand.AspNetUserId, CancellationToken.None);
-                                continue;
+                                currentRetryCount--;
                             }
                         }
-                        finally
-                        {
-                            currentRetryCount--;
-                        }
+
+                        counter++;
                     }
-
-                    counter++;
                 }
 
                 _logger.LogInformation($"FINISHED updating items description {successCounter}/{hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count}");

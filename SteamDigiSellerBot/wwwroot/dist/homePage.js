@@ -34607,20 +34607,21 @@ function lastOrders_toPrimitive(t, r) { if ("object" != lastOrders_typeof(t) || 
 
 var lastOrders = function lastOrders() {
   var _state$use = state.use(),
-    gameSession = _state$use.gameSession,
     lastOrders = _state$use.lastOrders;
-    if (_state$use.gameSession == null) {
-        return null;
+  var _state$use2 = state.use(),
+    gameSession = _state$use2.gameSession;
+  if (gameSession == null) {
+    return null;
+  }
+  if (gameSession.addedDateTime) {
+    var now = new Date();
+    var orderDate = new Date(gameSession.addedDateTime);
+    var threeDaysInMillis = 3 * 24 * 60 * 60 * 1000;
+    var differenceInMillis = now - orderDate;
+    if (differenceInMillis > threeDaysInMillis) {
+      return null;
     }
-    if (_state$use.gameSession.addedDateTime) {
-        const now = new Date();
-        const orderDate = new Date(_state$use.gameSession.addedDateTime);
-        const threeDaysInMillis = 3 * 24 * 60 * 60 * 1000;
-        const differenceInMillis = now - orderDate;
-        if (differenceInMillis > threeDaysInMillis) {
-            return null;
-        }
-    }
+  }
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
     children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
@@ -34668,9 +34669,9 @@ var Item = function Item(_ref) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const orderState_styles = ({"wrapper":"styles__wrapper--AwMkg","area":"styles__area--rofP8","closeBtn":"styles__closeBtn--axPR5","title":"styles__title--dFrK_","showConfirmProfileUrlName":"styles__showConfirmProfileUrlName--GO5b4","enterProfileUrlOrderName":"styles__enterProfileUrlOrderName--EDA_q","error":"styles__error--cxDwS","sendInProgress":"styles__sendInProgress--t_2CF","gameSended":"styles__gameSended--EwR82","gameAlreadyExists":"styles__gameAlreadyExists--V51Cw","gameInQueue":"styles__gameInQueue--KCyOg","ivitationRefused":"styles__ivitationRefused--ZPyVO","ivitationSended":"styles__ivitationSended--TnAhX","confirmProfileUrl":"styles__confirmProfileUrl--fxSu_","enterUniqueCode":"styles__enterUniqueCode--uvMPs","enterProfileUrl":"styles__enterProfileUrl--_Rl6Z","form":"styles__form--qj9RK","captha":"styles__captha--pm2s5","hints":"styles__hints--ocB07","hint":"styles__hint--RCllq","accImg":"styles__accImg--O9Mjq","accButtons":"styles__accButtons--OQ7jl","line1":"styles__line1--vhPFp","but":"styles__but--KOM_Q","contactSellerWrapper":"styles__contactSellerWrapper--qHy3k","loaderMob":"styles__loaderMob--NGyxd","loader":"styles__loader--BBZax","leaveFeedback":"styles__leaveFeedback--WlCb5","input":"styles__input--qQHmJ","inBtn":"styles__inBtn--fzY5V","errorText":"styles__errorText--XI3PZ","dlcWrapper":"styles__dlcWrapper--WFZWy","info":"styles__info--NRMSg","timer":"styles__timer--UbT0I","regionError":"styles__regionError--uZosD","activationExpErapper":"styles__activationExpErapper--A_rS7","text":"styles__text--zeE_4","contactBut":"styles__contactBut--WhxDF","checkEditionVersionWrapper":"styles__checkEditionVersionWrapper--nfCOT","contactWrapper":"styles__contactWrapper--uOfjO","contact":"styles__contact--W4GGd","checkEditionVersion":"styles__checkEditionVersion--Ooate","dash":"styles__dash--saTNf"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/info.svg
-const info_namespaceObject = __webpack_require__.p + "92007f0ff5594b3491c4.svg";
+const info_namespaceObject = __webpack_require__.p + "211f125b87980400f486.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/home/orderState/close.svg
-const close_namespaceObject = __webpack_require__.p + "f5c70ca6fe8bc32a6620.svg";
+const close_namespaceObject = __webpack_require__.p + "e6df971ddb54b9a50f13.svg";
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
 function objectWithoutPropertiesLoose_objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
