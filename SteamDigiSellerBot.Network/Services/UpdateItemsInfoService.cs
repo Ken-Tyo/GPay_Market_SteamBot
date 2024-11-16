@@ -77,8 +77,8 @@ namespace SteamDigiSellerBot.Network.Services
                                     new UpdateItemInfoCommand(
                                         digiSellerId: digiSellerId,
                                         name: updateItemInfoGoodsItem.Name,
-                                        infoData: updateItemInfoCommands.InfoData,
-                                        additionalInfoData: updateItemInfoCommands.AdditionalInfoData),
+                                        infoData: updateItemInfoGoodsItem.InfoData,
+                                        additionalInfoData: updateItemInfoGoodsItem.AdditionalInfoData),
                                     token,
                                     httpRequest);
 

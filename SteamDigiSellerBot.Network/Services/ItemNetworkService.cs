@@ -214,6 +214,7 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> infoData) => updateItemInfoGoods.SetInfoData(infoData),
                     cancellationToken);
             }
 
@@ -226,6 +227,7 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> additionalInfoData) => updateItemInfoGoods.SetAdditionalInfoData(additionalInfoData),
                     cancellationToken);
             }
         }
@@ -236,6 +238,7 @@ namespace SteamDigiSellerBot.Network.Services
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            Action<UpdateItemInfoGoods, List<LocaleValuePair>> setData,
             CancellationToken cancellationToken)
         {
             // Replace tags by item specification
@@ -249,7 +252,7 @@ namespace SteamDigiSellerBot.Network.Services
             foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
                 var item = itemsWithTags.First(x => x.Id == updateItemInfoGoodsItem.ItemId);
-                infoData.ReplaceTagsToValue(item, tagTypeReplacements, tagPromoReplacements);
+                setData(updateItemInfoGoodsItem, infoData.GetReplacedTagsToValue(item, tagTypeReplacements, tagPromoReplacements));
             }
         }
 

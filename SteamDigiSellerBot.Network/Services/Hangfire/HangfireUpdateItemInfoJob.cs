@@ -44,6 +44,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                 _logger.LogInformation($"STARTING update items description...");
                 int counter = 1;
                 int successCounter = 0;
+                int total = hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.SelectMany(x => x.DigiSellerIds).Count();
                 foreach (var updateItemInfoGoodsItem in hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods)
                 {
                     foreach(var digiSellerId in updateItemInfoGoodsItem.DigiSellerIds)
@@ -51,7 +52,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                         _logger.LogInformation("    STARTING update item digisellerId = {digisellerId} ({counter}/{total})",
                         digiSellerId,
                         counter,
-                        hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count);
+                        total);
                         var currentRetryCount = NetworkConst.TriesCount;
                         while (currentRetryCount > 0)
                         {
@@ -68,8 +69,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                                     new UpdateItemInfoCommand(
                                         digiSellerId: digiSellerId,
                                         name: updateItemInfoGoodsItem.Name,
-                                        infoData: hangfireUpdateJobCommand.UpdateItemInfoCommands.InfoData,
-                                        additionalInfoData: hangfireUpdateJobCommand.UpdateItemInfoCommands.AdditionalInfoData),
+                                        infoData: updateItemInfoGoodsItem.InfoData,
+                                        additionalInfoData: updateItemInfoGoodsItem.AdditionalInfoData),
                                     token,
                                     httpRequest);
 
@@ -129,7 +130,7 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                     }
                 }
 
-                _logger.LogInformation($"FINISHED updating items description {successCounter}/{hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.Count}");
+                _logger.LogInformation($"FINISHED updating items description {successCounter}/{total}");
                 _logger.LogInformation($"NOT UPDATED DigisellerIds: {sbNotUpdatedIds}");
             }
             catch (HttpException ex)
