@@ -184,44 +184,35 @@ namespace SteamDigiSellerBot.Network
                 }
             }
 
-            await Task.WhenAll(new List<Task>
+            var balanceTask = GetBotBalance_Proto();
+            var nameAndAvatarTask = Task.Run(() => GetBotNameAndAvatar());
+            var vacGamesTask = GetBotVacGames(vacCheckList, _bot.Region);
+            var botStateTask = Task.Run(() => GetBotState(_bot));
+
+            await Task.WhenAll(balanceTask, nameAndAvatarTask, vacGamesTask, botStateTask);
+
+            var (balanceFetched, balance) = await balanceTask;
+            if (balanceFetched)
             {
-                Task.Run(() =>
-                {
-                    (bool balanceFetched, decimal balance) = GetBotBalance_Proto().Result;
-                    if (balanceFetched)
-                    {
-                        _bot.Balance = balance;
-                        _bot.LastTimeBalanceUpdated=DateTime.UtcNow;
-                    }
-                }),
-                Task.Run(() =>
-                {
-                    (bool, string, string) nameAndAvatarParse = GetBotNameAndAvatar();
-                    if (nameAndAvatarParse.Item1)
-                    {
-                        _bot.PersonName = nameAndAvatarParse.Item2;
-                        _bot.AvatarUrl = nameAndAvatarParse.Item3;
-                    }
-                }),
-                Task.Run(() =>
-                {
-                    (bool, List<Bot.VacGame>) vacParse = GetBotVacGames(vacCheckList, _bot.Region).Result;
-                    if (vacParse.Item1)
-                        _bot.VacGames = vacParse.Item2;
-                }),
-                Task.Run(() =>
-                {
-                    (bool, BotState)//, DateTimeOffset, int) 
-                        stateParse = GetBotState(_bot);
-                    if (stateParse.Item1)
-                    {
-                        _bot.State = stateParse.Item2;
-                        //_bot.TempLimitDeadline = stateParse.Item3;
-                        //_bot.SendGameAttemptsCount = stateParse.Item4;
-                    }
-                })
-            });
+                _bot.Balance = balance;
+                _bot.LastTimeBalanceUpdated = DateTime.UtcNow;
+            }
+
+            var (personName, avatarUrl) = await nameAndAvatarTask;
+            _bot.PersonName = personName;
+            _bot.AvatarUrl = avatarUrl;
+
+            var (vacGamesSuccess, vacGames) = await vacGamesTask;
+            if (vacGamesSuccess)
+            {
+                _bot.VacGames = vacGames;
+            }
+
+            var (stateSuccess, botState) = await botStateTask;
+            if (stateSuccess)
+            {
+                _bot.State = botState;
+            }
 
             (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) = 
                 GetSendedGiftsSum(currencyData, _bot.Region, _bot.BotRegionSetting);
@@ -833,10 +824,10 @@ namespace SteamDigiSellerBot.Network
             return sessionId;
         }
 
-        private (bool, string, string) GetBotNameAndAvatar()
+        private (string, string) GetBotNameAndAvatar()
         {
             if (_bot.SteamId is null)
-                return (false, "", "");
+                return (_bot.PersonName, _bot.AvatarUrl);
 
             try
             {
@@ -846,7 +837,7 @@ namespace SteamDigiSellerBot.Network
 
                 var avatarUrl = ParseAvatarUrl(html);
                 var pd = SteamHelper.GetProfileDataProfilePage(html);
-                return (true, pd?.personaname ?? "", avatarUrl);
+                return (pd?.personaname ?? _bot.PersonName, !string.IsNullOrWhiteSpace(avatarUrl) ? avatarUrl : _bot.AvatarUrl);
                 //string apiKeyStr = _bot.SteamHttpRequest.Get("https://steamcommunity.com/dev/apikey").ToString();
                 //string apiKey = apiKeyStr.Substring("Key:", "</p>").Trim();
 
@@ -877,7 +868,7 @@ namespace SteamDigiSellerBot.Network
                 Console.WriteLine($"BOT {_bot.UserName} avatar parse error");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
-                return (false, "", "");
+                return (_bot.PersonName, _bot.AvatarUrl);
             }
         }
 

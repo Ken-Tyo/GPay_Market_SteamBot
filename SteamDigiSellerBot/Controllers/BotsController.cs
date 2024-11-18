@@ -133,11 +133,13 @@ namespace SteamDigiSellerBot.Controllers
                 bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
                 bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
                 bot.LastTimeUpdated = DateTime.UtcNow;
+                bot.PersonName = oldBot.PersonName ?? string.Empty;
+                bot.AvatarUrl = oldBot.AvatarUrl ?? string.Empty;
             }
 
             if (ModelState.ErrorCount > 0)
                 return createBadRequest();
-
+            
             if (bot != null && bot.SteamGuardAccount != null
                 && bot.SteamGuardAccount.AccountName.Equals(model.UserName))
             {
