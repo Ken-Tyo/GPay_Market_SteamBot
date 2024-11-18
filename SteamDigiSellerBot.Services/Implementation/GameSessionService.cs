@@ -1245,6 +1245,8 @@ namespace SteamDigiSellerBot.Services.Implementation
             var firstPrice = prices.First();
             var newPriorityPriceRub = await _currencyDataService
                     .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var digiPriceInRub= gs.DigiSellerDealPriceUsd > 0 ? await _currencyDataService
+                .ConvertRUBto(gs.DigiSellerDealPriceUsd, 1): 0 ;
 
             _logger.LogInformation($"GS ID {gs.Id}: Code passed CheckGameSessionExpiredAndHandle and gone to GameReadyToSendStatus.priceChanged, " +
                 $"is it really {newPriorityPriceRub} higher than {gs.PriorityPrice} ???");
@@ -1270,6 +1272,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //    }
                     //});
                     //await _gameSessionRepository.EditAsync(gs);
+                    return GameReadyToSendStatus.priceChanged;
+                }
+            }
+            if (digiPriceInRub> 0 && newPriorityPriceRub > digiPriceInRub)
+            {
+                _logger.LogInformation($"GS ID {gs.Id}: if (newPriorityPriceRub > digiPriceInRub) is True");
+                var percentDiffMax = gs.MaxSellPercent ?? 3;
+                var percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
+                if (percentDiff > percentDiffMax)
+                {
+                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
                     return GameReadyToSendStatus.priceChanged;
                 }
             }

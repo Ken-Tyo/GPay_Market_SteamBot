@@ -228,7 +228,6 @@ namespace SteamDigiSellerBot.Controllers
 
             DigiSellerSoldItem soldItem = await _digiSellerNetworkService.GetSoldItemFromCode(
                 uniquecode, user.AspNetUser.Id);
-
             if (soldItem != null)
             {
                 isCorrectCode = true;
@@ -240,7 +239,6 @@ namespace SteamDigiSellerBot.Controllers
                     var firstPrice = prices.First();
                     var priorityPriceRub = await _currencyDataService
                             .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
-
                     gs = new GameSession()
                     {
                         User = user,
