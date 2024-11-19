@@ -376,3 +376,6 @@ ALTER TABLE "AspNetUsers" ADD "DigisellerIDC" text NULL;
 ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
+
+19.11 
+ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;

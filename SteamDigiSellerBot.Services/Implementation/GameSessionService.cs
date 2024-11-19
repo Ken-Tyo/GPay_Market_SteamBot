@@ -237,7 +237,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             Item item = gs.Item;
 
             //Мусорный лог
-            if (gs.DigiSellerDealPriceUsd != 0 || item.CurrentDigiSellerPriceUsd != 0)
+            if (gs.DigiSellerDealPriceUsd > 0 || item.CurrentDigiSellerPriceUsd != 0)
                 _logger.LogInformation(
                     $"Test in GS ID {gs.Id} for gs.DigiSellerDealPriceUsd = {gs.DigiSellerDealPriceUsd} " +
                     $"and item.CurrentDigiSellerPriceUsd = {item.CurrentDigiSellerPriceUsd}");
@@ -258,7 +258,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 res = nowUtc > exp;
                 newStatus = GameSessionStatusEnum.ExpiredDiscount; //Просрочено (скидки)
             }
-            else if (gs.DigiSellerDealPriceUsd < item.CurrentDigiSellerPriceUsd * 0.98m)
+            else if ((gs.DigiSellerDealPriceUsd ?? 0) < item.CurrentDigiSellerPriceUsd * 0.98m)
             {
                 //res = true;
                 //newStatus = 11; //Просрочено (скидки)
@@ -1246,7 +1246,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var newPriorityPriceRub = await _currencyDataService
                     .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
             var digiPriceInRub= gs.DigiSellerDealPriceUsd > 0 ? await _currencyDataService
-                .ConvertRUBto(gs.DigiSellerDealPriceUsd, 1): 0 ;
+                .ConvertRUBto(gs.DigiSellerDealPriceUsd.Value, 1): 0 ;
 
             _logger.LogInformation($"GS ID {gs.Id}: Code passed CheckGameSessionExpiredAndHandle and gone to GameReadyToSendStatus.priceChanged, " +
                 $"is it really {newPriorityPriceRub} higher than {gs.PriorityPrice} ???");
