@@ -225,11 +225,12 @@ namespace SteamDigiSellerBot.Controllers
 
             //if (user == null)
             //    return BadRequest();
-
+            
             DigiSellerSoldItem soldItem = await _digiSellerNetworkService.GetSoldItemFromCode(
                 uniquecode, user.AspNetUser.Id);
             if (soldItem != null)
             {
+                _logger?.LogInformation($"Продажа {uniquecode}: {System.Text.Json.JsonSerializer.Serialize(soldItem)}");
                 isCorrectCode = true;
                 Item item = await _itemRepository.GetByPredicateAsync(db, x => x.Active && x.DigiSellerIds.Contains(soldItem.ItemId.ToString()));
 

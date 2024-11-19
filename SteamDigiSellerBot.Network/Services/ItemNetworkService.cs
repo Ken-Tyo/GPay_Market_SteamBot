@@ -351,19 +351,20 @@ namespace SteamDigiSellerBot.Network.Services
 
                             }
 
+                            var priceDown = finalPrice / item.CurrentDigiSellerPrice;
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
-                                finalPrice / item.CurrentDigiSellerPrice < 0.08M)
+                                priceDown < 0.08M && !(priceDown is >= 0.048M and <= 0.052M))
                             {
                                 _logger.LogWarning(
-                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%");
+                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(priceDown * 100):0.0}%");
                                 item.CurrentDigiSellerPriceNeedAttention = true;
                             }
                             else
                             {
                                 if (!manualUpdate && item.CurrentDigiSellerPrice > 1000 &&
-                                    finalPrice / item.CurrentDigiSellerPrice < 0.2M)
+                                    priceDown < 0.2M)
                                     _logger.LogInformation(
-                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%)");
+                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(priceDown * 100):0.0}%)");
                                 item.CurrentDigiSellerPriceNeedAttention = false;
                                 //FixedPrice все время в рублях
                                 item.CurrentDigiSellerPrice = finalPrice;
