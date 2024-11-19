@@ -462,6 +462,16 @@ export const apiBotSetIsOn = async (id, isOn) => {
   //await apiFetchBots();
 };
 
+export const apiBotSetIsReserve = async (id, isreserve) => {
+  let res = await fetch(`/bots/setisreserve`, {
+    method: "POST",
+    body: mapToFormData({
+      botId: id,
+      isReserve: isreserve,
+    }),
+  });
+};
+
 export const apiSaveBotRegionSettings = async (item) => {
   setStateProp("saveBotRegionSetResponse", {
     loading: true,

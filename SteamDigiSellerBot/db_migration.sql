@@ -379,3 +379,7 @@ ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
 
 19.11 
 ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
+
+
+19.11.2024
+ALTER TABLE public."Bots" ADD COLUMN "IsReserve" BOOL DEFAULT false
