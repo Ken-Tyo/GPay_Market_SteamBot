@@ -354,7 +354,7 @@ namespace SteamDigiSellerBot.Network.Services
 
                             }
 
-                            var priceDown = finalPrice / item.CurrentDigiSellerPrice;
+                            var priceDown = item.CurrentDigiSellerPrice>0 ? finalPrice / item.CurrentDigiSellerPrice : 1;
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
                                 priceDown < 0.08M && !(priceDown is >= 0.048M and <= 0.052M))
                             {
