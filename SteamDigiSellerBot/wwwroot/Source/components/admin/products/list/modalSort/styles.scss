@@ -1,7 +1,7 @@
 .sortPriceDropDown {
     all: unset; /* Reset all inherited styles */
     min-width: 150px !important;
-    height: 65px !important;
+    height: auto !important;
     right: -150px;
     top: 60px;
     font-weight: 400 !important;
@@ -16,6 +16,7 @@
     .sortPriceDropDownItem {
         margin-bottom: 20px;
         padding-left: 10px;
+        padding-right: 10px;
         color: #cccccc;
         font-size: 14px;
         line-height: 8px;
