@@ -537,10 +537,10 @@ const products = () => {
         onSave={(russianText, englishText) => {
           var goods = items
             .filter(i => selectedItems.includes(i.id))
-            .flatMap(x => x.digiSellerIds)
             .map(x => {
               return {
-                digiSellerId: x,
+                digiSellerIds: x.digiSellerIds,
+                itemId: x.id,
               };
             });
 

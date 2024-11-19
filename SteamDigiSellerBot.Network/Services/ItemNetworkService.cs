@@ -197,7 +197,7 @@ namespace SteamDigiSellerBot.Network.Services
             await _digiSellerNetworkService.GetProductsBaseAsync(
                 languageCodes,
                 cancellationToken,
-                updateItemInfoGoods.Select(x => x.DigiSellerId).ToArray());
+                updateItemInfoGoods.SelectMany(x => x.DigiSellerIds).ToArray());
 
         private async Task ReplaceAllLocalValueDataTagsAsync(
             UpdateItemInfoCommands updateItemInfoCommands,
@@ -214,6 +214,7 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> infoData) => updateItemInfoGoods.SetInfoData(infoData),
                     cancellationToken);
             }
 
@@ -226,6 +227,7 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> additionalInfoData) => updateItemInfoGoods.SetAdditionalInfoData(additionalInfoData),
                     cancellationToken);
             }
         }
@@ -236,20 +238,21 @@ namespace SteamDigiSellerBot.Network.Services
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            Action<UpdateItemInfoGoods, List<LocaleValuePair>> setData,
             CancellationToken cancellationToken)
         {
             // Replace tags by item specification
             await using var db = _contextFactory.CreateDbContext();
-            var digiSellerIdsWithTags = updateItemInfoGoods.Select(x => x.DigiSellerId.ToString()).ToArray();
+            var digiSellerIdsWithTags = updateItemInfoGoods.SelectMany(x => x.DigiSellerIds).ToList();
             var itemsWithTags = await db
                     .Items
-                    .Where(x => x.DigiSellerIds.Any(digiSellerId => digiSellerIdsWithTags.Contains(digiSellerId)))
+                    .Where(x => updateItemInfoGoods.Select(x => x.ItemId).Contains(x.Id))
                     .ToListAsync(cancellationToken);
 
             foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
-                var item = itemsWithTags.First(x => x.DigiSellerIds.Contains(updateItemInfoGoodsItem.DigiSellerId.ToString()));
-                infoData.ReplaceTagsToValue(item, tagTypeReplacements, tagPromoReplacements);
+                var item = itemsWithTags.First(x => x.Id == updateItemInfoGoodsItem.ItemId);
+                setData(updateItemInfoGoodsItem, infoData.GetReplacedTagsToValue(item, tagTypeReplacements, tagPromoReplacements));
             }
         }
 
@@ -260,7 +263,7 @@ namespace SteamDigiSellerBot.Network.Services
         {
             foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
-                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id == updateItemInfoGoodsItem.DigiSellerId);
+                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id != null && updateItemInfoGoodsItem.DigiSellerIds.Contains((int)x.ProductBase.Id));
                 if (productsByDigiSellerId.Any())
                 {
                     updateItemInfoGoodsItem.Name = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Name);
