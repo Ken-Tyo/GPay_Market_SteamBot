@@ -1282,8 +1282,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
                 if (percentDiff > percentDiffMax)
                 {
-                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
-                    return GameReadyToSendStatus.priceChanged;
+                    _logger.LogWarning($"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
+                    //await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
+                    //return GameReadyToSendStatus.priceChanged;
                 }
             }
 
