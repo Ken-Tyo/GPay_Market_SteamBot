@@ -1293,7 +1293,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         if (percentDiff > percentDiffMax)
                         {
                             _logger.LogWarning(
-                                $"digi price comparer Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
+                                $"digi price comparer Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.Value.ToString("0.000")}% вместо {percentDiffMax}%");
                             //await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
                             //return GameReadyToSendStatus.priceChanged;
                         }
