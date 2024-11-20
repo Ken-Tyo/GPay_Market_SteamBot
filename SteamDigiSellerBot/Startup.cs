@@ -58,6 +58,7 @@ namespace SteamDigiSellerBot
             services.AddTransient<IUserDBRepository, UserDBRepository>();
             services.AddTransient<ISteamCountryCodeRepository, SteamCountryCodeRepository>();
             services.AddTransient<IGameSessionStatusLogRepository, GameSessionStatusLogRepository>();
+            services.AddTransient<IGiftBanService, GiftBanService>();
             services.AddTransient<IGamePriceRepository, GamePriceRepository>();
             services.AddTransient<IItemInfoTemplateRepository, ItemInfoTemplateRepository>();
             services.AddTransient<IItemInfoTemplateValueRepository, ItemInfoTemplateValueRepository>();

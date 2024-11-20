@@ -120,7 +120,7 @@ namespace SteamDigiSellerBot.Network
         public DateTime? LastLogin { get; set; }
         public void Login()
         {
-            DebugLog.Enabled = true;
+           DebugLog.Enabled = true;
             if (_isRunning)
                 return;
             _isRunning = true;
@@ -1839,8 +1839,8 @@ namespace SteamDigiSellerBot.Network
                 {
                     res.result = SendeGameResult.error;
                     res.errCode = finalTranStatus.purchaseresultdetail;
-                    res.errMessage = $"Бот \"{this.Bot.UserName}\" получил Gift Ban - постоянный лимит на отправку игр. Если это ошибка, передобавьте бота или попробуйте вручную. Последняя сумма отправки игры: {res.finalizeTranStatus.purchasereceipt.formattedTotal} / {countryCode}.";
-
+                    res.errMessage = $"Бот получил Gift Ban - постоянный лимит на отправку игр. Если это ошибка, передобавьте бота или попробуйте вручную.";
+                    res.ChangeBot = true;
                     sendGame = res;
                     return sendGame;
                 }

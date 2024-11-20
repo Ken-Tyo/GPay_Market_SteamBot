@@ -161,6 +161,7 @@ namespace SteamDigiSellerBot.Tests
                 userDBRepository: null,
                 digiSellerNetworkService: dns.Object,
                 gameSessionStatusLogRepository: null,
+                giftBanService: null,
                 logger: loggerMock.Object,
                 configuration: configMock.Object/*,
                 itemRepository: itemRepositoryMock.Object*/);
