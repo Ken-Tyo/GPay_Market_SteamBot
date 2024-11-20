@@ -211,21 +211,26 @@ const grid = () => {
                     {i.balance} {currencyDict[i.steamCurrencyId]?.steamSymbol}
                   </div>
                 </div>
-                <div className={css.right}>
-                  <div className={css.leftPrice}>
-                    <div>{i.totalPurchaseSumUSD.toFixed(2)} $</div>
-                  </div>
-                  <div className={css.rightPrice}>
-                    <div style={{}}>
-                      <span style={{ color: '#C39F1C' }}>
-                        {i.sendedGiftsSum.toFixed(2)}{' '}
-                        {currencyDict[i.steamCurrencyId]?.steamSymbol}
-                      </span>{' '}
-                      / {i.maxSendedGiftsSum.toFixed(2)}{' '}
-                      {currencyDict[i.steamCurrencyId]?.steamSymbol}
+                  {(i.remainingSumToGift === null || i.remainingSumToGift === undefined)
+                    ?
+                    <div className={css.right}>
+                      <div className={css.leftPrice}>
+                        <div>{i.totalPurchaseSumUSD.toFixed(2)} $</div>
+                      </div>
+                      <div className={css.rightPrice}>
+                        <div style={{}}>
+                          <span style={{ color: '#C39F1C' }}>
+                            {i.sendedGiftsSum.toFixed(2)}{' '}
+                            {currencyDict[i.steamCurrencyId]?.steamSymbol}
+                          </span>{' '}
+                          / {i.maxSendedGiftsSum.toFixed(2)}{' '}
+                          {currencyDict[i.steamCurrencyId]?.steamSymbol}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                    :
+                    <LimitContainer bot={i} currDict={currencyDict} />
+                }
               </div>
 
               <div className={css.buttonWrapper}>
@@ -314,7 +319,21 @@ const grid = () => {
     </>
   );
 };
-
+const LimitContainer = ({ bot, currDict }) => {
+    return (
+        <div className={css.remainingRight}>
+            <div className={css.remainingPrice}>
+                <div style={{}}>
+                    {'до '}
+                    <span style={{ color: '#C5443C' }}>
+                        {(bot.remainingSumToGift * currDict[bot.steamCurrencyId]?.steamValue).toFixed(2)}
+                    </span>
+                    {' '}{currDict[bot.steamCurrencyId]?.steamSymbol}
+                </div>
+            </div>
+        </div>
+    );
+} 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({

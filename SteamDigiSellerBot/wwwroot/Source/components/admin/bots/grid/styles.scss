@@ -14,8 +14,6 @@
 
     height: 100%;
     overflow-y: auto;
-
-
     // display: grid;
     // grid-template: 1fr/repeat(4, 1fr);
     // padding-right: 50px;
@@ -78,10 +76,8 @@
                     display: flex;
                     flex-direction: row;
                     align-items: start;
-
                     color: $white-1;
                     margin-right: 9.5px;
-
                     font-size: 22px;
                     line-height: 22px;
                     margin-bottom: 14px;
@@ -93,7 +89,6 @@
 
                     .region {
                         color: $white-3;
-
                         font-size: 14px;
                         line-height: 14px;
                         margin-right: 6px;
@@ -204,6 +199,25 @@
                     color: $white-3;
                 }
             }
+
+            .remainingRight {
+                width: 210px;
+                height: 35px;
+                background-color: #512068;
+                border-radius: 24px;
+                display: flex;
+                justify-content: center;
+
+                .remainingPrice {
+                    width: 120px;
+                    font-size: 12px;
+                    line-height: 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: $white-3;
+                }
+            }
         }
 
         .buttonWrapper {
@@ -221,15 +235,12 @@
                 width: 245px;
                 height: 35px;
                 margin-left: 10px;
-
                 font-size: 12px;
                 line-height: 12px;
-
                 color: $white-1;
 
                 .editBtn {
                     width: 133px;
-
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -242,7 +253,6 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-
                 }
             }
         }
@@ -255,11 +265,9 @@
                 display: flex;
                 flex-direction: column;
                 flex: 1 1 auto;
-
                 color: #CBAC3E;
                 font-size: 12px;
                 line-height: 12px;
-
                 padding-top: 31px;
                 padding-left: 27px;
 
@@ -462,7 +470,6 @@
         gap: 15px;
         width: 254px;
         background: #632c7d;
-
         border-radius: 34px;
 
         .item {
@@ -505,6 +512,5 @@
                 }
             }
         }
-
     }
 }
