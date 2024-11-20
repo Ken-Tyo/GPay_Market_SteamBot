@@ -1243,10 +1243,11 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             var (_, prices) = GetSortedPriorityPrices(gs.Item);
             var firstPrice = prices.First();
-            var newPriorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
-            
-            
+            var convertToRub = await _currencyDataService
+                .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var newPriorityPriceRub = convertToRub.success ? convertToRub.value : null;
+
+
 
             _logger.LogInformation($"GS ID {gs.Id}: Code passed CheckGameSessionExpiredAndHandle and gone to GameReadyToSendStatus.priceChanged, " +
                 $"is it really {newPriorityPriceRub} higher than {gs.PriorityPrice} ???");
@@ -1278,16 +1279,16 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             if (gs.DigiSellerDealPriceUsd > 0)
             {
-                var digiConvertFromUSD = await _currencyDataService.TryConvertToRUB(gs.DigiSellerDealPriceUsd.Value, 1);
-                if (digiConvertFromUSD is { success: true, value: > 0 })
+                var digiConvertToRub = await _currencyDataService.TryConvertToRUB(gs.DigiSellerDealPriceUsd.Value, 1);
+
+                if (digiConvertToRub is { success: true, value: > 0 })
                 {
-                    
-                    var digiPriceInRub = await _currencyDataService.ConvertRUBto(digiConvertFromUSD.value.Value, firstPrice.SteamCurrencyId);
+                    var digiPriceInRub = digiConvertToRub.value;
                     _logger.LogInformation($"GS ID {gs.Id} digi price comparer: digi {digiPriceInRub} real price {newPriorityPriceRub}");
                     if (digiPriceInRub > 0 && newPriorityPriceRub > digiPriceInRub)
                     {
                         _logger.LogInformation($"GS ID {gs.Id}: digi price comparer if (newPriorityPriceRub > digiPriceInRub) is True");
-                        var percentDiffMax = gs.MaxSellPercent ?? 4;
+                        var percentDiffMax = 0 ;// gs.MaxSellPercent ?? 4;
                         var percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
                         if (percentDiff > percentDiffMax)
                         {

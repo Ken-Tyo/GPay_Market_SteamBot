@@ -238,8 +238,9 @@ namespace SteamDigiSellerBot.Controllers
                 {
                     var (_, prices) = _gameSessionService.GetSortedPriorityPrices(item);
                     var firstPrice = prices.First();
-                    var priorityPriceRub = await _currencyDataService
-                            .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+                    var convertToRub = await _currencyDataService
+                        .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+                    var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
                     gs = new GameSession()
                     {
                         User = user,
