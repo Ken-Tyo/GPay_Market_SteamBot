@@ -223,8 +223,6 @@ namespace SteamDigiSellerBot.Network.Services
                 .ToList();
             foreach (var game in games)
             {
-                game.GameInfo = new StoreItem(data, po);
-                db.Entry(game).Property(x => x.GameInfo).IsModified = true;
                 var targetPrice =
                     game.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == c.SteamId);
                 if (targetPrice is null)
@@ -260,6 +258,8 @@ namespace SteamDigiSellerBot.Network.Services
                 {
                     game.IsPriceParseError = false;
                     db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                    game.GameInfo = new StoreItem(data, po);
+                    db.Entry(game).Property(x => x.GameInfo).IsModified = true;
                 }
 
                 if (targetPrice.Id == 0)
