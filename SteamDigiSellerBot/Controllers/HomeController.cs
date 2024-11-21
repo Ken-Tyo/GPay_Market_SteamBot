@@ -266,8 +266,9 @@ namespace SteamDigiSellerBot.Controllers
                             };
                             await _gameSessionRepository.AddAsync(db, gs);
                             await _gameSessionService.SetSteamContact(db, gs, soldItem.Options.ToArray());
+                            return (isCorrectCode, gs);
                         }
-                        return (isCorrectCode, gs);
+                        
                     }
 
                     gs = new GameSession()
