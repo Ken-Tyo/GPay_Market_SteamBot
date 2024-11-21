@@ -254,10 +254,13 @@ namespace SteamDigiSellerBot.Network.Services
                     targetPrice.LastUpdate = DateTime.UtcNow;
                 }
 
-                if (game.SteamCurrencyId == c.SteamId && game.IsPriceParseError)
+                if (game.SteamCurrencyId == c.SteamId)
                 {
-                    game.IsPriceParseError = false;
-                    db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                    if (game.IsPriceParseError)
+                    {
+                        game.IsPriceParseError = false;
+                        db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                    }
                     game.GameInfo = new StoreItem(data, po);
                     db.Entry(game).Property(x => x.GameInfo).IsModified = true;
                 }
