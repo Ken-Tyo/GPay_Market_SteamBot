@@ -529,7 +529,7 @@ namespace SteamDigiSellerBot.Tests
             {
                 context = new()
                 {
-                    country_code = "RU",
+                    country_code = "UA",
                     
                 },
                 data_request = new StoreBrowseItemDataRequest()
@@ -537,11 +537,13 @@ namespace SteamDigiSellerBot.Tests
                     include_all_purchase_options = true,
                     include_release = true,
                     include_included_items = true,
+                    include_basic_info = true,
+                    include_tag_count = int.MaxValue
                 }
             };
             r.ids.Add(new StoreItemID()
             {
-                appid = 2300320,
+                appid = 2555420,
 
             });
             try
@@ -549,6 +551,7 @@ namespace SteamDigiSellerBot.Tests
                 var response =
                     await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
                         System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,null);
+                var t= System.Text.Json.JsonSerializer.Serialize(response.store_items[0]);
                 var po = response.store_items.SelectMany(x => x.purchase_options)
                     .Select(x => x.packageid != 0 ? x.packageid : x.bundleid);
             }

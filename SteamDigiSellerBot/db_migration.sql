@@ -379,3 +379,6 @@ ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
 
 19.11 
 ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
+
+21.11
+alter table "Games" ADD "GameInfo" JSON null;

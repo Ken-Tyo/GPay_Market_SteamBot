@@ -11,7 +11,6 @@ using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
 using SteamKit2.Internal;
-using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;

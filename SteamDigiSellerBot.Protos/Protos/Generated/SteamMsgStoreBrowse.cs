@@ -6,6 +6,8 @@
 
 #region Designer generated code
 #pragma warning disable CS0612, CS0618, CS1591, CS3021, IDE0079, IDE1006, RCS1036, RCS1057, RCS1085, RCS1192
+using SteamKit2.WebUI.Internal;
+
 namespace SteamKit2.Internal
 {
 
@@ -322,6 +324,27 @@ namespace SteamKit2.Internal
     [global::ProtoBuf.ProtoContract()]
     public partial class StoreItem : global::ProtoBuf.IExtensible
     {
+        public PurchaseOption GameOption { get; set; }
+        public StoreItem() { }
+
+        public StoreItem(StoreItem item, PurchaseOption option)
+        {
+            foreach (var p in this.GetType().GetProperties())
+            {
+                try
+                {
+                    p.SetValue(this, p.GetValue(item));
+                }
+                catch
+                {
+
+                }
+            }
+
+            this.purchase_options = null;
+            this.GameOption = option;
+        }
+
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);

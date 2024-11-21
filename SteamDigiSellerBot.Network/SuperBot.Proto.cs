@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿extern alias OverrideProto;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using SteamAuthCore;
 using SteamDigiSellerBot.Database.Entities;
@@ -11,7 +12,6 @@ using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
 using SteamKit2.Internal;
-using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -32,6 +32,7 @@ using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
+using OverrideProto::SteamKit2.WebUI.Internal;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -246,9 +247,9 @@ namespace SteamDigiSellerBot.Network
         {
             CCheckout_GetFriendOwnershipForGifting_Request item = new();
             if (isBundle)
-                item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { bundleid = subId });
+                item.item_ids.Add(new OverrideProto::SteamKit2.WebUI.Internal.StoreItemID() { bundleid = subId });
             else
-                item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { packageid = subId });
+                item.item_ids.Add(new OverrideProto::SteamKit2.WebUI.Internal.StoreItemID() { packageid = subId });
             var api = _steamClient.Configuration.GetAsyncWebAPIInterface("ICheckoutService");
             var response = await api.CallProtobufAsync<CCheckout_GetFriendOwnershipForGifting_Response>(
                 HttpMethod.Get, "GetFriendOwnershipForGifting", args: PrepareProtobufArguments(item, accessToken));
