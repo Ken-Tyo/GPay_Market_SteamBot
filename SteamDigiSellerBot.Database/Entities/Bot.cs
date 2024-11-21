@@ -1,13 +1,15 @@
 ﻿using DatabaseRepository.Entities;
-using Newtonsoft.Json;
 using Org.Mentalis.Network.ProxySocket.Models;
 using SteamAuthCore;
 using SteamDigiSellerBot.Database.Enums;
+using SteamDigiSellerBot.Utilities.Services;
 using SteamKit2;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -29,14 +31,26 @@ namespace SteamDigiSellerBot.Database.Entities
         public string PersonName { get; set; }
 
         public string Password { get; set; }
+        
+        [IgnoreDataMember]
+        public string PasswordC { get; set; }
 
         public string MaFileStr { get; set; }
+
+        [IgnoreDataMember]
+        public string MaFileStrC { get; set; }
 
         public string UserAgent { get; set; }
 
         public string ProxyStr { get; set; }
 
+        [IgnoreDataMember]
+        public string ProxyStrC { get; set; }
+
         public string SteamCookiesStr { get; set; }
+
+        [IgnoreDataMember]
+        public string SteamCookiesStrC { get; set; }
 
         public string Region { get; set; }
         public string SteamId { get; set; }
@@ -52,6 +66,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public bool IsProblemRegion { get; set; }
         public bool HasProblemPurchase { get; set; }
+        [JsonIgnore]
         public virtual BotRegionSetting BotRegionSetting { get; set; }
 
         public bool IsON { get; set; }
@@ -60,14 +75,16 @@ namespace SteamDigiSellerBot.Database.Entities
 
         [Column(TypeName = "json")]
         public IEnumerable<VacGame> VacGames { get; set; }
-
+        [JsonIgnore]
         public virtual List<BotSendGameAttempts> SendGameAttempts { get; set; }
 
         //public string CountryCode { get; set; }
         public EResult? LoginResult { get; set; }
 
         [NotMapped]
-        public EResult Result { get; set; }
+        public EResult? Result { get; set; }
+        [NotMapped]
+        public EResult? ResultExtDescription { get; set; }
         [NotMapped]
         public DateTime? ResultSetTime { get; set; }
 
@@ -78,15 +95,21 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             get
             {
-                return new CookieDictionary(SteamCookiesStr);
+                //return new CookieDictionary(string.IsNullOrEmpty(SteamCookiesStrC) ? SteamCookiesStr : CryptographyUtilityService.Decrypt(SteamCookiesStr));
+                return new CookieDictionary(CryptographyUtilityService.Decrypt(SteamCookiesStr));
             }
             set
             {
-                SteamCookiesStr = value.ToString();
+                Console.WriteLine($"BotEncrytpZone {nameof(SteamCookies)} {UserName} {value}");
+                //При отказе от незашифрованного значения закомментировать
+                //SteamCookiesStrC = value.ToString();
+                SteamCookiesStr = CryptographyUtilityService.Encrypt(value.ToString());
             }
         }
 
         [NotMapped]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public HttpRequest SteamHttpRequest
         {
             get
@@ -99,7 +122,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
                 if (!string.IsNullOrWhiteSpace(ProxyStr))
                 {
-                    steamHttpRequest.Proxy = HttpProxyClient.Parse(ProxyStr);
+                    steamHttpRequest.Proxy = HttpProxyClient.Parse(CryptographyUtilityService.Decrypt(ProxyStr));
                 }
 
                 return steamHttpRequest;
@@ -107,13 +130,14 @@ namespace SteamDigiSellerBot.Database.Entities
         }
 
         [NotMapped]
+        [JsonIgnore]
         public Proxy Proxy
         {
             get
             {
                 if (!string.IsNullOrWhiteSpace(ProxyStr))
                 {
-                    return new Proxy(ProxyStr);
+                    return new Proxy(CryptographyUtilityService.Decrypt(ProxyStr));
                 }
 
                 return null;
@@ -127,7 +151,7 @@ namespace SteamDigiSellerBot.Database.Entities
             {
                 if (!string.IsNullOrWhiteSpace(MaFileStr))
                 {
-                    return JsonConvert.DeserializeObject<SteamGuardAccount>(MaFileStr);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamGuardAccount>(CryptographyUtilityService.Decrypt(MaFileStr));
                 }
 
                 return null;

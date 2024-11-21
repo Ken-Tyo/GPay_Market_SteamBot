@@ -11,7 +11,6 @@ using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
 using SteamKit2.Internal;
-using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -22,6 +21,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +32,8 @@ using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Utilities.Services;
+using System.Text.Json.Serialization;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -89,18 +91,38 @@ namespace SteamDigiSellerBot.Network
             //IVacGameRepository vacGameRepository
             )
         {
-            _steamClient = new SteamClient();
-            _manager = new CallbackManager(_steamClient);
             _bot = bot;
             _logger = logger;
+
+
             //_currencyDataRepository = currencyDataRepository;
             //_vacGameRepository = vacGameRepository;
 
+            SetSteamClient();
+        }
+
+        private void SetSteamClient()
+        {
+            _steamClient = new SteamClient();
+            _manager = new CallbackManager(_steamClient);
+
+
             _steamUser = _steamClient.GetHandler<SteamUser>();
-            
+
             _manager.Subscribe<SteamClient.ConnectedCallback>(OnConnected);
             _manager.Subscribe<SteamClient.DisconnectedCallback>(OnDisconnected);
             _manager.Subscribe<SteamUser.LoggedOnCallback>(OnLoggedOn);
+        }
+
+        public void ResetSteamClient()
+        {
+            _isRunning = false;
+            isOk = false;
+            _bot.Result = EResult.Invalid;
+            _steamClient?.Disconnect();
+            Task.Delay(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult();
+            SetSteamClient();
+            Login();
         }
 
         public Bot Bot => _bot;
@@ -124,8 +146,13 @@ namespace SteamDigiSellerBot.Network
             if (_isRunning)
                 return;
             _isRunning = true;
-           
-            _steamClient.Connect(proxy: _bot.Proxy);
+
+            var proxy = _bot.Proxy;
+            if (IsOk())
+            {
+                _logger.LogInformation($"Steam: релог {_bot.UserName} прокси: {proxy?.Host} {proxy?.Port} {proxy?.UserName} {proxy?.Password}");
+            }
+            _steamClient.Connect(proxy: proxy);
 
             for (int i = 0; i < 30 && _isRunning; i++)
             {
@@ -156,44 +183,35 @@ namespace SteamDigiSellerBot.Network
                 }
             }
 
-            await Task.WhenAll(new List<Task>
+            var balanceTask = GetBotBalance_Proto();
+            var nameAndAvatarTask = Task.Run(() => GetBotNameAndAvatar());
+            var vacGamesTask = GetBotVacGames(vacCheckList, _bot.Region);
+            var botStateTask = Task.Run(() => GetBotState(_bot));
+
+            await Task.WhenAll(balanceTask, nameAndAvatarTask, vacGamesTask, botStateTask);
+
+            var (balanceFetched, balance) = await balanceTask;
+            if (balanceFetched)
             {
-                Task.Run(() =>
-                {
-                    (bool balanceFetched, decimal balance) = GetBotBalance_Proto().Result;
-                    if (balanceFetched)
-                    {
-                        _bot.Balance = balance;
-                        _bot.LastTimeBalanceUpdated=DateTime.UtcNow;
-                    }
-                }),
-                Task.Run(() =>
-                {
-                    (bool, string, string) nameAndAvatarParse = GetBotNameAndAvatar();
-                    if (nameAndAvatarParse.Item1)
-                    {
-                        _bot.PersonName = nameAndAvatarParse.Item2;
-                        _bot.AvatarUrl = nameAndAvatarParse.Item3;
-                    }
-                }),
-                Task.Run(() =>
-                {
-                    (bool, List<Bot.VacGame>) vacParse = GetBotVacGames(vacCheckList, _bot.Region).Result;
-                    if (vacParse.Item1)
-                        _bot.VacGames = vacParse.Item2;
-                }),
-                Task.Run(() =>
-                {
-                    (bool, BotState)//, DateTimeOffset, int) 
-                        stateParse = GetBotState(_bot);
-                    if (stateParse.Item1)
-                    {
-                        _bot.State = stateParse.Item2;
-                        //_bot.TempLimitDeadline = stateParse.Item3;
-                        //_bot.SendGameAttemptsCount = stateParse.Item4;
-                    }
-                })
-            });
+                _bot.Balance = balance;
+                _bot.LastTimeBalanceUpdated = DateTime.UtcNow;
+            }
+
+            var (personName, avatarUrl) = await nameAndAvatarTask;
+            _bot.PersonName = personName;
+            _bot.AvatarUrl = avatarUrl;
+
+            var (vacGamesSuccess, vacGames) = await vacGamesTask;
+            if (vacGamesSuccess)
+            {
+                _bot.VacGames = vacGames;
+            }
+
+            var (stateSuccess, botState) = await botStateTask;
+            if (stateSuccess)
+            {
+                _bot.State = botState;
+            }
 
             (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) = 
                 GetSendedGiftsSum(currencyData, _bot.Region, _bot.BotRegionSetting);
@@ -252,7 +270,7 @@ namespace SteamDigiSellerBot.Network
                 var authSession = await _steamClient.Authentication.BeginAuthSessionViaCredentialsAsync(new AuthSessionDetails
                 {
                     Username = _bot.UserName,
-                    Password = _bot.Password,
+                    Password = CryptographyUtilityService.Decrypt(_bot.Password),
                     IsPersistentSession = false,
                     //PlatformType = EAuthTokenPlatformType.k_EAuthTokenPlatformType_MobileApp,
                     //ClientOSType = EOSType.Android9,
@@ -295,6 +313,7 @@ namespace SteamDigiSellerBot.Network
             if (!isOk)
             {
                 _logger?.LogWarning($"Bot fail login: {_bot?.UserName} LoggedOnCallback description:\n{System.Text.Json.JsonSerializer.Serialize(callback)}");
+                _bot.ResultExtDescription = callback.ExtendedResult;
             }
 
             bool isSteamGuard = callback.Result == EResult.AccountLogonDenied;
@@ -360,6 +379,7 @@ namespace SteamDigiSellerBot.Network
         {
             _logger?.LogInformation("Disconnected from Steam '{0}'...", _bot.UserName);
             _isRunning = false;
+            isOk=false;
         }
 
         private CookieDictionary GetWebCookiesNonce(string myLoginKey) // depricated
@@ -568,10 +588,13 @@ namespace SteamDigiSellerBot.Network
                 if (string.IsNullOrEmpty(html))
                     return (false, null);
 
+                var currency = currencyData.Currencies
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(botData.Region, c.CountryCode, c.Code));
+
                 var purchases =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, 
-                        currencyData, 
+                        currencyData, currency,
                         x => x.Contains("Purchase") 
                          && !x.Contains("Gift Purchase") 
                          && !x.Contains("In-Game Purchase") 
@@ -583,7 +606,7 @@ namespace SteamDigiSellerBot.Network
                 var refunded =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, 
-                        currencyData,
+                        currencyData,currency,
                         x => x.Contains("Refund")
                          && !x.Contains("Gift"),
                         BotTransactionType.Refund);
@@ -630,8 +653,7 @@ namespace SteamDigiSellerBot.Network
 
                 decimal maxSendedGiftsSum = (totalPurchaseSum + purchaseCNY + purchaseJPY) - refundedSum;
 
-                var currency = currencyData.Currencies
-                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(botData.Region,c.CountryCode,c.Code));
+
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
@@ -687,19 +709,22 @@ namespace SteamDigiSellerBot.Network
                 if (string.IsNullOrEmpty(html))
                     return (false, -1, -1);
 
+                var currency = currencyData.Currencies
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(region, c.CountryCode, c.Code));
+
                 var sendedGifts =
                     SteamParseHelper.ParseSteamTransactionsSum(
-                        html, currencyData, x => x.Contains("Gift Purchase"), BotTransactionType.GiftPurchase);
+                        html, currencyData,currency, x => x.Contains("Gift Purchase"), BotTransactionType.GiftPurchase);
                 //Console.WriteLine(sendedGifts.Count); // debug 
 
                 var giftRefunded =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html,
-                        currencyData,
+                        currencyData,currency,
                         x => x.Contains("Gift Purchase")
                           && x.Contains("wht_refunded"),
                         BotTransactionType.GiftPurchaseRefund);
-                                //Console.WriteLine(giftRefunded.Count); // debug 
+                //Console.WriteLine(giftRefunded.Count); // debug 
 
                 //если есть настройки для проблемных регионов, взять дату с которой считать покупки
                 //var dateFrom = _bot.BotRegionSetting?.CreateDate ?? DateTime.MinValue;
@@ -710,8 +735,7 @@ namespace SteamDigiSellerBot.Network
                         : ToUsdSum(sendedGifts, DateTime.MinValue, currencyData);
                 decimal giftRefundedSum = ToUsdSum(giftRefunded, DateTime.MinValue, currencyData);
 
-                var currency = currencyData.Currencies
-                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(region, c.CountryCode , c.Code));
+                
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
@@ -803,10 +827,10 @@ namespace SteamDigiSellerBot.Network
             return sessionId;
         }
 
-        private (bool, string, string) GetBotNameAndAvatar()
+        private (string, string) GetBotNameAndAvatar()
         {
             if (_bot.SteamId is null)
-                return (false, "", "");
+                return (_bot.PersonName, _bot.AvatarUrl);
 
             try
             {
@@ -816,7 +840,7 @@ namespace SteamDigiSellerBot.Network
 
                 var avatarUrl = ParseAvatarUrl(html);
                 var pd = SteamHelper.GetProfileDataProfilePage(html);
-                return (true, pd?.personaname ?? "", avatarUrl);
+                return (pd?.personaname ?? _bot.PersonName, !string.IsNullOrWhiteSpace(avatarUrl) ? avatarUrl : _bot.AvatarUrl);
                 //string apiKeyStr = _bot.SteamHttpRequest.Get("https://steamcommunity.com/dev/apikey").ToString();
                 //string apiKey = apiKeyStr.Substring("Key:", "</p>").Trim();
 
@@ -847,7 +871,7 @@ namespace SteamDigiSellerBot.Network
                 Console.WriteLine($"BOT {_bot.UserName} avatar parse error");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
-                return (false, "", "");
+                return (_bot.PersonName, _bot.AvatarUrl);
             }
         }
 
@@ -1053,13 +1077,18 @@ namespace SteamDigiSellerBot.Network
                 //vacBanByVacGameIdDict[game.Name] = false;
                 try
                 {
-                    var (shoppingCartGID, _) = await AddToCart(game.AppId, game.SubId);
-                    if (string.IsNullOrEmpty(shoppingCartGID))
+                    //Пока не работает
+                    return (false, null);
+                    if (_cartInProcess)
+                        return (false, null);
+                    await DeleteCart(await GetSessiondId());
+                    var (ShoppingCart, shoppingCartGID) = await AddToCart_Proto(region, uint.Parse(game.SubId), reciverId: 28365100);
+                    if (shoppingCartGID==0)
                         return (false, null);
 
                     HttpRequest request = _bot.SteamHttpRequest;
                     var c = _bot.SteamCookies;
-                    c.Add("shoppingCartGID", shoppingCartGID);
+                    c.Add("shoppingCartGID", shoppingCartGID.ToString());
                     request.Cookies = c;
                     var cart = request.Post(cartUrlStr).ToString();
 
@@ -1461,13 +1490,16 @@ namespace SteamDigiSellerBot.Network
         private async Task<(InitTranResponse,string)> InitSendGameTransaction(
             string gidShoppingCart, string sessionId, string gifteeAccountId, 
             string receiverName, string comment, string wishes, string signature,
-            string countryCode)
+            string countryCode, bool secondTry)
         {
             if (string.IsNullOrWhiteSpace(sessionId))
-                return (null,null);
+            {
+                _logger?.LogWarning("Bot session error: "+ JsonConvert.SerializeObject(_bot, Formatting.Indented));
+                return (null, null);
+            }
 
             var initTranUrl = "https://checkout.steampowered.com/checkout/inittransaction/";
-            var formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+            var formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
 
             var initTran = new Uri(initTranUrl);
             var reqMes = new HttpRequestMessage(HttpMethod.Post, initTran);
@@ -1478,6 +1510,8 @@ namespace SteamDigiSellerBot.Network
                 { "shoppingCartGID", gidShoppingCart },
                 { "wants_mature_content", "1" }
             };
+            if (secondTry)
+                cookies.Add("beginCheckoutCart", "-1");
             HttpResponseMessage response;
             using var client = GetDefaultHttpClientBy(initTranUrl, out HttpClientHandler handler, cookies);
             try
@@ -1488,7 +1522,7 @@ namespace SteamDigiSellerBot.Network
             {
                 await Task.Delay(TimeSpan.FromSeconds(40));
                 sessionId = await GetSessiondId("https://checkout.steampowered.com");
-                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
                 var reqMes2 = new HttpRequestMessage(HttpMethod.Post, initTran);
                 reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
                 cookies = new Dictionary<string, string>() {
@@ -1503,7 +1537,7 @@ namespace SteamDigiSellerBot.Network
             {
                 await Task.Delay(TimeSpan.FromSeconds(40));
                 sessionId= await GetSessiondId("https://checkout.steampowered.com");
-                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode);
+                formParams = transactionParams(gidShoppingCart, sessionId, gifteeAccountId, receiverName, comment, wishes, signature, countryCode, secondTry);
                 var reqMes2 = new HttpRequestMessage(HttpMethod.Post, initTran);
                 reqMes2.Content = new System.Net.Http.FormUrlEncodedContent(formParams);
                 cookies = new Dictionary<string, string>() {
@@ -1528,7 +1562,7 @@ namespace SteamDigiSellerBot.Network
         }
 
         private static RequestParams transactionParams(string gidShoppingCart, string sessionId, string gifteeAccountId,
-            string receiverName, string comment, string wishes, string signature, string countryCode)
+            string receiverName, string comment, string wishes, string signature, string countryCode, bool secondTry)
         {
             var formParams = new RequestParams
             {
@@ -1562,8 +1596,8 @@ namespace SteamDigiSellerBot.Network
                 ["ShippingState"] = "",
                 ["ShippingPostalCode"] = "",
                 ["ShippingPhone"] = "",
-                ["bIsGift"] = 1,
-                ["GifteeAccountID"] = gifteeAccountId,
+                ["bIsGift"] = secondTry ? 0 : 1,
+                ["GifteeAccountID"] = secondTry ? 0 : gifteeAccountId,
                 ["GifteeEmail"] = "",
                 ["GifteeName"] = receiverName,
                 ["GiftMessage"] = comment,
@@ -1702,7 +1736,9 @@ namespace SteamDigiSellerBot.Network
             [0] = "Неизвестная ошибка.",
             [2] = "Недостаточно средств.",
             [13]= "Ваша покупка не может быть завершена, так как в вашей корзине находятся товары, недоступные в вашей стране",
+            [24]= "Вы можете добавить этот продукт в свой аккаунт Steam, только если у вас есть основной продукт.",
             [53] = "За последние несколько часов вы пытались совершить слишком много покупок. Пожалуйста, подождите немного.",
+            [70] = "У получателя уже есть этот продукт.",
             [71] = "Подарок недействителен для региона получателя.",
             [72] = "Подарок невозможно отправить, так как цена в регионе получателя значительно отличается от вашей цены.",
             [73] = "Не удалось назначить получателя подарка",
@@ -1768,13 +1804,27 @@ namespace SteamDigiSellerBot.Network
                 comment: comment,
                 wishes: "Счастливой игры",
                 signature: "GPay market",
-                countryCode);
+                countryCode, false);
 
             res.initTranRes = initResp;
 
             var mes = "";
+            if (initResp.success == 2)
+            {
+                (initResp, rI) = await InitSendGameTransaction(
+                    gidShoppingCart,
+                    sessionId,
+                    gifteeAccountId,
+                    receiverName,
+                    comment: comment,
+                    wishes: "Счастливой игры",
+                    signature: "GPay market",
+                    countryCode, true);
+                res.initTranRes = initResp;
+            }
             if (initResp.success != 1)
             {
+#warning оформить 70 код под продукт уже есть
                 if (mesDict.ContainsKey(initResp.purchaseresultdetail))
                     mes = mesDict[initResp.purchaseresultdetail];
 
@@ -1946,10 +1996,10 @@ namespace SteamDigiSellerBot.Network
         public int purchaseresultdetail;
         public int paymentmethod;
         public string transid;
-        public int transactionprovider;
-        public string paymentmethodcountrycode;
+        public int transactionprovider=6;
+        public string paymentmethodcountrycode="RU";
         public string paypaltoken;
-        public int packagewitherror;
+        public int packagewitherror=-1;
         public int appcausingerror;
         public int pendingpurchasepaymentmethod;
         public string authorizationurl;

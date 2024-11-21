@@ -13,15 +13,11 @@ namespace SteamDigiSellerBot.Network.Providers
     {
         private const string ApplicationJsonContentType = "application/json";
 
-        private readonly ICryptographyUtilityService _cryptographyUtilityService;
         private readonly IUserDBRepository _userDBRepository;
 
         public DigisellerTokenProvider(
-            ICryptographyUtilityService cryptographyUtilityService,
             IUserDBRepository userDBRepository)
         {
-            _cryptographyUtilityService = cryptographyUtilityService
-                ?? throw new ArgumentNullException(nameof(cryptographyUtilityService));
             _userDBRepository = userDBRepository ?? throw new ArgumentNullException(nameof(userDBRepository));
         }
 
@@ -32,7 +28,7 @@ namespace SteamDigiSellerBot.Network.Providers
              && user.DigisellerTokenExp > DateTimeOffset.UtcNow)
                 return user.DigisellerToken;
 
-            var newToken = GenerateNewToken(user.DigisellerApiKey, user.DigisellerID);
+            var newToken = GenerateNewToken(CryptographyUtilityService.Decrypt(user.DigisellerApiKey), CryptographyUtilityService.Decrypt(user.DigisellerID));
             if (newToken.Retval == 0)
             {
                 user.DigisellerToken = newToken.Token;
@@ -47,7 +43,7 @@ namespace SteamDigiSellerBot.Network.Providers
         private DigisellerCreateTokenResp GenerateNewToken(string apiKey, string sellerId)
         {
             string timeStamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString();
-            string sign = _cryptographyUtilityService.GetSha256(apiKey + timeStamp);
+            string sign = CryptographyUtilityService.GetSha256(apiKey + timeStamp);
             string tokenParams = JsonConvert.SerializeObject(new DigisellerCreateTokenReq
             {
                 SellerId = sellerId,

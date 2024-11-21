@@ -1,4 +1,4 @@
-alter table "GameSessions" drop column "CopyCount";
+﻿alter table "GameSessions" drop column "CopyCount";
 
 задача 68
 
@@ -365,3 +365,20 @@ insert into "TagTypeReplacements" ("Id", "IsDlc") values (2, true)
 insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'ru-RU', 'дополнение')
 insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'en-US', 'DLC')
 
+
+27.10.2024 96-шифровать-хешировать-пароли-в-бд-ботов-steam-аккаунтов-при-добавлении-в-разделе
+ALTER TABLE "Bots" ADD "PasswordC" text NULL;
+ALTER TABLE "Bots" ADD "ProxyStrC" text NULL;
+ALTER TABLE "Bots" ADD "MaFileStrC" text NULL;
+ALTER TABLE "Bots" ADD "SteamCookiesStrC" text NULL;
+ALTER TABLE "SteamProxies" ADD "PasswordC" text NULL;
+ALTER TABLE "AspNetUsers" ADD "DigisellerIDC" text NULL;
+ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
+ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
+ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
+
+19.11 
+ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
+
+21.11
+alter table "Games" ADD "GameInfo" JSON null;

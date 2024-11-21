@@ -11,6 +11,7 @@ const Footer = () => {
   const { i18n } = useTranslation();
   const [cookies, setCookie] = useCookies();
   const location = useGeoLocation();
+  const { t: tFooter } = useTranslation('footer');
 
   if (!cookies.ln) {
     const lang = location.country === 'RU' ? 'ru' : 'en';
@@ -36,6 +37,7 @@ const Footer = () => {
           setCookie('ln', i18n.language);
         }}
       />
+      <div className={css.tg_hint}><div>{tFooter('giveaways')}<span>&nbsp;{tFooter('giveaways_sign')}</span></div></div>
     </div>
   );
 }

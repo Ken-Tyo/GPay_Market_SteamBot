@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using SteamDigiSellerBot.ActionFilters;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
-using SteamDigiSellerBot.Extensions;
 using SteamDigiSellerBot.Models.Proxy;
 using SteamDigiSellerBot.Network;
-using SteamDigiSellerBot.ViewModels;
+using SteamDigiSellerBot.Utilities.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,6 +34,10 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> ProxyList()
         {
             List<SteamProxy> proxies = await _steamProxyRepository.ListAsync();
+            proxies.ForEach(e =>
+            {
+                e.Password = CryptographyUtilityService.Decrypt(e.Password);
+            });
 
             return Ok(proxies);
         }

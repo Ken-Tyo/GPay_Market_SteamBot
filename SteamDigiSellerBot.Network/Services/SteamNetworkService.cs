@@ -1,4 +1,5 @@
-﻿using Castle.Core.Internal;
+﻿extern alias OverrideProto;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
@@ -19,8 +20,11 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using OverrideProto::SteamKit2.Internal;
 using xNet;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
+using static SteamDigiSellerBot.Network.Models.SteamAppDetails.InnerData.PackageGroup;
+using StoreItem_PurchaseOption = OverrideProto::SteamKit2.WebUI.Internal.StoreItem_PurchaseOption;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -29,7 +33,9 @@ namespace SteamDigiSellerBot.Network.Services
         Task SetSteamPrices(
             string appId, List<Game> gamesList, List<Currency> currencies,
             DatabaseContext db, int tries = 10);
-
+        Task SetSteamPrices_Proto(
+            string appId, List<Game> gamesList, List<Currency> currencies,
+            DatabaseContext db, int tries = 10);
         Task<(ProfileDataRes, string)> ParseUserProfileData(string link, SteamContactType contactType, Bot bot = null);
 
         Task UpdateDiscountTimersAndIsBundleField(
@@ -94,6 +100,213 @@ namespace SteamDigiSellerBot.Network.Services
             }
         }
 
+
+
+        public async Task SetSteamPrices_Proto(
+          string appId,
+            List<Game> gamesList,
+            List<Currency> currencies,
+            DatabaseContext db,
+            int tries = 10)
+        {
+            Currency? lastCurrency=null;
+            try
+            {
+                foreach (var game in gamesList)
+                {
+                    var needToDelete = game.GamePrices.ExceptBy(currencies.Select(e => e.SteamId), e => e.SteamCurrencyId).ToList();
+                    if (needToDelete.Any() && currencies.Count>1)
+                    {
+                        game.GamePrices.RemoveAll(e => needToDelete.Contains(e));
+                    }
+                }
+
+                var proxy = _proxyPull.GetFreeProxy();
+                SteamApiClient apiClient = new SteamApiClient(proxy);
+                foreach (var c in currencies)
+                {
+                    lastCurrency = c;
+                    var r = new CStoreBrowse_GetItems_Request()
+                    {
+                        context = new()
+                        {
+                            country_code = c.CountryCode
+                        },
+                        data_request = new StoreBrowseItemDataRequest()
+                        {
+                            include_all_purchase_options = true,
+                            include_release = true,
+                            include_included_items = true,
+                            include_basic_info = true,
+                            include_tag_count = int.MaxValue
+                        }
+                    };
+                    r.ids.Add(new StoreItemID()
+                    {
+                        appid = uint.Parse(appId),
+                    });
+                    try
+                    {
+                        var response =
+                            await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
+                                System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1, null);
+
+
+                        if (response != null && response.store_items.Count == 1)
+                        {
+                            var data = response.store_items[0];
+                            if (!data.unvailable_for_country_restriction)
+                            {
+                                foreach (var po in data.purchase_options)
+                                {
+                                    purchase_options_process(appId, gamesList, db, data, po, c);
+                                }
+                                foreach (var po in data.accessories)
+                                {
+                                    purchase_options_process(appId, gamesList, db, data, po, c);
+                                }
+                            }
+                            else
+                            {
+                                
+                                var games = gamesList.Where(x => x.SteamCurrencyId == c.SteamId).ToList();
+                                if (games.Any())
+                                    _logger?.LogWarning(
+                                        $"{nameof(SetSteamPrices_Proto)}: Недоступен {appId} в {c.CountryCode}");
+                                foreach (var game in games)
+                                {
+                                    game.IsPriceParseError = true;
+                                    db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            _logger?.LogWarning(
+                                $"{nameof(SetSteamPrices_Proto)}: Странный результат парсинга appId: {appId}\n{System.Text.Json.JsonSerializer.Serialize(response)}");
+                            await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await Task.Delay(400);
+                        if (gamesList.Select(x => x.SteamCurrencyId).Distinct().Any(x => x == c.Id))
+                        {
+                            _logger?.LogError(ex,$"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}\n{System.Text.Json.JsonSerializer.Serialize(r)}");
+                            await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
+                        }
+                        else
+                        {
+                            _logger?.LogWarning($"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}\n{System.Text.Json.JsonSerializer.Serialize(r)}");
+                            await SetSteamPrices(appId, gamesList, new List<Currency>() { c }, db, tries);
+                        }
+
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                await Task.Delay(400);
+                _logger?.LogError(ex, $"{nameof(SetSteamPrices_Proto)}: Ошибка получения цен {appId} {lastCurrency?.CountryCode}");
+                await SetSteamPrices(appId, gamesList, currencies, db, tries);
+            }
+            await Task.Delay(25);
+        }
+
+        private void purchase_options_process(string appId, List<Game> gamesList, DatabaseContext db, StoreItem data, StoreItem.PurchaseOption po,
+            Currency c)
+        {
+            if (po.original_price_in_cents == 0 && po.final_price_in_cents > 0)
+                po.original_price_in_cents = po.final_price_in_cents;
+            var games = gamesList.Where(x =>
+                    x.SubId == (po.packageid == 0 ? po.bundleid : po.packageid).ToString())
+                .ToList();
+            foreach (var game in games)
+            {
+                var targetPrice =
+                    game.GamePrices.FirstOrDefault(gp => gp.SteamCurrencyId == c.SteamId);
+                if (targetPrice is null)
+                {
+                    targetPrice = new GamePrice()
+                    {
+                        GameId = game.Id,
+                        SteamCurrencyId = c.SteamId,
+                        IsManualSet = false
+                    };
+                    game.GamePrices.Add(targetPrice);
+                }
+
+                //если цена уже была и устанавливается вручную, пропускаем
+                if (targetPrice.IsManualSet)
+                    continue;
+                if (Math.Round(targetPrice.OriginalSteamPrice, 2) !=
+                    (po.original_price_in_cents / 100M)
+                    || Math.Round(targetPrice.CurrentSteamPrice, 2) !=
+                    (po.final_price_in_cents / 100M))
+                {
+                    _logger?.LogInformation(
+                        $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}: Изменение цены" +
+                        $"{(targetPrice.OriginalSteamPrice != (po.original_price_in_cents / 100M) ? $" Оригинал: {targetPrice.OriginalSteamPrice} / {po.original_price_in_cents / 100M}" : "")}" +
+                        $"{(targetPrice.CurrentSteamPrice != (po.final_price_in_cents / 100M) ? $" Скидка: {targetPrice.CurrentSteamPrice} / {po.final_price_in_cents / 100M}" : "")}");
+
+                    targetPrice.OriginalSteamPrice = po.original_price_in_cents / 100M;
+                    targetPrice.CurrentSteamPrice = po.final_price_in_cents / 100M;
+                    targetPrice.LastUpdate = DateTime.UtcNow;
+                }
+
+                if (game.SteamCurrencyId == c.SteamId)
+                {
+                    if (game.IsPriceParseError)
+                    {
+                        game.IsPriceParseError = false;
+                        db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                    }
+                    game.GameInfo = new StoreItem(data, po);
+                    db.Entry(game).Property(x => x.GameInfo).IsModified = true;
+                }
+
+                if (targetPrice.Id == 0)
+                    db.Entry(targetPrice).State = EntityState.Added;
+                else
+                    db.Entry(targetPrice).State = EntityState.Modified;
+
+
+                game.UpdateIsDiscount(db, po.discount_pct != 0);
+                if (po.discount_pct != 0 && game.SteamCurrencyId == c.SteamId)
+                {
+                    var discountDate = po.active_discounts
+                        ?.OrderByDescending(x =>
+                            po.original_price_in_cents - po.final_price_in_cents ==
+                            x.discount_amount).ThenBy(x => x.discount_end_date).FirstOrDefault()
+                        ?.discount_end_date;
+                    var tDate = discountDate is not 0 and not null
+                        ? DateTimeOffset.FromUnixTimeSeconds((long)discountDate)
+                            .ToUniversalTime()
+                            .DateTime
+                        : DateTime.MinValue;
+                    if (tDate != game.DiscountEndTimeUtc)
+                    {
+                        _logger?.LogInformation(
+                            $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Изменение даты скидки {appId} с {game.DiscountEndTimeUtc}  на {tDate}");
+                        game.DiscountEndTimeUtc = tDate;
+                        db.Entry(game).Property(x => x.DiscountEndTimeUtc).IsModified = true;
+                    }
+                }
+
+                if (game.DiscountEndTimeUtc.Year > 2000)
+                    if (game.DiscountEndTimeUtc.AddMinutes(-SteamHelper
+                            .DiscountTimerInAdvanceMinutes) <
+                        SteamHelper.GetUtcNow()
+                        && targetPrice.OriginalSteamPrice > 0)
+                    {
+                        _logger?.LogInformation(
+                            $"{nameof(SetSteamPrices_Proto)} {game.AppId} {game.SubId} {game.Name} {c.CountryCode}:  Конец скидки {appId} с {game.DiscountEndTimeUtc}");
+                        targetPrice.CurrentSteamPrice = targetPrice.OriginalSteamPrice;
+                    }
+            }
+        }
+
+
         public HttpRequest CreateBaseHttpRequest() => new HttpRequest()
         {
             Cookies = new CookieDictionary
@@ -126,7 +339,7 @@ namespace SteamDigiSellerBot.Network.Services
                 foreach (var game in gamesList)
                 {
                     var needToDelete = game.GamePrices.ExceptBy(currencies.Select(e => e.SteamId), e => e.SteamCurrencyId).ToList();
-                    if (needToDelete.Any())
+                    if (needToDelete.Any() && currencies.Count > 1)
                     {
                         game.GamePrices.RemoveAll(e => needToDelete.Contains(e));
                     }
@@ -298,6 +511,7 @@ namespace SteamDigiSellerBot.Network.Services
             steamProxy.Host = notRfBot.Proxy.Host;
             steamProxy.Port = notRfBot.Proxy.Port;
             steamProxy.UserName = notRfBot.Proxy.UserName;
+            //steamProxy.PasswordC = notRfBot.Proxy.Password;
             steamProxy.Password = notRfBot.Proxy.Password;
             await ParsePrices(appId, invalidCurrencies, db, PerformWithCustomHttpClient, false, gamesList);
         }
@@ -319,6 +533,7 @@ namespace SteamDigiSellerBot.Network.Services
             //var gamesList = db.Games.Where(g => g.AppId == appId && items.Contains(g.SubId)).ToList();
             for (int t = 0; t < tries; t++)
             {
+                var selectedProxy = "";
                 try
                 {
                     SteamProxy steamProxy = _proxyPull.GetFreeProxy();
@@ -327,6 +542,8 @@ namespace SteamDigiSellerBot.Network.Services
                     {
                         request.Proxy = steamProxy.ProxyClient;
                     }
+
+                    selectedProxy = steamProxy?.Host + ":" + steamProxy?.Port;
 
                     string s = request.Get("https://store.steampowered.com/app/" + appId + "?cc=ru").ToString();
                     // Избегаем попадать в лимит при обращении к серверу
@@ -392,7 +609,7 @@ namespace SteamDigiSellerBot.Network.Services
                 }
                 catch (HttpException ex)
                 {
-                    _logger.LogWarning(default, ex, $"At the current time [{DateTime.UtcNow}] the server can't HTTP GET 'SteamGame' {appId}");
+                    _logger.LogWarning(default, ex, $"At the current time [{DateTime.UtcNow}] the server can't HTTP GET 'SteamGame' {appId} proxy({selectedProxy})");
                 }
                 catch (Exception ex)
                 {

@@ -7,6 +7,7 @@ using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Models;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Utilities.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,7 @@ namespace SteamDigiSellerBot.Services
                         try
                         {
                             prices = await scope.ServiceProvider
-                                .GetRequiredService<IDigiSellerNetworkService>().GetPriceList(user.DigisellerID);
+                                .GetRequiredService<IDigiSellerNetworkService>().GetPriceList(CryptographyUtilityService.Decrypt(user.DigisellerID));
                             _logger.LogInformation($"ItemMonitoringService: Получена информация по {prices.Count} товарам из Digiseller Marker:{id}");
                         }
                         catch

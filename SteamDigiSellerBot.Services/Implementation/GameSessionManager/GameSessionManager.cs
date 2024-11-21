@@ -256,11 +256,15 @@ namespace SteamDigiSellerBot.Services.Implementation
                         else
                         {
                             var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+
                         }
                     }
                     else if (res is Sended)
                     {
                         var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                        var gs = new GameSession { Id = gsId };
+                        gs.BlockOrder = true;
+                        gsr.UpdateFieldAsync(gs, gs => gs.BlockOrder);
                     }
                 }
                 else if (sender == GSSCommon.ActivationExpiredGSQ)
@@ -432,6 +436,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.StatusId = lastStatusId.Value;
 
             await _gsRepo.UpdateFieldAsync(gs, gs => gs.Stage);
+
             return true;
         }
     }

@@ -197,7 +197,7 @@ namespace SteamDigiSellerBot.Network.Services
             await _digiSellerNetworkService.GetProductsBaseAsync(
                 languageCodes,
                 cancellationToken,
-                updateItemInfoGoods.Select(x => x.DigiSellerId).ToArray());
+                updateItemInfoGoods.SelectMany(x => x.DigiSellerIds).ToArray());
 
         private async Task ReplaceAllLocalValueDataTagsAsync(
             UpdateItemInfoCommands updateItemInfoCommands,
@@ -214,6 +214,7 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> infoData) => updateItemInfoGoods.SetInfoData(infoData),
                     cancellationToken);
             }
 
@@ -226,6 +227,7 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> additionalInfoData) => updateItemInfoGoods.SetAdditionalInfoData(additionalInfoData),
                     cancellationToken);
             }
         }
@@ -236,20 +238,21 @@ namespace SteamDigiSellerBot.Network.Services
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            Action<UpdateItemInfoGoods, List<LocaleValuePair>> setData,
             CancellationToken cancellationToken)
         {
             // Replace tags by item specification
             await using var db = _contextFactory.CreateDbContext();
-            var digiSellerIdsWithTags = updateItemInfoGoods.Select(x => x.DigiSellerId.ToString()).ToArray();
+            var digiSellerIdsWithTags = updateItemInfoGoods.SelectMany(x => x.DigiSellerIds).ToList();
             var itemsWithTags = await db
                     .Items
-                    .Where(x => x.DigiSellerIds.Any(digiSellerId => digiSellerIdsWithTags.Contains(digiSellerId)))
+                    .Where(x => updateItemInfoGoods.Select(x => x.ItemId).Contains(x.Id))
                     .ToListAsync(cancellationToken);
 
             foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
-                var item = itemsWithTags.First(x => x.DigiSellerIds.Contains(updateItemInfoGoodsItem.DigiSellerId.ToString()));
-                infoData.ReplaceTagsToValue(item, tagTypeReplacements, tagPromoReplacements);
+                var item = itemsWithTags.First(x => x.Id == updateItemInfoGoodsItem.ItemId);
+                setData(updateItemInfoGoodsItem, infoData.GetReplacedTagsToValue(item, tagTypeReplacements, tagPromoReplacements));
             }
         }
 
@@ -260,7 +263,7 @@ namespace SteamDigiSellerBot.Network.Services
         {
             foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
-                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id == updateItemInfoGoodsItem.DigiSellerId);
+                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id != null && updateItemInfoGoodsItem.DigiSellerIds.Contains((int)x.ProductBase.Id));
                 if (productsByDigiSellerId.Any())
                 {
                     updateItemInfoGoodsItem.Name = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Name);
@@ -317,7 +320,9 @@ namespace SteamDigiSellerBot.Network.Services
                     currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
                 }
 
-                await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
+                await _steamNetworkService.SetSteamPrices_Proto(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
+                //await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse, db, 5);
+
 
                 //before update Digiseller price
                 var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
@@ -349,19 +354,20 @@ namespace SteamDigiSellerBot.Network.Services
 
                             }
 
+                            var priceDown = item.CurrentDigiSellerPrice>0 ? finalPrice / item.CurrentDigiSellerPrice : 1;
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
-                                finalPrice / item.CurrentDigiSellerPrice < 0.08M)
+                                priceDown < 0.08M && !(priceDown is >= 0.048M and <= 0.052M))
                             {
                                 _logger.LogWarning(
-                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%");
+                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(priceDown * 100):0.0}%");
                                 item.CurrentDigiSellerPriceNeedAttention = true;
                             }
                             else
                             {
                                 if (!manualUpdate && item.CurrentDigiSellerPrice > 1000 &&
-                                    finalPrice / item.CurrentDigiSellerPrice < 0.2M)
+                                    priceDown < 0.2M)
                                     _logger.LogInformation(
-                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%)");
+                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(priceDown * 100):0.0}%)");
                                 item.CurrentDigiSellerPriceNeedAttention = false;
                                 //FixedPrice все время в рублях
                                 item.CurrentDigiSellerPrice = finalPrice;

@@ -53,8 +53,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public decimal? PriorityPrice { get; set; }
 
-        [NotMapped]
-        public decimal DigiSellerDealPriceUsd { get; set; }
+        public decimal? DigiSellerDealPriceUsd { get; set; }
 
         public int GameExistsRepeatSendCount { get; set; }
 

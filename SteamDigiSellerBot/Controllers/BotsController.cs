@@ -17,7 +17,10 @@ using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Extensions;
 using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
+using SteamDigiSellerBot.Utilities.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SteamDigiSellerBot.Database.Enums;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -30,6 +33,8 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _botPool;
         private readonly IBotSendGameAttemptsRepository _botSendGameAttemptsRepository;
+        private readonly IConfiguration _configuration;
+
         private readonly DatabaseContext db;
         private readonly ILogger<BotsController> _logger;
 
@@ -42,6 +47,7 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionRepository gameSessionRepository,
             ISuperBotPool botPoolService,
             IBotSendGameAttemptsRepository botSendGameAttemptsRepository,
+            IConfiguration configuration,
             IMapper mapper,
             ILogger<BotsController> logger,
             DatabaseContext dbContext)
@@ -54,7 +60,8 @@ namespace SteamDigiSellerBot.Controllers
             _mapper = mapper;
             _botSendGameAttemptsRepository = botSendGameAttemptsRepository;
             _logger = logger;
-            db=dbContext;
+            _configuration = configuration;
+            db =dbContext;
         }
 
         [HttpGet, Route("bots/list")]
@@ -64,9 +71,10 @@ namespace SteamDigiSellerBot.Controllers
             bots.ForEach(e =>
             {
                 e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
+                e.Password = CryptographyUtilityService.Decrypt(e.Password);
+                e.ProxyStr = CryptographyUtilityService.Decrypt(e.ProxyStr);
             });
 
-            
             return Ok(bots
                 .OrderByDescending(b => b.IsON)
                 .ThenBy(b => b.Region)
@@ -85,22 +93,35 @@ namespace SteamDigiSellerBot.Controllers
 
                 return BadRequest(new { errors });
             };
+
             Bot bot = _mapper.Map<Bot>(model);
+
+            //bot.PasswordC = model.Password;
+            bot.Password = CryptographyUtilityService.Encrypt(model.Password);
+            //bot.ProxyStrC = model.Proxy;
+            bot.ProxyStr = CryptographyUtilityService.Encrypt(model.Proxy);
+
             Bot oldBot = null;
             if (!model.Id.HasValue && model.MaFile is null)
                 ModelState.AddModelError("", "Поле MaFile является обязательным");
-            
+
             if (model.Id.HasValue)
             {
                 oldBot = await _steamBotRepository.GetByIdAsync(db,model.Id.Value);
-                if ((bot.UserName != oldBot.UserName || bot.Password != oldBot.Password)
+
+                var oldBotPass = CryptographyUtilityService.Decrypt(oldBot.Password);
+
+                if ((bot.UserName != oldBot.UserName || model.Password != oldBotPass)
                  && model.MaFile is null)
                 {
                     ModelState.AddModelError("", "Поле MaFile является обязательным");
                 }
 
                 if (model.MaFile is null)
+                {
                     bot.MaFileStr = oldBot.MaFileStr;
+                    //bot.MaFileStrC = oldBot.MaFileStrC;
+                }
 
                 bot.BotRegionSetting = oldBot.BotRegionSetting;
                 bot.HasProblemPurchase = oldBot.HasProblemPurchase;
@@ -112,11 +133,13 @@ namespace SteamDigiSellerBot.Controllers
                 bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
                 bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
                 bot.LastTimeUpdated = DateTime.UtcNow;
+                bot.PersonName = oldBot.PersonName ?? string.Empty;
+                bot.AvatarUrl = oldBot.AvatarUrl ?? string.Empty;
             }
 
             if (ModelState.ErrorCount > 0)
                 return createBadRequest();
-
+            
             if (bot != null && bot.SteamGuardAccount != null
                 && bot.SteamGuardAccount.AccountName.Equals(model.UserName))
             {
@@ -160,7 +183,7 @@ namespace SteamDigiSellerBot.Controllers
                 
                 if (!botAuthOK)
                 {
-                    ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + bot.Result.ToString());
+                    ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + (bot.Result?.ToString() ?? "не установлено" ) + (bot.ResultExtDescription !=null ? "("+bot.ResultExtDescription.ToString()+")" :""));
                     return createBadRequest();
                 }
 
@@ -238,7 +261,7 @@ namespace SteamDigiSellerBot.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + bot.Result.ToString());
+                ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + (bot.Result?.ToString() ?? "не установлено") + (bot.ResultExtDescription != null ? "(" + bot.ResultExtDescription.ToString() + ")" : ""));
             }
 
             return this.CreateBadRequest();

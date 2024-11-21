@@ -4,6 +4,7 @@
     left: 10px;
 }
 .toggleButton {
+    display: none;
     position: absolute;
     top: 10px;
     left: 265px;
@@ -15,10 +16,14 @@
     cursor: pointer;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    display: flex;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s;
+}
+@media (max-width: 430px) {
+    .toggleButton {
+        display: flex;
+    }
 }
 
 .closed {

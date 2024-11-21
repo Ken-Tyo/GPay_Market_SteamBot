@@ -94,5 +94,9 @@
   },
   "common": {
     "order": "Order"
+  },
+  "footer": {
+    "giveaways": "Game giveaways here!",
+    "giveaways_sign": "Subscribe!"
   }
 }

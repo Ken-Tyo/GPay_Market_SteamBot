@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
 using static SteamDigiSellerBot.Network.SuperBot;
@@ -241,7 +242,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             Item item = gs.Item;
 
             //Мусорный лог
-            if (gs.DigiSellerDealPriceUsd != 0 || item.CurrentDigiSellerPriceUsd != 0)
+            if (gs.DigiSellerDealPriceUsd > 0 || item.CurrentDigiSellerPriceUsd != 0)
                 _logger.LogInformation(
                     $"Test in GS ID {gs.Id} for gs.DigiSellerDealPriceUsd = {gs.DigiSellerDealPriceUsd} " +
                     $"and item.CurrentDigiSellerPriceUsd = {item.CurrentDigiSellerPriceUsd}");
@@ -262,7 +263,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 res = nowUtc > exp;
                 newStatus = GameSessionStatusEnum.ExpiredDiscount; //Просрочено (скидки)
             }
-            else if (gs.DigiSellerDealPriceUsd < item.CurrentDigiSellerPriceUsd * 0.98m)
+            else if ((gs.DigiSellerDealPriceUsd ?? 0) < item.CurrentDigiSellerPriceUsd * 0.98m)
             {
                 //res = true;
                 //newStatus = 11; //Просрочено (скидки)
@@ -828,8 +829,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 (isError, valueJson) = await AddToFriendBySteamContactType(gs, profileData, bot, superBot);
                 if (isError)
                 {
-                    superBot = _botPool.ReLogin(bot);
-                    for (int i = 0; i < 5; i++)
+                    if (superBot.LastLogin != null && superBot.LastLogin.Value < DateTime.UtcNow.AddMinutes(-40))
+                        superBot = _botPool.ReLogin(bot);
+                    for (int i = 0; i < 3; i++)
                     {
                         if (superBot.IsOk())
                         {
@@ -838,7 +840,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         }
                         else
                         {
-                            await Task.Delay(500);
+                            await Task.Delay(1000);
                             superBot.Login();
                         }
                     }
@@ -857,6 +859,12 @@ namespace SteamDigiSellerBot.Services.Implementation
                         botId = bot.Id,
                         botName = bot.UserName
                     };
+                }
+                else if (valueJson.message == "Проблема с подключением к стим")
+                {
+                    gs.StatusId= GameSessionStatusEnum.SwitchBot;
+                    gs.BotSwitchList.Add(gs.BotId.Value);
+                    await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BotSwitchList);
                 }
                 else
                 {
@@ -909,21 +917,23 @@ namespace SteamDigiSellerBot.Services.Implementation
         private async Task<(bool, ValueJson)> AddToFriendBySteamContactType(
             GameSession gs, ProfileDataRes profileData, Bot bot, SuperBot superBot)
         {
-            InviteRes res = null;
-            ValueJson valueJson = null;
-            bool isError = false;
-            switch (gs.SteamContactType)
-            {
-                case SteamContactType.profileUrl:
-                case SteamContactType.steamId:
-                case SteamContactType.steamIdCustom:
+            //try
+            //{
+                InviteRes res = null;
+                ValueJson valueJson = null;
+                bool isError = false;
+                switch (gs.SteamContactType)
+                {
+                    case SteamContactType.profileUrl:
+                    case SteamContactType.steamId:
+                    case SteamContactType.steamIdCustom:
                     {
                         var r = await superBot.SendInvitationViaAddAsFriend(profileData);
                         res = r;
 
                         if (r.success == 1)
                         {
-                            gs.StatusId = GameSessionStatusEnum.RequestSent;//заявка отправлена
+                            gs.StatusId = GameSessionStatusEnum.RequestSent; //заявка отправлена
                             valueJson = new GameSessionStatusLog.ValueJson
                             {
                                 userNickname = profileData.personaname,
@@ -937,7 +947,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         else
                         {
                             _logger.LogError(
-                                    $"GS ID {gs.Id} error while try add user with direct link - reponse\n {JsonConvert.SerializeObject(res)}");
+                                $"GS ID {gs.Id} error while try add user with direct link - reponse\n {JsonConvert.SerializeObject(res)}");
                             isError = true;
                             valueJson = new GameSessionStatusLog.ValueJson
                             {
@@ -953,7 +963,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                         break;
                     }
-                case SteamContactType.friendInvitationUrl:
+                    case SteamContactType.friendInvitationUrl:
                     {
                         var r = await superBot.SendInvitationViaInvitationLink(gs.SteamContactValue, profileData);
                         res = r;
@@ -961,20 +971,20 @@ namespace SteamDigiSellerBot.Services.Implementation
                         if (r.success == 1)
                         {
                             //gs.StatusId = 19;//Очередь
-                            gs.StatusId = GameSessionStatusEnum.SendingGame;//Отправка игры
-                                                                            //valueJson = new GameSessionStatusLog.ValueJson { botId = bot.Id, botName = bot.UserName };
+                            gs.StatusId = GameSessionStatusEnum.SendingGame; //Отправка игры
+                            //valueJson = new GameSessionStatusLog.ValueJson { botId = bot.Id, botName = bot.UserName };
                         }
                         else
                         {
                             _logger.LogError(
-                                    $" GS ID {gs.Id} error while try add user with invitation link - response\n {JsonConvert.SerializeObject(res)}");
+                                $" GS ID {gs.Id} error while try add user with invitation link - response\n {JsonConvert.SerializeObject(res)}");
 
                             //ссылка утратилась, пробуем добавить по обычной
                             var afr = await superBot.SendInvitationViaAddAsFriend(profileData);
 
                             if (afr.success == 1)
                             {
-                                gs.StatusId = GameSessionStatusEnum.RequestSent;//заявка отправлена
+                                gs.StatusId = GameSessionStatusEnum.RequestSent; //заявка отправлена
                                 valueJson = new GameSessionStatusLog.ValueJson
                                 {
                                     userNickname = profileData.personaname,
@@ -1005,9 +1015,35 @@ namespace SteamDigiSellerBot.Services.Implementation
 
                         break;
                     }
-            }
+                }
 
-            return (isError, valueJson);
+                return (isError, valueJson);
+            //}
+            //catch (Exception ex)
+            //{
+            //    if (ex is TaskCanceledException or HttpRequestException)
+            //        return (true, new ValueJson()
+            //        {
+            //            userNickname = profileData.personaname,
+            //            userProfileUrl = profileData.url,
+            //            botId = bot.Id,
+            //            botName = bot.UserName,
+            //            botRegionName = await GetBotRegionName(bot),
+            //            botRegionCode = bot.Region,
+            //            message = "Проблема с подключением к стим",
+            //        });
+            //    else
+            //        return (true, new ValueJson()
+            //        {
+            //            userNickname = profileData.personaname,
+            //            userProfileUrl = profileData.url,
+            //            botId = bot.Id,
+            //            botName = bot.UserName,
+            //            botRegionName = await GetBotRegionName(bot),
+            //            botRegionCode = bot.Region,
+            //            message = $"Ошибка: {ex.GetType()} {ex.Message}:\n\n{ex.StackTrace}",
+            //        });
+            //}
         }
 
         public async Task<CheckFriendAddedResult> CheckFriendAddedStatus(int gsId)
@@ -1041,12 +1077,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var sbot = _botPool.GetById(gs.Bot.Id);
                 if (!sbot.IsOk())
                 {
-                    gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
-                    await updateGsStatus(gs, new ValueJson
+                    if (sbot.LastLogin == null || sbot.LastLogin.Value < DateTime.UtcNow.AddMinutes(-5))
+                        sbot = _botPool.ReLogin(sbot.Bot);
+                    if (!sbot.IsOk())
                     {
-                        message = $"Ошибка при попытке логина в аккаунт {sbot.Bot.UserName}"
-                    });
-                    return CheckFriendAddedResult.botIsNotOk;
+                        gs.StatusId = GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+                        await updateGsStatus(gs, new ValueJson
+                        {
+                            message = $"Ошибка при попытке логина в аккаунт {sbot.Bot.UserName}"
+                        });
+                        return CheckFriendAddedResult.botIsNotOk;
+                    }
                 }
 
                 bool? res = null;
@@ -1096,6 +1137,28 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
 
                     res = checkFriendRes;
+                }
+
+                await using (var db = _userDBRepository.GetContext())
+                {
+                    var gs2 = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
+                    if (gs2.Stage != GameSessionStage.CheckFriend)
+                    {
+                        if (gs.Stage == GameSessionStage.Done)
+                        {
+                            gs.BlockOrder = true;
+                            await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.BlockOrder);
+                        }
+
+                        log = new GameSessionStatusLog
+                        {
+                            GameSessionId = gs.Id,
+                            StatusId = gs.StatusId,
+                            Value = new ValueJson() { message = $"Вызов ошибки контроля статуса, текущая стадия заявки {gs2.Stage} вместо {GameSessionStage.CheckFriend}."+(gs.BlockOrder ? " Заказ заблокирован": "") }
+                        };
+                        await _gameSessionStatusLogRepository.AddAsync(log);
+                        return CheckFriendAddedResult.breakThread;
+                    }
                 }
 
                 //var gs = await _gameSessionRepository.GetByIdAsync((int)gs.Id);
@@ -1192,8 +1255,11 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             var (_, prices) = GetSortedPriorityPrices(gs.Item);
             var firstPrice = prices.First();
-            var newPriorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var newPriorityPriceRub = convertToRub.success ? convertToRub.value : null;
+
+
 
             _logger.LogInformation($"GS ID {gs.Id}: Code passed CheckGameSessionExpiredAndHandle and gone to GameReadyToSendStatus.priceChanged, " +
                 $"is it really {newPriorityPriceRub} higher than {gs.PriorityPrice} ???");
@@ -1220,6 +1286,30 @@ namespace SteamDigiSellerBot.Services.Implementation
                     //});
                     //await _gameSessionRepository.EditAsync(gs);
                     return GameReadyToSendStatus.priceChanged;
+                }
+            }
+
+            if (gs.DigiSellerDealPriceUsd > 0)
+            {
+                var digiConvertToRub = await _currencyDataService.TryConvertToRUB(gs.DigiSellerDealPriceUsd.Value, 1);
+
+                if (digiConvertToRub is { success: true, value: > 0 })
+                {
+                    var digiPriceInRub = digiConvertToRub.value;
+                    _logger.LogInformation($"GS ID {gs.Id} digi price comparer: digi {digiPriceInRub} real price {newPriorityPriceRub}");
+                    if (digiPriceInRub > 0 && newPriorityPriceRub > digiPriceInRub)
+                    {
+                        _logger.LogInformation($"GS ID {gs.Id}: digi price comparer if (newPriorityPriceRub > digiPriceInRub) is True");
+                        var percentDiffMax = 0 ;// gs.MaxSellPercent ?? 4;
+                        var percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
+                        if (percentDiff > percentDiffMax)
+                        {
+                            _logger.LogWarning(
+                                $"digi price comparer Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.Value.ToString("0.000")}% вместо {percentDiffMax}%");
+                            //await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
+                            //return GameReadyToSendStatus.priceChanged;
+                        }
+                    }
                 }
             }
 
@@ -1671,7 +1761,8 @@ namespace SteamDigiSellerBot.Services.Implementation
         onCheck,
         rejected,
         added,
-        unknowErr
+        unknowErr,
+        breakThread
     }
 
     public enum GameReadyToSendStatus

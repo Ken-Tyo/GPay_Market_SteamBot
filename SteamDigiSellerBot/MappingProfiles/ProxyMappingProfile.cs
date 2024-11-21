@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SteamDigiSellerBot.Database.Entities;
+using SteamDigiSellerBot.Utilities.Services;
 
 namespace SteamDigiSellerBot.MappingProfiles
 {
@@ -7,24 +8,30 @@ namespace SteamDigiSellerBot.MappingProfiles
     {
         public ProxyMappingProfile()
         {
-            CreateMap<string, SteamProxy>().AfterMap((src, dst) =>
+            CreateMap<string, SteamProxy>().AfterMap<ProxyMappingAction>();
+        }
+    }
+
+    public class ProxyMappingAction : IMappingAction<string, SteamProxy>
+    {
+        public void Process(string source, SteamProxy destination, ResolutionContext context)
+        {
+            string[] proxyData = source.Split(new char[] { ':', ';' });
+
+            if (proxyData.Length == 2)
             {
-                string[] proxyData = src.Split(new char[] { ':', ';' });
+                destination.Host = proxyData[0];
+                destination.Port = int.Parse(proxyData[1]);
+            }
 
-                if (proxyData.Length == 2)
-                {
-                    dst.Host = proxyData[0];
-                    dst.Port = int.Parse(proxyData[1]);
-                }
-
-                if (proxyData.Length == 4)
-                {
-                    dst.Host = proxyData[0];
-                    dst.Port = int.Parse(proxyData[1]);
-                    dst.UserName = proxyData[2];
-                    dst.Password = proxyData[3];
-                }
-            });
+            if (proxyData.Length == 4)
+            {
+                destination.Host = proxyData[0];
+                destination.Port = int.Parse(proxyData[1]);
+                destination.UserName = proxyData[2];
+                destination.Password = CryptographyUtilityService.Encrypt(proxyData[3]);
+                //destination.PasswordC = proxyData[3];
+            }
         }
     }
 }

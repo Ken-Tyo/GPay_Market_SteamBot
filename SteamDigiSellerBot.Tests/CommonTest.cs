@@ -29,6 +29,8 @@ using xNet;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using SteamKit2;
+using SteamKit2.WebUI.Internal;
+using System.Net.Http;
 
 namespace SteamDigiSellerBot.Tests
 {
@@ -352,30 +354,50 @@ namespace SteamDigiSellerBot.Tests
         [Test]
         public async Task Protobuf_CartAddCheck()
         {
-            DebugLog.AddListener((s, e) => Debug.WriteLine("SteamKit logger:" + s + "\n" + e));
-            DebugLog.Enabled = true;
+     
+            //botSender = new Bot
+            //{
+            //    Id = 51,
+            //    UserName = "oaggdjtbjbvz",
+            //    IsON = true,
+            //    Region = "RU",
+            //    SteamCurrencyId = 5,//RUB
+            //    SendedGiftsSum = 0,
+            //    MaxSendedGiftsSum = 10000,
+            //    VacGames = new List<Bot.VacGame>(),
+            //    State = Database.Enums.BotState.active,
+            //    Password = "Ji975thiyHUYT",
+            //    ProxyStr = "45.155.61.110:63956:AwJyXm9A:hcnnkmGv",
+            //    MaFileStr = "{\"shared_secret\":\"QQXWHjVPXCIgwVLmz2HWD+Vmt4I=\",\"serial_number\":\"5906418840149666516\",\"revocation_code\":\"R00728\",\"uri\":\"otpauth://totp/Steam:oaggdjtbjbvz?secret=IEC5MHRVJ5OCEIGBKLTM6YOWB7SWNN4C&issuer=Steam\",\"server_time\":1605835588,\"account_name\":\"oaggdjtbjbvz\",\"token_gid\":\"27bddde03aa37366\",\"identity_secret\":\"kGYaB6Nnb2amSezmCyD/WJMOm38=\",\"secret_1\":\"Frme68yYr3tnZ8XF510ZlY0gqtw=\",\"status\":0,\"device_id\":\"android:de73bb14-48ea-cbaf-3dbd-d467abd16a60\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"a27c9d10d7fb18a57e74eb3a\",\"SteamLogin\":\"76561199107384279%7C%7CE1246248FF37C48730BF5B6CFFF718E54BB44DD8\",\"SteamLoginSecure\":\"76561199107384279%7C%7CFD361D553E4670BF93535B47A89A93C3888E7923\",\"WebCookie\":\"74C66D0E9ED5A16E64193D678AE0DEAB63EADEE9\",\"OAuthToken\":\"393bda8d59f0b619ffe33eae1c059eeb\",\"SteamID\":76561199107384279}}"
+
+            //};
             botSender = new Bot
             {
-                Id = 51,
-                UserName = "blumio73",
+                Id = 31,
+                UserName = "pannna",
                 IsON = true,
-                Region = "CN",
-                SteamCurrencyId = 23,//RUB
+                Region = "JP",
+                SteamCurrencyId = 8,//RUB
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "D37A823SS6BA",
-                ProxyStr = "176.56.38.82:7158:user129212:21cpft",
-                MaFileStr = "{\"shared_secret\":\"Vsoa4n1GJQKPklLms4cAB3R5hus=\",\"serial_number\":\"3438487121126445838\",\"revocation_code\":\"R65226\",\"uri\":\"otpauth://totp/Steam:blumio73?secret=K3FBVYT5IYSQFD4SKLTLHBYAA52HTBXL&issuer=Steam\",\"server_time\":1721678203,\"account_name\":\"blumio73\",\"token_gid\":\"3aba4c20878e94af\",\"identity_secret\":\"x34angXDkYD/8BxURG1lcGdFisA=\",\"secret_1\":\"4ZWb/nMDMOIhyg+QOGolynFIVI8=\",\"status\":1,\"device_id\":\"android:35fd4699-d40e-4f68-8534-55d71c0f7539\",\"fully_enrolled\":true,\"Session\":{\"SteamID\":76561197998309574,\"AccessToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MEY5MF8yNERDNDlBQ182RERDMiIsICJzdWIiOiAiNzY1NjExOTc5OTgzMDk1NzQiLCAiYXVkIjogWyAid2ViIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3MjMxMjQ3NjEsICJuYmYiOiAxNzE0Mzk3MTI4LCAiaWF0IjogMTcyMzAzNzEyOCwgImp0aSI6ICIwRjhFXzI0REM0OUFCXzZFOUM1IiwgIm9hdCI6IDE3MjMwMzcxMjgsICJydF9leHAiOiAxNzQxMDkwMzIyLCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMjEyLjE5My4xNjcuMjQwIiwgImlwX2NvbmZpcm1lciI6ICIyMTIuMTkzLjE2Ny4yNDAiIH0.xYfoB7Y3ZIQwMwrDk00aCjmqFwEmNLqtTIN6MBuiTbAzEwJRM0ZelLPCnZ3A4_pCEAnqpoCh_D8q5RyyOsDuBg\",\"RefreshToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5Nzk5ODMwOTU3NCIsICJhdWQiOiBbICJ3ZWIiLCAicmVuZXciLCAiZGVyaXZlIiwgIm1vYmlsZSIgXSwgImV4cCI6IDE3NDEwOTAzMjIsICJuYmYiOiAxNzE0Mzk3MTI4LCAiaWF0IjogMTcyMzAzNzEyOCwgImp0aSI6ICIwRjkwXzI0REM0OUFDXzZEREMyIiwgIm9hdCI6IDE3MjMwMzcxMjgsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIyMTIuMTkzLjE2Ny4yNDAiLCAiaXBfY29uZmlybWVyIjogIjIxMi4xOTMuMTY3LjI0MCIgfQ.PI-megizqOWAmbUxIQDmWxBa96Xar6PApEb2tZNXZmyYhmm2749RpkjSuBOzcmu1mUFaDQzAEIPPLOxGzjk1BA\",\"SessionID\":null}}"
-
+                Password = "wr+NCEEAMHEKF5Rr;YA4VQozPc8JqB/9y;16wYVqtTHJHIjoD/nECvRA==",
+                ProxyStr = "hKdq0CYYLKXZye22K3Pb0KUnWBWdfofcO2uxDVjBKXYF963OdGM=;4HssdI9R31Zw5qO0;HG+JfpMKKRzYVXDzUuFf0g==",
+                MaFileStr = "RwD0wTTOYjp64gU5HSvIWYy1NpJn58IgeIKen2SJEu0z1kqrHafsQ/3RP8X0CBhDzGAr9GEJL6SXUWb8hgLEsu+m2f8p3Gt+soT0emB86cr964IPWWDd8KPrrczJoDI4/KOuqwZE4uBG6QXNAcfCc0U8ny/gtEyz6/dxJf9Zfy+mHqrEoIcZVCDK24zf7S3rVEGDap3SPsCfekfu90DWdgliKxeZ+DZ/mpgQgw8AiqzHTXKbEoO4vlDQpt/FineVKTTcrRPrJ/SYXwys5savDUTr/X9w6NEjLGMIjOmXVLELe/wkrUvu5+nt10/DNXBUxbZQsqFOUYhBnkUIewkgP7g84HqUvdgqdw7kzquLoWG/KndAiHTvV+tC+P0kOBluVh+qiijTdArnCC9ThNyNsrJiE1p9a5aPMNZYy4/WfS/SHCMNXwgrZjnVtp+WoQe6bpCaL91SlyRfrCHSNPWQkav+FXJjB5R5ZnIdrY1LKAApzENlWvndMOxDPKad4BKlm8ze7CRDy3RnxpNlHzkTEzmKC2fVZ8WVikT3XG7Go0yEZdufvL3sBxinDctfhecgG3wJNKK+tE/ZhlMeC2dVeuv3Fve0vI3mkqLazQQvjaJWcTmAKHrEfUyJ81NQ1TUuI4wVxhqpJoYUR61GUO9PSF8Zavu4i1MQNQvQYweoXEqR4wGwFz7UzUENtPimRwCps+Wz1t2zbV8qsgb0Ad4GyE1J7fBgZlI0NAUte201QBqy/8IcxSz2KyaR3KzQc5ux/KvYxrHpmJKi5HS9DFI//OZ+sn/VWdFILqh3cqO1PmpLR8Dv0sYKHygVJ40vCaDvsyfrECoqJczn8aizI/xhnTj67yfVm8c5VB4=;o8/cWCbNqPxC1RIb;4cTI6xs5U0vBmB4Aa61ZBQ==",
+                SteamCookiesStr = "giLBpX455QoXXHqRbUb+Wo4kkN8ZoX36l8ZVjVjPjk2bPkYrR8oWvbEuZKqEHhXXM7O+1Lq4Ch0TniIxn+LLsp+Yk7iyMA8bT1ijUxvfD9Imp59TmRKf6/zi1PlxZZ+c+wD3CiHdLUP6tKVloOuJcVNTgA7fokNnEI1pKEIO5PGv64PULAUkeyfgCYulvtt516u/rQEDj6FBQA039rRFre+V4ruRxg4gyLOpg1PG0PSUYHlQUxGdOSGpfMXS70kmOjohd78yqOpNU5msqxEZIi+BtdywUZ48jYL/vBTXGxGGh5aGPNZF058JpU2xkyNrT19JN/E4BLuhKqDpa6//zhJgZcOpjPHcYpJI0s2LX05oA7NxbjgavBhCl+xJ5P+fSPJPyhdW19XBh24MmTEOs5I5RLAxriUoSMhwBd89kvM0kvwQKVjwqZRj38ciwf1M/X82dCZPC84lhtcDpJ6M/PEL+SIowWuD3xDR5HMqRTJbR3eehB/tRSnt1zstIXnq4rscoQl8HOnSBpkh1ZxV5KKbPI806PIdzbRoC607V9lRKK3l6UtabKFspbewq4tY+/H4Ifpy2gGqs6CwiSSctCaxSiGEK0vP+cfc4nPr08DSyMUy5cQxEOlkBLpcWRTToP8C81w7DD3MwmFemp4xAKPLq+HtRIrlaiNKoWZmVO0Bc4+cCasNXxAok6dwxGEEzePiMjFQMU7ye4WjsuRHkxNYPjuE8oxxRoIIWGzL82xSFerOIwWjB3unhynNtQ9pT7enYglucdPw3shWqnPD9Imb3csSCUySq2z8BnnaG7ZAGOd4fGMRQUYIAzY3+G1rCKyh;RvukMGpN46y83KU5;bLPPKQISL3Xa+/gr6I2W7g=="
             };
             var sb = new SuperBot(botSender);
 
-            var (appId, subId) = ("220240", "17982");
+            var (appId, subId) = ("252490", "244390");
             var session0 = await sb.GetSessiondId();
             sb.Login();
+            var t = await sb.GetPageHtml("https://store.steampowered.com/pointssummary/ajaxgetasyncconfig");
             var b= sb.IsOk();var session = await sb.GetSessiondId();
+
+            var balance= await sb.GetBotBalance_Proto();
+
+            var giftSumm = sb.GetSendedGiftsSum(currencyData, botSender.Region, null);
 
             await sb.SendInvitationViaAddAsFriend(new ProfileDataRes()
             {
@@ -384,8 +406,36 @@ namespace SteamDigiSellerBot.Tests
                 url = "https://steamcommunity.com/profiles/76561197988630828/"
             });
 
+            //await sb.GetBotVacGames(
+            //    new List<VacGame>() { new VacGame() { AppId = "252490", SubId = "244390", Name = "RUST", Id = 1 } }, "RU");
+
             var sendResult = await sb.SendGameProto(uint.Parse(appId), uint.Parse(subId), false, "28365100", "______", "Тест", botSender.Region);
         }
+
+        private CurrencyData currencyData = new CurrencyData()
+        {
+            Id = 1,
+            Currencies = new List<Currency>()
+            {
+                new Currency()
+                {
+                    Id = 8, Value = 155.12M, Code = "JPY", CountryCode = "JP", Name = "Японская иена", Position = 104,
+                    SteamId = 8, SteamSymbol = "¥"
+                },
+                new Currency()
+                {
+                    Id = 1, Value = 1M, Code = "USD", CountryCode = "US", Name = "Доллар", Position = 100, SteamId = 1,
+                    SteamSymbol = "$"
+                },
+                new Currency()
+                {
+                    Id = 5, Value = 100.87M, Code = "RUB", CountryCode = "RU", Name = "Рубли", Position = 1, SteamId = 5,
+                    SteamSymbol = "руб."
+                },
+            },
+            LastUpdateDateTime = DateTime.UtcNow
+        };
+
 
         [Test]
         public void TestDiscount()
@@ -460,6 +510,57 @@ namespace SteamDigiSellerBot.Tests
             }
 
             currencyData.LastUpdateDateTime = DateTime.UtcNow;
+        }
+
+        [Test]
+        public async Task Protobuf_ItemsSells()
+        {
+
+            using HttpClient client = new HttpClient();
+            //SteamApiClient apiClient = new SteamApiClient(new SteamProxy()
+            //{
+            //    Host = "195.19.168.10",
+            //    Port = 64234,
+            //    UserName = "6nEpBYwR",
+            //    Password = "v7YFz1pt"
+            //});
+
+            SteamApiClient apiClient = new SteamApiClient(client);
+            var r = new CStoreBrowse_GetItems_Request()
+            {
+                context = new()
+                {
+                    country_code = "UA",
+                    
+                },
+                data_request = new StoreBrowseItemDataRequest()
+                {
+                    include_all_purchase_options = true,
+                    include_release = true,
+                    include_included_items = true,
+                    include_basic_info = true,
+                    include_tag_count = int.MaxValue
+                }
+            };
+            r.ids.Add(new StoreItemID()
+            {
+                appid = 2555420,
+
+            });
+            try
+            {
+                var response =
+                    await apiClient.CallProtobufAsync<CStoreBrowse_GetItems_Request, CStoreBrowse_GetItems_Response>(
+                        System.Net.Http.HttpMethod.Get, "IStoreBrowseService/GetItems", r, 1,null);
+                var t= System.Text.Json.JsonSerializer.Serialize(response.store_items[0]);
+                var po = response.store_items.SelectMany(x => x.purchase_options)
+                    .Select(x => x.packageid != 0 ? x.packageid : x.bundleid);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
     }

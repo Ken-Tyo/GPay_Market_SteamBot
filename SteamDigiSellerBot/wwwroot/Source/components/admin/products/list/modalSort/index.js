@@ -33,6 +33,7 @@ const ToggleSort = ({orderSort, onSort}) => {
                 <div className={css.sortPriceDropDown}>
                     <p className={css.sortPriceDropDownItem} onClick={() => onSort('percent')}>По процентам</p>
                     <p className={css.sortPriceDropDownItem} onClick={() => onSort('price')}>По сумме чисел</p>
+                    <p className={css.sortPriceDropDownItem} onClick={() => onSort('discountPercent')}>По проценту скидки</p>
                 </div>
             )}
         </div>

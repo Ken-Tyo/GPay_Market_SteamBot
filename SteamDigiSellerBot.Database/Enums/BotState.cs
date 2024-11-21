@@ -9,8 +9,9 @@ namespace SteamDigiSellerBot.Database.Enums
     public enum BotState
     {
         active = 1,
-        tempLimit,
-        limit,
-        blocked
+        tempLimit=2,
+        limit=3,
+        blocked=4,
+        off=5
     }
 }

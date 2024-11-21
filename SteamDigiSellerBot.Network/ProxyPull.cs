@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Repositories;
 using SteamDigiSellerBot.Network.Services;
+using SteamDigiSellerBot.Utilities.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,7 @@ namespace SteamDigiSellerBot.Network
 
                 foreach (var p in _proxyRepository.ListAsync().Result)
                 {
+                    p.Password = CryptographyUtilityService.Decrypt(p.Password);
                     proxyData.Add(new ProxyData
                     {
                         SteamProxy = p
@@ -68,6 +70,7 @@ namespace SteamDigiSellerBot.Network
                 {
                     if (!proxyDict.ContainsKey(p.Id))
                     {
+                        p.Password = CryptographyUtilityService.Decrypt(p.Password);
                         proxyData.Add(new ProxyData
                         {
                             SteamProxy = p

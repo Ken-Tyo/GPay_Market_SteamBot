@@ -21,6 +21,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         public Dictionary<int, GsState> Q => q;
 
         public HashSet<int> ProcessOnAdd { get; set; } = new();
+        public HashSet<int> BanOnAdd { get; set; } = new();
 
 
         public GameSessionQueue(BaseGameSessionManager manager)

@@ -24,6 +24,7 @@ namespace SteamDigiSellerBot.Network.Helpers
         public static List<BotTransaction> ParseSteamTransactionsSum(
             string source, 
             CurrencyData currencyData, 
+            Currency? currency,
             Func<string, bool> predicate, 
             BotTransactionType transactionType)
         {
@@ -49,7 +50,7 @@ namespace SteamDigiSellerBot.Network.Helpers
             //File.WriteAllText("C://Temp/AllParserPurchases.txt", purchases.ToArray().ToString() + "\n\n\n"); // debug
 
             //var t = string.Join("\r\n\r\n", purchases);
-            List<BotTransaction> purchasesPrices = GetSteamHistoryPrices(purchases, currencyData, transactionType);
+            List<BotTransaction> purchasesPrices = GetSteamHistoryPrices(purchases, currencyData,currency, transactionType);
 
             return purchasesPrices;//.Sum();
         }
@@ -60,7 +61,7 @@ namespace SteamDigiSellerBot.Network.Helpers
         /// <param name="purchases"></param>
         /// <param name="currencyData"></param>
         /// <returns></returns>
-        public static List<BotTransaction> GetSteamHistoryPrices(List<string> purchases, CurrencyData currencyData,
+        public static List<BotTransaction> GetSteamHistoryPrices(List<string> purchases, CurrencyData currencyData, Currency? botCurrency,
             BotTransactionType transactionType)
         {
             List<BotTransaction> prices = new();
@@ -86,6 +87,9 @@ namespace SteamDigiSellerBot.Network.Helpers
                         Console.WriteLine($"currency not found for - {priceAndSymbol}");
                         continue;
                     }
+
+                    if (botCurrency!=null && currency.SteamSymbol == botCurrency.SteamSymbol)
+                        currency = botCurrency;
 
                     BotTransaction tran = new();
                     tran.Type = transactionType;
