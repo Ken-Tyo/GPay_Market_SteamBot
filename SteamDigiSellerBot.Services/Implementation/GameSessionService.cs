@@ -1630,6 +1630,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                             await _steamCountryCodeRepository.GetByPredicateAsync(db, r => r.Code == gs.Bot.Region);
                         gs.Item.LastSendedRegion = region;
                         gs.SendRegion = region;
+                        gs.ItemSteamCountryCodeId = gs.Item.SteamCountryCodeId;
                         gs.StatusId = GameSessionStatusEnum.Received; //Игра получена
                         valueJson = new GameSessionStatusLog.ValueJson
                         {

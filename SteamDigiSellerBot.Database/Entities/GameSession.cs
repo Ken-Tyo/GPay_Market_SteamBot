@@ -45,6 +45,12 @@ namespace SteamDigiSellerBot.Database.Entities
         [ForeignKey("SteamCountryCodeId")]
         public virtual SteamCountryCode SendRegion { get; set; }
 
+
+        public int? ItemSteamCountryCodeId { get; set; }
+
+        [ForeignKey("ItemSteamCountryCodeId")]
+        public virtual SteamCountryCode ItemRegion { get; set; }
+
         public virtual List<GameSessionStatusLog> GameSessionStatusLogs { get; set; }
         public int UserId { get; set; }
 

@@ -447,3 +447,6 @@ comment on table "UpdateItemInfoStat" is 'Статистика обновлен�
 comment on column "UpdateItemInfoStat"."JobCode" is 'Код задачи на обновление';
 comment on column "UpdateItemInfoStat"."UpdateDate" is 'Дата обновления';
 comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество отправленных запросов';
+
+23.11
+alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");

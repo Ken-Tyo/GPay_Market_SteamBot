@@ -113,6 +113,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
             var list = await db.GameSessions
                 .Include(gs => gs.SendRegion)
+                .Include(gs => gs.ItemRegion)
                 .Include(gs => gs.Item)
                 .Include(gs => gs.ItemData)
                 .Include(gs => gs.Bot)
