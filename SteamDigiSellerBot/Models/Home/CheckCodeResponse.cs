@@ -41,7 +41,6 @@ namespace SteamDigiSellerBot.Models.Home
         public DateTimeOffset? SessionEndTime { get; set; }
         public DateTimeOffset? AutoSendInvitationTime { get; set; }
         public DateTimeOffset AddedDateTime { get; set; }
-
         public bool IsDlc { get; set; }
         public bool IsAnotherBotExists { get; set; }
         public bool CanResendGame { get; set; }

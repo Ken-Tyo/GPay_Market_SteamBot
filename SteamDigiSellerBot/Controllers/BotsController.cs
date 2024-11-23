@@ -75,8 +75,6 @@ namespace SteamDigiSellerBot.Controllers
                 e.ProxyStr = CryptographyUtilityService.Decrypt(e.ProxyStr);
             });
 
-            await _steamBotRepository.CheckAndEncryptPasswords();
-
             return Ok(bots
                 .OrderByDescending(b => b.IsON)
                 .ThenBy(b => b.Region)
@@ -98,9 +96,9 @@ namespace SteamDigiSellerBot.Controllers
 
             Bot bot = _mapper.Map<Bot>(model);
 
-            bot.PasswordC = model.Password;
+            //bot.PasswordC = model.Password;
             bot.Password = CryptographyUtilityService.Encrypt(model.Password);
-            bot.ProxyStrC = model.Proxy;
+            //bot.ProxyStrC = model.Proxy;
             bot.ProxyStr = CryptographyUtilityService.Encrypt(model.Proxy);
 
             Bot oldBot = null;
@@ -113,7 +111,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 var oldBotPass = CryptographyUtilityService.Decrypt(oldBot.Password);
 
-                if ((bot.UserName != oldBot.UserName || bot.PasswordC != oldBotPass)
+                if ((bot.UserName != oldBot.UserName || model.Password != oldBotPass)
                  && model.MaFile is null)
                 {
                     ModelState.AddModelError("", "Поле MaFile является обязательным");
@@ -122,7 +120,7 @@ namespace SteamDigiSellerBot.Controllers
                 if (model.MaFile is null)
                 {
                     bot.MaFileStr = oldBot.MaFileStr;
-                    bot.MaFileStrC = oldBot.MaFileStrC;
+                    //bot.MaFileStrC = oldBot.MaFileStrC;
                 }
 
                 bot.BotRegionSetting = oldBot.BotRegionSetting;
@@ -135,11 +133,13 @@ namespace SteamDigiSellerBot.Controllers
                 bot.SendGameAttemptsCountDaily = oldBot.SendGameAttemptsCountDaily;
                 bot.SendGameAttemptsArrayDaily = oldBot.SendGameAttemptsArrayDaily;
                 bot.LastTimeUpdated = DateTime.UtcNow;
+                bot.PersonName = oldBot.PersonName ?? string.Empty;
+                bot.AvatarUrl = oldBot.AvatarUrl ?? string.Empty;
             }
 
             if (ModelState.ErrorCount > 0)
                 return createBadRequest();
-
+            
             if (bot != null && bot.SteamGuardAccount != null
                 && bot.SteamGuardAccount.AccountName.Equals(model.UserName))
             {

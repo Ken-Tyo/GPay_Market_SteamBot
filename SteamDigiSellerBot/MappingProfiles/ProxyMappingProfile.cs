@@ -30,7 +30,7 @@ namespace SteamDigiSellerBot.MappingProfiles
                 destination.Port = int.Parse(proxyData[1]);
                 destination.UserName = proxyData[2];
                 destination.Password = CryptographyUtilityService.Encrypt(proxyData[3]);
-                destination.PasswordC = proxyData[3];
+                //destination.PasswordC = proxyData[3];
             }
         }
     }

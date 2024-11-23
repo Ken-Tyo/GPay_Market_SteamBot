@@ -141,6 +141,8 @@ namespace SteamDigiSellerBot.Controllers
             if (req.StatusId == GameSessionStatusEnum.Done || req.StatusId == GameSessionStatusEnum.Closed)
             {
                 _gameSessionManager.RemoveWithStatus(gs.Id, req.StatusId);
+                gs.BlockOrder = true;
+                await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BlockOrder);
                 //_gameSessionManager.Remove(gs.Id);
                 //gs.Stage = GameSessionStage.Done;
                 //await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.Stage);
@@ -192,8 +194,9 @@ namespace SteamDigiSellerBot.Controllers
 
             var (_, prices) = _gameSessionService.GetSortedPriorityPrices(gs.Item);
             var firstPrice = prices.First();
-            var priorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                    .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
 
             gs.Bot = null;
             gs.BotSwitchList = new();
@@ -260,8 +263,9 @@ namespace SteamDigiSellerBot.Controllers
                 return this.CreateBadRequest();
             }
 
-            var priorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
 
             var count = Math.Min(req.CopyCount ?? 1, 50);
 

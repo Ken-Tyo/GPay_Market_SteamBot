@@ -53,8 +53,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public decimal? PriorityPrice { get; set; }
 
-        [NotMapped]
-        public decimal DigiSellerDealPriceUsd { get; set; }
+        public decimal? DigiSellerDealPriceUsd { get; set; }
 
         public int GameExistsRepeatSendCount { get; set; }
 
@@ -118,5 +117,6 @@ namespace SteamDigiSellerBot.Database.Entities
         SwitchBot=20,
         OrderConfirmed=21,
         InvitationBlocked=22,
+        GameRequired=23
     }
 }
