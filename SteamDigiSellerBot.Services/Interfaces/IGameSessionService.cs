@@ -14,6 +14,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
     {
         Task SetSteamContact(DatabaseContext db, GameSession gameSession, params Option[] opts);
         Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode);
+        Task<GameSession> ChangeBot(DatabaseContext db, string uniquecode);
         Task<bool> CheckGameSessionExpiredAndHandle(GameSession gs);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null);

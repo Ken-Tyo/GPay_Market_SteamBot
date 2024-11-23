@@ -11,7 +11,6 @@ using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
 using SteamKit2.Internal;
-using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -42,7 +41,7 @@ namespace SteamDigiSellerBot.Network
     {
         private Bot _bot { get; set; }
         
-        private SteamClient _steamClient { get; set; }
+        public SteamClient _steamClient { get; set; }
 
         private SteamUser _steamUser { get; set; }
 
@@ -50,7 +49,7 @@ namespace SteamDigiSellerBot.Network
 
         public bool _isRunning { get; set; }
         private string code = string.Empty;
-        private string accessToken = string.Empty;
+        public string accessToken = string.Empty;
         public bool Connected => !string.IsNullOrEmpty(accessToken);
         private string refreshToken = string.Empty;
         private string engUrlParam = "l=english";
@@ -589,10 +588,13 @@ namespace SteamDigiSellerBot.Network
                 if (string.IsNullOrEmpty(html))
                     return (false, null);
 
+                var currency = currencyData.Currencies
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(botData.Region, c.CountryCode, c.Code));
+
                 var purchases =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, 
-                        currencyData, 
+                        currencyData, currency,
                         x => x.Contains("Purchase") 
                          && !x.Contains("Gift Purchase") 
                          && !x.Contains("In-Game Purchase") 
@@ -604,7 +606,7 @@ namespace SteamDigiSellerBot.Network
                 var refunded =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html, 
-                        currencyData,
+                        currencyData,currency,
                         x => x.Contains("Refund")
                          && !x.Contains("Gift"),
                         BotTransactionType.Refund);
@@ -651,8 +653,7 @@ namespace SteamDigiSellerBot.Network
 
                 decimal maxSendedGiftsSum = (totalPurchaseSum + purchaseCNY + purchaseJPY) - refundedSum;
 
-                var currency = currencyData.Currencies
-                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(botData.Region,c.CountryCode,c.Code));
+
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);
@@ -708,19 +709,22 @@ namespace SteamDigiSellerBot.Network
                 if (string.IsNullOrEmpty(html))
                     return (false, -1, -1);
 
+                var currency = currencyData.Currencies
+                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(region, c.CountryCode, c.Code));
+
                 var sendedGifts =
                     SteamParseHelper.ParseSteamTransactionsSum(
-                        html, currencyData, x => x.Contains("Gift Purchase"), BotTransactionType.GiftPurchase);
+                        html, currencyData,currency, x => x.Contains("Gift Purchase"), BotTransactionType.GiftPurchase);
                 //Console.WriteLine(sendedGifts.Count); // debug 
 
                 var giftRefunded =
                     SteamParseHelper.ParseSteamTransactionsSum(
                         html,
-                        currencyData,
+                        currencyData,currency,
                         x => x.Contains("Gift Purchase")
                           && x.Contains("wht_refunded"),
                         BotTransactionType.GiftPurchaseRefund);
-                                //Console.WriteLine(giftRefunded.Count); // debug 
+                //Console.WriteLine(giftRefunded.Count); // debug 
 
                 //если есть настройки для проблемных регионов, взять дату с которой считать покупки
                 //var dateFrom = _bot.BotRegionSetting?.CreateDate ?? DateTime.MinValue;
@@ -731,8 +735,7 @@ namespace SteamDigiSellerBot.Network
                         : ToUsdSum(sendedGifts, DateTime.MinValue, currencyData);
                 decimal giftRefundedSum = ToUsdSum(giftRefunded, DateTime.MinValue, currencyData);
 
-                var currency = currencyData.Currencies
-                    .FirstOrDefault(c => SteamHelper.CurrencyCountryGroupFilter(region, c.CountryCode , c.Code));
+                
 
                 if (currency is null)
                     currency = currencyData.Currencies.FirstOrDefault(c => c.SteamId == 1);

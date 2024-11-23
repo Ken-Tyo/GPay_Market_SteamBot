@@ -7,6 +7,7 @@ import {
     apiCheckFriend,
     checkCode,
     apiResetSteamAcc,
+    apiResetBot
 } from '../../../containers/home/state';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import moment from 'moment';
@@ -410,7 +411,9 @@ const OrderState = () => {
                                                 text={tInvitationRefused('tryWithBot')}
                                                 className={css.but}
                                                 style={{ width: '377px' }}
-                                                onClick={() => { }}
+                                                onClick={() => {
+                                                    apiResetBot();
+                                                }}
                                             />
                                         </div>
                                     )}
@@ -472,7 +475,9 @@ const OrderState = () => {
                                                 text={tInvitationRefused('tryWithBot')}
                                                 className={css.but}
                                                 style={{ width: '377px' }}
-                                                onClick={() => { }}
+                                                onClick={() => {
+                                                    apiResetBot();
+                                                }}
                                             />
                                         </div>
                                     )}
@@ -842,7 +847,9 @@ const OrderState = () => {
                                                 text={tTempInviteBan('tryWithBot')}
                                                 className={css.but}
                                                 style={{ width: '377px' }}
-                                                onClick={() => { }}
+                                                onClick={() => {
+                                                    apiResetBot();
+                                                }}
                                             />
                                         </div>
                                     )}

@@ -197,6 +197,24 @@ export const apiResetSteamAcc = async () => {
   }
 };
 
+export const apiResetBot = async () => {
+    const { gameSession, autoInvitationTimeOut } = state.get();
+    //clearTimeout(autoInvitationTimeOut);
+    //setStateProp('autoInvitationTimeOut', null);
+
+    let res = await fetch(`/gamesession/resetBot`, {
+        method: 'POST',
+        body: mapToFormData({
+            uniquecode: gameSession.uniqueCode,
+        }),
+    });
+
+    if (res.ok) {
+        let gameSession = await res.json();
+        setStateProp('gameSession', gameSession);
+    }
+};
+
 // export const resetProfileUrl = () => {
 //   const { gameSession } = state.get();
 

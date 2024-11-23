@@ -127,11 +127,21 @@ const products = () => {
                     return b.steamPercent - a.steamPercent
                 }
             });
+        } else if(type === 'discountPercent'){
+            sorted.sort((a, b) => {
+              const aDiscount = a.discountPercent != null ? a.discountPercent : -Infinity;
+              const bDiscount = b.discountPercent != null ? b.discountPercent : -Infinity;
+              if (sortOrder === "asc") {
+                  return aDiscount - bDiscount;
+              } else {
+                  return bDiscount - aDiscount;
+              }
+          });
         } else {
             sorted.sort((a, b) => {
                 return a.id - b.id;
             });
-        };
+          };
         setSortedItems(sorted);
         setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     };

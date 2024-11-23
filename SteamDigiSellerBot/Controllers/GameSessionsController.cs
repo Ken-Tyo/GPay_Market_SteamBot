@@ -194,8 +194,9 @@ namespace SteamDigiSellerBot.Controllers
 
             var (_, prices) = _gameSessionService.GetSortedPriorityPrices(gs.Item);
             var firstPrice = prices.First();
-            var priorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                    .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
 
             gs.Bot = null;
             gs.BotSwitchList = new();
@@ -262,8 +263,9 @@ namespace SteamDigiSellerBot.Controllers
                 return this.CreateBadRequest();
             }
 
-            var priorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
 
             var count = Math.Min(req.CopyCount ?? 1, 50);
 
@@ -358,6 +360,24 @@ namespace SteamDigiSellerBot.Controllers
                 return this.CreateBadRequest();
 
             var gs = await _gameSessionService.ResetSteamContact(db, req.Uniquecode);
+            if (gs == null)
+            {
+                ModelState.AddModelError("", "такой заказ не найден");
+                return this.CreateBadRequest();
+            }
+
+            var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
+
+            return Ok(gsi);
+        }
+
+        [HttpPost, Route("gamesession/resetbot"), ValidationActionFilter]
+        public async Task<IActionResult> ResetBot(ResetProfileUrlReq req)
+        {
+            if (!ModelState.IsValid)
+                return this.CreateBadRequest();
+
+            var gs = await _gameSessionService.ChangeBot(db, req.Uniquecode);
             if (gs == null)
             {
                 ModelState.AddModelError("", "такой заказ не найден");

@@ -23,6 +23,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SteamAuthCore\SteamAuthCore\SteamAuthCore.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Protos\SteamDigiSellerBot.Protos.csproj" >
+	    <Aliases>OverrideProto</Aliases>
+    </ProjectReference>
     <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
     <ProjectReference Include="..\xNetStandart\src\xNetStandard.csproj" />
   </ItemGroup>

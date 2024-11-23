@@ -33496,28 +33496,19 @@ var apiResetSteamAcc = /*#__PURE__*/function () {
     return _ref12.apply(this, arguments);
   };
 }();
-
-// export const resetProfileUrl = () => {
-//   const { gameSession } = state.get();
-
-//   gameSession.statusId = 12;
-//   gameSession.steamProfileUrl = null;
-
-//   setStateProp('gameSession', gameSession);
-// };
-
-var apiConfirmSending = /*#__PURE__*/function () {
-  var _ref13 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee13(uniquecode) {
-    var res, gameSession;
+var apiResetBot = /*#__PURE__*/function () {
+  var _ref13 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee13() {
+    var _state$get5, gameSession, autoInvitationTimeOut, res, _gameSession2;
     return state_regeneratorRuntime().wrap(function _callee13$(_context13) {
       while (1) switch (_context13.prev = _context13.next) {
         case 0:
-          setStateProp('checkCodeLoading', true);
+          _state$get5 = state.get(), gameSession = _state$get5.gameSession, autoInvitationTimeOut = _state$get5.autoInvitationTimeOut; //clearTimeout(autoInvitationTimeOut);
+          //setStateProp('autoInvitationTimeOut', null);
           _context13.next = 3;
-          return fetch("/gamesession/confirmsending", {
+          return fetch("/gamesession/resetBot", {
             method: 'POST',
             body: mapToFormData({
-              uniquecode: uniquecode
+              uniquecode: gameSession.uniqueCode
             })
           });
         case 3:
@@ -33529,27 +33520,37 @@ var apiConfirmSending = /*#__PURE__*/function () {
           _context13.next = 7;
           return res.json();
         case 7:
-          gameSession = _context13.sent;
-          setStateProp('gameSession', gameSession);
+          _gameSession2 = _context13.sent;
+          setStateProp('gameSession', _gameSession2);
         case 9:
         case "end":
           return _context13.stop();
       }
     }, _callee13);
   }));
-  return function apiConfirmSending(_x13) {
+  return function apiResetBot() {
     return _ref13.apply(this, arguments);
   };
 }();
-var apiCheckFriend = /*#__PURE__*/function () {
+
+// export const resetProfileUrl = () => {
+//   const { gameSession } = state.get();
+
+//   gameSession.statusId = 12;
+//   gameSession.steamProfileUrl = null;
+
+//   setStateProp('gameSession', gameSession);
+// };
+
+var apiConfirmSending = /*#__PURE__*/function () {
   var _ref14 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee14(uniquecode) {
-    var res;
+    var res, gameSession;
     return state_regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
           setStateProp('checkCodeLoading', true);
           _context14.next = 3;
-          return fetch("/gamesession/checkfrined", {
+          return fetch("/gamesession/confirmsending", {
             method: 'POST',
             body: mapToFormData({
               uniquecode: uniquecode
@@ -33557,14 +33558,49 @@ var apiCheckFriend = /*#__PURE__*/function () {
           });
         case 3:
           res = _context14.sent;
-        case 4:
+          if (!res.ok) {
+            _context14.next = 9;
+            break;
+          }
+          _context14.next = 7;
+          return res.json();
+        case 7:
+          gameSession = _context14.sent;
+          setStateProp('gameSession', gameSession);
+        case 9:
         case "end":
           return _context14.stop();
       }
     }, _callee14);
   }));
-  return function apiCheckFriend(_x14) {
+  return function apiConfirmSending(_x13) {
     return _ref14.apply(this, arguments);
+  };
+}();
+var apiCheckFriend = /*#__PURE__*/function () {
+  var _ref15 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee15(uniquecode) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee15$(_context15) {
+      while (1) switch (_context15.prev = _context15.next) {
+        case 0:
+          setStateProp('checkCodeLoading', true);
+          _context15.next = 3;
+          return fetch("/gamesession/checkfrined", {
+            method: 'POST',
+            body: mapToFormData({
+              uniquecode: uniquecode
+            })
+          });
+        case 3:
+          res = _context15.sent;
+        case 4:
+        case "end":
+          return _context15.stop();
+      }
+    }, _callee15);
+  }));
+  return function apiCheckFriend(_x14) {
+    return _ref15.apply(this, arguments);
   };
 }();
 // EXTERNAL MODULE: ./node_modules/void-elements/index.js
@@ -45593,7 +45629,9 @@ var OrderState = function OrderState() {
                 style: {
                   width: '377px'
                 },
-                onClick: function onClick() {}
+                onClick: function onClick() {
+                  apiResetBot();
+                }
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactSellerWrapper,
@@ -45653,7 +45691,9 @@ var OrderState = function OrderState() {
                 style: {
                   width: '377px'
                 },
-                onClick: function onClick() {}
+                onClick: function onClick() {
+                  apiResetBot();
+                }
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactSellerWrapper,
@@ -46020,7 +46060,9 @@ var OrderState = function OrderState() {
                 style: {
                   width: '377px'
                 },
-                onClick: function onClick() {}
+                onClick: function onClick() {
+                  apiResetBot();
+                }
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactSellerWrapper,

@@ -43572,10 +43572,10 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
           try {
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var item = _step.value;
-              if (!item.tagPromoReplacementValues || item.tagPromoReplacementValues.length == 0) {
+              if (!item.replacementValues || item.replacementValues.length == 0) {
                 continue;
               }
-              var _iterator2 = ModalPromoTagEdit_createForOfIteratorHelper(item.tagPromoReplacementValues),
+              var _iterator2 = ModalPromoTagEdit_createForOfIteratorHelper(item.replacementValues),
                 _step2;
               try {
                 for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
@@ -45209,6 +45209,12 @@ var ToggleSort = function ToggleSort(_ref) {
           return onSort('price');
         },
         children: "\u041F\u043E \u0441\u0443\u043C\u043C\u0435 \u0447\u0438\u0441\u0435\u043B"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("p", {
+        className: modalSort_styles.sortPriceDropDownItem,
+        onClick: function onClick() {
+          return onSort('discountPercent');
+        },
+        children: "\u041F\u043E \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u0443 \u0441\u043A\u0438\u0434\u043A\u0438"
       })]
     })]
   });
@@ -45960,6 +45966,16 @@ var products = function products() {
             return 1;
           }
           return b.steamPercent - a.steamPercent;
+        }
+      });
+    } else if (type === 'discountPercent') {
+      sorted.sort(function (a, b) {
+        var aDiscount = a.discountPercent != null ? a.discountPercent : -Infinity;
+        var bDiscount = b.discountPercent != null ? b.discountPercent : -Infinity;
+        if (sortOrder === "asc") {
+          return aDiscount - bDiscount;
+        } else {
+          return bDiscount - aDiscount;
         }
       });
     } else {

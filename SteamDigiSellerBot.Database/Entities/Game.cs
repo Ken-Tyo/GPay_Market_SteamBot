@@ -1,8 +1,11 @@
-﻿using DatabaseRepository.Entities;
+﻿extern alias OverrideProto;
+using DatabaseRepository.Entities;
 using SteamDigiSellerBot.Database.Contexts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+using OverrideProto::SteamKit2.Internal;
 
 namespace SteamDigiSellerBot.Database.Entities
 {
@@ -37,6 +40,10 @@ namespace SteamDigiSellerBot.Database.Entities
 
 
         public virtual List<GamePrice> GamePrices { get; set; }
+
+        [Column(TypeName = "json")]
+        [JsonIgnore]
+        public StoreItem GameInfo { get; set; }
 
         
 

@@ -1,4 +1,5 @@
-﻿using Castle.Core.Internal;
+﻿extern alias OverrideProto;
+using Castle.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,11 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using SteamKit2.WebUI.Internal;
+using OverrideProto::SteamKit2.Internal;
 using xNet;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
 using static SteamDigiSellerBot.Network.Models.SteamAppDetails.InnerData.PackageGroup;
+using StoreItem_PurchaseOption = OverrideProto::SteamKit2.WebUI.Internal.StoreItem_PurchaseOption;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -135,7 +137,8 @@ namespace SteamDigiSellerBot.Network.Services
                             include_all_purchase_options = true,
                             include_release = true,
                             include_included_items = true,
-
+                            include_basic_info = true,
+                            include_tag_count = int.MaxValue
                         }
                     };
                     r.ids.Add(new StoreItemID()
@@ -156,11 +159,11 @@ namespace SteamDigiSellerBot.Network.Services
                             {
                                 foreach (var po in data.purchase_options)
                                 {
-                                    purchase_options_process(appId, gamesList, db, po, c);
+                                    purchase_options_process(appId, gamesList, db, data, po, c);
                                 }
                                 foreach (var po in data.accessories)
                                 {
-                                    purchase_options_process(appId, gamesList, db, po, c);
+                                    purchase_options_process(appId, gamesList, db, data, po, c);
                                 }
                             }
                             else
@@ -210,7 +213,7 @@ namespace SteamDigiSellerBot.Network.Services
             await Task.Delay(25);
         }
 
-        private void purchase_options_process(string appId, List<Game> gamesList, DatabaseContext db, StoreItem_PurchaseOption po,
+        private void purchase_options_process(string appId, List<Game> gamesList, DatabaseContext db, StoreItem data, StoreItem.PurchaseOption po,
             Currency c)
         {
             if (po.original_price_in_cents == 0 && po.final_price_in_cents > 0)
@@ -251,10 +254,15 @@ namespace SteamDigiSellerBot.Network.Services
                     targetPrice.LastUpdate = DateTime.UtcNow;
                 }
 
-                if (game.SteamCurrencyId == c.SteamId && game.IsPriceParseError)
+                if (game.SteamCurrencyId == c.SteamId)
                 {
-                    game.IsPriceParseError = false;
-                    db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                    if (game.IsPriceParseError)
+                    {
+                        game.IsPriceParseError = false;
+                        db.Entry(game).Property(x => x.IsPriceParseError).IsModified = true;
+                    }
+                    game.GameInfo = new StoreItem(data, po);
+                    db.Entry(game).Property(x => x.GameInfo).IsModified = true;
                 }
 
                 if (targetPrice.Id == 0)

@@ -83,6 +83,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     GameSessionStatusEnum.GameIsExists,
                     GameSessionStatusEnum.BotNotFound,
                     GameSessionStatusEnum.IncorrectRegion,
+                    GameSessionStatusEnum.GameRequired,
                     GameSessionStatusEnum.UnknownError,
                     GameSessionStatusEnum.ExpiredTimer,
                     GameSessionStatusEnum.ExpiredDiscount,

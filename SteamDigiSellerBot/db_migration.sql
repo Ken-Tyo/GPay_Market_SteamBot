@@ -377,6 +377,12 @@ ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
 
+19.11 
+ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
+
+21.11
+alter table "Games" ADD "GameInfo" JSON null;
+
 19.11.2024 Задача 142 - Добавление тэга %infoApps%
 CREATE TABLE "TagInfoAppsReplacements" (
 	"Id" serial PRIMARY KEY

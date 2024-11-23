@@ -36539,6 +36539,29 @@ namespace SteamKit2.WebUI.Internal
     [global::ProtoBuf.ProtoContract()]
     public partial class StoreItem : global::ProtoBuf.IExtensible
     {
+
+        public StoreItem_PurchaseOption GameOption { get; set; }
+        public StoreItem() {}
+
+        public StoreItem(StoreItem item, StoreItem_PurchaseOption option)
+        {
+            foreach (var p in this.GetType().GetProperties())
+            {
+                try
+                {
+                    p.SetValue(this, p.GetValue(item));
+                }
+                catch
+                {
+
+                }
+            }
+
+            this.purchase_options = null;
+            this.GameOption = option;
+        }
+
+
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
