@@ -117,5 +117,6 @@ namespace SteamDigiSellerBot.Database.Entities
         SwitchBot=20,
         OrderConfirmed=21,
         InvitationBlocked=22,
+        GameRequired=23
     }
 }

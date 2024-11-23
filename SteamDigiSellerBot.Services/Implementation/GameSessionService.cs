@@ -164,7 +164,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             //Некорректный регион - 5
             if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.RequestSent,
                     GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.GameIsExists, 
-                    GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked }.Contains(gs.StatusId))
+                    GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.GameRequired, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked }.Contains(gs.StatusId))
                 return gs;
 
             _gameSessionManager.Remove(gs.Id);
@@ -223,7 +223,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         /// This array contains the state numbers before the expiration time.
         /// </summary>
         public static GameSessionStatusEnum[] BeforeExpStatuses = new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.GameIsExists, GameSessionStatusEnum.SteamNetworkProblem, GameSessionStatusEnum.ProfileNoSet,
-            GameSessionStatusEnum.BotLimit, GameSessionStatusEnum.GameRejected, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.RequestSent, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.IncorrectProfile
+            GameSessionStatusEnum.BotLimit, GameSessionStatusEnum.GameRejected, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.RequestSent, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.GameRequired, GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.IncorrectProfile
             , GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.SendingGame, GameSessionStatusEnum.Queue, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked };
 
         /// <summary>
@@ -1548,10 +1548,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                     else if (sendRes.result == SendeGameResult.error)
                     {
-                        gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71
-                                      || sendRes.initTranRes?.purchaseresultdetail == 72
-                            ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
-                            : GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+                        if (sendRes.initTranRes?.purchaseresultdetail == 71
+                            || sendRes.initTranRes?.purchaseresultdetail == 72)
+                            gs.StatusId = GameSessionStatusEnum.IncorrectRegion;
+                        else if (sendRes.initTranRes?.purchaseresultdetail == 24)
+                            gs.StatusId = GameSessionStatusEnum.GameRequired;
+                        else
+                        gs.StatusId = GameSessionStatusEnum.UnknownError;
 
                         var mes = "Не удалось отправить игру.";
                         if (!string.IsNullOrEmpty(sendRes.errMessage))
