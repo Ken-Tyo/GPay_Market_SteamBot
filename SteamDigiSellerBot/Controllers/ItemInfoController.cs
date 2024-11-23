@@ -11,6 +11,7 @@ using SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand;
 using SteamDigiSellerBot.Network.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,12 +25,16 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IItemNetworkService _itemNetworkService;
         private readonly TagTypeReplacementsRepository _tagTypeReplacementsRepository;
         private readonly TagPromoReplacementsRepository _tagPromoReplacementsRepository;
+        private readonly TagInfoAppsReplacementsRepository _tagInfoAppsReplacementsRepository;
+        private readonly TagInfoDlcReplacementsRepository _tagInfoDlcReplacementsRepository;
 
         public ItemInfoController(
             UserManager<User> userManager,
             IItemNetworkService itemNetworkService,
             TagTypeReplacementsRepository tagTypeReplacementsRepository,
             TagPromoReplacementsRepository tagPromoReplacementsRepository,
+            TagInfoAppsReplacementsRepository tagInfoAppsReplacementsRepository,
+            TagInfoDlcReplacementsRepository tagInfoDlcReplacementsRepository,
             IMapper mapper)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -39,6 +44,12 @@ namespace SteamDigiSellerBot.Controllers
 
             _tagPromoReplacementsRepository = tagPromoReplacementsRepository
                 ?? throw new ArgumentNullException(nameof(tagPromoReplacementsRepository));
+
+            _tagInfoAppsReplacementsRepository = tagInfoAppsReplacementsRepository
+                ?? throw new ArgumentNullException(nameof(tagInfoAppsReplacementsRepository));
+
+            _tagInfoDlcReplacementsRepository = tagInfoDlcReplacementsRepository
+                ?? throw new ArgumentNullException(nameof(tagInfoDlcReplacementsRepository));
         }
 
         [HttpPatch("iteminfo")]
@@ -49,12 +60,16 @@ namespace SteamDigiSellerBot.Controllers
             User user = await _userManager.GetUserAsync(User);
             var tagTypeReplacements = await _tagTypeReplacementsRepository.GetAsync(user.Id, cancellationToken);
             var tagPromoReplacements = await _tagPromoReplacementsRepository.GetAsync(user.Id, cancellationToken);
+            var tagInfoAppsReplacements = await _tagInfoAppsReplacementsRepository.GetAsync(user.Id, cancellationToken);
+            var tagInfoDlcReplacements = await _tagInfoDlcReplacementsRepository.GetAsync(user.Id, cancellationToken);
 
             await _itemNetworkService.UpdateItemsInfoesAsync(
                 updateItemInfoCommands,
                 user.Id,
                 tagTypeReplacements,
                 tagPromoReplacements,
+                tagInfoAppsReplacements,
+                tagInfoDlcReplacements,
                 cancellationToken);
 
             return Ok();

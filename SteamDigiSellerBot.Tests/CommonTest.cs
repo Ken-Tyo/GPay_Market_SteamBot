@@ -83,7 +83,7 @@ namespace SteamDigiSellerBot.Tests
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
-                State = Database.Enums.BotState.active,
+                State = SteamDigiSellerBot.Database.Enums.BotState.active,
                 Password = "MN86^ghjfu8D",
                 ProxyStr = "195.19.169.9:62530:AwJyXm9A:hcnnkmGv",
                 MaFileStr = "{\"shared_secret\":\"e2GxqeoBMotoE7h4+hAjvLCQEK4=\",\"serial_number\":\"4762780954051992012\",\"revocation_code\":\"R09973\",\"uri\":\"otpauth://totp/Steam:sa3lyffh?secret=PNQ3DKPKAEZIW2ATXB4PUEBDXSYJAEFO&issuer=Steam\",\"server_time\":1605835260,\"account_name\":\"sa3lyffh\",\"token_gid\":\"2669dde0444363cf\",\"identity_secret\":\"6BItb2HgJqNTKXRm3DPvF495nsQ=\",\"secret_1\":\"SrpKQPX0GUBk8R51lslshxKN580=\",\"status\":0,\"device_id\":\"android:f623e2d3-da2f-85d2-574e-640c91405995\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"7d6472a2a594e4a0868b8e4d\",\"SteamLogin\":\"76561199107382870%7C%7CE0D4AD34842D8983848E949F2283CF39A9E09BE9\",\"SteamLoginSecure\":\"76561199107382870%7C%7CD5EBD280891B4AEAE816C836EEB484CE3EBD1038\",\"WebCookie\":\"0B496766FF5DAB06186B8C20F6926FEC82706172\",\"OAuthToken\":\"e4be6d8572f74aac6eb067b31c5d8a72\",\"SteamID\":76561199107382870}}"
@@ -112,7 +112,7 @@ namespace SteamDigiSellerBot.Tests
                     },
             };
 
-            user = new UserDB { AspNetUser = new Database.Models.User { Id = "1" } };
+            user = new UserDB { AspNetUser = new User { Id = "1" } };
 
             wsns = new Mock<IWsNotificationSender>();
             dns = new Mock<IDigiSellerNetworkService>();
@@ -380,7 +380,7 @@ namespace SteamDigiSellerBot.Tests
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
-                State = Database.Enums.BotState.active,
+                State = SteamDigiSellerBot.Database.Enums.BotState.active,
                 Password = "M8&ho898554",
                 ProxyStr = "91.220.206.224:63674:AwJyXm9A:hcnnkmGv",
                 MaFileStr = "{\"shared_secret\":\"gojt7eeVrw2QEnd8LOrW4oSlnmI=\",\"serial_number\":\"7015747733681894824\",\"revocation_code\":\"R72448\",\"uri\":\"otpauth://totp/Steam:rrjmhxuxjgctz?secret=QKEO33PHSWXQ3EASO56CZ2WW4KCKLHTC&issuer=Steam\",\"server_time\":1605834514,\"account_name\":\"rrjmhxuxjgctz\",\"token_gid\":\"24f5dde04538248d\",\"identity_secret\":\"AO3phpaiTECOHs2/s5a8G9E+udo=\",\"secret_1\":\"NOvazrJWvphNpwGUu1cOV767ogo=\",\"status\":0,\"device_id\":\"android:dfc31d94-120c-b6fb-658a-5c21757b00d8\",\"fully_enrolled\":true,\"Session\":{\"SessionID\":\"4d9122e664e81f1663df0f04\",\"SteamLogin\":\"76561199107283477%7C%7C471F5518BC4315421C33CFEE5E6BC8E47E344FCC\",\"SteamLoginSecure\":\"76561199107283477%7C%7C500B94061BBEA5FA6E78846CEB9DCC77A7241751\",\"WebCookie\":\"D479C6296F6D0A494603A24AA8FA4186AD4ECE33\",\"OAuthToken\":\"20c6bfb5ea21f28f083d69f3ac082e8c\",\"SteamID\":76561199107283477}}"

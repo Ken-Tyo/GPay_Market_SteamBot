@@ -26,6 +26,8 @@ using static SteamDigiSellerBot.Network.Services.DigiSellerNetworkService;
 using SteamDigiSellerBot.Network.Extensions;
 using SteamDigiSellerBot.Database.Repositories.TagRepositories;
 using SteamDigiSellerBot.Database.Entities.TagReplacements;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Text;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -42,11 +44,28 @@ namespace SteamDigiSellerBot.Network.Services
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
             CancellationToken cancellationToken);
     }
 
     public class ItemNetworkService : IItemNetworkService
     {
+        private const int ChunkSize = 1000;
+        private const string GamesWithMultipleSubIdPlainSQL = @"
+WITH cte AS
+(SELECT DISTINCT
+	""Id"",
+	COUNT(1) OVER(PARTITION BY ""AppId"") AS GamesByAppIdCnt
+FROM
+	public.""Games"" g)
+SELECT
+    g.* 
+FROM
+	""Games"" g
+JOIN cte ON cte.GamesByAppIdCnt > 1 AND cte.""Id"" = g.""Id""
+ORDER BY g.""AppId""";
+
         private readonly ISteamNetworkService _steamNetworkService;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly IConfiguration _configuration;
@@ -54,7 +73,8 @@ namespace SteamDigiSellerBot.Network.Services
         private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly ILogger<ItemNetworkService> _logger;
         private readonly ISteamProxyRepository _steamProxyRepository;
-        private readonly UpdateItemsInfoService _updateItemsInfoService;
+        private readonly IUpdateItemsInfoService _updateItemsInfoService;
+        private readonly GameAppsRepository _gameAppsRepository;
 
         public ItemNetworkService(
            ISteamNetworkService steamNetworkService,
@@ -64,7 +84,8 @@ namespace SteamDigiSellerBot.Network.Services
            IConfiguration configuration,
            ILogger<ItemNetworkService> logger,
            ISteamProxyRepository steamProxyRepository,
-           UpdateItemsInfoService updateItemsInfoService)
+           IUpdateItemsInfoService updateItemsInfoService,
+           GameAppsRepository gameAppsRepository)
         {
             _steamNetworkService = steamNetworkService;
             _digiSellerNetworkService = digiSellerNetworkService;
@@ -74,6 +95,7 @@ namespace SteamDigiSellerBot.Network.Services
             _logger = logger;
             _steamProxyRepository = steamProxyRepository;
             _updateItemsInfoService = updateItemsInfoService ?? throw new ArgumentNullException(nameof(updateItemsInfoService));
+            _gameAppsRepository = gameAppsRepository ?? throw new ArgumentNullException(nameof(gameAppsRepository));
         }
 
         public async Task SetPrices(
@@ -178,7 +200,9 @@ namespace SteamDigiSellerBot.Network.Services
             UpdateItemInfoCommands updateItemInfoCommands,
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
-            IReadOnlyList<TagPromoReplacement> tagPromoReplacements, 
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
             CancellationToken cancellationToken)
         {
             var languageCodes = updateItemInfoCommands.InfoData?.Any() == true
@@ -186,7 +210,14 @@ namespace SteamDigiSellerBot.Network.Services
                 : updateItemInfoCommands.AdditionalInfoData.Select(x => x.Locale).ToHashSet();
 
             var getProductsBaseAsyncTask = GetProductsBaseAsync(updateItemInfoCommands.Goods, languageCodes, cancellationToken);
-            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(updateItemInfoCommands, aspNetUserId, tagTypeReplacements, tagPromoReplacements, cancellationToken);
+            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(
+                updateItemInfoCommands,
+                aspNetUserId,
+                tagTypeReplacements,
+                tagPromoReplacements,
+                tagInfoAppsReplacements,
+                tagInfoDlcReplacements,
+                cancellationToken);
             await Task.WhenAll(getProductsBaseAsyncTask, replaceTagsAsyncTask);
 
             EnrichUpdateItemInfoCommands(updateItemInfoCommands.Goods, getProductsBaseAsyncTask.Result, languageCodes);
@@ -204,6 +235,8 @@ namespace SteamDigiSellerBot.Network.Services
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
             CancellationToken cancellationToken)
         {
             if (updateItemInfoCommands.InfoData.ContainsTags())
@@ -214,6 +247,8 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    tagInfoAppsReplacements,
+                    tagInfoDlcReplacements,
                     (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> infoData) => updateItemInfoGoods.SetInfoData(infoData),
                     cancellationToken);
             }
@@ -227,6 +262,8 @@ namespace SteamDigiSellerBot.Network.Services
                     aspNetUserId,
                     tagTypeReplacements,
                     tagPromoReplacements,
+                    tagInfoAppsReplacements,
+                    tagInfoDlcReplacements,
                     (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> additionalInfoData) => updateItemInfoGoods.SetAdditionalInfoData(additionalInfoData),
                     cancellationToken);
             }
@@ -238,6 +275,8 @@ namespace SteamDigiSellerBot.Network.Services
             string aspNetUserId,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
             Action<UpdateItemInfoGoods, List<LocaleValuePair>> setData,
             CancellationToken cancellationToken)
         {
@@ -249,12 +288,96 @@ namespace SteamDigiSellerBot.Network.Services
                     .Where(x => updateItemInfoGoods.Select(x => x.ItemId).Contains(x.Id))
                     .ToListAsync(cancellationToken);
 
+            var gamesByAppId = _gameAppsRepository.GetAppIdWithNames();
+            var dlcWithParent = _gameAppsRepository.GetDlcWithParent();
+
             foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
                 var item = itemsWithTags.First(x => x.Id == updateItemInfoGoodsItem.ItemId);
-                setData(updateItemInfoGoodsItem, infoData.GetReplacedTagsToValue(item, tagTypeReplacements, tagPromoReplacements));
+                setData(
+                    updateItemInfoGoodsItem,
+                    infoData.GetReplacedTagsToValue(
+                        item,
+                        tagTypeReplacements,
+                        tagPromoReplacements,
+                        tagInfoAppsReplacements,
+                        tagInfoDlcReplacements));
+
+                string replaceString = string.Empty;
+                if (gamesByAppId.ContainsKey(item.AppId))
+                {
+                    var sb = new StringBuilder();
+                    foreach (var gameByAppId in gamesByAppId[item.AppId])
+                    {
+                        sb.Append("• ").Append(gameByAppId.Name).Append(Environment.NewLine);
+                    }
+                    replaceString = sb.ToString();
+                }
+
+                ReplaceStrongTag(StrongTagsConstants.AppsListTagTemplate, updateItemInfoGoodsItem, replaceString);
+
+                replaceString = string.Empty;
+                var dlc = dlcWithParent.SingleOrDefault(x => x.AppId == item.AppId && x.ParentGameApp != null);
+                if (dlc != null)
+                {
+                    replaceString = $"• {dlc.ParentGameApp.Name}";
+                }
+
+                ReplaceStrongTag(StrongTagsConstants.GameParentListTagTemplate, updateItemInfoGoodsItem, replaceString);
             }
         }
+
+        private void ReplaceStrongTag(
+            string tag,
+            UpdateItemInfoGoods updateItemInfoGoodsItem,
+            string replaceString)
+        {
+            List<LocaleValuePair> infoDataList = new List<LocaleValuePair>();
+
+            bool isChanged = false;
+            foreach (var infoData in updateItemInfoGoodsItem.InfoData)
+            {
+                if (infoData.Value.Contains(tag))
+                {
+                    infoDataList.Add(new LocaleValuePair(infoData.Locale, infoData.Value.Replace(tag, replaceString)));
+                    isChanged = true;
+                }
+                else
+                {
+                    infoDataList.Add(infoData);
+                }
+            }
+
+            if (isChanged)
+            {
+                updateItemInfoGoodsItem.SetInfoData(infoDataList);
+            }
+
+            isChanged = false;
+            List<LocaleValuePair> additionalInfoDataList = new List<LocaleValuePair>();
+            foreach (var additionalInfoData in updateItemInfoGoodsItem.AdditionalInfoData)
+            {
+                if (additionalInfoData.Value.Contains(tag))
+                {
+                    additionalInfoDataList.Add(
+                        new LocaleValuePair(
+                            additionalInfoData.Locale,
+                            additionalInfoData.Value.Replace(tag, replaceString)));
+
+                    isChanged = true;
+                }
+                else
+                {
+                    additionalInfoDataList.Add(additionalInfoData);
+                }
+            }
+
+            if (isChanged)
+            {
+                updateItemInfoGoodsItem.SetAdditionalInfoData(additionalInfoDataList);
+            }
+        }
+
 
         private static void EnrichUpdateItemInfoCommands(
             List<UpdateItemInfoGoods> updateItemInfoGoods,

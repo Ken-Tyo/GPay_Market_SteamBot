@@ -376,3 +376,68 @@ ALTER TABLE "AspNetUsers" ADD "DigisellerIDC" text NULL;
 ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
+
+19.11.2024 Задача 142 - Добавление тэга %infoApps%
+CREATE TABLE "TagInfoAppsReplacements" (
+	"Id" serial PRIMARY KEY
+);
+
+comment on table "TagInfoAppsReplacements" is 'Замены тэгов состава изделия - %infoApps%';
+comment on column "TagInfoAppsReplacements"."Id" is 'Идентификатор';
+
+CREATE TABLE "TagInfoAppsReplacementValues" (
+	"TagInfoAppsReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagInfoAppsReplacementId", "LanguageCode")
+);
+
+comment on table "TagInfoAppsReplacementValues" is 'Значения для замены тэгов состава изделия - %infoApps%';
+comment on column "TagInfoAppsReplacementValues"."TagInfoAppsReplacementId" is 'ИД замены тэга состава изделия';
+comment on column "TagInfoAppsReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagInfoAppsReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagInfoAppsReplacementValues" add constraint "TagInfoAppsReplacementValues_TagInfoAppsReplacementId_fkey" 
+foreign key ("TagInfoAppsReplacementId") references "TagInfoAppsReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagInfoAppsReplacementValues" add constraint "TagInfoAppsReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+20.11.2024 Задача 141 - Добавление тэга %infoDLC%
+CREATE TABLE "TagInfoDlcReplacements" (
+	"Id" serial PRIMARY KEY
+);
+
+comment on table "TagInfoDlcReplacements" is 'Замены тэгов состава изделия - %infoDLC%';
+comment on column "TagInfoDlcReplacements"."Id" is 'Идентификатор';
+
+CREATE TABLE "TagInfoDlcReplacementValues" (
+	"TagInfoDlcReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagInfoDlcReplacementId", "LanguageCode")
+);
+
+comment on table "TagInfoDlcReplacementValues" is 'Значения для замены тэгов с требованиями основной игры к DLC - %infoDLC%';
+comment on column "TagInfoDlcReplacementValues"."TagInfoDlcReplacementId" is 'ИД замены тэга с требованиями основной игры к DLC';
+comment on column "TagInfoDlcReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagInfoDlcReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagInfoDlcReplacementValues" add constraint "TagInfoDlcReplacementValues_TagInfoDlcReplacementId_fkey" 
+foreign key ("TagInfoDlcReplacementId") references "TagInfoDlcReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagInfoDlcReplacementValues" add constraint "TagInfoDlcReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+22.11.2024 Задача 68
+CREATE TABLE UpdateItemInfoStat (
+	"JobCode" varchar(16),
+	"UpdateDate" date,
+	"RequestCount" int not null,
+	PRIMARY KEY("JobCode")
+);
+
+comment on table "UpdateItemInfoStat" is 'Статистика обновлений описаний товаров за день';
+comment on column "UpdateItemInfoStat"."JobCode" is 'Код задачи на обновление';
+comment on column "UpdateItemInfoStat"."UpdateDate" is 'Дата обновления';
+comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество отправленных запросов';

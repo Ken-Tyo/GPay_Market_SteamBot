@@ -44,7 +44,7 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
         return;
       }
 
-      setTagPromoReplacementValues(data.flatMap(x => x.tagPromoReplacementValues));
+      setTagPromoReplacementValues(data.flatMap(x => x.replacementValues));
     })
   }, [])
 
@@ -54,7 +54,7 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
         return;
       }
 
-      setTagTypeReplacementValues(data.flatMap(x => x.tagTypeReplacementValues));
+      setTagTypeReplacementValues(data.flatMap(x => x.replacementValues));
     })
   }, [])
 
