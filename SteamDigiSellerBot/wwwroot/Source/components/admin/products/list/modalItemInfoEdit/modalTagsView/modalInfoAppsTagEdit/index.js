@@ -3,29 +3,16 @@ import Button from '../../../../../../shared/button';
 import ModalBase from '../../../../../../shared/modalBase';
 import css from './styles.scss';
 import Textarea from '../../../../../../shared/textarea'
-import { apiFetchTagPromoReplacementValues, apiTagPromoReplacementValues, apiFetchMarketPlaces, apiFetchLanguages } from '../../../../../../../containers/admin/state'
+import { apiFetchTagInfoAppsReplacementValues, apiTagInfoAppsReplacementValues, apiFetchMarketPlaces, apiFetchLanguages } from '../../../../../../../containers/admin/state'
 
-const ModalPromoTagEdit = ({ isOpen, onClose }) => {
+const ModalInfoAppsTagEdit = ({ isOpen, onClose }) => {
   if (!isOpen)
     return;
 
   const [languages, setLanguages] = useState([]) 
-  const [marketPlaces, setMarketPlaces] = useState([])
   const [selectedRuPlatform, setSelectedRuPlatform] = useState(null);
   const [selectedEnPlatform, setSelectedEnPlatform] = useState(null);
   const [values, setValues] = useState(new Map());
-
-  const getInitValues = (marketPlaceData, langData) => {
-    let map = new Map();
-
-    marketPlaceData.forEach((item) => {
-      langData.forEach((lang) => {
-        map.set(`${item.id}${lang}`, '')
-      })
-    })
-
-    return map;
-  }
 
   useEffect(() => {
     apiFetchLanguages().then((langData) => {
@@ -36,104 +23,61 @@ const ModalPromoTagEdit = ({ isOpen, onClose }) => {
       var langData = langData.map(x => x.code);
       setLanguages(langData)
 
-      apiFetchMarketPlaces().then((marketPlaceData) => {
-        if (!marketPlaceData || marketPlaceData.length == 0) {
+      apiFetchTagInfoAppsReplacementValues().then((data) => {
+        if (!data || data.length == 0) {
           return;
-        }
+        }        
 
-        setMarketPlaces(marketPlaceData)
-        setSelectedEnPlatform(marketPlaceData[0])
-        setSelectedRuPlatform(marketPlaceData[0])
-
-        apiFetchTagPromoReplacementValues().then((data) => {
-          if (!data || data.length == 0) {
-            return;
+        let valuesMap = new Map();
+        for (var item of data) {
+          if (!item.replacementValues || item.replacementValues.length == 0) {
+            continue;
           }
 
-          let newMap = new Map(getInitValues(marketPlaceData, langData))
-          for (var item of data) {
-            if (!item.replacementValues || item.replacementValues.length == 0) {
+          for (var tagInfoAppsReplacementValue of item.replacementValues) {
+            if (!tagInfoAppsReplacementValue.value) {
               continue;
             }
 
-            for (var tagPromoReplacementValue of item.replacementValues) {
-              if (!tagPromoReplacementValue.value) {
-                continue;
-              }
-
-              newMap = new Map(newMap.set(`${item.marketPlaceId}${tagPromoReplacementValue.languageCode}`, tagPromoReplacementValue.value));
-            }
+            valuesMap.set(`${tagInfoAppsReplacementValue.languageCode}`, tagInfoAppsReplacementValue.value)
           }
+        }
 
-          setValues(newMap);
-        })
+        setValues(valuesMap);
       })
     })
   }, [])
 
   const handleChangeRussianText = (text) => {
-    setValues(new Map(values.set(`${selectedRuPlatform.id}${languages[0]}`, text)))
+    setValues(new Map(values.set(`${languages[0]}`, text)))
   };
 
   const handleChangeEnglishText = (text) => {
-    setValues(new Map(values.set(`${selectedEnPlatform.id}${languages[1]}`, text)))
+    setValues(new Map(values.set(`${languages[1]}`, text)))
   };
 
   const onSave = async () => {
     var data = [];
-    for (var item of marketPlaces) {
-      var marketPlaceItem = {
-        marketPlaceId: item.id,
-        values: []
-      };
-
-      for (var language of languages) {
-        marketPlaceItem.values.push({
-          languageCode: language,
-          value: values.get(`${item.id}${language}`),
-        })
-      }
-
-      data.push(marketPlaceItem)
+    for (var language of languages) {
+      data.push({
+        languageCode: language,
+        value: values.get(`${language}`),
+      })
     }
 
-    await apiTagPromoReplacementValues(data);
+    await apiTagInfoAppsReplacementValues({ values: data });
     onClose();
-  }
-
-  const renderPlatforms = (lang) => {
-    if (!marketPlaces || marketPlaces.length == 0) {
-      return null;
-    }
-
-    return marketPlaces.map((value) => renderPlatform(lang, value))
-  }
-
-  const renderPlatform = (lang, value) => {
-    if (lang == languages[0]) {
-      return (<div
-        className={selectedRuPlatform?.id == value.id ? css.activeTab : ''}
-        onClick={() => setSelectedRuPlatform(value)}>
-        {value.name}
-    </div>)
-    } else if (lang == languages[1]) {
-      return (<div
-        className={selectedEnPlatform?.id == value.id ? css.activeTab : ''}
-        onClick={() => setSelectedEnPlatform(value)}>
-        {value.name}
-    </div>)
-    }
   }
 
   return (
     <ModalBase
       isOpen={isOpen}
-      className={css.tagPromoEditModalContent}
+      className={css.tagInfoAppsEditModalContent}
       width={'890px'}
       height={'auto'}
     >
-      <div className={css.title}><h1>Теги - %promo%</h1></div>
-      <div className={css.titleDescription}>Передает рекламное промо, можно указать<br/>товары продавца для продвижения</div>
+      <div className={css.title}><h1>Теги - %infoApps%</h1></div>
+      <div className={css.titleDescription}>Перечисление состава издания</div>
       <div className={css.tagItemEdit}>
         <div className={css.tagItemEditLang}>
           <div className={css.tagItemEditLangTitle}>
@@ -143,17 +87,15 @@ const ModalPromoTagEdit = ({ isOpen, onClose }) => {
                 <path d="M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z" fill="#D52B1E" />
                 <path d="M0 7.47266H32.2862V14.9455H0V7.47266Z" fill="#0039A6" />
               </svg>
-              <span>Игра</span>
             </div>
-            <div className={css.tagItemEditLangPlatforms}>{renderPlatforms(languages[0])}</div>
           </div>
           <div className={css.tagItemValue}>
             <Textarea
               onChange={handleChangeRussianText}
-              defaultValue={values ? values.get(`${selectedRuPlatform?.id}${languages[0]}`) : ''}
-              value={values ? values.get(`${selectedRuPlatform?.id}${languages[0]}`) : ''}
-              placeholder={'Введенный текст промо'}
-              height={'327px'}
+              defaultValue={values ? values.get(`${languages[0]}`) : ''}
+              value={values ? values.get(`${languages[0]}`) : ''}
+              placeholder={'Состав данного изделия: <apps_list>'}
+              height={'190px'}
               width={'100%'}
             />
           </div>
@@ -178,27 +120,25 @@ const ModalPromoTagEdit = ({ isOpen, onClose }) => {
                 <path d="M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z" fill="#C8102E" />
                 <path d="M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z" fill="#C8102E" />
               </svg>
-              <span>Игра</span>
             </div>
-            <div className={css.tagItemEditLangPlatforms}>{renderPlatforms(languages[1])}</div>
           </div>
           <div className={css.tagItemValue}>
             <Textarea
               onChange={handleChangeEnglishText}
-              defaultValue={values ? values.get(`${selectedEnPlatform?.id}${languages[1]}`) : ''}
-              value={values ? values.get(`${selectedEnPlatform?.id}${languages[1]}`) : ''}
-              placeholder={'Введенный текст промо'}
-              height={'327px'}
+              defaultValue={values ? values.get(`${languages[1]}`) : ''}
+              value={values ? values.get(`${languages[1]}`) : ''}
+              placeholder={'The composition of this publication: <apps_list>'}
+              height={'190px'}
               width={'100%'}
             />
           </div>
         </div>
       </div>
-      <div className={css.tagPromoEditButtons}>
+      <div className={css.tagInfoAppsEditButtons}>
         <Button width={'217px'} height={'auto'} onClick={onSave}>Сохранить</Button>
         <Button width={'217px'} height={'auto'} onClick={onClose}>Закрыть</Button>
       </div>
     </ModalBase>);
 }
 
-export default ModalPromoTagEdit;
+export default ModalInfoAppsTagEdit;

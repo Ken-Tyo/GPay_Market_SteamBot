@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
-                State = Database.Enums.BotState.active,
+                State = SteamDigiSellerBot.Database.Enums.BotState.active,
                 LastTimeUpdated = DateTime.UtcNow.AddMinutes(-5), // для проверки на последнее обновление
                 Password = "MN86^ghjfu8D",
                 ProxyStr = "195.19.169.9:62530:AwJyXm9A:hcnnkmGv",
@@ -346,7 +346,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
-                State = Database.Enums.BotState.active,
+                State = SteamDigiSellerBot.Database.Enums.BotState.active,
                 LastTimeUpdated = DateTime.UtcNow.AddMinutes(-5), // для проверки на последнее обновление
                 Password = "MN86^ghjfu8D",
                 ProxyStr = "195.19.169.9:62530:AwJyXm9A:hcnnkmGv",

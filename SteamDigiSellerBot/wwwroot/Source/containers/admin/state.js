@@ -1109,6 +1109,66 @@ export const apiTagPromoReplacementValues = async (data) => {
   return false;
 };
 
+export const apiFetchTagInfoAppsReplacementValues = async () => {
+  let res = await fetch(`/taginfoappsreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagInfoAppsReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/taginfoappsreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagInfoDlcReplacementValues = async () => {
+  let res = await fetch(`/taginfodlcreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagInfoDlcReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/taginfodlcreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
 export const apiGetUpdateItemInfoJobStatistics = async () => {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");

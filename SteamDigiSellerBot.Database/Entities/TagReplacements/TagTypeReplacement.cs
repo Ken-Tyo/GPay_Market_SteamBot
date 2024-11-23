@@ -1,9 +1,5 @@
 ﻿using DatabaseRepository.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot.Database.Entities.TagReplacements
 {
@@ -13,6 +9,6 @@ namespace SteamDigiSellerBot.Database.Entities.TagReplacements
 
         public bool IsDlc { get; init; }
 
-        public virtual ICollection<TagTypeReplacementValue> TagTypeReplacementValues { get; init; }
+        public virtual ICollection<TagTypeReplacementValue> ReplacementValues { get; init; }
     }
 }

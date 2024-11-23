@@ -84,7 +84,7 @@ namespace SteamDigiSellerBot.Database.Repositories.TagRepositories
 
             return await databaseContext
                 .TagTypeReplacements
-                .Include(x => x.TagTypeReplacementValues)
+                .Include(x => x.ReplacementValues)
                 .ToListAsync(cancellationToken);
         }
     }
