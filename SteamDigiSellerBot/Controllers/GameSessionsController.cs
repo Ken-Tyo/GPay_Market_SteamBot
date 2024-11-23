@@ -367,6 +367,24 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(gsi);
         }
 
+        [HttpPost, Route("gamesession/resetbot"), ValidationActionFilter]
+        public async Task<IActionResult> ResetBot(ResetProfileUrlReq req)
+        {
+            if (!ModelState.IsValid)
+                return this.CreateBadRequest();
+
+            var gs = await _gameSessionService.ChangeBot(db, req.Uniquecode);
+            if (gs == null)
+            {
+                ModelState.AddModelError("", "такой заказ не найден");
+                return this.CreateBadRequest();
+            }
+
+            var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
+
+            return Ok(gsi);
+        }
+
         [HttpPost, Route("gamesession/checkfrined"), ValidationActionFilter]
         public async Task<IActionResult> CheckFriend(ResetProfileUrlReq req)
         {

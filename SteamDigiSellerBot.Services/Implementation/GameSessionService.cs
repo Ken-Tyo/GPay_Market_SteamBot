@@ -219,6 +219,53 @@ namespace SteamDigiSellerBot.Services.Implementation
             return gs;
         }
 
+        public async Task<GameSession> ChangeBot(DatabaseContext db, string uniquecode)
+        {
+            var gs =
+                await _gameSessionRepository.GetByPredicateAsync(db, x => x.UniqueCode.Equals(uniquecode));
+
+            if (gs == null)
+                return null;
+
+            //Ожидается подтверждение - 16
+            //Заявка отправлена - 6
+            //Заявка отклонена - 4
+            //Бот не найден - 17
+            //Неизвестная ошибка - 7
+            //Уже есть этот продукт - 19
+            //Некорректный регион - 5
+            if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.RequestSent,
+                    GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.GameIsExists,
+                    GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked }.Contains(gs.StatusId))
+                return gs;            
+
+            var oldBotValue = gs.Bot.Id;
+            var oldBotName = gs.Bot.UserName;
+            gs.Bot = null;
+            gs.StatusId = GameSessionStatusEnum.SwitchBot;
+            gs.GameSessionStatusLogs.Add(new GameSessionStatusLog
+            {
+                InsertDate = DateTimeOffset.UtcNow,
+                StatusId = gs.StatusId,
+                GameSessionId = gs.Id,
+                Value = new ValueJson
+                {
+                    message = "Сброс бота",
+                    botId = oldBotValue,
+                    botName = oldBotName,
+                    userNickname = gs.SteamProfileName,
+                    userSteamContact = gs.SteamContactValue
+                }
+            });
+
+            gs.Stage = Database.Entities.GameSessionStage.AddToFriend;           
+            _gameSessionManager.AddToFriendGSQ.Add(gs.Id);
+            await _gameSessionRepository.EditAsync(db, gs);
+            await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
+
+            return gs;
+        }
+
         /// <summary>
         /// This array contains the state numbers before the expiration time.
         /// </summary>
