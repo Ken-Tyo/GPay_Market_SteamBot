@@ -127,6 +127,11 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
 
                                 requestTotalCount++;
 
+                                if (requestTotalCount % 10 == 0)
+                                {
+                                    await _updateItemInfoStatRepository.AddOrUpdateAsync(JobCode, 10, cancellationToken);
+                                }
+
                                 if (updateResult.Contains("\"status\":\"Success\""))
                                 {
                                     _logger.LogInformation("    SUCCESSFULLY UPDATED item digisellerId = {digisellerId}", digiSellerId);

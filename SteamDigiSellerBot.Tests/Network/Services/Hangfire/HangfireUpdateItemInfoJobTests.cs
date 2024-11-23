@@ -9,6 +9,7 @@ using SteamDigiSellerBot.Network.Services;
 using SteamDigiSellerBot.Network.Services.Hangfire;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -112,6 +113,8 @@ namespace SteamDigiSellerBot.Tests.Network.Services.Hangfire
                                     It.IsAny<UpdateItemInfoCommand>(),
                                     token,
                                     It.IsAny<xNet.HttpRequest>()), Times.Exactly(expectedRequestCount));
+
+            updateItemInfoStatRepository.Verify(x => x.AddOrUpdateAsync("UpdateItemInfo", 10, CancellationToken.None), Times.Exactly((expectedRequestCount + 1) / 10));
 
             digisellerTokenProvider
                 .Verify(x => x.GetDigisellerTokenAsync(userName, CancellationToken.None), Times.Once);
@@ -271,6 +274,8 @@ namespace SteamDigiSellerBot.Tests.Network.Services.Hangfire
                                     It.IsAny<UpdateItemInfoCommand>(),
                                     token,
                                     It.IsAny<xNet.HttpRequest>()), Times.Exactly(expectedRequestCount));
+
+            updateItemInfoStatRepository.Verify(x => x.AddOrUpdateAsync("UpdateItemInfo", 10, CancellationToken.None), Times.Exactly(expectedRequestCount / 10));
 
             digisellerTokenProvider
                 .Verify(x => x.GetDigisellerTokenAsync(userName, CancellationToken.None), Times.Once);
@@ -432,6 +437,8 @@ namespace SteamDigiSellerBot.Tests.Network.Services.Hangfire
                                     It.IsAny<UpdateItemInfoCommand>(),
                                     token,
                                     It.IsAny<xNet.HttpRequest>()), Times.Exactly(expectedRequestCount));
+
+            updateItemInfoStatRepository.Verify(x => x.AddOrUpdateAsync("UpdateItemInfo", 10, CancellationToken.None), Times.Exactly(expectedRequestCount / 10));
 
             digisellerTokenProvider
                 .Verify(x => x.GetDigisellerTokenAsync(userName, CancellationToken.None), Times.Once);
