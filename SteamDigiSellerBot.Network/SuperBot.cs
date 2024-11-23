@@ -41,7 +41,7 @@ namespace SteamDigiSellerBot.Network
     {
         private Bot _bot { get; set; }
         
-        private SteamClient _steamClient { get; set; }
+        public SteamClient _steamClient { get; set; }
 
         private SteamUser _steamUser { get; set; }
 
@@ -49,7 +49,7 @@ namespace SteamDigiSellerBot.Network
 
         public bool _isRunning { get; set; }
         private string code = string.Empty;
-        private string accessToken = string.Empty;
+        public string accessToken = string.Empty;
         public bool Connected => !string.IsNullOrEmpty(accessToken);
         private string refreshToken = string.Empty;
         private string engUrlParam = "l=english";

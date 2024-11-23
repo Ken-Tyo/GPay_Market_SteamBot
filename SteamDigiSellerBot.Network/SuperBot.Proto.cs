@@ -259,7 +259,7 @@ namespace SteamDigiSellerBot.Network
             return false;
         }
 
-        Dictionary<string, object?> PrepareProtobufArguments<T>(T request, string accessToken)
+        public Dictionary<string, object?> PrepareProtobufArguments<T>(T request, string accessToken)
         {
             var args = new Dictionary<string, object?>()
             {

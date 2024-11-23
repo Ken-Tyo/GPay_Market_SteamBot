@@ -529,7 +529,7 @@ namespace SteamDigiSellerBot.Tests
             {
                 context = new()
                 {
-                    country_code = "UA",
+                    country_code = "CN",
                     
                 },
                 data_request = new StoreBrowseItemDataRequest()
@@ -543,7 +543,7 @@ namespace SteamDigiSellerBot.Tests
             };
             r.ids.Add(new StoreItemID()
             {
-                appid = 2555420,
+                appid = 2694490,
 
             });
             try
