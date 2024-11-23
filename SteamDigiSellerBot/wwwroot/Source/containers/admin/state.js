@@ -110,7 +110,6 @@ export const initBotsPage = async () => {
   console.log("params", params);
   let botId = Number(params.id || 0);
   if (botId) {
-    const { bots } = state.get();
     let bot = bots.find((b) => b.id === botId);
     //console.log(botId, bots, bot);
     if (bot) {
@@ -470,6 +469,15 @@ export const apiBotSetIsReserve = async (id, isreserve) => {
       isReserve: isreserve,
     }),
   });
+  if (res.ok) {
+    state.set((value) => {
+      return {
+        ...value,
+        bots: value.bots.map((bot) =>
+          bot.id === id ? { ...bot, isReserve: isreserve } : bot)
+      };
+    });
+  }
 };
 
 export const apiSaveBotRegionSettings = async (item) => {

@@ -29,9 +29,9 @@ const FromItemSwitch = ({ name, value, onChange }) => {
        <div className={css.name}>{name}</div>
        <div>
         <Switch
-          name={name}
           value={value}
-          onChange={onChange} />
+          onChange={onChange}
+        />
       </div>
     </div>
   );
@@ -44,7 +44,7 @@ const ModalEdit = ({
   onSave,
   response,
   resetResponse,
-  isreserve,
+  isReserve,
 }) => {
   const initialValue = {
     id: null,
@@ -53,7 +53,7 @@ const ModalEdit = ({
     proxy: null,
     maFile: null,
     gameSendLimit: null,
-    isreserve:null,
+    isReserve:null,
   };
   const [item, setItem] = useState(initialValue);
 
@@ -118,8 +118,11 @@ const ModalEdit = ({
               {item.id && (
                 <FromItemSwitch
                   name={'Запасной бот:'} 
-                  value={item.isreserve}
-                  onChange={(val) => apiBotSetIsReserve(item.id, val)}
+                  onChange={(val) => {
+                     apiBotSetIsReserve(item.id, val);
+                     handleChange('isReserve');
+                  }}
+                  value={item.isReserve}
                 />
               )}
             </div>
