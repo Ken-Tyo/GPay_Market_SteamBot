@@ -40,6 +40,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 if (updateItemInfoStat.UpdateDate.Date < currentDate.Date)
                 {
+                    updateItemInfoStat.UpdateDate = currentDate.Date;
                     updateItemInfoStat.RequestCount = 0;
                 }
 
@@ -52,7 +53,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<int> GetRequestCountAsync(string jobCode, CancellationToken cancellationToken)
         {
             using var databaseContext = _databaseContextFactory.CreateDbContext();
-            var updateItemInfoStat = await databaseContext.UpdateItemInfoStats.SingleOrDefaultAsync(x => x.JobCode == jobCode);
+            var updateItemInfoStat = await databaseContext.UpdateItemInfoStats.SingleOrDefaultAsync(x => x.JobCode == jobCode && x.UpdateDate == DateTime.UtcNow.Date);
             if (updateItemInfoStat is null)
             {
                 return 0;
