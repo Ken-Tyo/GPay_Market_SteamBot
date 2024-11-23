@@ -95,7 +95,8 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                                 if (requestTotalCount >= requestLimitPerDay)
                                 {
                                     var startIndex = hangfireUpdateJobCommand.UpdateItemInfoCommands.Goods.IndexOf(updateItemInfoGoodsItem);
-                                    TimeSpan startAfterDuration = new DateTime(startDate.Year, startDate.Month, startDate.Day + 1, 8, 0, 0, DateTimeKind.Utc) - DateTime.UtcNow;
+                                    var nextDay = startDate.AddDays(1);
+                                    TimeSpan startAfterDuration = new DateTime(nextDay.Year, nextDay.Month, nextDay.Day, 8, 0, 0, DateTimeKind.Utc) - DateTime.UtcNow;
                                     var updateJobCommand = new HangfireUpdateItemInfoJobCommand(
                                         UpdateItemInfoCommands: new UpdateItemInfoCommands()
                                         {
@@ -126,6 +127,11 @@ namespace SteamDigiSellerBot.Network.Services.Hangfire
                                     httpRequest);
 
                                 requestTotalCount++;
+
+                                if (requestTotalCount % 10 == 0)
+                                {
+                                    await _updateItemInfoStatRepository.AddOrUpdateAsync(JobCode, 10, cancellationToken);
+                                }
 
                                 if (updateResult.Contains("\"status\":\"Success\""))
                                 {
