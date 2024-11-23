@@ -1260,7 +1260,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var percentDiff = ((decimal)(newPriorityPriceRub * 100) / gs.PriorityPrice) - 100;
                 if (percentDiff > percentDiffMax)
                 {
-                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи {gs.PriorityPrice}, сохраненная в рублях {gs.Item.CurrentDigiSellerPrice}. Разница {percentDiff.Value.ToString("0.000")}% вместо {percentDiffMax}%" );
+                    await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub?.ToString("0.00")}, продажи {gs.PriorityPrice?.ToString("0.00")}, сохраненная в рублях {gs.Item.CurrentDigiSellerPrice.ToString("0.00")}. Разница {percentDiff.Value.ToString("0.000")}% вместо {percentDiffMax}%" );
                     //gs.StatusId = 7;//неизвестная ошибка
                     //await _gameSessionRepository.UpdateField(gs, gs => gs.StatusId);
                     //await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
@@ -1284,7 +1284,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 if (digiConvertToRub is { success: true, value: > 0 })
                 {
                     var digiPriceInRub = digiConvertToRub.value;
-                    _logger.LogInformation($"GS ID {gs.Id} digi price comparer: digi {digiPriceInRub} real price {newPriorityPriceRub}");
+                    _logger.LogInformation($"GS ID {gs.Id} digi price comparer: digi {digiPriceInRub?.ToString("0.00")} real price {newPriorityPriceRub?.ToString("0.00")}");
                     if (digiPriceInRub > 0 && newPriorityPriceRub > digiPriceInRub)
                     {
                         _logger.LogInformation($"GS ID {gs.Id}: digi price comparer if (newPriorityPriceRub > digiPriceInRub) is True");
@@ -1292,10 +1292,20 @@ namespace SteamDigiSellerBot.Services.Implementation
                         var percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
                         if (percentDiff > percentDiffMax)
                         {
-                            _logger.LogWarning(
-                                $"digi price comparer Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.Value.ToString("0.000")}% вместо {percentDiffMax}%");
-                            //await createErrLog(gs, $"Изменились цены: новая после конверсии {newPriorityPriceRub}, продажи c Диги {gs.DigiSellerDealPriceUsd}$ ({digiPriceInRub} руб). Разница {percentDiff.ToString("0.000")}% вместо {percentDiffMax}%");
-                            //return GameReadyToSendStatus.priceChanged;
+                            gs.StatusId = GameSessionStatusEnum.ExpiredDiscount;
+                            await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
+                            await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
+                            {
+                                GameSessionId = gs.Id,
+                                StatusId = gs.StatusId,
+                                Value = new GameSessionStatusLog.ValueJson
+                                {
+                                    message = $"Изменились цены: новая после конверсии {newPriorityPriceRub?.ToString("0.00")}, продажи c Диги {gs.DigiSellerDealPriceUsd?.ToString("0.00")}$ ({digiPriceInRub?.ToString("0.00")} руб)."+
+                                              $" Разница {percentDiff?.ToString("0.000")}% вместо {percentDiffMax}%"
+                                }
+                            });
+
+                            return GameReadyToSendStatus.discountExpired;
                         }
                     }
                 }
@@ -1735,6 +1745,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         botNoLongerSuitable,
         botSwitch,
         blockOrder,
+        discountExpired,
         ready = 100
     }
 
