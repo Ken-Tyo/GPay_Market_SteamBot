@@ -83,17 +83,27 @@ const OrderState = () => {
     let [searchParams, setSearchParams] = useSearchParams();
     const uniquecode = searchParams.get('uniquecode') || '';
 
-    const [isResendBlocked, setIsResendBlocked] = useState(true);
+    const [isResendBlocked, setIsResendBlocked] = useState(true); // Заблокирована кнопка
+    const [secondsRemaining, setSecondsRemaining] = useState(60); // Остаток времени
 
     useEffect(() => {
-        // Запускаем таймер на 60 секунд
-        const timer = setTimeout(() => {
-            setIsResendBlocked(false); // Разблокируем кнопку через 60 секунд
-        }, 60000);
+        if (isResendBlocked) {
+            // Запускаем интервал для обратного отсчёта
+            const interval = setInterval(() => {
+                setSecondsRemaining((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval); // Очищаем интервал при достижении 0
+                        setIsResendBlocked(false); // Разблокируем кнопку
+                        return 0;
+                    }
+                    return prev - 1; // Уменьшаем количество оставшихся секунд
+                });
+            }, 1000);
 
-        // Очищаем таймер при размонтировании компонента
-        return () => clearTimeout(timer);
-    }, []);
+            // Очищаем интервал при размонтировании компонента
+            return () => clearInterval(interval);
+        }
+    }, [isResendBlocked]);
 
 
 
@@ -709,7 +719,7 @@ const OrderState = () => {
                 </Area>
             )}
 
-            {showError && (
+            {(showError) && (
                 <Area
                     title={`${tCommon('order')} #${gameSession.id} - ${tInvitationRefused(
                         'error'
@@ -767,7 +777,7 @@ const OrderState = () => {
                 </Area>
             )}
 
-            {(showRegionError || showGameRequiredError) && (
+            {(showRegionError) && (
                 <Area>
                     <div className={css.regionError}>
                         <div className={css.title}>{tRegionError('error')}</div>
@@ -797,25 +807,25 @@ const OrderState = () => {
                 </Area>
             )}
 
-            {false  && (
+            {showGameRequiredError && (
                 <Area>
                     <div className={css.regionError}>
                         <div className={css.title}>{tGameRequiredError('error')}</div>
-                        <div className={css.text} style="margin-bottom:2rem">{tGameRequiredError('info_row1')}</div>
-                        <div className={css.text} style="margin-bottom:1.5rem">{tGameRequiredError('info_row2')}</div>
-                        <div className={css.text} style="margin-bottom:1rem">{tGameRequiredError('info_row3')}</div>
+                        <div className={css.text} style= {{marginBottom: '2rem' }} >{tGameRequiredError('info_row1')}</div>
+                        <div className={css.text} style= {{marginBottom: '1.5rem' }}>{tGameRequiredError('info_row2')}</div>
+                        <div className={css.text} style={{marginBottom:'1rem'}} >{tGameRequiredError('info_row3')}</div>
                         <div className={css.text}>{tGameRequiredError('info_row4')}</div>
                         <div className={css.accButtons}>
                             <div className={css.line1}>
                                 {!gameSession.blockOrder && gameSession.canResendGame && (
                                     <Button
-                                        text={tGameRequiredError('repeatSendGame')}
+                                        text={tGameRequiredError('repeatSendGame') + (isResendBlocked && secondsRemaining>0 ? ' (' + secondsRemaining+')' : '')}
                                         className={css.but}
-                                        style={ {
-                                                marginRight: '1.5em',
-                                                opacity: isResendBlocked ? '0.7' : '1',
-                                                pointerEvents: isResendBlocked ? 'none' : 'auto',
-                                            }}
+                                        style={{
+                                            marginRight: '1.5em',
+                                            opacity: isResendBlocked ? '0.7' : '1',
+                                            pointerEvents: isResendBlocked ? 'none' : 'auto'
+                                        }}
                                         onClick={() => {
                                             setIsResendBlocked(true);
                                             apiCheckFriend(gameSession.uniqueCode);
@@ -830,7 +840,6 @@ const OrderState = () => {
                                             backgroundColor: '#FFFFFF',
                                             color: '#8615BC',
                                             border: '1px solid #571676',
-
                                             marginLeft: '25px'
                                         }}
                                         onClick={() => {

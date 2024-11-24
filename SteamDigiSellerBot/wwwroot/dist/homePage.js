@@ -45294,18 +45294,32 @@ var OrderState = function OrderState() {
   var _useState = (0,react.useState)(true),
     _useState2 = orderState_slicedToArray(_useState, 2),
     isResendBlocked = _useState2[0],
-    setIsResendBlocked = _useState2[1];
-  (0,react.useEffect)(function () {
-    // Запускаем таймер на 60 секунд
-    var timer = setTimeout(function () {
-      setIsResendBlocked(false); // Разблокируем кнопку через 60 секунд
-    }, 60000);
+    setIsResendBlocked = _useState2[1]; // Заблокирована кнопка
+  var _useState3 = (0,react.useState)(60),
+    _useState4 = orderState_slicedToArray(_useState3, 2),
+    secondsRemaining = _useState4[0],
+    setSecondsRemaining = _useState4[1]; // Остаток времени
 
-    // Очищаем таймер при размонтировании компонента
-    return function () {
-      return clearTimeout(timer);
-    };
-  }, []);
+  (0,react.useEffect)(function () {
+    if (isResendBlocked) {
+      // Запускаем интервал для обратного отсчёта
+      var interval = setInterval(function () {
+        setSecondsRemaining(function (prev) {
+          if (prev <= 1) {
+            clearInterval(interval); // Очищаем интервал при достижении 0
+            setIsResendBlocked(false); // Разблокируем кнопку
+            return 0;
+          }
+          return prev - 1; // Уменьшаем количество оставшихся секунд
+        });
+      }, 1000);
+
+      // Очищаем интервал при размонтировании компонента
+      return function () {
+        return clearInterval(interval);
+      };
+    }
+  }, [isResendBlocked]);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: orderState_styles.wrapper,
     children: [checkCodeLoadingModal && uniquecode !== '' && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
@@ -45981,7 +45995,7 @@ var OrderState = function OrderState() {
           digisellerId: gameSession.digisellerId
         })]
       })
-    }), (showRegionError || showGameRequiredError) && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+    }), showRegionError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: orderState_styles.regionError,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -46014,7 +46028,74 @@ var OrderState = function OrderState() {
           })
         })]
       })
-    }),  false && /*#__PURE__*/0, showOrderClosed && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+    }), showGameRequiredError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.regionError,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.title,
+          children: tGameRequiredError('error')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          style: {
+            marginBottom: '2rem'
+          },
+          children: tGameRequiredError('info_row1')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          style: {
+            marginBottom: '1.5rem'
+          },
+          children: tGameRequiredError('info_row2')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          style: {
+            marginBottom: '1rem'
+          },
+          children: tGameRequiredError('info_row3')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          children: tGameRequiredError('info_row4')
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: orderState_styles.accButtons,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.line1,
+            children: [!gameSession.blockOrder && gameSession.canResendGame && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tGameRequiredError('repeatSendGame') + (isResendBlocked && secondsRemaining > 0 ? ' (' + secondsRemaining + ')' : ''),
+              className: orderState_styles.but,
+              style: {
+                marginRight: '1.5em',
+                opacity: isResendBlocked ? '0.7' : '1',
+                pointerEvents: isResendBlocked ? 'none' : 'auto'
+              },
+              onClick: function onClick() {
+                setIsResendBlocked(true);
+                apiCheckFriend(gameSession.uniqueCode);
+              },
+              disabled: isResendBlocked
+            }), !gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tOrderState('changeAccountBut'),
+              style: {
+                backgroundColor: '#FFFFFF',
+                color: '#8615BC',
+                border: '1px solid #571676',
+                marginLeft: '25px'
+              },
+              onClick: function onClick() {
+                apiResetSteamAcc();
+              }
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.contactSellerWrapper,
+            style: {
+              marginTop: '20px'
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+              digisellerId: gameSession.digisellerId
+            })
+          })]
+        })]
+      })
+    }), showOrderClosed && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: orderState_styles.activationExpErapper,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -46180,10 +46261,10 @@ var Dlc = function Dlc(_ref5) {
 };
 var Timer = function Timer(_ref6) {
   var endTime = _ref6.endTime;
-  var _useState3 = (0,react.useState)(null),
-    _useState4 = orderState_slicedToArray(_useState3, 2),
-    timer = _useState4[0],
-    setTimer = _useState4[1];
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = orderState_slicedToArray(_useState5, 2),
+    timer = _useState6[0],
+    setTimer = _useState6[1];
   var _useTranslation19 = useTranslation_useTranslation('timer'),
     tTimer = _useTranslation19.t;
   (0,react.useEffect)(function () {
@@ -49221,7 +49302,7 @@ var i18next_loadLanguages = instance.loadLanguages;
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/public/locales/en/translation.json
 const translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"bought","for":"for"},"checkCode":{"title":"Enter a unique order code","inputPlaceholder":"Enter a unique code","inputAcceptBut":"Сonfirm","errors":{"1":"","2":"Incorrect order code entered. Check the code again.","3":"Confirm that you are not a robot.","4":"Error, invalid captcha."}},"orderState":{"title":"Order state","steamUrlInfo1":"1. You can enter a quick invite link or a friend code to your Steam account, in which case the deal will go faster. You can find it in the Steam tabs: \\"Friends\\" > \\"Add as Friend\\"","steamUrlInfo2":"2. You can enter a link to your Steam profile, for this you need to open your profile, right-click on the free field in the profile, then click \\"copy link address\\" in the drop-down list","inputPlaceholder":"Link entered","inputAcceptBut":"Сonfirm","linkIncorrectErr":"Invalid profile link entered. Check again.","yourSteamName":"Your Steam nickname","thisMyAccBut":"This is my account","changeAccountBut":"Change account","requestSent":"Friend request sent","requestSentInfo":"You have been sent a request to add friends on Steam. You need to accept our bot with the nickname {{botName}} as a friend. Then the purchased item will be sent to you.","requestInProcessing":"Your order is being processed"},"dlc":{"info":"This product is an addition to the main game. Without the presence of the main game, you will not be able to activate the DLC"},"timer":{"title":"Time to activate","expInfoTooltip":"After this time, the order will be impossible to receive. Either an additional payment will be required, or any conditions of the order will change, perhaps now this product is on sale."},"activationTimeExpires":{"error":"Error","message":"Unfortunately, you did not manage to get the game before the end of discounts (sales) for this game and your order became inactive. Please contact the seller to resolve this issue.","contactTheSeller":"Contact the seller"},"invitationRefused":{"error":"Error","youRefused":"You have rejected the application of our bot!","info":"You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.","iSentInvitation":"I sent a friend request","tryWithBot":"Repeat request from another bot"},"tempInviteBan":{"error":"Error","youRefused":"This bot can not send you invites anymore!","info":"You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.","iSentInvitation":"I sent a friend request","tryWithBot":"Repeat request from another bot"},"invitationRefusedWithRemoteBot":{"info":"You need to either request a new request from another bot, or you can provide a new link to the account where your order needs to be delivered."},"gameExists":{"error":"Error","info":"You already have this game/add-on on your Steam account. Specify another account that does not contain this product. If you have a free (temporary) version of the game, delete it {{- link}} and try again!","repeatSendGame":"Retry","hereClick":"here (clickable)"},"gameSendInProgress":{"title":"The game is sent","info1":"The game is being sent, please wait...","info2":"The procedure usually takes about 3 minutes..."},"gameSended":{"title":"A good buy","info":"Thank you for shopping in our store! We would love to hear from you, please contact us again!","homeBut":"Home","feedbackBut":"Leave feedback","checkEditionVersion":"Check edition version"},"gameInQueue":{"queue":"Queue","info1":"At the moment, all bots of this heading are occupied. Your turn: ","info2":"Approximate waiting time: ","info3":"You can contact the seller to clarify the possibility of speeding up the waiting time..."},"regionError":{"error":"Error","info":"The region of the recipient of the game is different from the one purchased. It is impossible to deliver a game to a region where the game is more expensive than the cost of the selected region. Please specify another account with the correct region, or contact us to resolve the issue!"},"gameRequired":{"error":"No game on account","info_row1":"Could not send the add-on to your Steam account because you do not have the main version of the game. Buy the main game and try again, or specify the correct account where the game is present to activate the add-on!","info_row2":"If this is an error:","info_row3":"Check that your game is NOT private and everyone on the account can see it - try again after some time","info_row4":"If after some time this does not help - contact the seller for instructions","repeatSendGame":"Repeat"},"orderClosed":{"closed":"Order closed","message":"Unfortunately, this order was closed by the seller. Contact for details about this"},"error":{"info":"There was an unexpected tech. error. Please contact the seller"},"common":{"order":"Order"},"footer":{"giveaways":"Game giveaways here!","giveaways_sign":"Subscribe!"}}');
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/public/locales/ru/translation.json
-const ru_translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"купил","for":"за"},"checkCode":{"title":"Введите уникальный код заказа","inputPlaceholder":"Введите уникальный код","inputAcceptBut":"Подтвердить","errors":{"1":"","2":"Введён не коректный код заказа. Проверьте код ещё раз.","3":"Подтвердите что вы не робот.","4":"Ошибка, неверная капча."}},"orderState":{"title":"Состояние заказа","steamUrlInfo1":"1. Вы можете ввести ссылку быстрого приглашения, либо код друга на ваш Steam аккаунт, в таком случае — сделка пройдёт быстрее. Найти её можно во вкладках Steam: «Друзья» > «Добавить в друзья»","steamUrlInfo2":"2. Вы можете ввести ссылку на ваш Steam профиль, для этого необходимо открыть ваш профиль, нажать ПКМ по свободному полю в профиле, дальше нажать «скопировать адрес ссылки» в выпавшем списке","inputPlaceholder":"Введённая ссылка","inputAcceptBut":"Подтвердить","linkIncorrectErr":"Введена некоректная ссылка профиля. Проверьте ещё раз.","yourSteamName":"Ваш Steam никнейм","thisMyAccBut":"Это мой аккунт","changeAccountBut":"Сменить аккаунт","requestSent":"Оправлена заявка в друзья","requestSentInfo":"Вам отправлен запрос на добавление друзья в Steam. Вам необходимо принять нашего бота с никнеймом {{- botName}} в друзья. Далее вам отправят купленный товар.","requestInProcessing":"Ваш заказ обрабатывается"},"dlc":{"info":"Данный товар является дополнением к основной игре. Без наличия основной игры Вы не сможете активировать DLC"},"timer":{"title":"Время на активацию","expInfoTooltip":"По истечению данного времени — заказ будет получить невозможно. Либо потребуется доплата, либо изменятся какие-либо условия заказа, возможно сейчас данный товар находится на распродаже."},"activationTimeExpires":{"error":"Ошибка","message":"К сожалению, вы не успели получить игру до окончания скидок (распродажи) на данную игру и ваш заказ стал неактивным. Пожалуйста, свяжитесь с продавцом для решения данной проблемы.","contactTheSeller":"Связаться с продавцом"},"invitationRefused":{"error":"Ошибка","youRefused":"Вы отклонили заявку нашего бота!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"tempInviteBan":{"error":"Ошибка","youRefused":"Этот бот больше не может присылать Вам заявки!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"invitationRefusedWithRemoteBot":{"info":"Вам нужно либо запросить новую заявку от другого бота, либо вы можете по новой указать ссылку на аккаунт, куда необходимо доставить Ваш заказ."},"gameExists":{"error":"Ошибка","info":"На Вашем Steam аккаунте уже есть эта игра/дополнение. Укажите другой аккаунт, который не содержит данного продукта. Если у Вас бесплатная (временная) версия игры - удалите ее {{- link}} и попробуйте снова!","repeatSendGame":"Повторить попытку","hereClick":"тут (кликабельно)"},"gameSendInProgress":{"title":"Отправляется игра","info1":"Происходит отправка игры, пожалуйста ожидайте...","info2":"Обычно процедура занимает около 3-ех минут..."},"gameSended":{"title":"Удачная покупка","info":"Спасибо за покупку товара в нашем магазине! Будем рады Вашему отзыву, обращайтесь ещё!","homeBut":"Главная","feedbackBut":"Оставить отзыв","checkEditionVersion":"Проверить версию издания"},"gameInQueue":{"queue":"Очередь","info1":"В данный момент все боты данной товарной позиции - заняты. Ваша очередь: ","info2":"Примерное время ожидания: ","info3":"Вы можете связаться с продавцом для уточнения возможности ускорения ожидания..."},"regionError":{"error":"Ошибка","info":"Регион получателя игры отличается от купленного. Доставить игру в регион, где игра дороже стоимости выбранного региона — невозможно. Пожалуйста, укажите другой аккаунт с верным регионом, либо свяжитесь с нами за решением проблемы!"},"gameRequired":{"error":"Нет игры","info_row1":"Не удалось отправить дополнение на Ваш Steam аккаунт, поскольку у Вас отсутствует основная версия игры. Купите основную игру и пробуйте снова, либо укажите верный аккаунт, где присутствует игра для активации дополнения!","info_row2":"Если это ошибка:","info_row3":"Проверьте, что игра у вас НЕ приватная и ее видят все на аккаунте - попробуйте снова повторить через какое-то время","info_row4":"Если через время это не помогает - обратитесь к продавцу за инструкциями","repeatSendGame":"Повторить"},"orderClosed":{"closed":"Заказ закрыт","message":"К сожалению, данный заказ был закрыт продавцом. Свяжитесь для получения подробностей об этом"},"error":{"info":"Произошла непредвиденная тех. ошибка. Пожалуйста, свяжитесь с продавцом"},"common":{"order":"Заказ"},"footer":{"giveaways":"У нас тут раздачи игр!","giveaways_sign":"Подпишись!"}}');
+const ru_translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"купил","for":"за"},"checkCode":{"title":"Введите уникальный код заказа","inputPlaceholder":"Введите уникальный код","inputAcceptBut":"Подтвердить","errors":{"1":"","2":"Введён не коректный код заказа. Проверьте код ещё раз.","3":"Подтвердите что вы не робот.","4":"Ошибка, неверная капча."}},"orderState":{"title":"Состояние заказа","steamUrlInfo1":"1. Вы можете ввести ссылку быстрого приглашения, либо код друга на ваш Steam аккаунт, в таком случае — сделка пройдёт быстрее. Найти её можно во вкладках Steam: «Друзья» > «Добавить в друзья»","steamUrlInfo2":"2. Вы можете ввести ссылку на ваш Steam профиль, для этого необходимо открыть ваш профиль, нажать ПКМ по свободному полю в профиле, дальше нажать «скопировать адрес ссылки» в выпавшем списке","inputPlaceholder":"Введённая ссылка","inputAcceptBut":"Подтвердить","linkIncorrectErr":"Введена некоректная ссылка профиля. Проверьте ещё раз.","yourSteamName":"Ваш Steam никнейм","thisMyAccBut":"Это мой аккаунт","changeAccountBut":"Сменить аккаунт","requestSent":"Оправлена заявка в друзья","requestSentInfo":"Вам отправлен запрос на добавление друзья в Steam. Вам необходимо принять нашего бота с никнеймом {{- botName}} в друзья. Далее вам отправят купленный товар.","requestInProcessing":"Ваш заказ обрабатывается"},"dlc":{"info":"Данный товар является дополнением к основной игре. Без наличия основной игры Вы не сможете активировать DLC"},"timer":{"title":"Время на активацию","expInfoTooltip":"По истечению данного времени — заказ будет получить невозможно. Либо потребуется доплата, либо изменятся какие-либо условия заказа, возможно сейчас данный товар находится на распродаже."},"activationTimeExpires":{"error":"Ошибка","message":"К сожалению, вы не успели получить игру до окончания скидок (распродажи) на данную игру и ваш заказ стал неактивным. Пожалуйста, свяжитесь с продавцом для решения данной проблемы.","contactTheSeller":"Связаться с продавцом"},"invitationRefused":{"error":"Ошибка","youRefused":"Вы отклонили заявку нашего бота!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"tempInviteBan":{"error":"Ошибка","youRefused":"Этот бот больше не может присылать Вам заявки!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"invitationRefusedWithRemoteBot":{"info":"Вам нужно либо запросить новую заявку от другого бота, либо вы можете по новой указать ссылку на аккаунт, куда необходимо доставить Ваш заказ."},"gameExists":{"error":"Ошибка","info":"На Вашем Steam аккаунте уже есть эта игра/дополнение. Укажите другой аккаунт, который не содержит данного продукта. Если у Вас бесплатная (временная) версия игры - удалите ее {{- link}} и попробуйте снова!","repeatSendGame":"Повторить попытку","hereClick":"тут (кликабельно)"},"gameSendInProgress":{"title":"Отправляется игра","info1":"Происходит отправка игры, пожалуйста ожидайте...","info2":"Обычно процедура занимает около 3-ех минут..."},"gameSended":{"title":"Удачная покупка","info":"Спасибо за покупку товара в нашем магазине! Будем рады Вашему отзыву, обращайтесь ещё!","homeBut":"Главная","feedbackBut":"Оставить отзыв","checkEditionVersion":"Проверить версию издания"},"gameInQueue":{"queue":"Очередь","info1":"В данный момент все боты данной товарной позиции - заняты. Ваша очередь: ","info2":"Примерное время ожидания: ","info3":"Вы можете связаться с продавцом для уточнения возможности ускорения ожидания..."},"regionError":{"error":"Ошибка","info":"Регион получателя игры отличается от купленного. Доставить игру в регион, где игра дороже стоимости выбранного региона — невозможно. Пожалуйста, укажите другой аккаунт с верным регионом, либо свяжитесь с нами за решением проблемы!"},"gameRequired":{"error":"Нет игры","info_row1":"Не удалось отправить дополнение на Ваш Steam аккаунт, поскольку у Вас отсутствует основная версия игры. Купите основную игру и пробуйте снова, либо укажите верный аккаунт, где присутствует игра для активации дополнения!","info_row2":"Если это ошибка:","info_row3":"Проверьте, что игра у вас НЕ приватная и ее видят все на аккаунте - попробуйте снова повторить через какое-то время","info_row4":"Если через время это не помогает - обратитесь к продавцу за инструкциями","repeatSendGame":"Повторить"},"orderClosed":{"closed":"Заказ закрыт","message":"К сожалению, данный заказ был закрыт продавцом. Свяжитесь для получения подробностей об этом"},"error":{"info":"Произошла непредвиденная тех. ошибка. Пожалуйста, свяжитесь с продавцом"},"common":{"order":"Заказ"},"footer":{"giveaways":"У нас тут раздачи игр!","giveaways_sign":"Подпишись!"}}');
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/home/i18n.js
 function i18n_typeof(o) { "@babel/helpers - typeof"; return i18n_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, i18n_typeof(o); }
 function i18n_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
