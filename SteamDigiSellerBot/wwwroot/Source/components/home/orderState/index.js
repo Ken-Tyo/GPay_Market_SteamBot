@@ -807,14 +807,13 @@ const OrderState = () => {
                         <div className={css.text}>{tGameRequiredError('info_row4')}</div>
                         <div className={css.accButtons}>
                             <div className={css.line1}>
-                                {(!gameSession.blockOrder && gameSession.canResendGame) && (
+                                {!gameSession.blockOrder && gameSession.canResendGame && (
                                     <Button
                                         text={tGameRequiredError('repeatSendGame')}
                                         className={css.but}
-                                        style={
-                                            {
+                                        style={ {
                                                 marginRight: '1.5em',
-                                                opacity: isResendBlocked ? 0.7 : 1,
+                                                opacity: isResendBlocked ? '0.7' : '1',
                                                 pointerEvents: isResendBlocked ? 'none' : 'auto',
                                             }}
                                         onClick={() => {

@@ -46044,7 +46044,7 @@ var OrderState = function OrderState() {
               className: orderState_styles.but,
               style: {
                 marginRight: '1.5em',
-                opacity: isResendBlocked ? 0.7 : 1,
+                opacity: isResendBlocked ? '0.7' : '1',
                 pointerEvents: isResendBlocked ? 'none' : 'auto'
               },
               onClick: function onClick() {
