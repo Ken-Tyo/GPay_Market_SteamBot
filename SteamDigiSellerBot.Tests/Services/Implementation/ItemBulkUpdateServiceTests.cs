@@ -51,7 +51,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 IncreaseDecreaseOperator: null,
                 IncreaseDecreasePercent: null,
                 Ids: new[] { 1, 2 },
-                new Database.Models.User() { });
+                new User() { });
 
             var expectedItems = new List<Item>()
             {
@@ -134,7 +134,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 IncreaseDecreaseOperator: increaseDecreaseOperator,
                 IncreaseDecreasePercent: increasePercent,
                 Ids: new[] { 1, 2 },
-                new Database.Models.User() { });
+                new User() { });
 
             var expectedItems = new List<Item>()
             {
@@ -217,7 +217,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 IncreaseDecreaseOperator: increaseDecreaseOperatorEnum,
                 IncreaseDecreasePercent: increasePercent,
                 Ids: new[] { 1, 2 },
-                new Database.Models.User() { });
+                new User() { });
 
             var expectedItems = new List<Item>()
             {
@@ -302,7 +302,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 IncreaseDecreaseOperator: increaseDecreaseOperator,
                 IncreaseDecreasePercent: increasePercent,
                 Ids: new[] { 1, 2 },
-                new Database.Models.User() { });
+                new User() { });
 
             var expectedItems = new List<Item>()
             {

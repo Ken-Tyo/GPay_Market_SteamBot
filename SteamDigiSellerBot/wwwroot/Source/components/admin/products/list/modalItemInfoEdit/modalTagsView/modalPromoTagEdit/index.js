@@ -52,11 +52,11 @@ const ModalPromoTagEdit = ({ isOpen, onClose }) => {
 
           let newMap = new Map(getInitValues(marketPlaceData, langData))
           for (var item of data) {
-            if (!item.tagPromoReplacementValues || item.tagPromoReplacementValues.length == 0) {
+            if (!item.replacementValues || item.replacementValues.length == 0) {
               continue;
             }
 
-            for (var tagPromoReplacementValue of item.tagPromoReplacementValues) {
+            for (var tagPromoReplacementValue of item.replacementValues) {
               if (!tagPromoReplacementValue.value) {
                 continue;
               }

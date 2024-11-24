@@ -371,6 +371,24 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(gsi);
         }
 
+        [HttpPost, Route("gamesession/resetbot"), ValidationActionFilter]
+        public async Task<IActionResult> ResetBot(ResetProfileUrlReq req)
+        {
+            if (!ModelState.IsValid)
+                return this.CreateBadRequest();
+
+            var gs = await _gameSessionService.ChangeBot(db, req.Uniquecode);
+            if (gs == null)
+            {
+                ModelState.AddModelError("", "такой заказ не найден");
+                return this.CreateBadRequest();
+            }
+
+            var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
+
+            return Ok(gsi);
+        }
+
         [HttpPost, Route("gamesession/checkfrined"), ValidationActionFilter]
         public async Task<IActionResult> CheckFriend(ResetProfileUrlReq req)
         {
@@ -386,13 +404,14 @@ namespace SteamDigiSellerBot.Controllers
 
             if (gs.StatusId != GameSessionStatusEnum.RequestReject && 
                 gs.StatusId != GameSessionStatusEnum.GameIsExists &&
-                gs.StatusId != GameSessionStatusEnum.InvitationBlocked)
+                gs.StatusId != GameSessionStatusEnum.InvitationBlocked &&
+                gs.StatusId != GameSessionStatusEnum.GameRequired)
             {
                 ModelState.AddModelError("", "не корректный статус заказа");
                 return this.CreateBadRequest();
             }
 
-            if (gs.StatusId == GameSessionStatusEnum.GameIsExists)
+            if (gs.StatusId is GameSessionStatusEnum.GameIsExists or GameSessionStatusEnum.GameRequired)
             {
                 gs.GameExistsRepeatSendCount++;
             }

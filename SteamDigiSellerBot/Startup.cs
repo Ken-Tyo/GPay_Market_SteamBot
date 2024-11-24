@@ -62,20 +62,28 @@ namespace SteamDigiSellerBot
             services.AddTransient<IGamePriceRepository, GamePriceRepository>();
             services.AddTransient<IItemInfoTemplateRepository, ItemInfoTemplateRepository>();
             services.AddTransient<IItemInfoTemplateValueRepository, ItemInfoTemplateValueRepository>();
+            services.AddTransient<IUpdateItemInfoStatRepository, UpdateItemInfoStatRepository>();
             services.AddTransient<TagTypeReplacementsRepository>();
             services.AddTransient<TagPromoReplacementsRepository>();
+            services.AddTransient<TagInfoAppsReplacementsRepository>();
+            services.AddTransient<TagInfoDlcReplacementsRepository>();
             services.AddTransient<MarketPlaceProvider>();
             services.AddTransient<LanguageProvider>();
+            services.AddTransient<IRandomDelayProvider, RandomDelayProvider>();
             services.AddTransient<IItemBulkUpdateService, ItemBulkUpdateService>();
             services.AddTransient<TagTypeReplacementService>();
             services.AddTransient<TagPromoReplacementService>();
+            services.AddTransient<TagInfoAppsReplacementService>();
+            services.AddTransient<TagInfoDlcReplacementService>();
 
             services.AddSingleton<ISteamNetworkService, SteamNetworkService>();
             services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();
             services.AddSingleton<IItemNetworkService, ItemNetworkService>();
             services.AddSingleton<ICurrencyDataService, CurrencyDataService>();
-            services.AddSingleton<DigisellerTokenProvider>();
-            services.AddSingleton<UpdateItemsInfoService>();
+            services.AddSingleton<IDigisellerTokenProvider, DigisellerTokenProvider>();
+            services.AddSingleton<IUpdateItemsInfoService, UpdateItemsInfoService>();
+
+            services.AddTransient(provider => new GameAppsRepository(Configuration.GetConnectionString(DatabaseExtension.ConnectionName)));
 
             services.AddSingleton<IGameSessionService, GameSessionService>();
 
@@ -95,7 +103,9 @@ namespace SteamDigiSellerBot
                 e.AddConsole();
                 e.AddDebug();
                 });
+
             services.AddAutoMapper(typeof(Startup), typeof(AddOrUpdateTagTypeReplacementsCommandMappingProfile));
+            services.AddAutoMapper(typeof(Startup), typeof(AddOrUpdateTagInfoAppsReplacementsCommandMappingProfile));
 
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
             {

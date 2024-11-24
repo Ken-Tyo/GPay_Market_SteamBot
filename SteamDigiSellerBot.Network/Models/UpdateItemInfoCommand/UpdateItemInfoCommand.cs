@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace SteamDigiSellerBot.Network.Models.UpdateItemInfoCommand
 {
-    public sealed class UpdateItemInfoCommand
+    public class UpdateItemInfoCommand
     {
+        protected UpdateItemInfoCommand() {}
+
         public UpdateItemInfoCommand(
             int digiSellerId,
             List<LocaleValuePair> name,

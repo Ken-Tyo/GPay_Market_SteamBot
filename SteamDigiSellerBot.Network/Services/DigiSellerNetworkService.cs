@@ -50,12 +50,12 @@ namespace SteamDigiSellerBot.Network.Services
     {
         private readonly ILogger<DigiSellerNetworkService> _logger;
         private readonly IUserDBRepository _userDBRepository;
-        private readonly DigisellerTokenProvider _digisellerTokenProvider;
+        private readonly IDigisellerTokenProvider _digisellerTokenProvider;
 
         public DigiSellerNetworkService(
             ILogger<DigiSellerNetworkService> logger,
             IUserDBRepository userDBRepository,
-            DigisellerTokenProvider digisellerTokenProvider)
+            IDigisellerTokenProvider digisellerTokenProvider)
         {
             _logger = logger;
             _digisellerTokenProvider = digisellerTokenProvider;
