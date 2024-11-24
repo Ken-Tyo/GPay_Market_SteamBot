@@ -41,6 +41,7 @@ const OrderState = () => {
     const { t: tGameSendInProgress } = useTranslation('gameSendInProgress');
     const { t: tGameInQueue } = useTranslation('gameInQueue');
     const { t: tRegionError } = useTranslation('regionError');
+    const { t: tGameRequiredError } = useTranslation('gameRequired');
     const { t: tError } = useTranslation('error');
     const { t: tOrderClosed } = useTranslation('orderClosed');
     const { t: tCommon } = useTranslation('common');
@@ -72,6 +73,7 @@ const OrderState = () => {
     const showGameSended =
         gameSession && (gameSession.statusId === 1 || gameSession.statusId === 2);
     const showRegionError = gameSession && gameSession.statusId === 5;
+    const showGameRequiredError = gameSession && gameSession.statusId === 23;
     const showOrderClosed = gameSession && gameSession.statusId === 15;
     const showError =
         gameSession && (gameSession.statusId === 17 || gameSession.statusId === 7);
@@ -80,6 +82,21 @@ const OrderState = () => {
 
     let [searchParams, setSearchParams] = useSearchParams();
     const uniquecode = searchParams.get('uniquecode') || '';
+
+    const [isResendBlocked, setIsResendBlocked] = useState(true);
+
+    useEffect(() => {
+        // Запускаем таймер на 60 секунд
+        const timer = setTimeout(() => {
+            setIsResendBlocked(false); // Разблокируем кнопку через 60 секунд
+        }, 60000);
+
+        // Очищаем таймер при размонтировании компонента
+        return () => clearTimeout(timer);
+    }, []);
+
+
+
     return (
         <div className={css.wrapper}>
             {checkCodeLoadingModal && uniquecode !== '' &&
@@ -780,6 +797,60 @@ const OrderState = () => {
                 </Area>
             )}
 
+            {showGameRequiredError && (
+                <Area>
+                    <div className={css.regionError}>
+                        <div className={css.title}>{tGameRequiredError('error')}</div>
+                        <div className={css.text} style="margin-bottom:2rem">{tGameRequiredError('info_row1')}</div>
+                        <div className={css.text} style="margin-bottom:1.5rem">{tGameRequiredError('info_row2')}</div>
+                        <div className={css.text} style="margin-bottom:1rem">{tGameRequiredError('info_row3')}</div>
+                        <div className={css.text}>{tGameRequiredError('info_row4')}</div>
+                        <div className={css.accButtons}>
+                            <div className={css.line1}>
+                                {(!gameSession.blockOrder && gameSession.canResendGame) && (
+                                    <Button
+                                        text={tGameRequiredError('repeatSendGame')}
+                                        className={css.but}
+                                        style={
+                                            {
+                                                marginRight: '1.5em',
+                                                opacity: isResendBlocked ? 0.7 : 1,
+                                                pointerEvents: isResendBlocked ? 'none' : 'auto',
+                                            }}
+                                        onClick={() => {
+                                            setIsResendBlocked(true);
+                                            apiCheckFriend(gameSession.uniqueCode);
+                                        }}
+                                        disabled={isResendBlocked}
+                                    />
+                                )}
+                                {!gameSession.blockOrder && (
+                                    <Button
+                                        text={tOrderState('changeAccountBut')}
+                                        style={{
+                                            backgroundColor: '#FFFFFF',
+                                            color: '#8615BC',
+                                            border: '1px solid #571676',
+
+                                            marginLeft: '25px'
+                                        }}
+                                        onClick={() => {
+                                            apiResetSteamAcc();
+                                        }}
+                                    />)}
+                            </div>
+
+                            <div
+                                className={css.contactSellerWrapper}
+                                style={{ marginTop: '20px' }}
+                            >
+                                <ContactTheSeller digisellerId={gameSession.digisellerId} />
+                            </div>
+                        </div>
+                    </div>
+                </Area>
+            )}
+
             {showOrderClosed && (
                 <Area>
                     <div className={css.activationExpErapper}>
@@ -1031,6 +1102,8 @@ const InputWithButton = ({ butName, onClick, placeholder, defaultValue }) => {
         </div>
     );
 };
+
+
 
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
