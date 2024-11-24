@@ -382,3 +382,6 @@ ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
 
 21.11
 alter table "Games" ADD "GameInfo" JSON null;
+
+23.11 Задача #70 - GiftBan
+ALTER TABLE "Bot" add "RemainingSumToGift" numeric null;

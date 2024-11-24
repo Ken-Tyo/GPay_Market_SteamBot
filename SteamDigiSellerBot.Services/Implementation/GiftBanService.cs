@@ -38,10 +38,10 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             try
             {
+                bot.RemainingSumToGift = usdPrice - deltaUsd;
+
                 if (usdPrice >= 1.0m)
                 {
-                    bot.RemainingSumToGift = usdPrice - deltaUsd;
-  
                     _logger.LogInformation($"{nameof(this.SetRemainingGiftSum)}: " +
                         $"Bot {bot.UserName} remaining sum was updated to {bot.RemainingSumToGift} " +
                         $"USD with purchasing GS Id = {gs.Id}");
