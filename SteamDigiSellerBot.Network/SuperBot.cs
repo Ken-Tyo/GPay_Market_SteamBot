@@ -752,8 +752,7 @@ namespace SteamDigiSellerBot.Network
             }
             catch (Exception ex)
             {
-                Console.WriteLine(
-                    $"BOT {_bot.UserName} - error parse Sended Gifts Sum\n{ex.Message}\n{ex.StackTrace}");
+                _logger?.LogError(ex, $"BOT {_bot.UserName} - error parse Sended Gifts Sum");
                 return (false, -1, -1);
             }
         }
