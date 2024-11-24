@@ -45255,14 +45255,16 @@ var products = function products() {
         }
       });
     } else if (type === 'discountPercent') {
-      sorted.sort(function (a, b) {
-        var aDiscount = a.discountPercent != null ? a.discountPercent : -Infinity;
-        var bDiscount = b.discountPercent != null ? b.discountPercent : -Infinity;
-        if (sortOrder === "asc") {
-          return aDiscount - bDiscount;
-        } else {
-          return bDiscount - aDiscount;
+      var getDiscountValue = function getDiscountValue(discount) {
+        if (discount != null && discount > 0) {
+          return sortOrder === "asc" ? discount : -discount;
         }
+        return Infinity;
+      };
+      sorted.sort(function (a, b) {
+        var aDiscount = getDiscountValue(a.discountPercent);
+        var bDiscount = getDiscountValue(b.discountPercent);
+        return aDiscount - bDiscount;
       });
     } else {
       sorted.sort(function (a, b) {

@@ -127,15 +127,18 @@ const products = () => {
                     return b.steamPercent - a.steamPercent
                 }
             });
-        } else if(type === 'discountPercent'){
-            sorted.sort((a, b) => {
-              const aDiscount = a.discountPercent != null ? a.discountPercent : -Infinity;
-              const bDiscount = b.discountPercent != null ? b.discountPercent : -Infinity;
-              if (sortOrder === "asc") {
-                  return aDiscount - bDiscount;
-              } else {
-                  return bDiscount - aDiscount;
+        } else if(type === 'discountPercent') {
+            const getDiscountValue = (discount) => {
+              if (discount != null && discount > 0) {
+                  return sortOrder === "asc" ? discount : -discount;
               }
+              return Infinity;
+            };
+    
+            sorted.sort((a, b) => {
+              const aDiscount = getDiscountValue(a.discountPercent);
+              const bDiscount = getDiscountValue(b.discountPercent);
+              return aDiscount - bDiscount;
           });
         } else {
             sorted.sort((a, b) => {
