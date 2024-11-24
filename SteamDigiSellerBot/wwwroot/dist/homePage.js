@@ -45981,7 +45981,7 @@ var OrderState = function OrderState() {
           digisellerId: gameSession.digisellerId
         })]
       })
-    }), showRegionError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+    }), (showRegionError || showGameRequiredError) && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: orderState_styles.regionError,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -46014,68 +46014,7 @@ var OrderState = function OrderState() {
           })
         })]
       })
-    }), showGameRequiredError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
-      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: orderState_styles.regionError,
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: orderState_styles.title,
-          children: tGameRequiredError('error')
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: orderState_styles.text,
-          style: "margin-bottom:2rem",
-          children: tGameRequiredError('info_row1')
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: orderState_styles.text,
-          style: "margin-bottom:1.5rem",
-          children: tGameRequiredError('info_row2')
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: orderState_styles.text,
-          style: "margin-bottom:1rem",
-          children: tGameRequiredError('info_row3')
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: orderState_styles.text,
-          children: tGameRequiredError('info_row4')
-        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: orderState_styles.accButtons,
-          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: orderState_styles.line1,
-            children: [!gameSession.blockOrder && gameSession.canResendGame && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
-              text: tGameRequiredError('repeatSendGame'),
-              className: orderState_styles.but,
-              style: {
-                marginRight: '1.5em',
-                opacity: isResendBlocked ? '0.7' : '1',
-                pointerEvents: isResendBlocked ? 'none' : 'auto'
-              },
-              onClick: function onClick() {
-                setIsResendBlocked(true);
-                apiCheckFriend(gameSession.uniqueCode);
-              },
-              disabled: isResendBlocked
-            }), !gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
-              text: tOrderState('changeAccountBut'),
-              style: {
-                backgroundColor: '#FFFFFF',
-                color: '#8615BC',
-                border: '1px solid #571676',
-                marginLeft: '25px'
-              },
-              onClick: function onClick() {
-                apiResetSteamAcc();
-              }
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: orderState_styles.contactSellerWrapper,
-            style: {
-              marginTop: '20px'
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
-              digisellerId: gameSession.digisellerId
-            })
-          })]
-        })]
-      })
-    }), showOrderClosed && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+    }),  false && /*#__PURE__*/0, showOrderClosed && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         className: orderState_styles.activationExpErapper,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
