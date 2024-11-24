@@ -767,7 +767,7 @@ const OrderState = () => {
                 </Area>
             )}
 
-            {showRegionError && (
+            {(showRegionError || showGameRequiredError) && (
                 <Area>
                     <div className={css.regionError}>
                         <div className={css.title}>{tRegionError('error')}</div>
@@ -797,7 +797,7 @@ const OrderState = () => {
                 </Area>
             )}
 
-            {showGameRequiredError && (
+            {false  && (
                 <Area>
                     <div className={css.regionError}>
                         <div className={css.title}>{tGameRequiredError('error')}</div>
