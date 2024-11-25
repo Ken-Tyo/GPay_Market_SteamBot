@@ -171,10 +171,24 @@ namespace SteamDigiSellerBot.Services.Implementation
             //Неизвестная ошибка - 7
             //Уже есть этот продукт - 19
             //Некорректный регион - 5
-            if (!new GameSessionStatusEnum[] { GameSessionStatusEnum.WaitingToConfirm, GameSessionStatusEnum.OrderConfirmed, GameSessionStatusEnum.RequestSent,
-                    GameSessionStatusEnum.RequestReject, GameSessionStatusEnum.BotNotFound, GameSessionStatusEnum.UnknownError, GameSessionStatusEnum.GameIsExists, 
-                    GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.GameRequired, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked }.Contains(gs.StatusId))
+            if (!new GameSessionStatusEnum[]
+            {
+                GameSessionStatusEnum.WaitingToConfirm,
+                GameSessionStatusEnum.OrderConfirmed,
+                GameSessionStatusEnum.RequestSent,
+                GameSessionStatusEnum.RequestReject,
+                GameSessionStatusEnum.BotNotFound,
+                GameSessionStatusEnum.UnknownError,
+                GameSessionStatusEnum.GameIsExists,
+                GameSessionStatusEnum.Queue,
+                GameSessionStatusEnum.IncorrectRegion,
+                GameSessionStatusEnum.GameRequired,
+                GameSessionStatusEnum.SwitchBot,
+                GameSessionStatusEnum.InvitationBlocked
+            }.Contains(gs.StatusId))
+            {
                 return gs;
+            }
 
             _gameSessionManager.Remove(gs.Id);
             if (gs.Bot != null && gs.SteamContactValue != null)
@@ -1707,13 +1721,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                     else if (sendRes.result == SendeGameResult.error)
                     {
-                        if (sendRes.initTranRes?.purchaseresultdetail == 71
-                            || sendRes.initTranRes?.purchaseresultdetail == 72)
-                            gs.StatusId = GameSessionStatusEnum.IncorrectRegion;
-                        else if (sendRes.initTranRes?.purchaseresultdetail == 24)
-                            gs.StatusId = GameSessionStatusEnum.GameRequired;
-                        else
-                        gs.StatusId = GameSessionStatusEnum.UnknownError;
+                        gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71 || sendRes.initTranRes?.purchaseresultdetail == 72
+                            ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
+                            : sendAttemptsCounts >= maxSendGameAttempts
+                                ? GameSessionStatusEnum.GiftBan //Бан на отправку подарков
+                                : sendRes.initTranRes?.purchaseresultdetail == 24
+                                    ? gs.StatusId = GameSessionStatusEnum.GameRequired
+                                    : GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
 
                         if (gs.StatusId == GameSessionStatusEnum.GiftBan)
                         {

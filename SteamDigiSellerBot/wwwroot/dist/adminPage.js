@@ -26814,13 +26814,13 @@ var SwitchBtn = function SwitchBtn(_ref) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const list_styles = ({"wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","loader":"styles__loader--qLq6S","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","massDescriptionText":"styles__massDescriptionText--nZkry","subMenu":"styles__subMenu--BvgsJ","subMenuItem":"styles__subMenuItem--lEV1I","subMenuVisible":"styles__subMenuVisible--aZuZk","subMenuHidden":"styles__subMenuHidden--LODMB","errPopover":"styles__errPopover--lUtCS"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/trash.svg
-const trash_namespaceObject = __webpack_require__.p + "e7f4c96ac0c6ee9ce988.svg";
+const trash_namespaceObject = __webpack_require__.p + "a4c9a89c8403eb3d97c3.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pen.svg
-const pen_namespaceObject = __webpack_require__.p + "a7aa548f154722e9e574.svg";
+const pen_namespaceObject = __webpack_require__.p + "3a74007026beab8f35fc.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/additem.svg
-const additem_namespaceObject = __webpack_require__.p + "9d88c3f77df1537c88cf.svg";
+const additem_namespaceObject = __webpack_require__.p + "9b285564fb5d9a6bb58d.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/warning.svg
-const warning_namespaceObject = __webpack_require__.p + "52bd48a2bcd82103b7f3.svg";
+const warning_namespaceObject = __webpack_require__.p + "13512b38768e3bec6f75.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/infinity.svg
 const infinity_namespaceObject = __webpack_require__.p + "fc22708812c38683fc50.svg";
 // EXTERNAL MODULE: ./node_modules/use-sync-external-store/shim/with-selector.js
@@ -46544,11 +46544,11 @@ var products = function products() {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const priceHierarchy_styles = ({"priceHierarchyWrapper":"styles__priceHierarchyWrapper--BPA1u","header":"styles__header--WABmM","left":"styles__left--wqDZS","backBut":"styles__backBut--VZwkZ","but":"styles__but--QgSJV","title":"styles__title--kIZV8","gameName":"styles__gameName--ip3bx","right":"styles__right--NdjV0","content":"styles__content--K8KmI","hierarchy":"styles__hierarchy--md2XP","level":"styles__level--axTIP","prices":"styles__prices--r9iN7","priceItemWrapper":"styles__priceItemWrapper--UXLit","priceItem":"styles__priceItem--zjeK0","nameRow":"styles__nameRow--ohWpB","dot":"styles__dot--SZ5eQ","currName":"styles__currName--cBDtZ","priceRow":"styles__priceRow--ag2f5","warn":"styles__warn--CxOy5","price":"styles__price--TMUwY","editBut":"styles__editBut--Cpua0","percent":"styles__percent--Itd3M","line":"styles__line--oUzUW","lineWrapper":"styles__lineWrapper--_a0US"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/left.svg
-const left_namespaceObject = __webpack_require__.p + "19c14cf3993ae1d335f5.svg";
+const left_namespaceObject = __webpack_require__.p + "1f8b30c7208d1f199375.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/priceHierarchy/warning.svg
-const priceHierarchy_warning_namespaceObject = __webpack_require__.p + "7290d336af3e71f9504b.svg";
+const priceHierarchy_warning_namespaceObject = __webpack_require__.p + "c2cf924e8be9238d774a.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pen10x10.svg
-const pen10x10_namespaceObject = __webpack_require__.p + "833d35d8674ba56fe7ac.svg";
+const pen10x10_namespaceObject = __webpack_require__.p + "10f2ae6a75398537f05f.svg";
 ;// CONCATENATED MODULE: ./node_modules/react-zoom-pan-pinch/dist/index.esm.js
 
 
@@ -55086,7 +55086,7 @@ var modalSaveText = function modalSaveText(_ref) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const statusBadge_styles = ({"wrapper":"styles__wrapper--aIpcD","nameText":"styles__nameText--VSPbC","historyWrapper":"styles__historyWrapper--S8306"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/history.svg
-const history_namespaceObject = __webpack_require__.p + "b2311f92b31870b14c55.svg";
+const history_namespaceObject = __webpack_require__.p + "0550f86529e8bf1b3ba6.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/statusBadge/index.js
 
 
@@ -55117,15 +55117,15 @@ var statusBadge = function statusBadge(_ref) {
 };
 /* harmony default export */ const list_statusBadge = (statusBadge);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/referArrow.svg
-const referArrow_namespaceObject = __webpack_require__.p + "a47fabe09ccacd29e8e5.svg";
+const referArrow_namespaceObject = __webpack_require__.p + "0253609d9abb7cc23cc2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/comment.svg
-const comment_namespaceObject = __webpack_require__.p + "76d5ced19b0630be586e.svg";
+const comment_namespaceObject = __webpack_require__.p + "5fdee8aac0f037f4c8ba.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/check.svg
-const check_namespaceObject = __webpack_require__.p + "668c3f30a9a5b048dff6.svg";
+const check_namespaceObject = __webpack_require__.p + "66c4c75f2ced6614b873.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/retry.svg
-const retry_namespaceObject = __webpack_require__.p + "98d6fd2a8eeba732a3d6.svg";
+const retry_namespaceObject = __webpack_require__.p + "daec4cd5588eaec46057.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/stop.svg
-const stop_namespaceObject = __webpack_require__.p + "2ad51a7596f34f0c384e.svg";
+const stop_namespaceObject = __webpack_require__.p + "f2c7af70017956da7283.svg";
 ;// CONCATENATED MODULE: ./node_modules/@remix-run/router/dist/router.js
 /**
  * @remix-run/router v1.15.3
@@ -60844,9 +60844,9 @@ function createMemoryRouter(routes, opts) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const expander_styles = ({"wrapper":"styles__wrapper--rCgse","header":"styles__header--m4aca","content":"styles__content--ZypIv"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowUp.svg
-const arrowUp_namespaceObject = __webpack_require__.p + "038e294ef4fdf8f4ac31.svg";
+const arrowUp_namespaceObject = __webpack_require__.p + "c426d178b29faa2c8ba2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowDown.svg
-const arrowDown_namespaceObject = __webpack_require__.p + "6c101caa3d24d1eac6f3.svg";
+const arrowDown_namespaceObject = __webpack_require__.p + "755eea11171ff9c02c61.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/modalStatusHistory/expander/index.js
 function expander_slicedToArray(arr, i) { return expander_arrayWithHoles(arr) || expander_iterableToArrayLimit(arr, i) || expander_unsupportedIterableToArray(arr, i) || expander_nonIterableRest(); }
 function expander_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -61054,7 +61054,7 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
                     })]
                   })]
                 });
-              } else if (sid === 23 && val) {
+              } else if (sid === 24 && val) {
                 return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
                   children: [val.botName && val.botId && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
                     children: ["\u0411\u043E\u0442: ", createBotLink(val)]
@@ -61826,15 +61826,15 @@ var orders = function orders() {
 /* harmony default export */ const admin_orders = (orders);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/grid/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const grid_styles = ({"grid":"styles__grid--geGov","item":"styles__item--qPacC","header":"styles__header--zilir","image":"styles__image--DpbHq","problem":"styles__problem--cW2_Z","info":"styles__info--umdmA","login":"styles__login--IgU1M","data":"styles__data--Ki8fl","region":"styles__region--vAHZz","flag":"styles__flag--Aq_JM","proxy":"styles__proxy--ic8k9","vacWrapper":"styles__vacWrapper--f52iJ","vac":"styles__vac--LQW7Q","text":"styles__text--EvoRC","lineWrapper":"styles__lineWrapper--sqSlG","line":"styles__line--AMYQt","prices":"styles__prices--EePG_","left":"styles__left--OtEnd","right":"styles__right--CPaMp","leftPrice":"styles__leftPrice--z0QWH","rightPrice":"styles__rightPrice--FQr4q","buttonWrapper":"styles__buttonWrapper--xWSjn","buttons":"styles__buttons--HsrdH","editBtn":"styles__editBtn--AZQxn","delBtn":"styles__delBtn--TqqLy","vacSide":"styles__vacSide--IAjKk","list":"styles__list--kLmj2","vacItem":"styles__vacItem--WqdSB","vacBackButWrapper":"styles__vacBackButWrapper--VNNs4","vacBackBut":"styles__vacBackBut--NPnBw","addItem":"styles__addItem--S8kYT","item2":"styles__item2--LlKTM","item-header":"styles__item-header--af2F5","header-content":"styles__header-content--h2_vg","name":"styles__name--O12RZ","lang":"styles__lang--kAN5I","vac-info":"styles__vac-info--WLsM9","active":"styles__active--eWHDT","time-limit":"styles__time-limit--oKorI","limit":"styles__limit--_jNL9","blocked":"styles__blocked--nI_x9","add":"styles__add--_3Cqz","item-content":"styles__item-content--SS4nW","money":"styles__money--OQ_Ys","money-stats":"styles__money-stats--Cn2EN","money-stats-left":"styles__money-stats-left--nxBaa","money-stats-general":"styles__money-stats-general--le9eX","yellow":"styles__yellow--AO5cE","green":"styles__green--n5iGL","red":"styles__red--uhuK4","item-controls":"styles__item-controls--w3VeX","button":"styles__button--C0Jpe","item-edit":"styles__item-edit--cJ0y7","item-delete":"styles__item-delete--yJZle","stats":"styles__stats--gcI1n","circle":"styles__circle--nzg55","count":"styles__count--Y7cJE"});
+/* harmony default export */ const grid_styles = ({"grid":"styles__grid--geGov","item":"styles__item--qPacC","header":"styles__header--zilir","image":"styles__image--DpbHq","problem":"styles__problem--cW2_Z","info":"styles__info--umdmA","login":"styles__login--IgU1M","data":"styles__data--Ki8fl","region":"styles__region--vAHZz","flag":"styles__flag--Aq_JM","proxy":"styles__proxy--ic8k9","vacWrapper":"styles__vacWrapper--f52iJ","vac":"styles__vac--LQW7Q","text":"styles__text--EvoRC","lineWrapper":"styles__lineWrapper--sqSlG","line":"styles__line--AMYQt","prices":"styles__prices--EePG_","left":"styles__left--OtEnd","right":"styles__right--CPaMp","leftPrice":"styles__leftPrice--z0QWH","rightPrice":"styles__rightPrice--FQr4q","remainingRight":"styles__remainingRight--wX6I6","remainingPrice":"styles__remainingPrice--D9gNE","buttonWrapper":"styles__buttonWrapper--xWSjn","buttons":"styles__buttons--HsrdH","editBtn":"styles__editBtn--AZQxn","delBtn":"styles__delBtn--TqqLy","vacSide":"styles__vacSide--IAjKk","list":"styles__list--kLmj2","vacItem":"styles__vacItem--WqdSB","vacBackButWrapper":"styles__vacBackButWrapper--VNNs4","vacBackBut":"styles__vacBackBut--NPnBw","addItem":"styles__addItem--S8kYT","item2":"styles__item2--LlKTM","item-header":"styles__item-header--af2F5","header-content":"styles__header-content--h2_vg","name":"styles__name--O12RZ","lang":"styles__lang--kAN5I","vac-info":"styles__vac-info--WLsM9","active":"styles__active--eWHDT","time-limit":"styles__time-limit--oKorI","limit":"styles__limit--_jNL9","blocked":"styles__blocked--nI_x9","add":"styles__add--_3Cqz","item-content":"styles__item-content--SS4nW","money":"styles__money--OQ_Ys","money-stats":"styles__money-stats--Cn2EN","money-stats-left":"styles__money-stats-left--nxBaa","money-stats-general":"styles__money-stats-general--le9eX","yellow":"styles__yellow--AO5cE","green":"styles__green--n5iGL","red":"styles__red--uhuK4","item-controls":"styles__item-controls--w3VeX","button":"styles__button--C0Jpe","item-edit":"styles__item-edit--cJ0y7","item-delete":"styles__item-delete--yJZle","stats":"styles__stats--gcI1n","circle":"styles__circle--nzg55","count":"styles__count--Y7cJE"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/botavatar.svg
-const botavatar_namespaceObject = __webpack_require__.p + "fb494f3363a55414dd26.svg";
+const botavatar_namespaceObject = __webpack_require__.p + "0f41de6a27016f007d91.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/addbot.svg
 const addbot_namespaceObject = __webpack_require__.p + "8efeb320eea1851c2983.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/vacReturn.svg
-const vacReturn_namespaceObject = __webpack_require__.p + "89831fa72e0ccd71fe3d.svg";
+const vacReturn_namespaceObject = __webpack_require__.p + "51bdcb42daea80005a64.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/warning2.svg
-const warning2_namespaceObject = __webpack_require__.p + "11429941e542ad6f1fc7.svg";
+const warning2_namespaceObject = __webpack_require__.p + "dda4e71ea9967084dbe2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/modalBotDetails/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalBotDetails_styles = ({"content":"styles__content--IvJLn","boxes":"styles__boxes--ekm66","infoarea":"styles__infoarea--vuD1R","item":"styles__item--jUAYT","name":"styles__name--yotOv","val":"styles__val--Fjjla","botState":"styles__botState--LnnA2","dot":"styles__dot--phzoZ","stateName":"styles__stateName--SAjsp","copyable":"styles__copyable--OExzn","actions":"styles__actions--_PQKU"});
@@ -64129,17 +64129,17 @@ var proxies_products = function products() {
 };
 /* harmony default export */ const admin_proxies = (proxies_products);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/gamepad.svg
-const gamepad_namespaceObject = __webpack_require__.p + "1f8f5cc7c0e5a13f1027.svg";
+const gamepad_namespaceObject = __webpack_require__.p + "61a744ba8f685d7aeba2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/robot.svg
-const robot_namespaceObject = __webpack_require__.p + "09f81d38c6e4c2ea1b08.svg";
+const robot_namespaceObject = __webpack_require__.p + "d6bbd981ed2bd9d2db67.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/cart.svg
-const cart_namespaceObject = __webpack_require__.p + "6ce708447f662108fb26.svg";
+const cart_namespaceObject = __webpack_require__.p + "3c68476424236c8d82e2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/settings.svg
-const settings_namespaceObject = __webpack_require__.p + "c16dc6317bfa2eb2cf37.svg";
+const settings_namespaceObject = __webpack_require__.p + "63b1b618af954e7db694.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowLeft.svg
-const arrowLeft_namespaceObject = __webpack_require__.p + "b1c7335def848f80bcc5.svg";
+const arrowLeft_namespaceObject = __webpack_require__.p + "96780ec48f6c1b85e039.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowRight.svg
-const arrowRight_namespaceObject = __webpack_require__.p + "ed4605a092b467216198.svg";
+const arrowRight_namespaceObject = __webpack_require__.p + "f2076a772b23a44d6772.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const leftMenu_styles = ({"toggleButton":"styles__toggleButton--qG8Pf","closed":"styles__closed--L88sh","wrapper":"styles__wrapper--Enr_z","titleSection":"styles__titleSection--GXD_6","title":"styles__title--GJMSN","menuSection":"styles__menuSection--l24r9","menuList":"styles__menuList--VGVfU","menuItem":"styles__menuItem--cB2Wo","icon":"styles__icon--NmqaV","arrowIcon":"styles__arrowIcon--Vx09I","subMenu":"styles__subMenu--EEbna","subMenuItem":"styles__subMenuItem--xVLM8","isOpen":"styles__isOpen--uNqls","filterButton":"styles__filterButton--S1_Lr","massButton":"styles__massButton--XOeJd"});
@@ -65442,13 +65442,13 @@ var orders_modalEdit_ModalEdit = function ModalEdit(_ref5) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const paggination_styles = ({"wrapper":"styles__wrapper--B7G6T","input":"styles__input--FG9Kt","goBtn":"styles__goBtn--gJ4Ui","pages":"styles__pages--ZrrnQ","text":"styles__text--Ng0gg"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pagArrowLeft.svg
-const pagArrowLeft_namespaceObject = __webpack_require__.p + "a493394c76b42a40d236.svg";
+const pagArrowLeft_namespaceObject = __webpack_require__.p + "0e5d5228fa8e4c86316b.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pagArrowRight.svg
-const pagArrowRight_namespaceObject = __webpack_require__.p + "0d47a8fd75102e106255.svg";
+const pagArrowRight_namespaceObject = __webpack_require__.p + "c6344c221a0d68412fa5.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pagDoubleArrowLeft.svg
-const pagDoubleArrowLeft_namespaceObject = __webpack_require__.p + "3dbf89cb40e1303fb3a7.svg";
+const pagDoubleArrowLeft_namespaceObject = __webpack_require__.p + "a588ed6d81292e9d0cf2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pagDoubleArrowRight.svg
-const pagDoubleArrowRight_namespaceObject = __webpack_require__.p + "cf4f3daa0b0cfacff13b.svg";
+const pagDoubleArrowRight_namespaceObject = __webpack_require__.p + "b7d98431be9a031eca10.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/paggination/index.js
 function paggination_slicedToArray(arr, i) { return paggination_arrayWithHoles(arr) || paggination_iterableToArrayLimit(arr, i) || paggination_unsupportedIterableToArray(arr, i) || paggination_nonIterableRest(); }
 function paggination_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -65546,7 +65546,7 @@ var paggination = function paggination(_ref) {
 };
 /* harmony default export */ const shared_paggination = (paggination);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/G.svg
-const G_namespaceObject = __webpack_require__.p + "fd3071b4b1cd5420f7a1.svg";
+const G_namespaceObject = __webpack_require__.p + "21fb214d33f99ad49b13.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/index.js
 function leftMenu_typeof(o) { "@babel/helpers - typeof"; return leftMenu_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, leftMenu_typeof(o); }
 function leftMenu_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ leftMenu_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == leftMenu_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(leftMenu_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }

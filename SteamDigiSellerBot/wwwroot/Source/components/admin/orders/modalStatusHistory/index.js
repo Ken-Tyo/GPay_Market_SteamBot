@@ -193,7 +193,7 @@ const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
                           </div>
                         </div>
                       );
-                    } else if (sid === 23 && val) {
+                    } else if (sid === 24 && val) {
                         return (
                             <div>
                                 {val.botName && val.botId && (

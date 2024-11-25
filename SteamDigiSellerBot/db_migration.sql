@@ -448,9 +448,8 @@ comment on column "UpdateItemInfoStat"."JobCode" is 'Код задачи на о
 comment on column "UpdateItemInfoStat"."UpdateDate" is 'Дата обновления';
 comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество отправленных запросов';
 
-23.11
+23.11 - ДУБЛЬ СТРОКИ 125
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
-alter table "Games" ADD "GameInfo" JSON null;
 
-23.11 Задача #70 - GiftBan
+24.11 Задача #70 - GiftBan
 ALTER TABLE "Bot" add "RemainingSumToGift" numeric null;
