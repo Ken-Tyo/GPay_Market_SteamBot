@@ -76,6 +76,9 @@ namespace SteamDigiSellerBot.Database.Entities
         [Column(TypeName = "json")]
         public List<int> BotSwitchList { get; set; } = new();
 
+        [Column(TypeName = "json")]
+        public List<DateTime> AccountSwitchList { get; set; } = new();
+
         public bool BlockOrder { get; set; }
 
         public GameSession()

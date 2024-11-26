@@ -257,11 +257,14 @@ const OrderState = () => {
                                                 backgroundColor: '#FFFFFF',
                                                 color: '#8615BC',
                                                 border: '1px solid #571676',
-                                                marginRight: '1.5em'
+                                                marginRight: '1.5em',
+                                                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                             }}
                                             onClick={() => {
                                                 apiResetSteamAcc();
                                             }}
+                                            disabled={gameSession.cantSwitchAccount}
                                         />)}
                                 </div>
 
@@ -312,11 +315,14 @@ const OrderState = () => {
                                                 backgroundColor: '#FFFFFF',
                                                 color: '#8615BC',
                                                 border: '1px solid #571676',
-                                                marginRight: '1.5em'
+                                                marginRight: '1.5em',
+                                                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                             }}
                                             onClick={() => {
                                                 apiResetSteamAcc();
                                             }}
+                                            disabled={gameSession.cantSwitchAccount}
                                         />)}
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <ContactTheSeller digisellerId={gameSession.digisellerId} />
@@ -366,11 +372,14 @@ const OrderState = () => {
                                         backgroundColor: '#FFFFFF',
                                         color: '#8615BC',
                                         border: '1px solid #571676',
-                                        marginRight: '1.5em'
+                                        marginRight: '1.5em',
+                                        opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                        pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                     }}
                                     onClick={() => {
                                         apiResetSteamAcc();
                                     }}
+                                    disabled={gameSession.cantSwitchAccount}
                                 />)}
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <ContactTheSeller digisellerId={gameSession.digisellerId} />
@@ -418,11 +427,14 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '1.5em'
+                                                    marginRight: '1.5em',
+                                                    opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                    pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
                                                 }}
+                                                disabled={gameSession.cantSwitchAccount}
                                             />)}
                                         <Button
                                             text={tInvitationRefused('iSentInvitation')}
@@ -489,11 +501,14 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '1.5em'
+                                                    marginRight: '1.5em',
+                                                    opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                    pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
                                                 }}
+                                                disabled={gameSession.cantSwitchAccount}
                                             />)}
                                     </div>
                                     {gameSession.isAnotherBotExists && (
@@ -556,11 +571,14 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '1.5em'
+                                                    marginRight: '1.5em',
+                                                    opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                    pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
                                                 }}
+                                                disabled={gameSession.cantSwitchAccount}
                                             />)}
                                         {gameSession.canResendGame && (
                                             <Button
@@ -699,11 +717,14 @@ const OrderState = () => {
                                                 backgroundColor: '#FFFFFF',
                                                 color: '#8615BC',
                                                 border: '1px solid #571676',
-                                                marginRight: '1.5em'
+                                                marginRight: '1.5em',
+                                                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                             }}
                                             onClick={() => {
                                                 apiResetSteamAcc();
                                             }}
+                                            disabled={gameSession.cantSwitchAccount}
                                         />)}
 
                                     <div className={css.contactSellerWrapper}>
@@ -741,11 +762,14 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '1.5em'
+                                                    marginRight: '1.5em',
+                                                    opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                    pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
                                                 }}
+                                                disabled={gameSession.cantSwitchAccount}
                                             />)}
 
                                         <div
@@ -791,11 +815,14 @@ const OrderState = () => {
                                             backgroundColor: '#FFFFFF',
                                             color: '#8615BC',
                                             border: '1px solid #571676',
-                                            marginRight: '1.5em'
+                                            marginRight: '1.5em',
+                                            opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                            pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                         }}
                                         onClick={() => {
                                             apiResetSteamAcc();
                                         }}
+                                        disabled={gameSession.cantSwitchAccount}
                                     />)}
 
                                 <div className={css.contactBut}>
@@ -811,15 +838,15 @@ const OrderState = () => {
                 <Area>
                     <div className={css.regionError}>
                         <div className={css.title}>{tGameRequiredError('error')}</div>
-                        <div className={css.text} style= {{marginBottom: '2rem' }} >{tGameRequiredError('info_row1')}</div>
-                        <div className={css.text} style= {{marginBottom: '1.5rem' }}>{tGameRequiredError('info_row2')}</div>
-                        <div className={css.text} style={{marginBottom:'1rem'}} >{tGameRequiredError('info_row3')}</div>
+                        <div className={css.text} style={{ marginBottom: '2rem' }} >{tGameRequiredError('info_row1')}</div>
+                        <div className={css.text} style={{ marginBottom: '1.5rem' }}>{tGameRequiredError('info_row2')}</div>
+                        <div className={css.text} style={{ marginBottom: '1rem' }} >{tGameRequiredError('info_row3')}</div>
                         <div className={css.text}>{tGameRequiredError('info_row4')}</div>
                         <div className={css.accButtons}>
                             <div className={css.line1}>
                                 {!gameSession.blockOrder && gameSession.canResendGame && (
                                     <Button
-                                        text={tGameRequiredError('repeatSendGame') + (isResendBlocked && secondsRemaining>0 ? ' (' + secondsRemaining+')' : '')}
+                                        text={tGameRequiredError('repeatSendGame') + (isResendBlocked && secondsRemaining > 0 ? ' (' + secondsRemaining + ')' : '')}
                                         className={css.but}
                                         style={{
                                             marginRight: '1.5em',
@@ -840,11 +867,14 @@ const OrderState = () => {
                                             backgroundColor: '#FFFFFF',
                                             color: '#8615BC',
                                             border: '1px solid #571676',
-                                            marginLeft: '25px'
+                                            marginLeft: '25px',
+                                            opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                            pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                         }}
                                         onClick={() => {
                                             apiResetSteamAcc();
                                         }}
+                                        disabled={gameSession.cantSwitchAccount}
                                     />)}
                             </div>
 
@@ -906,11 +936,14 @@ const OrderState = () => {
                                                     backgroundColor: '#FFFFFF',
                                                     color: '#8615BC',
                                                     border: '1px solid #571676',
-                                                    marginRight: '1.5em'
+                                                    marginRight: '1.5em',
+                                                    opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                                                    pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                                                 }}
                                                 onClick={() => {
                                                     apiResetSteamAcc();
                                                 }}
+                                                disabled={gameSession.cantSwitchAccount}
                                             />)}
                                         <Button
                                             text={tTempInviteBan('iSentInvitation')}

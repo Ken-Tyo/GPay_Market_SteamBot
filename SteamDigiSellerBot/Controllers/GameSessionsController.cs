@@ -200,6 +200,7 @@ namespace SteamDigiSellerBot.Controllers
 
             gs.Bot = null;
             gs.BotSwitchList = new();
+            gs.AccountSwitchList = new();
             gs.SteamProfileUrl = null;
             gs.StatusId = GameSessionStatusEnum.ProfileNoSet;//Не указан профиль
             gs.SteamContactValue = null;
@@ -367,7 +368,12 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
-
+            if (gsi.CantSwitchAccount)
+            {
+                ModelState.AddModelError("", "Превышено количество смены аккаунтов в час. Ожидайте или обратитесь в поддержку.");
+                return this.CreateBadRequest();
+            }
+             
             return Ok(gsi);
         }
 

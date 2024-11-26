@@ -450,3 +450,7 @@ comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество �
 
 23.11
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
+INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "Description") VALUES (49, 23, 'Ошибка (Нет игры)', '#E13F29', NULL);
+
+26.11
+ALTER TABLE "GameSessions" ADD "AccountSwitchList" JSON null;

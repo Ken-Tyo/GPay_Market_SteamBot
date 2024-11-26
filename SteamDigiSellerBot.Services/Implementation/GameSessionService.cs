@@ -171,6 +171,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                     GameSessionStatusEnum.Queue, GameSessionStatusEnum.IncorrectRegion, GameSessionStatusEnum.GameRequired, GameSessionStatusEnum.SwitchBot, GameSessionStatusEnum.InvitationBlocked }.Contains(gs.StatusId))
                 return gs;
 
+            gs.AccountSwitchList ??= new();
+            if (gs.AccountSwitchList.Count(x => x > DateTime.UtcNow.AddHours(-1)) >= 3)
+                return gs;
+
             _gameSessionManager.Remove(gs.Id);
             if (gs.Bot != null && gs.SteamContactValue != null)
             {
@@ -199,6 +203,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             gs.Bot = null;
             gs.StatusId = GameSessionStatusEnum.ProfileNoSet;
             gs.SteamContactValue = null;
+            gs.AccountSwitchList.Add(DateTime.UtcNow);
             gs.SteamContactType = SteamContactType.unknown;
             gs.SteamProfileUrl = null;
             gs.SteamProfileGifteeAccountID = null;

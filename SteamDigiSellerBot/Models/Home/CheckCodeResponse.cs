@@ -44,6 +44,7 @@ namespace SteamDigiSellerBot.Models.Home
         public bool IsDlc { get; set; }
         public bool IsAnotherBotExists { get; set; }
         public bool CanResendGame { get; set; }
+        public bool CantSwitchAccount { get; set; }
         public string DigisellerId { get; set; }
         public int QueuePosition { get; set; }
         public int QueueWaitingMinutes { get; set; }
