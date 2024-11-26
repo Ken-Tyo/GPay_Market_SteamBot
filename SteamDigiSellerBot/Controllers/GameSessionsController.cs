@@ -426,7 +426,7 @@ namespace SteamDigiSellerBot.Controllers
             gs.Stage = GameSessionStage.CheckFriend;
             await _gameSessionRepository.EditAsync(db, gs);
             _gameSessionManager.CheckFriend(gs.Id);
-
+            await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
             return Ok();
         }
     }
