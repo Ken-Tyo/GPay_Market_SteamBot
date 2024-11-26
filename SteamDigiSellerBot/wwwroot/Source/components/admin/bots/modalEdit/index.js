@@ -26,8 +26,8 @@ const FromItemText = ({ name, onChange, hint, value, cymbol }) => {
 const FromItemSwitch = ({ name, value, onChange }) => {
   return (
     <div className={css.formItem}>
-       <div className={css.name}>{name}</div>
-       <div>
+      <div className={css.name}>{name}</div>
+      <div style={{ marginTop: "10px", marginRight: "60px" }}>
         <Switch
           value={value}
           onChange={onChange}
