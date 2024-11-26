@@ -50,7 +50,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly ILogger<GameSessionService> _logger;
         private readonly IConfiguration _configuration;
         private GameSessionCommon _gameSessionManager { get; set; }
-        private const int maxSendGameAttempts = 5;
+        private const int maxSendGameAttempts = 2;
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
