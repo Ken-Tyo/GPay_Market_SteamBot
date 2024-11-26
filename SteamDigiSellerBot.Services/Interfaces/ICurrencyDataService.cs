@@ -17,5 +17,6 @@ namespace SteamDigiSellerBot.Services.Interfaces
         bool CleanCache();
         Task ForceUpdateCurrentCurrency();
         Task<(bool success, decimal? value)> TryConvertToRUB(decimal val, int steamCurrencyId);
+        Task<decimal> ConvertPriceToUsd(decimal val, int steamCurrencyId);
     }
 }

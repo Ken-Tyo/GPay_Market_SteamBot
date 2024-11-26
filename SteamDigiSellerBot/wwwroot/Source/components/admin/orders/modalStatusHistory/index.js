@@ -193,6 +193,22 @@ const ModalStatusHistory = ({ isOpen, data, onCancel }) => {
                           </div>
                         </div>
                       );
+                    } else if (sid === 24 && val) {
+                        return (
+                            <div>
+                                {val.botName && val.botId && (
+                                    <div>Бот: {createBotLink(val)}</div>
+                                )}
+                                <div>
+                                    { val.message }
+                                </div>
+                                {val.itemPrice && val.itemCurrencyCode && (
+                                    <div>Последняя сумма отправки игры: <span style={{ color: '#D3AE29' }}>
+                                        {val.itemPrice} {val.itemCurrencyCode}
+                                    </span></div>
+                                )}
+                            </div>
+                        )
                     }
                     else if (val)
                     {

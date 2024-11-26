@@ -29,6 +29,7 @@ namespace SteamDigiSellerBot.Database.Entities
             public string message { get; set; }
             public decimal? itemPrice { get; set; }
             public string itemRegion { get; set; }
+            public string itemCurrencyCode { get; set; }
             public int botId { get; set; }
             public string botName { get; set; }
             public string botRegionName { get; set; }

@@ -57,6 +57,7 @@ namespace SteamDigiSellerBot.Database.Entities
         public decimal TotalPurchaseSumUSD { get; set; }
         public decimal SendedGiftsSum { get; set; }
         public decimal MaxSendedGiftsSum { get; set; }
+        public decimal? RemainingSumToGift { get; set; }
         public string AvatarUrl { get; set; }
         public int GameSendLimitAddParam { get; set; }
         public int? SteamCurrencyId { get; set; }
