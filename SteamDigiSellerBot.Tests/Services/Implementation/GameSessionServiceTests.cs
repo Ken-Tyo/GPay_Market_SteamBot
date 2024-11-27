@@ -39,6 +39,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
         private Mock<ILogger<GameSessionService>> _loggerMock;
         private Mock<IConfiguration> _configuration;
         private Mock<ICurrencyDataRepository> _currencyDateRepositoryMock;
+        private Mock<IGiftBanService> _giftBanService;
 
         private Mock<GameSessionCommon> _gameSessionManager { get; set; }
 
@@ -60,7 +61,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
             _loggerMock = new Mock<ILogger<GameSessionService>>();
             _configuration = new Mock<IConfiguration>();
             _currencyDateRepositoryMock = new Mock<ICurrencyDataRepository>();
-
+            _giftBanService = new Mock<IGiftBanService>();
             _gameSessionManager = new Mock<GameSessionCommon>();
 
             _service = new GameSessionService(
@@ -75,6 +76,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 _userDBRepositoryMock.Object,
                 _digiSellerNetworkServiceMock.Object,
                 _gameSessionStatusLogRepositoryMock.Object,
+                _giftBanService.Object,
                 _loggerMock.Object,
                 _configuration.Object
             );
