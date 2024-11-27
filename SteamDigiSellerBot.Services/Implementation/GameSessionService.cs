@@ -546,7 +546,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             await using var db = _botRepository.GetContext();
             IEnumerable<Bot> botFilterRes = await _botRepository
                 .ListAsync(db, b => (b.State == BotState.active || b.State == BotState.tempLimit) 
-                              && b.SendedGiftsSum < b.MaxSendedGiftsSum //сумма подарков не превышает максимальную
+                              && (b.IgnoreSendLimits || (b.SendedGiftsSum < b.MaxSendedGiftsSum)) //сумма подарков не превышает максимальную
                               && b.IsON && (!b.LastTimeUpdated.HasValue || DateTime.UtcNow.AddMinutes(-1) > b.LastTimeUpdated));
 
             gs.BotSwitchList ??= new();
@@ -590,7 +590,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 //var diffs = await GetAllowedAmountSendGiftsInRubDict(priceRegionFilteredBots);
                 //var diffFilteredBots = priceRegionFilteredBots.Where(b => p < diffs[b.Id]).ToList();
                 var diffFilteredBots = priceRegionFilteredBots
-                    .Where(b => price.CurrentSteamPrice < b.MaxSendedGiftsSum - b.SendedGiftsSum).ToList();
+                    .Where(b => b.IgnoreSendLimits || (price.CurrentSteamPrice < b.MaxSendedGiftsSum - b.SendedGiftsSum)).ToList();
 
                 _logger.LogInformation(
                     $"GS ID {gs.Id} after filter by send diff - {JsonConvert.SerializeObject(diffFilteredBots.Select(b => new { id = b.Id, name = b.UserName }))}");
