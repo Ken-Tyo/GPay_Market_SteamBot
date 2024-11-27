@@ -332,6 +332,10 @@ namespace SteamDigiSellerBot.Controllers
             if (!_gameSessionManager.ConfirmProfile(gs.Id))
                 return BadRequest();
 
+            if (!(gs.Stage is GameSessionStage.New or GameSessionStage.WaitConfirmation))
+                return BadRequest();
+
+
             gs.Stage = GameSessionStage.AddToFriend;
             gs.StatusId = GameSessionStatusEnum.OrderConfirmed;
             gs.AutoSendInvitationTime = null;
