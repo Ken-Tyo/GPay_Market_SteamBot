@@ -27189,7 +27189,7 @@ var initAdmin = /*#__PURE__*/function () {
 }();
 var initBotsPage = /*#__PURE__*/function () {
   var _ref3 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee3() {
-    var params, botId, _state$get2, bots, bot;
+    var params, botId, bot;
     return state_regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -27203,22 +27203,21 @@ var initBotsPage = /*#__PURE__*/function () {
           console.log("params", params);
           botId = Number(params.id || 0);
           if (!botId) {
-            _context3.next = 14;
+            _context3.next = 13;
             break;
           }
-          _state$get2 = state.get(), bots = _state$get2.bots;
           bot = bots.find(function (b) {
             return b.id === botId;
           }); //console.log(botId, bots, bot);
           if (!bot) {
-            _context3.next = 14;
+            _context3.next = 13;
             break;
           }
-          _context3.next = 13;
+          _context3.next = 12;
           return setSelectedBot(bot);
-        case 13:
+        case 12:
           toggleBotDetailsModal(true);
-        case 14:
+        case 13:
         case "end":
           return _context3.stop();
       }
@@ -27986,7 +27985,18 @@ var apiBotSetIsReserve = /*#__PURE__*/function () {
           });
         case 2:
           res = _context27.sent;
-        case 3:
+          if (res.ok) {
+            state.set(function (value) {
+              return state_objectSpread(state_objectSpread({}, value), {}, {
+                bots: value.bots.map(function (bot) {
+                  return bot.id === id ? state_objectSpread(state_objectSpread({}, bot), {}, {
+                    isReserve: isreserve
+                  }) : bot;
+                })
+              });
+            });
+          }
+        case 4:
         case "end":
           return _context27.stop();
       }
@@ -28711,11 +28721,11 @@ var apiGetSteamRegions = /*#__PURE__*/function () {
 }();
 var apiSetGameSessionStatus = /*#__PURE__*/function () {
   var _ref52 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(gSesId, statusId) {
-    var _state$get3, gameSessionsFilter, res;
+    var _state$get2, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
       while (1) switch (_context52.prev = _context52.next) {
         case 0:
-          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
+          _state$get2 = state.get(), gameSessionsFilter = _state$get2.gameSessionsFilter;
           _context52.next = 3;
           return fetch("/gamesessions/setstatus", {
             method: "POST",
@@ -28739,11 +28749,11 @@ var apiSetGameSessionStatus = /*#__PURE__*/function () {
 }();
 var apiResetGameSession = /*#__PURE__*/function () {
   var _ref53 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(gSesId) {
-    var _state$get4, gameSessionsFilter, res;
+    var _state$get3, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
       while (1) switch (_context53.prev = _context53.next) {
         case 0:
-          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
+          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
           _context53.next = 3;
           return fetch("/gamesessions/reset", {
             method: "POST",
@@ -28766,11 +28776,11 @@ var apiResetGameSession = /*#__PURE__*/function () {
 }();
 var apiAddCommentGameSession = /*#__PURE__*/function () {
   var _ref54 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(gSesId, comment) {
-    var _state$get5, gameSessionsFilter, res;
+    var _state$get4, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
       while (1) switch (_context54.prev = _context54.next) {
         case 0:
-          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
+          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
           toggleAddGameSesCommentModal(false);
           _context54.next = 4;
           return fetch("/gamesessions/comment", {
@@ -28795,11 +28805,11 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
 }();
 var updateGameSessionsFilter = /*#__PURE__*/function () {
   var _ref55 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(newData) {
-    var _state$get6, gameSessionsFilter, newFilter;
+    var _state$get5, gameSessionsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
       while (1) switch (_context55.prev = _context55.next) {
         case 0:
-          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
+          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
           newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
           console.log("new f", newFilter);
           setStateProp("gameSessionsFilter", newFilter);
@@ -28817,11 +28827,11 @@ var updateGameSessionsFilter = /*#__PURE__*/function () {
 }();
 var updateProductsFilter = /*#__PURE__*/function () {
   var _ref56 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(newData) {
-    var _state$get7, productsFilter, newFilter;
+    var _state$get6, productsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee56$(_context56) {
       while (1) switch (_context56.prev = _context56.next) {
         case 0:
-          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
+          _state$get6 = state.get(), productsFilter = _state$get6.productsFilter;
           newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
           console.log("new f", newFilter);
           setStateProp("productsFilter", newFilter);
@@ -28839,7 +28849,7 @@ var updateProductsFilter = /*#__PURE__*/function () {
 }();
 var apiAddGameSession = /*#__PURE__*/function () {
   var _ref57 = state_asyncToGenerator(/*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(data) {
-    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+    var res, errors, _state$get7, gameSessionsFilter, newUniqueCodes;
     return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
       while (1) switch (_context57.prev = _context57.next) {
         case 0:
@@ -28859,7 +28869,7 @@ var apiAddGameSession = /*#__PURE__*/function () {
             _context57.next = 12;
             break;
           }
-          _state$get8 = state.get(), gameSessionsFilter = _state$get8.gameSessionsFilter;
+          _state$get7 = state.get(), gameSessionsFilter = _state$get7.gameSessionsFilter;
           _context57.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
@@ -62625,7 +62635,7 @@ var HtmlTooltip = styles_styled(function (_ref) {
 
 
 
-var bots = function bots() {
+var bots_bots = function bots() {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: bots_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
@@ -62637,7 +62647,7 @@ var bots = function bots() {
     })]
   });
 };
-/* harmony default export */ const admin_bots = (bots);
+/* harmony default export */ const admin_bots = (bots_bots);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/Table/TableContext.js
 
 
@@ -64013,8 +64023,11 @@ var modalEdit_FromItemSwitch = function FromItemSwitch(_ref2) {
       className: bots_modalEdit_styles.name,
       children: name
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      style: {
+        marginTop: "10px",
+        marginRight: "60px"
+      },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
-        name: name,
         value: value,
         onChange: onChange
       })
@@ -64028,7 +64041,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref3) {
     onSave = _ref3.onSave,
     response = _ref3.response,
     resetResponse = _ref3.resetResponse,
-    isreserve = _ref3.isreserve;
+    isReserve = _ref3.isReserve;
   var initialValue = {
     id: null,
     userName: null,
@@ -64036,7 +64049,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref3) {
     proxy: null,
     maFile: null,
     gameSendLimit: null,
-    isreserve: null
+    isReserve: null
   };
   var _useState = (0,react.useState)(initialValue),
     _useState2 = bots_modalEdit_slicedToArray(_useState, 2),
@@ -64056,7 +64069,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref3) {
     };
   };
   var fileRef = react.useRef();
-  var modalHeight = item.id ? 938 : 599;
+  var modalHeight = item.id ? 835 : 599;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: item.id ? 'Редактировать бота' : 'Добавить бота',
@@ -64088,10 +64101,11 @@ var modalEdit_ModalEdit = function ModalEdit(_ref3) {
             cymbol: '$'
           }), item.id && /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemSwitch, {
             name: 'Запасной бот:',
-            value: item.isreserve,
             onChange: function onChange(val) {
-              return apiBotSetIsReserve(item.id, val);
-            }
+              apiBotSetIsReserve(item.id, val);
+              handleChange('isReserve');
+            },
+            value: item.isReserve
           })]
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {

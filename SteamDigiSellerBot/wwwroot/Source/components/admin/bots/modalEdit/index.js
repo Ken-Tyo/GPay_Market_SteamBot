@@ -74,7 +74,7 @@ const ModalEdit = ({
   };
 
   const fileRef = React.useRef();
-  const modalHeight = item.id ? 938 : 599;
+  const modalHeight = item.id ? 835 : 599;
 
   return (
     <ModalBase
