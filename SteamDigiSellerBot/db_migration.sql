@@ -459,4 +459,4 @@ INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "De
 
 26.11
 ALTER TABLE "GameSessions" ADD "AccountSwitchList" JSON null;
-ALTER TABLE "GameSessions" ADD "IgnoreSendLimits" BOOLEAN  not null default FALSE;
+ALTER TABLE "Bots" ADD "IgnoreSendLimits" BOOLEAN  not null default FALSE;
