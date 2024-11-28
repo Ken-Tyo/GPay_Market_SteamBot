@@ -43,7 +43,7 @@ namespace SteamDigiSellerBot.Tests.Integration
                 RentDays = TestContext.CurrentContext.Random.NextByte()
             };
 
-            var response = await client.PutAsJsonAsync<SellerDto>("/sellers", dto);
+            var response = await client.PostAsJsonAsync<SellerDto>("/sellers", dto);
             response.EnsureSuccessStatusCode();
 
             var sellerResponse = await response.Content.ReadFromJsonAsync<SellersCreateResponse>();
@@ -76,7 +76,7 @@ namespace SteamDigiSellerBot.Tests.Integration
                 RentDays = TestContext.CurrentContext.Random.NextByte()
             };
 
-            var response = await client.PutAsJsonAsync<SellerDto>("/sellers", dto);
+            var response = await client.PostAsJsonAsync<SellerDto>("/sellers", dto);
             response.EnsureSuccessStatusCode();
 
             var sellerResponse = await response.Content.ReadFromJsonAsync<SellersCreateResponse>();
@@ -106,7 +106,7 @@ namespace SteamDigiSellerBot.Tests.Integration
                 RentDays = TestContext.CurrentContext.Random.NextByte()
             };
 
-            var response = await client.PutAsJsonAsync<SellerDto>("/sellers", dto);
+            var response = await client.PostAsJsonAsync<SellerDto>("/sellers", dto);
             response.EnsureSuccessStatusCode();
 
             var sellerResponse = await response.Content.ReadFromJsonAsync<SellersCreateResponse>();
@@ -135,7 +135,7 @@ namespace SteamDigiSellerBot.Tests.Integration
                 Password = TestContext.CurrentContext.Random.GetString()
             };
 
-            var creatResponse = await client.PutAsJsonAsync<SellerDto>("/sellers", dto);
+            var creatResponse = await client.PostAsJsonAsync<SellerDto>("/sellers", dto);
             creatResponse.EnsureSuccessStatusCode();
 
             var sellerCreateResponse = await creatResponse.Content.ReadFromJsonAsync<SellersCreateResponse>();
@@ -144,7 +144,7 @@ namespace SteamDigiSellerBot.Tests.Integration
             dto.Login = TestContext.CurrentContext.Random.GetString();
             dto.RentDays = TestContext.CurrentContext.Random.NextByte();
 
-            var updateResponse = await client.PostAsJsonAsync<SellerDto>("/sellers", dto);
+            var updateResponse = await client.PutAsJsonAsync<SellerDto>("/sellers", dto);
             updateResponse.EnsureSuccessStatusCode();
 
             var sellerResponse = await updateResponse.Content.ReadFromJsonAsync<SellersUpdateResponse>();
@@ -170,7 +170,7 @@ namespace SteamDigiSellerBot.Tests.Integration
                 Password = TestContext.CurrentContext.Random.GetString()
             };
 
-            var creatResponse = await client.PutAsJsonAsync<SellerDto>("/sellers", dto);
+            var creatResponse = await client.PostAsJsonAsync<SellerDto>("/sellers", dto);
             creatResponse.EnsureSuccessStatusCode();
 
             var sellerCreateResponse = await creatResponse.Content.ReadFromJsonAsync<SellersCreateResponse>();        
