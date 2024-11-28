@@ -19,10 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamDigiSellerBot.Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamDigiSellerBot.Tests", "SteamDigiSellerBot.Tests\SteamDigiSellerBot.Tests.csproj", "{B0F47981-7C9E-4366-A4CB-2D823ECFF879}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamKit2", "SteamKit2\SteamKit2\SteamKit2\SteamKit2.csproj", "{4B2B0365-DE37-4B65-B614-3E4E7C05147D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamDigiSellerBot.Protos", "SteamDigiSellerBot.Protos\SteamDigiSellerBot.Protos.csproj", "{914F4BBE-7C27-4DD2-A8FA-2E9E99C9FAAF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -63,11 +63,14 @@ namespace SteamDigiSellerBot
             services.AddTransient<IItemInfoTemplateValueRepository, ItemInfoTemplateValueRepository>();
             services.AddTransient<TagTypeReplacementsRepository>();
             services.AddTransient<TagPromoReplacementsRepository>();
+            services.AddTransient<ISellerRepository, SellerRepository>();
+
             services.AddTransient<MarketPlaceProvider>();
             services.AddTransient<LanguageProvider>();
             services.AddTransient<IItemBulkUpdateService, ItemBulkUpdateService>();
             services.AddTransient<TagTypeReplacementService>();
             services.AddTransient<TagPromoReplacementService>();
+            services.AddTransient<ISellersService, SellersService>();
 
             services.AddSingleton<ISteamNetworkService, SteamNetworkService>();
             services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot
 {
-    public class Program
+    public partial class Program
     {
         public static async Task Main(string[] args)
         {
@@ -91,7 +91,6 @@ namespace SteamDigiSellerBot
             try
             {
                 IHost host = CreateHostBuilder(args)
-                .UseSerilog()
                 .Build();
 
                 using (IServiceScope scope = host.Services.CreateScope())
@@ -136,6 +135,7 @@ namespace SteamDigiSellerBot
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .UseSerilog();
     }
 }
