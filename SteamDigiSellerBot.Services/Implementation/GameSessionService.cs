@@ -1625,8 +1625,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                             gs.SteamProfileName,
                             $"Спасибо, что обратились к нам! №{gs.Id}",
                             gs.Bot.Region);
-
-                        await Task.Delay(TimeSpan.FromSeconds(45));
+                        if (sendRes?.finalizeTranStatus?.purchaseresultdetail == 11
+                            && sendRes?.result == SendeGameResult.error)
+                            await Task.Delay(TimeSpan.FromSeconds(45));
                     }
                     while (++sendAttemptsCounts < maxSendGameAttempts
                         && sendRes?.finalizeTranStatus?.purchaseresultdetail == 11
