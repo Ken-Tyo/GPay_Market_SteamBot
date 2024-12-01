@@ -28655,7 +28655,8 @@ var apiGetCurrencies = /*#__PURE__*/function () {
             return {
               code: c.code,
               steamId: c.steamId,
-              steamSymbol: c.steamSymbol
+              steamSymbol: c.steamSymbol,
+              steamValue: c.value
             };
           });
           state.set(function (value) {
@@ -61230,6 +61231,21 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
                     })]
                   })]
                 });
+              } else if (sid === 24 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [val.botName && val.botId && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0411\u043E\u0442: ", createBotLink(val)]
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: val.message
+                  }), val.itemPrice && val.itemCurrencyCode && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u0441\u0443\u043C\u043C\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0438\u0433\u0440\u044B: ", /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                      style: {
+                        color: '#D3AE29'
+                      },
+                      children: [val.itemPrice, " ", val.itemCurrencyCode]
+                    })]
+                  })]
+                });
               } else if (val) {
                 return /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
                   children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -61987,7 +62003,7 @@ var orders = function orders() {
 /* harmony default export */ const admin_orders = (orders);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/grid/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const grid_styles = ({"grid":"styles__grid--geGov","item":"styles__item--qPacC","header":"styles__header--zilir","image":"styles__image--DpbHq","problem":"styles__problem--cW2_Z","info":"styles__info--umdmA","login":"styles__login--IgU1M","data":"styles__data--Ki8fl","region":"styles__region--vAHZz","flag":"styles__flag--Aq_JM","proxy":"styles__proxy--ic8k9","vacWrapper":"styles__vacWrapper--f52iJ","vac":"styles__vac--LQW7Q","text":"styles__text--EvoRC","lineWrapper":"styles__lineWrapper--sqSlG","line":"styles__line--AMYQt","prices":"styles__prices--EePG_","left":"styles__left--OtEnd","right":"styles__right--CPaMp","leftPrice":"styles__leftPrice--z0QWH","rightPrice":"styles__rightPrice--FQr4q","buttonWrapper":"styles__buttonWrapper--xWSjn","buttons":"styles__buttons--HsrdH","editBtn":"styles__editBtn--AZQxn","delBtn":"styles__delBtn--TqqLy","vacSide":"styles__vacSide--IAjKk","list":"styles__list--kLmj2","vacItem":"styles__vacItem--WqdSB","vacBackButWrapper":"styles__vacBackButWrapper--VNNs4","vacBackBut":"styles__vacBackBut--NPnBw","addItem":"styles__addItem--S8kYT","item2":"styles__item2--LlKTM","item-header":"styles__item-header--af2F5","header-content":"styles__header-content--h2_vg","name":"styles__name--O12RZ","lang":"styles__lang--kAN5I","vac-info":"styles__vac-info--WLsM9","active":"styles__active--eWHDT","time-limit":"styles__time-limit--oKorI","limit":"styles__limit--_jNL9","blocked":"styles__blocked--nI_x9","add":"styles__add--_3Cqz","item-content":"styles__item-content--SS4nW","money":"styles__money--OQ_Ys","money-stats":"styles__money-stats--Cn2EN","money-stats-left":"styles__money-stats-left--nxBaa","money-stats-general":"styles__money-stats-general--le9eX","yellow":"styles__yellow--AO5cE","green":"styles__green--n5iGL","red":"styles__red--uhuK4","item-controls":"styles__item-controls--w3VeX","button":"styles__button--C0Jpe","item-edit":"styles__item-edit--cJ0y7","item-delete":"styles__item-delete--yJZle","stats":"styles__stats--gcI1n","circle":"styles__circle--nzg55","count":"styles__count--Y7cJE"});
+/* harmony default export */ const grid_styles = ({"grid":"styles__grid--geGov","item":"styles__item--qPacC","header":"styles__header--zilir","image":"styles__image--DpbHq","problem":"styles__problem--cW2_Z","info":"styles__info--umdmA","login":"styles__login--IgU1M","data":"styles__data--Ki8fl","region":"styles__region--vAHZz","flag":"styles__flag--Aq_JM","proxy":"styles__proxy--ic8k9","vacWrapper":"styles__vacWrapper--f52iJ","vac":"styles__vac--LQW7Q","text":"styles__text--EvoRC","lineWrapper":"styles__lineWrapper--sqSlG","line":"styles__line--AMYQt","prices":"styles__prices--EePG_","left":"styles__left--OtEnd","right":"styles__right--CPaMp","leftPrice":"styles__leftPrice--z0QWH","rightPrice":"styles__rightPrice--FQr4q","remainingRight":"styles__remainingRight--wX6I6","remainingPrice":"styles__remainingPrice--D9gNE","buttonWrapper":"styles__buttonWrapper--xWSjn","buttons":"styles__buttons--HsrdH","editBtn":"styles__editBtn--AZQxn","delBtn":"styles__delBtn--TqqLy","vacSide":"styles__vacSide--IAjKk","list":"styles__list--kLmj2","vacItem":"styles__vacItem--WqdSB","vacBackButWrapper":"styles__vacBackButWrapper--VNNs4","vacBackBut":"styles__vacBackBut--NPnBw","addItem":"styles__addItem--S8kYT","item2":"styles__item2--LlKTM","item-header":"styles__item-header--af2F5","header-content":"styles__header-content--h2_vg","name":"styles__name--O12RZ","lang":"styles__lang--kAN5I","vac-info":"styles__vac-info--WLsM9","active":"styles__active--eWHDT","time-limit":"styles__time-limit--oKorI","limit":"styles__limit--_jNL9","blocked":"styles__blocked--nI_x9","add":"styles__add--_3Cqz","item-content":"styles__item-content--SS4nW","money":"styles__money--OQ_Ys","money-stats":"styles__money-stats--Cn2EN","money-stats-left":"styles__money-stats-left--nxBaa","money-stats-general":"styles__money-stats-general--le9eX","yellow":"styles__yellow--AO5cE","green":"styles__green--n5iGL","red":"styles__red--uhuK4","item-controls":"styles__item-controls--w3VeX","button":"styles__button--C0Jpe","item-edit":"styles__item-edit--cJ0y7","item-delete":"styles__item-delete--yJZle","stats":"styles__stats--gcI1n","circle":"styles__circle--nzg55","count":"styles__count--Y7cJE"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/botavatar.svg
 const botavatar_namespaceObject = __webpack_require__.p + "0f41de6a27016f007d91.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/addbot.svg
@@ -63372,7 +63388,7 @@ var grid_grid = function grid() {
                 className: grid_styles.text,
                 children: [i.balance, " ", (_currencyDict$i$steam = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam === void 0 ? void 0 : _currencyDict$i$steam.steamSymbol]
               })
-            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            }), i.remainingSumToGift === null || i.remainingSumToGift === undefined ? /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: grid_styles.right,
               children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 className: grid_styles.leftPrice,
@@ -63391,6 +63407,9 @@ var grid_grid = function grid() {
                   }), ' ', "/ ", i.maxSendedGiftsSum.toFixed(2), ' ', (_currencyDict$i$steam3 = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam3 === void 0 ? void 0 : _currencyDict$i$steam3.steamSymbol]
                 })
               })]
+            }) : /*#__PURE__*/(0,jsx_runtime.jsx)(LimitContainer, {
+              bot: i,
+              currDict: currencyDict
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: grid_styles.buttonWrapper,
@@ -63476,16 +63495,36 @@ var grid_grid = function grid() {
     })]
   });
 };
-var HtmlTooltip = styles_styled(function (_ref) {
-  var className = _ref.className,
-    props = _objectWithoutProperties(_ref, grid_excluded);
+var LimitContainer = function LimitContainer(_ref) {
+  var _currDict$bot$steamCu, _currDict$bot$steamCu2;
+  var bot = _ref.bot,
+    currDict = _ref.currDict;
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: grid_styles.remainingRight,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: grid_styles.remainingPrice,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        style: {},
+        children: ['до ', /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+          style: {
+            color: '#C5443C'
+          },
+          children: (bot.remainingSumToGift * ((_currDict$bot$steamCu = currDict[bot.steamCurrencyId]) === null || _currDict$bot$steamCu === void 0 ? void 0 : _currDict$bot$steamCu.steamValue)).toFixed(2)
+        }), ' ', (_currDict$bot$steamCu2 = currDict[bot.steamCurrencyId]) === null || _currDict$bot$steamCu2 === void 0 ? void 0 : _currDict$bot$steamCu2.steamSymbol]
+      })
+    })
+  });
+};
+var HtmlTooltip = styles_styled(function (_ref2) {
+  var className = _ref2.className,
+    props = _objectWithoutProperties(_ref2, grid_excluded);
   return /*#__PURE__*/(0,jsx_runtime.jsx)(Tooltip_Tooltip, grid_objectSpread(grid_objectSpread({}, props), {}, {
     classes: {
       popper: className
     }
   }));
-})(function (_ref2) {
-  var theme = _ref2.theme;
+})(function (_ref3) {
+  var theme = _ref3.theme;
   return grid_defineProperty({}, "& .".concat(Tooltip_tooltipClasses.tooltip), {
     backgroundColor: '#43294B',
     color: '#D4D4D4',

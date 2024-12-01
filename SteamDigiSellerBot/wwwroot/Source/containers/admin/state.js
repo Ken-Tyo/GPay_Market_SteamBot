@@ -823,6 +823,7 @@ export const apiGetCurrencies = async () => {
       code: c.code,
       steamId: c.steamId,
       steamSymbol: c.steamSymbol,
+      steamValue: c.value
     };
   });
 

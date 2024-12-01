@@ -247,9 +247,10 @@ namespace SteamDigiSellerBot.Controllers
                     if (DateTime.TryParseExact(soldItem.DatePay, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture,
                             System.Globalization.DateTimeStyles.None, out var datePay))
                     {
-                        _logger?.LogWarning($"Продажа {uniquecode}: просрочена {datePay}");
+                        
                         if (datePay.AddDays(7) < DateTime.UtcNow)
                         {
+                            _logger?.LogWarning($"Продажа {uniquecode}: просрочена {datePay}");
                             gs = new GameSession()
                             {
                                 User = user,

@@ -68,7 +68,7 @@ namespace SteamDigiSellerBot.MappingProfiles
 
                     return sb.ToString();
                 }));
-
+            
             CreateMap<GameSession, GameSessionInfo>()
                 .ForMember(t => t.ItemName, x => x.MapFrom(s => s.Item.Name))
                 .ForMember(t => t.BotUsername, x => x.MapFrom((gs, gsi) => gs.Bot?.UserName))
@@ -77,6 +77,7 @@ namespace SteamDigiSellerBot.MappingProfiles
                         gs.Bot !=null ? $"https://steamcommunity.com/profiles/{gs.Bot.SteamId}" : null))
                 .ForMember(t => t.IsDlc, x => x.MapFrom(s => s.Item.IsDlc))
                 .ForMember(t => t.CanResendGame, x => x.MapFrom(s => s.GameExistsRepeatSendCount < 3))
+                .ForMember(t => t.CantSwitchAccount, x => x.MapFrom(s => s.AccountSwitchList!=null ? s.AccountSwitchList.Count(x=> x > DateTime.UtcNow.AddHours(-1) && x< DateTime.UtcNow.AddSeconds(-1) ) >= 3 : false))
                 .ForMember(t => t.DigisellerId, x => x.MapFrom(s => s.DigiSellerDealId))
                 .ForMember(t => t.SessionEndTime, x => x.MapFrom((gs, gsi) =>
                 {

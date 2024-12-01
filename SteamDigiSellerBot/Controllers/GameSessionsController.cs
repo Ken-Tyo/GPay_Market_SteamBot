@@ -200,6 +200,7 @@ namespace SteamDigiSellerBot.Controllers
 
             gs.Bot = null;
             gs.BotSwitchList = new();
+            gs.AccountSwitchList = new();
             gs.SteamProfileUrl = null;
             gs.StatusId = GameSessionStatusEnum.ProfileNoSet;//Не указан профиль
             gs.SteamContactValue = null;
@@ -331,6 +332,10 @@ namespace SteamDigiSellerBot.Controllers
             if (!_gameSessionManager.ConfirmProfile(gs.Id))
                 return BadRequest();
 
+            if (!(gs.Stage is GameSessionStage.New or GameSessionStage.WaitConfirmation))
+                return BadRequest();
+
+
             gs.Stage = GameSessionStage.AddToFriend;
             gs.StatusId = GameSessionStatusEnum.OrderConfirmed;
             gs.AutoSendInvitationTime = null;
@@ -367,7 +372,12 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
-
+            if (gsi.CantSwitchAccount)
+            {
+                ModelState.AddModelError("", "Превышено количество смены аккаунтов в час. Ожидайте или обратитесь в поддержку.");
+                return this.CreateBadRequest();
+            }
+             
             return Ok(gsi);
         }
 
@@ -420,7 +430,7 @@ namespace SteamDigiSellerBot.Controllers
             gs.Stage = GameSessionStage.CheckFriend;
             await _gameSessionRepository.EditAsync(db, gs);
             _gameSessionManager.CheckFriend(gs.Id);
-
+            await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
             return Ok();
         }
     }

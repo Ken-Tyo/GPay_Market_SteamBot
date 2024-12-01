@@ -45479,11 +45479,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '1.5em'
+                marginRight: '1.5em',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
             isDlc: isDlc
@@ -45530,11 +45533,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '1.5em'
+                marginRight: '1.5em',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               style: {
                 display: 'flex',
@@ -45594,11 +45600,14 @@ var OrderState = function OrderState() {
               backgroundColor: '#FFFFFF',
               color: '#8615BC',
               border: '1px solid #571676',
-              marginRight: '1.5em'
+              marginRight: '1.5em',
+              opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+              pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
             },
             onClick: function onClick() {
               apiResetSteamAcc();
-            }
+            },
+            disabled: gameSession.cantSwitchAccount
           }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             style: {
               display: 'flex',
@@ -45638,11 +45647,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tInvitationRefused('iSentInvitation'),
                 className: orderState_styles.but,
@@ -45706,11 +45718,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               })
             }), gameSession.isAnotherBotExists && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.line1,
@@ -45767,11 +45782,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), gameSession.canResendGame && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tGameExists('repeatSendGame'),
                 className: orderState_styles.but,
@@ -45922,11 +45940,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 className: orderState_styles.contactSellerWrapper,
                 children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
@@ -45962,11 +45983,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 style: {
                   display: 'flex',
@@ -46014,11 +46038,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '1.5em'
+                marginRight: '1.5em',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactBut,
               children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
@@ -46078,11 +46105,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginLeft: '25px'
+                marginLeft: '25px',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             className: orderState_styles.contactSellerWrapper,
@@ -46136,11 +46166,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tTempInviteBan('iSentInvitation'),
                 className: orderState_styles.but,
