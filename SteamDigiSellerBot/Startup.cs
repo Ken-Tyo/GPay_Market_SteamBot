@@ -70,6 +70,7 @@ namespace SteamDigiSellerBot
             services.AddTransient<LanguageProvider>();
             services.AddTransient<IRandomDelayProvider, RandomDelayProvider>();
             services.AddTransient<IItemBulkUpdateService, ItemBulkUpdateService>();
+            services.AddTransient<IPriceBasisBulkUpdateService, PriceBasisBulkUpdateService>();
             services.AddTransient<TagTypeReplacementService>();
             services.AddTransient<TagPromoReplacementService>();
             services.AddTransient<TagInfoAppsReplacementService>();

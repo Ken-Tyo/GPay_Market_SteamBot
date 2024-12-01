@@ -21,10 +21,12 @@ import {
   apiCreateItem,
   apiUpdateItemInfoes,
   toggleBulkEditPercentModal,
+  toggleBulkEditPriceBasisModal,
   toggleEditItemModal,
   toggleItemMainInfoModal,
   toggleItemAdditionalInfoModal,
   apiChangeItemBulk,
+  apiChangePriceBasisBulk,
   setSelectedItem,
   setSelectedItems,
   setStateProp,
@@ -33,6 +35,7 @@ import ConfirmDialog from "../../../shared/modalConfirm";
 import EditItemModal from "./modalEdit";
 import EditItemInfoModal from "./modalItemInfoEdit";
 import BulkPercentEdit from "./modalBulkPercentEdit";
+import BulkPriceBasisEdit from "./modalBulkPriceBasisEdit";
 import ToggleSort from "./modalSort/index";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -44,6 +47,7 @@ const products = () => {
     items,
     itemsLoading,
     bulkEditPercentModalIsOpen,
+    bulkEditPriceBasisModalIsOpen,
     editItemModalIsOpen,
     editItemMainInfoModalIsOpen,
     editItemAdditionalInfoModalIsOpen,
@@ -516,16 +520,25 @@ const products = () => {
               }
               }>Доп. информация</div>
             </div>
-          </div>
-          <div className={css.btnWrapper}>
-            <Button
-              text={"Удалить все"}
-              style={massChangeButStyle}
-              onClick={() => {
-                setOpenMassDelConfirm(true);
-              }}
-            />
-          </div>
+            </div>
+            <div className={css.btnWrapper}>
+                <Button
+                    text={"Смена ценовой основы"}
+                    style={massChangeButStyle}
+                    onClick={() => {
+                        toggleBulkEditPriceBasisModal(true);
+                    }}
+                />
+            </div>
+            <div className={css.btnWrapper}>
+                <Button
+                    text={"Удалить все"}
+                    style={massChangeButStyle}
+                    onClick={() => {
+                        setOpenMassDelConfirm(true);
+                    }}
+                />
+            </div>
         </div>
       </div>
 
@@ -627,7 +640,16 @@ const products = () => {
           apiChangeItemBulk(val, increaseDecreaseOperator.id, increaseDecreaseVal, selectedItems);
         }}
       />
-
+      <BulkPriceBasisEdit
+          isOpen={bulkEditPriceBasisModalIsOpen}
+          onCancel={() => {
+              toggleBulkEditPriceBasisModal(false);
+          }}
+          onSave={(val) => {
+              toggleBulkEditPriceBasisModal(false);
+              apiChangePriceBasisBulk(val, selectedItems);
+          }}
+      />
       <Popover
         id={`mouse-over-popover`}
         sx={{

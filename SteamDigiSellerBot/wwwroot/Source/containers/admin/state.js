@@ -45,6 +45,7 @@ export const state = entity({
   itemsMode: iMode[1],
   itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
+  bulkEditPriceBasisModalIsOpen: false,
   changeItemBulkResponse: { loading: false, loadingItemInfo: false },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
@@ -555,12 +556,21 @@ export const setItemInfoTemplates = (itemInfoTemplates) => {
 };
 
 export const toggleBulkEditPercentModal = (isOpen) => {
-  state.set((value) => {
+    state.set((value) => {
     return {
       ...value,
       bulkEditPercentModalIsOpen: isOpen,
     };
   });
+};
+
+export const toggleBulkEditPriceBasisModal = (isOpen) => {
+    state.set((value) => {
+        return {
+            ...value,
+            bulkEditPriceBasisModalIsOpen: isOpen,
+        };
+    });
 };
 
 export const toggleItemMainInfoModal = (isOpen) => {
@@ -730,12 +740,27 @@ export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, 
       SteamPercent,
       IncreaseDecreaseOperator,
       IncreaseDecreasePercent,
-      Ids,
+      Ids
     }),
   });
   setStateProp("changeItemBulkResponse", { loading: false });
   await apiFetchItems();
 };
+
+export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
+    setItemsLoading(true);
+    setStateProp("changeItemBulkResponse", { loading: true });
+    let res = await fetch(`/items/bulk/pricebasis`, {
+        method: "POST",
+        body: mapToFormData({
+            SteamCurrencyId,
+            Ids
+        }),
+    });
+    setStateProp("changeItemBulkResponse", { loading: false });
+    await apiFetchItems();
+};
+
 
 export const apiChangeDigisellerData = async (data) => {
   let res = await fetch(`/user/edit/digiseller`, {

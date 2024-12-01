@@ -1,0 +1,55 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding: 33px 86px 0 100px;
+    overflow-y: auto;
+    height: 450px;
+    letter-spacing: 0.04em;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .contentItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 18px;
+
+        .operatorPercent {
+            display: flex;
+
+            .percent {
+                margin-left: 10px;
+            }
+
+            .operator {
+                div {
+                    button {
+                        padding: 16px;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+
+    .itemOr {
+        text-align: center;
+        margin: 32px 0 36px -8px;
+        opacity: 0.7;
+        font-size: 20px;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    flex: 0 1 123px;
+    padding-bottom: 33px;
+    letter-spacing: 0.06em;
+}
