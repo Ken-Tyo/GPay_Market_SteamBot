@@ -263,6 +263,7 @@ namespace SteamDigiSellerBot.Controllers
                                 PriorityPrice = priorityPriceRub,
                                 MaxSellPercent = null,
                                 Stage = GameSessionStage.Done,
+                                Market = soldItem.Purchase?.content?.owner,
                                 BlockOrder = true
                             };
                             await _gameSessionRepository.AddAsync(db, gs);
@@ -282,7 +283,8 @@ namespace SteamDigiSellerBot.Controllers
                         UniqueCode = uniquecode,
                         StatusId = GameSessionStatusEnum.ProfileNoSet,//не указан профиль
                         PriorityPrice = priorityPriceRub,
-                        MaxSellPercent = null
+                        MaxSellPercent = null,
+                        Market = soldItem.Purchase?.content?.owner
                     };
                     await _gameSessionRepository.AddAsync(db, gs);
                     await _gameSessionService.SetSteamContact(db, gs, soldItem.Options.ToArray());

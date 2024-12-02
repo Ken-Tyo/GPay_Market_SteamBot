@@ -202,6 +202,24 @@ namespace SteamDigiSellerBot.Network.Services
 
                     DigiSellerSoldItem soldItem = JsonConvert.DeserializeObject<DigiSellerSoldItem>(s);
 
+                    try
+                    {
+                        HttpRequest request_pushare = new()
+                        {
+                            Cookies = new CookieDictionary(),
+                            UserAgent = Http.ChromeUserAgent()
+                        };
+                        // Поиск и проверка платежа по уникальному коду
+                        string s2 = request_pushare.Get("https://api.digiseller.com/api/purchase/info/" + soldItem.DealId +
+                                                        "?token=" + token).ToString();
+                        soldItem.Purchase = JsonConvert.DeserializeObject<Purchase>(s2);
+                    }
+                    catch (Exception ex) { }
+
+                    // Избегаем попадать в лимит при обращении к серверу
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+
+
                     return soldItem;
                 }
             }
