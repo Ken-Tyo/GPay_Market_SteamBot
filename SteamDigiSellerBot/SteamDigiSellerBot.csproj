@@ -52,6 +52,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\img\login\" />
+    <Folder Include="wwwroot\Source\components\admin\products\list\modalBulkPriceBasisEdit\" />
   </ItemGroup>
 
 </Project>

@@ -29,7 +29,7 @@ namespace SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService
         {
             _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
             _itemNetworkService = itemNetworkService ?? throw new ArgumentNullException(nameof(itemNetworkService));
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(itemNetworkService));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 

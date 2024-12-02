@@ -99,7 +99,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
         private async Task<decimal> PriceToUsd(GameSession gs)
         {
-            var localPrice = gs.Item.DigiSellerPriceWithAllSales;
+            var localPrice = gs.Item.GameSessionSteamPrice;
             var currencyId = gs.Item.SteamCurrencyId;
 
             var currencyDict = await _currencyDataRepository.GetCurrencyDictionary();
