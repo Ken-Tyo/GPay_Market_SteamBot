@@ -732,7 +732,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var result = WeightedShuffle(botFilterRes, botFilterRes.Select(b =>
                         (11-b.Attempt_Count()) *
                         (int)(gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
-                            ? balance.balance
+                            ? balance.balance*2
                             : 1M)).ToList());
                 if (pre_botId != null)
                     result = result.OrderByDescending(x => x.Id == pre_botId).ToList();
@@ -752,7 +752,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             var random = new Random();
             var weightedItems = items
                 .Select((item, index) => new { Item = item, Weight = random.NextDouble() * normalizedWeights[index] })
-                .OrderBy(x => x.Weight)
+                .OrderByDescending(x => x.Weight)
                 .ToList();
 
             return weightedItems.Select(x => x.Item).ToList();
