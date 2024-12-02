@@ -683,6 +683,7 @@ const products = () => {
               toggleBulkEditPriceBasisModal(false);
               apiChangePriceBasisBulk(val, selectedItems);
           }}
+          selectedCount={selectedItems.length}
       />
       <Popover
         id={`mouse-over-popover`}

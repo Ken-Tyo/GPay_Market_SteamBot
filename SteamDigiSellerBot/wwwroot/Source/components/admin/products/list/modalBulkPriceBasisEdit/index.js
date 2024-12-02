@@ -8,7 +8,7 @@ import { state } from '../../../../../containers/admin/state';
 const FromItemSelect = ({ name, onChange, value, options, hint }) => {
     return (
         <div className={css.formItem}>
-            <div className={css.name}>{name}</div>
+            <div className={css.name} style={{ marginRight: '70px' }}>{name}</div>
             <div>
                 <Select
                     options={options}
@@ -21,7 +21,7 @@ const FromItemSelect = ({ name, onChange, value, options, hint }) => {
     );
 };
 
-const ModalBulkPriceBasisEdit = ({ isOpen, onCancel, onSave }) => {
+const ModalBulkPriceBasisEdit = ({ isOpen, onCancel, onSave, selectedCount }) => {
   const [steamCurrencyId, setSteamCurrencyId] = useState(5);
 
     const currencies = state.use().currencies.map((c) => {
@@ -42,27 +42,35 @@ const ModalBulkPriceBasisEdit = ({ isOpen, onCancel, onSave }) => {
         currencies.find((c) => c.id === steamCurrencyId) || {}
     ).name;
 
+const title = (
+    <div className={css.custTitle}>
+        <div className={css.t1}>Редактировать ценовую основу</div>
+        <div className={css.t2}>Выбрано {selectedCount} товаров для редакитрования</div>
+    </div>);
+
   return (
       <ModalBase
         isOpen={isOpen}
-        title={'Смена ценовой основы'}
+          title={title}
         marginTop={'10px'}
         letterSpacing={'0.04em'}
         width={600}
         height={450}
       >
-      <div className={css.content}>
-          <FromItemSelect
-              name={'Ценовая основа:'}
-              options={currencies}
-              onChange={handleChange('steamCurrencyId')}
-              value={currencyVal}
-              hint={'Основа будет браться для отправки игры в выбранном регионе'}
-          />
+       <div className={css.content}>
+           <div className={css.formItem}>
+              <FromItemSelect
+                  name={"Ценовая основа:"}
+                  options={currencies}
+                  onChange={handleChange('steamCurrencyId')}
+                  value={currencyVal}
+                  hint={'Валюта, которая будет браться за основу цены товара. Стоимость будет конвертирована и установлена в рублях исходя из установленного курса в настройках.'}
+              />
+           </div>
       </div>
       <div className={css.actions}>
         <Button
-          text={'Подтвердить'}
+          text={'Сохранить'}
           style={{
             backgroundColor: '#478C35',
             marginRight: '24px',
