@@ -81,6 +81,8 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public bool BlockOrder { get; set; }
 
+        public int? Market { get; set; }
+
         public GameSession()
         {
             AddedDateTime = DateTimeOffset.UtcNow;

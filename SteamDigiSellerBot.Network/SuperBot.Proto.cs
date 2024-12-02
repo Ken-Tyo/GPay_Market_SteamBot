@@ -383,6 +383,7 @@ namespace SteamDigiSellerBot.Network
                         return res;
                     }
                 }
+                _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} start transaction");
                 var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
                     sessionId, res);
                 if ((result.errCode is 7 or 3 or 8 or 9 or 57)   && retryCount > 0)

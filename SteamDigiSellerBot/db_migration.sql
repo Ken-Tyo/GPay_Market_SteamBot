@@ -436,7 +436,7 @@ ALTER TABLE "TagInfoDlcReplacementValues" add constraint "TagInfoDlcReplacementV
 foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
 
 22.11.2024 Задача 68
-CREATE TABLE UpdateItemInfoStat (
+CREATE TABLE "UpdateItemInfoStat" (
 	"JobCode" varchar(16),
 	"UpdateDate" date,
 	"RequestCount" int not null,
@@ -460,3 +460,6 @@ INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "De
 26.11
 ALTER TABLE "GameSessions" ADD "AccountSwitchList" JSON null;
 ALTER TABLE "Bots" ADD "IgnoreSendLimits" BOOLEAN  not null default FALSE;
+
+02.12
+ALTER TABLE "GameSessions" ADD "Market" int null;
