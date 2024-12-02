@@ -1646,14 +1646,18 @@ namespace SteamDigiSellerBot.Services.Implementation
                 await _gameSessionRepository.EditAsync(db, gs);
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch); //readyState
             }
-
+            _logger.LogWarning($"GS ID {gs.Id} проверка очереди бота");
             if (sbot.BusyState.WaitOne())
             {
                 try
                 {
                     var check = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
                     if (check.StatusId is GameSessionStatusEnum.Received)
+                    {
+                        _logger.LogWarning(
+                            $"GS ID {gs.Id} Сброс отправки");
                         throw new Exception("Сброс отправки");
+                    }
 
                     int sendAttemptsCounts = 0;
 
@@ -1670,7 +1674,11 @@ namespace SteamDigiSellerBot.Services.Implementation
                             gs.Bot.Region);
                         if (sendRes?.finalizeTranStatus?.purchaseresultdetail == 11
                             && sendRes?.result == SendeGameResult.error)
+                        {
+                            _logger.LogWarning(
+                                $"GS ID {gs.Id} gift ban send retry {sendAttemptsCounts+1}");
                             await Task.Delay(TimeSpan.FromSeconds(45));
+                        }
                     }
                     while (++sendAttemptsCounts < maxSendGameAttempts
                         && sendRes?.finalizeTranStatus?.purchaseresultdetail == 11
