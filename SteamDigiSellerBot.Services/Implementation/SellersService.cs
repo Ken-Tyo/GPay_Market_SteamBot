@@ -85,7 +85,6 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             await _sellerRepository.AddAsync(seller);
 
-
             var resultSeller = await _sellerRepository.GetByIdAsync(seller.Id);
             var resultUser = await _userManager.FindByIdAsync(seller.AspNetUserId);
             return GenerateDto(resultSeller, resultUser);
