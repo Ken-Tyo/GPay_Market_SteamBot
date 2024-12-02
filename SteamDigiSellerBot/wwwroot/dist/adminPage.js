@@ -26596,7 +26596,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var listCheckBox = function listCheckBox(_ref) {
   var value = _ref.value,
-    _onClick = _ref.onClick;
+    onCheckedChange = _ref.onCheckedChange;
   var _useState = (0,react.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     checked = _useState2[0],
@@ -26606,10 +26606,10 @@ var listCheckBox = function listCheckBox(_ref) {
   }, [value]);
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
-    onClick: function onClick() {
+    onClick: function onClick(event) {
       var newVal = !checked;
       setChecked(newVal);
-      if (_onClick) _onClick(newVal);
+      if (onCheckedChange) onCheckedChange(newVal, event.shiftKey);
     },
     children: checked && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: styles.checked
@@ -46068,6 +46068,10 @@ var products = function products() {
     _useState12 = list_slicedToArray(_useState11, 2),
     subMenuVisibility = _useState12[0],
     setSubMenuVisibility = _useState12[1];
+  var _useState13 = (0,react.useState)(-1),
+    _useState14 = list_slicedToArray(_useState13, 2),
+    lastSelectedId = _useState14[0],
+    setLastSelectedId = _useState14[1];
   var open = Boolean(anchorEl);
   var massChangeButStyle = {
     width: "200px",
@@ -46206,6 +46210,29 @@ var products = function products() {
     options: "Опции",
     active: ""
   };
+
+  // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
+  var getItemsBetweenSelectedIds = function getItemsBetweenSelectedIds(firstId, secondId) {
+    var startIndex = sortedItems.findIndex(function (item) {
+      return item.id === firstId;
+    });
+    var endIndex = sortedItems.findIndex(function (item) {
+      return item.id === secondId;
+    });
+    if (startIndex === -1 || endIndex === -1) return [];
+    if (startIndex == endIndex) return [sortedItems[startIndex]];
+    var sliceStart = Math.min(startIndex, endIndex);
+    var sliceEnd = Math.max(startIndex, endIndex);
+    if (sliceEnd == sortedItems.length - 1) {
+      return sortedItems.slice(sliceStart).map(function (item) {
+        return item.id;
+      });
+    } else {
+      return sortedItems.slice(sliceStart, sliceEnd + 1).map(function (item) {
+        return item.id;
+      });
+    }
+  };
   var getBtnMassDescriptionBlock = function getBtnMassDescriptionBlock(lines) {
     return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: list_styles.massDescriptionText,
@@ -46277,16 +46304,27 @@ var products = function products() {
               children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 className: list_styles.listItemCheckbox,
                 children: /*#__PURE__*/(0,jsx_runtime.jsx)(list_listCheckBox, {
-                  onClick: function onClick(val) {
-                    if (val) {
-                      var newArr = _toConsumableArray(selectedItems);
-                      newArr.push(i.id);
-                      setSelectedItems(newArr);
+                  onCheckedChange: function onCheckedChange(val, shiftPressed) {
+                    if (shiftPressed) {
+                      //Shift-mouse click: Select all items betweeen the current row and the last selected
+                      if (lastSelectedId > 0 && i.id > 0 && lastSelectedId != i.id) {
+                        var newArr = getItemsBetweenSelectedIds(lastSelectedId, i.id);
+                        setSelectedItems(newArr);
+                        setLastSelectedId(-1);
+                      }
                     } else {
-                      var _newArr = selectedItems.filter(function (id) {
-                        return id != i.id;
-                      });
-                      setSelectedItems(_newArr);
+                      var newLastId = -1;
+                      if (val) {
+                        setSelectedItems([].concat(_toConsumableArray(selectedItems), [i.id]));
+                        newLastId = i.id;
+                      } else {
+                        var _newArr = selectedItems.filter(function (id) {
+                          return id != i.id;
+                        });
+                        setSelectedItems(_newArr);
+                        if (_newArr.length == 1) newLastId = _newArr[0];
+                      }
+                      setLastSelectedId(newLastId);
                     }
                   },
                   value: selectedItems.indexOf(i.id) !== -1
