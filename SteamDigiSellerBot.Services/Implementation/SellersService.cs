@@ -119,7 +119,10 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
             }
 
-            var seller = await _sellerRepository.GetByIdAsync(sellerDto.Id);
+            if (!sellerDto.Id.HasValue)
+                throw new ArgumentException("Id is null");
+
+            var seller = await _sellerRepository.GetByIdAsync(sellerDto.Id.Value);
 
             seller.AspNetUser = null;
             seller.AspNetUserId = user.Id;

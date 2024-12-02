@@ -2,7 +2,7 @@ namespace SteamDigiSellerBot.Network.Models.DTO
 {
     public class SellerDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Login { get; set; }
 
