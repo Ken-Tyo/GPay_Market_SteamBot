@@ -49,5 +49,6 @@ namespace SteamDigiSellerBot.Models.Home
         public int QueuePosition { get; set; }
         public int QueueWaitingMinutes { get; set; }
         public bool BlockOrder { get; set; }
+        public int? Market { get; set; }
     }
 }
