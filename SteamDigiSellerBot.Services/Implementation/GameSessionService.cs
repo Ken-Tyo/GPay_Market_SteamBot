@@ -718,6 +718,46 @@ namespace SteamDigiSellerBot.Services.Implementation
             return botFilterRes.ToList().FirstOrDefault();
         }
 
+        public async Task<Bot> GetRandomBotByItemCriteration(GameSession gs, IEnumerable<Bot> botFilterRes, int? pre_botId)
+        {
+            if (botFilterRes == null || botFilterRes.Count() == 0)
+                return null;
+
+            //на этапе отпавки нужны только активные
+            botFilterRes = botFilterRes.Where(b => b.State == BotState.active).ToList();
+
+            var botBalances = await GetBotBalancesInRubDict(botFilterRes);
+            unchecked
+            {
+                var result = WeightedShuffle(botFilterRes, botFilterRes.Select(b =>
+                        (11-b.Attempt_Count()) *
+                        (int)(gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
+                            ? balance.balance
+                            : 1M)).ToList());
+                if (pre_botId != null)
+                    result = result.OrderByDescending(x => x.Id == pre_botId).ToList();
+                _logger.LogInformation(
+                    $"GS ID {gs.Id} after filter by criteration - {JsonConvert.SerializeObject(result.Select(b => new { id = b.Id, name = b.UserName }))}");
+                return result.FirstOrDefault();
+            }
+        }
+
+        static List<T> WeightedShuffle<T>(IEnumerable<T> items, List<int> weights)
+        {
+            if (items.Count() != weights.Count)
+                throw new ArgumentException("Количество элементов и весов должно совпадать.");
+
+            double maxWeight = weights.Max();
+            var normalizedWeights = weights.Select(w => w / maxWeight).ToList();
+            var random = new Random();
+            var weightedItems = items
+                .Select((item, index) => new { Item = item, Weight = random.NextDouble() * normalizedWeights[index] })
+                .OrderBy(x => x.Weight)
+                .ToList();
+
+            return weightedItems.Select(x => x.Item).ToList();
+        }
+
         public async Task<(GetBotForSendGameStatus, BotFilterParams, SuperBot)> GetBotForSendGame(
            DatabaseContext db, GameSession gs)
         {
@@ -730,7 +770,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
 
 
-            var bot = await GetFirstBotByItemCriteration(gs, filterRes);
+            var bot = await GetRandomBotByItemCriteration(gs, filterRes,null);
             //foreach (var b in filterRes)
             //{
             //    var sb = await _botPool.GetById(b.Id);
@@ -1271,7 +1311,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return CheckFriendAddedResult.unknowErr;
             }
         }
-
+        public static string ResetString = "Сброс заказа";
         public async Task<GameReadyToSendStatus> CheckReadyToSendGameAndHandle(GameSession gs, bool writeReadyLog = false)
         {
             await using var db = _gameSessionRepository.GetContext();
@@ -1385,35 +1425,38 @@ namespace SteamDigiSellerBot.Services.Implementation
                             $"GS ID {gs.Id}: digi price comparer if (newPriorityPriceRub > digiPriceInRub) is True");
                         var percentDiffMax = 0; // gs.MaxSellPercent ?? 4;
                         var percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
-                        if (percentDiff > percentDiffMax)
-                        {
-                            if (DateTime.UtcNow < gs.Item.DiscountEndTimeUtc &&
-                                DateTime.UtcNow.AddMinutes(SteamHelper.DiscountTimerInAdvanceMinutes) > gs.Item.DiscountEndTimeUtc)
-                            {
-                                GetCurrentPrice(gs, firstPrice, ref newPriorityPriceRub);
-                            }
-
-                            percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
+                        var logs = await _gameSessionStatusLogRepository.GetLogsForGS(gs.Id);
+                        if (logs.All(x => x.Value?.message != ResetString))
                             if (percentDiff > percentDiffMax)
                             {
-
-                                gs.StatusId = GameSessionStatusEnum.ExpiredDiscount;
-                                await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
-                                await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
+                                if (DateTime.UtcNow < gs.Item.DiscountEndTimeUtc &&
+                                    DateTime.UtcNow.AddMinutes(SteamHelper.DiscountTimerInAdvanceMinutes) >
+                                    gs.Item.DiscountEndTimeUtc)
                                 {
-                                    GameSessionId = gs.Id,
-                                    StatusId = gs.StatusId,
-                                    Value = new GameSessionStatusLog.ValueJson
-                                    {
-                                        message =
-                                            $"Изменились цены: новая после конверсии {newPriorityPriceRub?.ToString("0.00")}, продажи c Диги {gs.DigiSellerDealPriceUsd?.ToString("0.00")}$ ({digiPriceInRub?.ToString("0.00")} руб)." +
-                                            $" Разница {percentDiff?.ToString("0.000")}% вместо {percentDiffMax}%"
-                                    }
-                                });
+                                    GetCurrentPrice(gs, firstPrice, ref newPriorityPriceRub);
+                                }
 
-                                return GameReadyToSendStatus.discountExpired;
+                                percentDiff = ((decimal)(newPriorityPriceRub * 100) / digiPriceInRub) - 100;
+                                if (percentDiff > percentDiffMax)
+                                {
+
+                                    gs.StatusId = GameSessionStatusEnum.ExpiredDiscount;
+                                    await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.StatusId);
+                                    await _gameSessionStatusLogRepository.AddAsync(new GameSessionStatusLog
+                                    {
+                                        GameSessionId = gs.Id,
+                                        StatusId = gs.StatusId,
+                                        Value = new GameSessionStatusLog.ValueJson
+                                        {
+                                            message =
+                                                $"Изменились цены: новая после конверсии {newPriorityPriceRub?.ToString("0.00")}, продажи c Диги {gs.DigiSellerDealPriceUsd?.ToString("0.00")}$ ({digiPriceInRub?.ToString("0.00")} руб)." +
+                                                $" Разница {percentDiff?.ToString("0.000")}% вместо {percentDiffMax}%"
+                                        }
+                                    });
+
+                                    return GameReadyToSendStatus.discountExpired;
+                                }
                             }
-                        }
                     }
                 }
             }
@@ -1440,7 +1483,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return GameReadyToSendStatus.botNotFound;
             }
 
-            var bot = await GetFirstBotByItemCriteration(gs, bots);
+            var bot = await GetRandomBotByItemCriteration(gs, bots, gs.Bot.Id);
             if (bot == null)
             {
                 //var curGs = await _gameSessionRepository.GetByIdAsync(gs.Id);

@@ -216,7 +216,7 @@ namespace SteamDigiSellerBot.Controllers
             {
                 InsertDate = DateTimeOffset.UtcNow,
                 StatusId = gs.StatusId,
-                Value = new ValueJson { message = "Сброс заказа" }
+                Value = new ValueJson { message = GameSessionService.ResetString }
             });
 
             await _gameSessionRepository.EditAsync(db,gs);
@@ -224,6 +224,8 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok();
         }
+
+
 
         [Authorize, HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
