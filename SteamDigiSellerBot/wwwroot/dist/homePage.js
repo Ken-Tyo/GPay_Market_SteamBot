@@ -34705,9 +34705,9 @@ var Item = function Item(_ref) {
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const orderState_styles = ({"wrapper":"styles__wrapper--AwMkg","area":"styles__area--rofP8","closeBtn":"styles__closeBtn--axPR5","title":"styles__title--dFrK_","showConfirmProfileUrlName":"styles__showConfirmProfileUrlName--GO5b4","enterProfileUrlOrderName":"styles__enterProfileUrlOrderName--EDA_q","error":"styles__error--cxDwS","sendInProgress":"styles__sendInProgress--t_2CF","gameSended":"styles__gameSended--EwR82","gameAlreadyExists":"styles__gameAlreadyExists--V51Cw","gameInQueue":"styles__gameInQueue--KCyOg","ivitationRefused":"styles__ivitationRefused--ZPyVO","ivitationSended":"styles__ivitationSended--TnAhX","confirmProfileUrl":"styles__confirmProfileUrl--fxSu_","enterUniqueCode":"styles__enterUniqueCode--uvMPs","enterProfileUrl":"styles__enterProfileUrl--_Rl6Z","form":"styles__form--qj9RK","captha":"styles__captha--pm2s5","hints":"styles__hints--ocB07","hint":"styles__hint--RCllq","accImg":"styles__accImg--O9Mjq","accButtons":"styles__accButtons--OQ7jl","line1":"styles__line1--vhPFp","but":"styles__but--KOM_Q","contactSellerWrapper":"styles__contactSellerWrapper--qHy3k","loaderMob":"styles__loaderMob--NGyxd","loader":"styles__loader--BBZax","leaveFeedback":"styles__leaveFeedback--WlCb5","input":"styles__input--qQHmJ","inBtn":"styles__inBtn--fzY5V","errorText":"styles__errorText--XI3PZ","dlcWrapper":"styles__dlcWrapper--WFZWy","info":"styles__info--NRMSg","timer":"styles__timer--UbT0I","regionError":"styles__regionError--uZosD","activationExpErapper":"styles__activationExpErapper--A_rS7","text":"styles__text--zeE_4","contactBut":"styles__contactBut--WhxDF","checkEditionVersionWrapper":"styles__checkEditionVersionWrapper--nfCOT","contactWrapper":"styles__contactWrapper--uOfjO","contact":"styles__contact--W4GGd","checkEditionVersion":"styles__checkEditionVersion--Ooate","dash":"styles__dash--saTNf"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/info.svg
-const info_namespaceObject = __webpack_require__.p + "211f125b87980400f486.svg";
+const info_namespaceObject = __webpack_require__.p + "92007f0ff5594b3491c4.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/home/orderState/close.svg
-const close_namespaceObject = __webpack_require__.p + "e6df971ddb54b9a50f13.svg";
+const close_namespaceObject = __webpack_require__.p + "f5c70ca6fe8bc32a6620.svg";
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
 function objectWithoutPropertiesLoose_objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
@@ -46713,9 +46713,10 @@ var Footer = function Footer() {
   var _useTranslation = useTranslation_useTranslation(),
     i18n = _useTranslation.i18n;
   var _useCookies = useCookies(),
-    _useCookies2 = footer_slicedToArray(_useCookies, 2),
+    _useCookies2 = footer_slicedToArray(_useCookies, 3),
     cookies = _useCookies2[0],
-    setCookie = _useCookies2[1];
+    setCookie = _useCookies2[1],
+    removeCookie = _useCookies2[2];
   var location = react_ipgeolocation();
   var _useTranslation2 = useTranslation_useTranslation('footer'),
     tFooter = _useTranslation2.t;
@@ -46732,9 +46733,22 @@ var Footer = function Footer() {
     if (i18n.language !== cookies.ln) i18n.changeLanguage(cookies.ln);
   }
   var currLang = i18n.language;
+  (0,react.useEffect)(function () {
+    if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) === 1271) {
+      setCookie('ggtghide', 'true', {
+        path: '/',
+        maxAge: 24 * 60 * 60
+      });
+    } else if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) > 0 && cookies.ggtghide) {
+      removeCookie('ggtghide', {
+        path: '/'
+      });
+    }
+  }, [gameSession === null || gameSession === void 0 ? void 0 : gameSession.market, cookies.ggtghide, setCookie]);
+  var tgHideCoockie = cookies.ggtghide === 'true';
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: footer_styles.footer,
-    children: [(gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) != 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("a", {
+    children: [!tgHideCoockie && (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) != 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("a", {
       href: "https://t.me/GPay_Market",
       target: "_blank",
       className: footer_styles.telegram,
@@ -46742,7 +46756,7 @@ var Footer = function Footer() {
         src: telegram_namespaceObject,
         alt: "telegram"
       })
-    }), (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) == 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}), /*#__PURE__*/(0,jsx_runtime.jsx)(textSwitch, {
+    }), (tgHideCoockie || (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) == 1271) && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}), /*#__PURE__*/(0,jsx_runtime.jsx)(textSwitch, {
       defaultValue: currLang === 'en',
       options: ['Ru', 'Eng'],
       onChange: function onChange(val) {
@@ -46750,7 +46764,7 @@ var Footer = function Footer() {
         i18n.changeLanguage(lan);
         setCookie('ln', i18n.language);
       }
-    }), (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) != 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    }), !tgHideCoockie && (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) != 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: footer_styles.tg_hint,
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         children: [tFooter('giveaways'), /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {

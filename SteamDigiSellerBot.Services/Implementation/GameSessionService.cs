@@ -51,6 +51,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IConfiguration _configuration;
         private GameSessionCommon _gameSessionManager { get; set; }
         private const int maxSendGameAttempts = 5;
+        private List<int> BotsLastSelected = new();
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -289,6 +290,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             gs.Stage = Database.Entities.GameSessionStage.AddToFriend;           
             _gameSessionManager.AddToFriendGSQ.Add(gs.Id);
             await _gameSessionRepository.EditAsync(db, gs);
+
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
 
             return gs;
@@ -730,20 +732,40 @@ namespace SteamDigiSellerBot.Services.Implementation
             unchecked
             {
                 var result = WeightedShuffle(botFilterRes, botFilterRes.Select(b =>
-                        (11-b.Attempt_Count()) *
-                        (int)(gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
-                            ? balance.balance*2
-                            : 1M)).ToList());
+                {
+                    var attempts = b.Attempt_Count();
+                    return ((10 - attempts) * (attempts <= 5 ? 1.8 : 1)) *
+                           (gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance) ? Math.Sqrt((double)balance.balance / 1000) : 1.0)*
+                           (BotsLastSelected.Contains(b.Id) ? 0.6 : 1);
+                }).ToList());
                 if (pre_botId != null)
                     result = result.OrderByDescending(x => x.Id == pre_botId).ToList();
                 _logger.LogInformation(
                     $"GS ID {gs.Id} after filter by criteration - {JsonConvert.SerializeObject(result.Select(b => new { id = b.Id, name = b.UserName }))}");
-                return result.FirstOrDefault();
+                var selected = result.FirstOrDefault();
+
+                if (pre_botId == null)
+                {
+                    try
+                    {
+                        BotsLastSelected?.Add(selected?.Id ?? 0);
+                        while (BotsLastSelected?.Count > 30)
+                        {
+                            BotsLastSelected?.RemoveAt(0);
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                return selected;
             }
         }
 
-        static List<T> WeightedShuffle<T>(IEnumerable<T> items, List<int> weights)
+        static List<T> WeightedShuffle<T>(IEnumerable<T> items, List<double> weights)
         {
+            if (!items.Any()) return items.ToList();
             if (items.Count() != weights.Count)
                 throw new ArgumentException("Количество элементов и весов должно совпадать.");
 
@@ -1616,8 +1638,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 await _gameSessionRepository.EditAsync(db, gs);
                 return (SendGameStatus.otherError, GameReadyToSendStatus.blockOrder);
             }
-            var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             SendGameStatus sendStatus;
+            var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             if (readyState != GameReadyToSendStatus.ready)
             {
                 sendStatus = SendGameStatus.otherError;
@@ -1647,8 +1669,24 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch); //readyState
             }
             _logger.LogWarning($"GS ID {gs.Id} проверка очереди бота");
+            DateTime timeIn= DateTime.UtcNow;
             if (sbot.BusyState.WaitOne())
             {
+                if ((DateTime.UtcNow - timeIn).TotalMinutes > 3)
+                {
+                    readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
+                    if (readyState != GameReadyToSendStatus.ready)
+                    {
+                        sendStatus = SendGameStatus.otherError;
+                        if (readyState == GameReadyToSendStatus.botsAreBusy)
+                        {
+                            sendStatus = SendGameStatus.botsAreBusy;
+                            //gs.Bot = null;
+                            //await _gameSessionRepository.EditAsync(gs);
+                        }
+                        return (sendStatus, readyState);
+                    }
+                }
                 try
                 {
                     var check = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
@@ -1778,13 +1816,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                     else if (sendRes.result == SendeGameResult.error)
                     {
-                        gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71 || sendRes.initTranRes?.purchaseresultdetail == 72
-                            ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
-                            : sendAttemptsCounts >= maxSendGameAttempts
-                                ? GameSessionStatusEnum.GiftBan //Бан на отправку подарков
-                                : sendRes.initTranRes?.purchaseresultdetail == 24
-                                    ? gs.StatusId = GameSessionStatusEnum.GameRequired
-                                    : GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+
+                        if (sendRes.initTranRes?.purchaseresultdetail is 71 or 72)
+                            gs.StatusId = GameSessionStatusEnum.IncorrectRegion;
+                        else if (sendAttemptsCounts >= maxSendGameAttempts)
+                            gs.StatusId = GameSessionStatusEnum.GiftBan;
+                        else if  (sendRes.initTranRes?.purchaseresultdetail == 24)
+                            gs.StatusId = gs.StatusId = GameSessionStatusEnum.GameRequired;
+                        else if (sendRes.errCode == 70)
+                            gs.StatusId = GameSessionStatusEnum.GameIsExists;
+                        else
+                            gs.StatusId = GameSessionStatusEnum.UnknownError;
 
                         if (gs.StatusId == GameSessionStatusEnum.GiftBan)
                         {
