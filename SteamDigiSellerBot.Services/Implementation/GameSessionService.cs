@@ -735,7 +735,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var attempts = b.Attempt_Count();
                     return ((10 - attempts) * (attempts <= 5 ? 1.8 : 1)) *
                            (gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
-                               ? Math.Sqrt((double)balance.balance/2000)
+                               ? Math.Sqrt((double)balance.balance/1000)
                                : 1.0);
                 }).ToList());
                 if (pre_botId != null)

@@ -24,17 +24,23 @@ const Footer = () => {
     } else {
         if (i18n.language !== cookies.ln) i18n.changeLanguage(cookies.ln);
     }
-
     let currLang = i18n.language;
+
+    useEffect(() => {
+        if (gameSession?.market === 1271 && !cookies.ggtghide) {
+            setCookie('ggtghide', 'true', { path: '/', maxAge: 24 * 60 * 60 });
+        }
+    }, [gameSession?.market, cookies.ggtghide, setCookie]);
+    const tgHideCoockie = cookies.ggtghide === 'true';
 
     return (
         <div className={css.footer}>
-            {gameSession?.market != 1271 && (
+            {(!tgHideCoockie && gameSession?.market != 1271 ) && (
                 <a href="https://t.me/GPay_Market" target="_blank" className={css.telegram}>
                     <img src={telegramIcon} alt="telegram" />
                 </a>
             )}
-            {gameSession?.market == 1271 && (
+            {(tgHideCoockie || gameSession?.market == 1271) && (
                 <div></div>
             )}
             <TextSwitch
@@ -46,7 +52,7 @@ const Footer = () => {
                     setCookie('ln', i18n.language);
                 }}
             />
-            {gameSession?.market != 1271 && (
+            {(!tgHideCoockie && gameSession?.market != 1271) && (
                 <div className={css.tg_hint}><div>{tFooter('giveaways')}<span>&nbsp;{tFooter('giveaways_sign')}</span></div></div>
             )}
         </div>
