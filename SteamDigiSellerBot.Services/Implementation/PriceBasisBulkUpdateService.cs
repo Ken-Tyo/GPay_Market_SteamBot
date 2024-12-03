@@ -53,7 +53,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
 
             // Recalculate Prices (after currency, because could be connection errors there)
-            foreach (Item item in items)
+            await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, bulkUpdateCommand.User.Id);
             {
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, userId, true);
             }
