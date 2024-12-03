@@ -289,6 +289,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             gs.Stage = Database.Entities.GameSessionStage.AddToFriend;           
             _gameSessionManager.AddToFriendGSQ.Add(gs.Id);
             await _gameSessionRepository.EditAsync(db, gs);
+
             await _wsNotifSender.GameSessionChanged(gs.User.AspNetUser.Id, gs.Id);
 
             return gs;
@@ -730,10 +731,13 @@ namespace SteamDigiSellerBot.Services.Implementation
             unchecked
             {
                 var result = WeightedShuffle(botFilterRes, botFilterRes.Select(b =>
-                        (11-b.Attempt_Count()) *
-                        (int)(gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
-                            ? balance.balance*2
-                            : 1M)).ToList());
+                {
+                    var attempts = b.Attempt_Count();
+                    return ((10 - attempts) * (attempts <= 5 ? 1.8 : 1)) *
+                           (gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
+                               ? Math.Sqrt((double)balance.balance/2000)
+                               : 1.0);
+                }).ToList());
                 if (pre_botId != null)
                     result = result.OrderByDescending(x => x.Id == pre_botId).ToList();
                 _logger.LogInformation(
@@ -742,8 +746,9 @@ namespace SteamDigiSellerBot.Services.Implementation
             }
         }
 
-        static List<T> WeightedShuffle<T>(IEnumerable<T> items, List<int> weights)
+        static List<T> WeightedShuffle<T>(IEnumerable<T> items, List<double> weights)
         {
+            if (!items.Any()) return items.ToList();
             if (items.Count() != weights.Count)
                 throw new ArgumentException("Количество элементов и весов должно совпадать.");
 
@@ -1616,8 +1621,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 await _gameSessionRepository.EditAsync(db, gs);
                 return (SendGameStatus.otherError, GameReadyToSendStatus.blockOrder);
             }
-            var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             SendGameStatus sendStatus;
+            var readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
             if (readyState != GameReadyToSendStatus.ready)
             {
                 sendStatus = SendGameStatus.otherError;
@@ -1647,8 +1652,24 @@ namespace SteamDigiSellerBot.Services.Implementation
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch); //readyState
             }
             _logger.LogWarning($"GS ID {gs.Id} проверка очереди бота");
+            DateTime timeIn= DateTime.UtcNow;
             if (sbot.BusyState.WaitOne())
             {
+                if ((DateTime.UtcNow - timeIn).TotalMinutes > 3)
+                {
+                    readyState = await CheckReadyToSendGameAndHandle(gs, writeReadyLog: false);
+                    if (readyState != GameReadyToSendStatus.ready)
+                    {
+                        sendStatus = SendGameStatus.otherError;
+                        if (readyState == GameReadyToSendStatus.botsAreBusy)
+                        {
+                            sendStatus = SendGameStatus.botsAreBusy;
+                            //gs.Bot = null;
+                            //await _gameSessionRepository.EditAsync(gs);
+                        }
+                        return (sendStatus, readyState);
+                    }
+                }
                 try
                 {
                     var check = await _gameSessionRepository.GetByIdAsync(db, gs.Id);
