@@ -1799,13 +1799,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                     }
                     else if (sendRes.result == SendeGameResult.error)
                     {
-                        gs.StatusId = sendRes.initTranRes?.purchaseresultdetail == 71 || sendRes.initTranRes?.purchaseresultdetail == 72
-                            ? GameSessionStatusEnum.IncorrectRegion //Некорректный регион
-                            : sendAttemptsCounts >= maxSendGameAttempts
-                                ? GameSessionStatusEnum.GiftBan //Бан на отправку подарков
-                                : sendRes.initTranRes?.purchaseresultdetail == 24
-                                    ? gs.StatusId = GameSessionStatusEnum.GameRequired
-                                    : GameSessionStatusEnum.UnknownError; //Неизвестная ошибка
+
+                        if (sendRes.initTranRes?.purchaseresultdetail is 71 or 72)
+                            gs.StatusId = GameSessionStatusEnum.IncorrectRegion;
+                        else if (sendAttemptsCounts >= maxSendGameAttempts)
+                            gs.StatusId = GameSessionStatusEnum.GiftBan;
+                        else if  (sendRes.initTranRes?.purchaseresultdetail == 24)
+                            gs.StatusId = gs.StatusId = GameSessionStatusEnum.GameRequired;
+                        else if (sendRes.errCode == 70)
+                            gs.StatusId = GameSessionStatusEnum.GameIsExists;
+                        else
+                            gs.StatusId = GameSessionStatusEnum.UnknownError;
 
                         if (gs.StatusId == GameSessionStatusEnum.GiftBan)
                         {
