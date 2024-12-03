@@ -71,6 +71,8 @@ const products = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [subMenuVisibility, setSubMenuVisibility] = useState(css.subMenuHidden);
 
+  const [lastSelectedId, setLastSelectedId] = useState(-1);
+
   const open = Boolean(anchorEl);
   const massChangeButStyle = {
     width: "200px",
@@ -186,6 +188,26 @@ const products = () => {
     active: "",
   };
 
+    // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
+    const getItemsBetweenSelectedIds = (firstId, secondId) => {
+        const startIndex = sortedItems.findIndex(item => item.id === firstId);
+        const endIndex = sortedItems.findIndex(item => item.id === secondId);
+
+        if (startIndex === -1 || endIndex === -1) return [];
+
+        if (startIndex == endIndex) return [sortedItems[startIndex]];
+
+        const sliceStart = Math.min(startIndex, endIndex);
+        const sliceEnd = Math.max(startIndex, endIndex);
+        if (sliceEnd == (sortedItems.length - 1)) {
+            return sortedItems.slice(sliceStart).map(item => item.id);
+        }
+        else {
+            return sortedItems.slice(sliceStart, sliceEnd + 1).map(item => item.id);
+        }
+    };
+
+
   const getBtnMassDescriptionBlock = (lines) => {
     return <div className={css.massDescriptionText}>{lines.map(line => (<div>{line}</div>))}</div>;
   };
@@ -274,14 +296,26 @@ const products = () => {
                 <div className={css.cell}>
                   <div className={css.listItemCheckbox}>
                     <CheckBox
-                      onClick={(val) => {
-                        if (val) {
-                          let newArr = [...selectedItems];
-                          newArr.push(i.id);
-                          setSelectedItems(newArr);
-                        } else {
-                          let newArr = selectedItems.filter((id) => id != i.id);
-                          setSelectedItems(newArr);
+                        onCheckedChange={(val, shiftPressed) => {
+                        if (shiftPressed) {
+                            //Shift-mouse click: Select all items betweeen the current row and the last selected
+                            if (lastSelectedId > 0 && i.id > 0 && lastSelectedId != i.id) {
+                                let newArr = getItemsBetweenSelectedIds(lastSelectedId, i.id);
+                                setSelectedItems(newArr);
+                                setLastSelectedId(-1);
+                            }
+                        }
+                        else { 
+                            let newLastId = -1;
+                            if (val) {
+                                setSelectedItems([...selectedItems, i.id]);
+                                newLastId = i.id;
+                            } else {
+                                let newArr = selectedItems.filter((id) => id != i.id);
+                                setSelectedItems(newArr);
+                                if (newArr.length == 1) newLastId = newArr[0];
+                            }
+                            setLastSelectedId(newLastId);
                         }
                       }}
                       value={selectedItems.indexOf(i.id) !== -1}
@@ -649,6 +683,7 @@ const products = () => {
               toggleBulkEditPriceBasisModal(false);
               apiChangePriceBasisBulk(val, selectedItems);
           }}
+          selectedCount={selectedItems.length}
       />
       <Popover
         id={`mouse-over-popover`}

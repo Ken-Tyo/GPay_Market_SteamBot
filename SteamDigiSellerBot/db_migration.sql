@@ -436,7 +436,7 @@ ALTER TABLE "TagInfoDlcReplacementValues" add constraint "TagInfoDlcReplacementV
 foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
 
 22.11.2024 Задача 68
-CREATE TABLE UpdateItemInfoStat (
+CREATE TABLE "UpdateItemInfoStat" (
 	"JobCode" varchar(16),
 	"UpdateDate" date,
 	"RequestCount" int not null,
