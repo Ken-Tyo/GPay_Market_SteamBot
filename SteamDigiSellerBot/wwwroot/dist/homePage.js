@@ -46713,9 +46713,10 @@ var Footer = function Footer() {
   var _useTranslation = useTranslation_useTranslation(),
     i18n = _useTranslation.i18n;
   var _useCookies = useCookies(),
-    _useCookies2 = footer_slicedToArray(_useCookies, 2),
+    _useCookies2 = footer_slicedToArray(_useCookies, 3),
     cookies = _useCookies2[0],
-    setCookie = _useCookies2[1];
+    setCookie = _useCookies2[1],
+    removeCookie = _useCookies2[2];
   var location = react_ipgeolocation();
   var _useTranslation2 = useTranslation_useTranslation('footer'),
     tFooter = _useTranslation2.t;
@@ -46733,10 +46734,14 @@ var Footer = function Footer() {
   }
   var currLang = i18n.language;
   (0,react.useEffect)(function () {
-    if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) === 1271 && !cookies.ggtghide) {
+    if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) === 1271) {
       setCookie('ggtghide', 'true', {
         path: '/',
         maxAge: 24 * 60 * 60
+      });
+    } else if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) > 0 && cookies.ggtghide) {
+      removeCookie('ggtghide', {
+        path: '/'
       });
     }
   }, [gameSession === null || gameSession === void 0 ? void 0 : gameSession.market, cookies.ggtghide, setCookie]);

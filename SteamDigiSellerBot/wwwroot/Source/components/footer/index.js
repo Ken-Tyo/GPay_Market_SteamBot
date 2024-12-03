@@ -11,7 +11,7 @@ import { state } from '../../containers/home/state';
 
 const Footer = () => {
     const { i18n } = useTranslation();
-    const [cookies, setCookie] = useCookies();
+    const [cookies, setCookie, removeCookie] = useCookies();
     const location = useGeoLocation();
     const { t: tFooter } = useTranslation('footer');
     const { gameSession } = state?.use();
@@ -27,8 +27,11 @@ const Footer = () => {
     let currLang = i18n.language;
 
     useEffect(() => {
-        if (gameSession?.market === 1271 && !cookies.ggtghide) {
+        if (gameSession?.market === 1271) {
             setCookie('ggtghide', 'true', { path: '/', maxAge: 24 * 60 * 60 });
+        }
+        else if (gameSession?.market > 0 && cookies.ggtghide) {
+            removeCookie('ggtghide', { path: '/' });
         }
     }, [gameSession?.market, cookies.ggtghide, setCookie]);
     const tgHideCoockie = cookies.ggtghide === 'true';
