@@ -51,6 +51,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         private readonly IConfiguration _configuration;
         private GameSessionCommon _gameSessionManager { get; set; }
         private const int maxSendGameAttempts = 5;
+        private List<int> BotsLastSelected = new();
 
         public GameSessionService(
             ISteamNetworkService steamNetworkService,
@@ -734,15 +735,31 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
                     var attempts = b.Attempt_Count();
                     return ((10 - attempts) * (attempts <= 5 ? 1.8 : 1)) *
-                           (gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance)
-                               ? Math.Sqrt((double)balance.balance/1000)
-                               : 1.0);
+                           (gs.Item.CurrentDigiSellerPrice >= 1000 && botBalances.TryGetValue(b.Id, out var balance) ? Math.Sqrt((double)balance.balance / 1000) : 1.0)*
+                           (BotsLastSelected.Contains(b.Id) ? 0.6 : 1);
                 }).ToList());
                 if (pre_botId != null)
                     result = result.OrderByDescending(x => x.Id == pre_botId).ToList();
                 _logger.LogInformation(
                     $"GS ID {gs.Id} after filter by criteration - {JsonConvert.SerializeObject(result.Select(b => new { id = b.Id, name = b.UserName }))}");
-                return result.FirstOrDefault();
+                var selected = result.FirstOrDefault();
+
+                if (pre_botId == null)
+                {
+                    try
+                    {
+                        BotsLastSelected?.Add(selected?.Id ?? 0);
+                        while (BotsLastSelected?.Count > 30)
+                        {
+                            BotsLastSelected?.RemoveAt(0);
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                return selected;
             }
         }
 
