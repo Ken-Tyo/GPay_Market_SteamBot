@@ -52,11 +52,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 await _databaseContext.SaveChangesAsync(cancellationToken);
             }
 
-            // Recalculate Prices (after currency, because could be connection errors there)
+            // Recalculate Prices in separate transaction (after settings currency, because could be connection errors below)
             await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(items, bulkUpdateCommand.User.Id);
-            {
-                await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, userId, true);
-            }
         }
     }
 }
