@@ -1,6 +1,5 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json;
-using SteamAuthCore;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Enums;
 using SteamDigiSellerBot.Database.Extensions;
@@ -10,10 +9,8 @@ using SteamDigiSellerBot.Utilities;
 using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
-using SteamKit2.Internal;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
@@ -21,19 +18,16 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using ProtoBuf;
 using xNet;
 using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
 using SteamDigiSellerBot.Utilities.Services;
-using System.Text.Json.Serialization;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -213,6 +207,15 @@ namespace SteamDigiSellerBot.Network
                 _bot.State = botState;
             }
 
+            try
+            {
+                await ModifySteamProfilePrivacySettings();
+            }
+            catch (HttpRequestException exc)
+            {
+                _logger.LogError("Не удалось задать настройки приватности для бота {0}. {1}", _bot.UserName, exc.Message);
+            }
+
             (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) = 
                 GetSendedGiftsSum(currencyData, _bot.Region, _bot.BotRegionSetting);
             if (sendedParseSuccess)
@@ -233,6 +236,71 @@ namespace SteamDigiSellerBot.Network
                 _bot.MaxSendedGiftsSum = getMaxSendedRes.MaxSendedGiftsSum;
                 _bot.MaxSendedGiftsUpdateDate = getMaxSendedRes.MaxSendedGiftsUpdateDate;
             }
+        }
+
+        private async Task ModifySteamProfilePrivacySettings()
+        {
+            var sessionId = await GetSessiondId();
+            
+            var privacySettings = new
+            {
+                PrivacyProfile = 1,         // My profile: Public
+                PrivacyInventory = 3,       // Inventory: Public
+                PrivacyInventoryGifts = 3,  // ☐ Always keep Steam Gifts private even if users can see my inventory.
+                PrivacyOwnedGames = 3,      // Game details: Public
+                PrivacyPlaytime = 3,        // ☐ Always keep my total playtime private even if users can see my game details.
+                PrivacyFriendsList = 3      // Friends List: Public
+            };
+            
+            // Can post comments on my profile:
+            // Public = 1
+            // Friends Only = 0
+            // Private = 2
+            const string commentPermission = "1";
+
+            var formData = new Dictionary<string, string>()
+            {
+                ["\"sessionid\""] = sessionId,
+                ["\"Privacy\""] = JsonConvert.SerializeObject(privacySettings),
+                ["\"eCommentPermission\""] = commentPermission,
+            };
+
+            var cookies = new Dictionary<string, string>()
+            {
+                { "sessionid", sessionId },
+            };
+            
+            var url = $"https://steamcommunity.com/profiles/{_bot.SteamId}/ajaxsetprivacy/";
+            var referrer = $"https://steamcommunity.com/profiles/{_bot.SteamId}/edit/settings/";
+            
+            using var client = GetDefaultHttpClientBy(url, cookies);
+            client.DefaultRequestHeaders.Referrer = new Uri(referrer);
+            
+            using var response = await client.PostAsync(
+                    url,
+                    CreateMultipartFormContent(formData)
+                );
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                //throw new SteamKitWebRequestException()
+            }
+        }
+        
+        static MultipartFormDataContent CreateMultipartFormContent(Dictionary<string, string> formData)
+        {
+            var result = new MultipartFormDataContent();
+            foreach (var pair in formData)
+            {
+                var content = new System.Net.Http.StringContent(pair.Value);
+                content.Headers.ContentType = null;
+                result.Add(content, pair.Key);
+            }
+            return result;
         }
 
         public void UpdateBotWithRegionProblem(
