@@ -131,6 +131,7 @@ namespace SteamDigiSellerBot
             app.UseRouting();
 
             app.UseAuthentication();
+            app.EnsureRolesCreated();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
