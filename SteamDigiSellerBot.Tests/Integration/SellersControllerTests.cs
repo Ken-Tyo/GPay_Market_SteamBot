@@ -145,7 +145,7 @@ namespace SteamDigiSellerBot.Tests.Integration
             creatResponse.EnsureSuccessStatusCode();
 
             var sellerCreateResponse = await creatResponse.Content.ReadFromJsonAsync<SellersCreateResponse>();        
-            int id = sellerCreateResponse.Seller.Id;
+            int id = sellerCreateResponse.Seller.Id.Value;
 
             var deleteResponse = await client.DeleteAsync("/sellers/" + id.ToString());
             deleteResponse.EnsureSuccessStatusCode();

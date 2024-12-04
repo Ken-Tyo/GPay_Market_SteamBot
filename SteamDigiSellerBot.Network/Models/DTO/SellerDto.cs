@@ -16,6 +16,8 @@ namespace SteamDigiSellerBot.Network.Models.DTO
 
         public bool Blocked { get; set; }
 
+        public string Comments { get; set; }
+
         public bool PermissionDigisellerItems { get; set; }
 
         public bool PermissionKFGItems { get; set; }
@@ -35,5 +37,7 @@ namespace SteamDigiSellerBot.Network.Models.DTO
         public bool PermissionBotsLimitsParsing { get; set; }
 
         public bool PermissionDigisellerItemsGeneration { get; set; }
+
+        public bool PermissionSteamPointsAutoDelivery { get; set; }
     }
 }

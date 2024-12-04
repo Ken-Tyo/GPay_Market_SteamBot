@@ -110,6 +110,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
         public async Task Sellers_Update()
         {
             var seller = new SellerDto(){
+                Id = TestContext.CurrentContext.Random.NextByte(),
                 Login = TestContext.CurrentContext.Random.GetString(),
                 Password = TestContext.CurrentContext.Random.GetString()
             };
