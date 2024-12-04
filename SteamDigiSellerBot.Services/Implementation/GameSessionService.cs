@@ -1602,7 +1602,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     var old = newPriorityPriceRub;
                     convertToRub = _currencyDataService
                         .TryConvertToRUB(po.final_price_in_cents / 100M, firstPrice.SteamCurrencyId).GetAwaiter().GetResult();
-                    newPriorityPriceRub = convertToRub.success ? convertToRub.value : null;
+                    newPriorityPriceRub = convertToRub.success ? convertToRub.value : old;
                     _logger.LogWarning(
                         $"{nameof(GetCurrentPrice)} GS ID {gs.Id} пересчет цены  перед окончанием скидки. Цена расчетная {newPriorityPriceRub?.ToString("0.00")}, проблемная {old?.ToString("0.00")}, цена создания {gs.PriorityPrice?.ToString("0.00")}, диги {gs.DigiSellerDealPriceUsd?.ToString("0.00")}");
                 }
