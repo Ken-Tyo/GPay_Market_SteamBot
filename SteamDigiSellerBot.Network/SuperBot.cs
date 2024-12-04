@@ -11,6 +11,7 @@ using SteamKit2;
 using SteamKit2.Authentication;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Dynamic;
 using System.IO;
@@ -40,8 +41,11 @@ namespace SteamDigiSellerBot.Network
         public SteamClient _steamClient { get; set; }
 
         private SteamUser _steamUser { get; set; }
+        private SteamApps _steamApps;
 
         private CallbackManager _manager { get; set; }
+
+        private readonly SuperBotSteamLicenses _steamLicenses;
 
         public bool _isRunning { get; set; }
         private string code = string.Empty;
@@ -89,12 +93,13 @@ namespace SteamDigiSellerBot.Network
         {
             _bot = bot;
             _logger = logger;
-
-
+            
             //_currencyDataRepository = currencyDataRepository;
             //_vacGameRepository = vacGameRepository;
 
             SetSteamClient();
+            
+            _steamLicenses = new SuperBotSteamLicenses(_bot, _steamApps, _logger);
         }
 
         private void SetSteamClient()
@@ -104,10 +109,12 @@ namespace SteamDigiSellerBot.Network
 
 
             _steamUser = _steamClient.GetHandler<SteamUser>();
+            _steamApps = _steamClient.GetHandler<SteamApps>();
 
             _manager.Subscribe<SteamClient.ConnectedCallback>(OnConnected);
             _manager.Subscribe<SteamClient.DisconnectedCallback>(OnDisconnected);
             _manager.Subscribe<SteamUser.LoggedOnCallback>(OnLoggedOn);
+            _manager.Subscribe<SteamApps.LicenseListCallback>(OnLicenseList);
         }
 
         public void ResetSteamClient()
@@ -296,6 +303,24 @@ namespace SteamDigiSellerBot.Network
             else
             {
                 throw new SteamKitWebRequestException($"Ошибка при выполнении запроса. {response.RequestMessage}", response);
+            }
+        }
+
+        private async void OnLicenseList(SteamApps.LicenseListCallback msg)
+        {
+            if (msg.Result != EResult.OK)
+            {
+                _logger.LogError($"Не удалось получить список лицензий для аккаунта {_bot.UserName} ({msg.Result}).");
+                return;
+            }
+
+            try
+            {
+                await _steamLicenses.FillFromSteam(msg.LicenseList);
+            }
+            catch (Exception exc)
+            {
+                _logger.LogError("Ошибка разбора списка лицензий у Steam Бота {0}. {1}", _bot.UserName, exc.ToString());
             }
         }
         
@@ -1810,7 +1835,7 @@ namespace SteamDigiSellerBot.Network
 
 
         public Semaphore BusyState = new Semaphore(1, 1);
-
+        
         public async Task<SendGameResponse> SendGame(
             string appId, string subId, bool isBundle, string gifteeAccountId, string receiverName, string comment,
             string countryCode)
