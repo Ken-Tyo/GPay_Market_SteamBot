@@ -463,3 +463,6 @@ ALTER TABLE "Bots" ADD "IgnoreSendLimits" BOOLEAN  not null default FALSE;
 
 02.12
 ALTER TABLE "GameSessions" ADD "Market" int null;
+
+04.12 *fix
+ALTER TABLE "GameSessions" ADD "ItemSteamCountryCodeId" int null;
