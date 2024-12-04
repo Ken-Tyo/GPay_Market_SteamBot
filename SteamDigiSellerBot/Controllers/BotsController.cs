@@ -293,7 +293,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [HttpPost, Route("bots/setisreserve")]
+        [HttpPut, Route("bots/setisreserve")]
         public async Task<IActionResult> SetIsReserve(EditBotIsReserve req)
         {
             if (req.BotId > 0)

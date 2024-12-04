@@ -27977,7 +27977,7 @@ var apiBotSetIsReserve = /*#__PURE__*/function () {
         case 0:
           _context27.next = 2;
           return fetch("/bots/setisreserve", {
-            method: "POST",
+            method: "PUT",
             body: mapToFormData({
               botId: id,
               isReserve: isreserve

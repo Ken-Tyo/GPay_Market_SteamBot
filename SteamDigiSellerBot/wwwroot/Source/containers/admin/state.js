@@ -463,7 +463,7 @@ export const apiBotSetIsOn = async (id, isOn) => {
 
 export const apiBotSetIsReserve = async (id, isreserve) => {
   let res = await fetch(`/bots/setisreserve`, {
-    method: "POST",
+    method: "PUT",
     body: mapToFormData({
       botId: id,
       isReserve: isreserve,
