@@ -249,7 +249,7 @@ namespace SteamDigiSellerBot.Network
                 PrivacyInventoryGifts = 3,  // ☐ Always keep Steam Gifts private even if users can see my inventory.
                 PrivacyOwnedGames = 3,      // Game details: Public
                 PrivacyPlaytime = 3,        // ☐ Always keep my total playtime private even if users can see my game details.
-                PrivacyFriendsList = 3      // Friends List: Public
+                PrivacyFriendsList = 1      // Friends List: Private
             };
             
             // Can post comments on my profile:
