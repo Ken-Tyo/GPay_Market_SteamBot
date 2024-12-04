@@ -466,3 +466,17 @@ ALTER TABLE "GameSessions" ADD "Market" int null;
 
 04.12 *fix
 ALTER TABLE "GameSessions" ADD "ItemSteamCountryCodeId" int null;
+
+05.12 Задача 163 - Список игр (приложений и комплектов), которые принадлежат боту
+CREATE TABLE "BotSteamLicenses"
+(
+    "Id" integer NOT NULL,
+    "AppIdList" integer[] NOT NULL,
+    "SubIdList" integer[] NOT NULL,
+    CONSTRAINT "PK_BotSteamLicanses" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_BotSteamLicenses_Bots" FOREIGN KEY ("Id")
+        REFERENCES "Bots" ("Id") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
+);
