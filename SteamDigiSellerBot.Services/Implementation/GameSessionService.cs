@@ -1586,8 +1586,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         new StoreItemID()
                         {
-                            appid = uint.Parse(gs.Item.AppId), bundleid = gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0,
-                            packageid = !gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0
+                            appid = uint.Parse(gs.Item.AppId)
+                            //, bundleid = gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0,
+                            //packageid = !gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0
                         }
                     }
                 };
@@ -1595,8 +1596,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var response = api.CallProtobufAsync<CStoreBrowse_GetItems_Response>(
                     HttpMethod.Get, "GetItems", args: sb.PrepareProtobufArguments(r, sb.accessToken)).GetAwaiter().GetResult();
                 var po = response.store_items.FirstOrDefault(x => x.appid == r.ids[0].appid)
-                    ?.purchase_options?.FirstOrDefault(x =>
-                        x.bundleid == r.ids[0].bundleid && x.packageid == r.ids[0].packageid);
+                    ?.purchase_options?.FirstOrDefault(x => gs.Item.SubId == (x.packageid == 0 ? x.bundleid : x.packageid).ToString());
                 if (po != null)
                 {
                     var old = newPriorityPriceRub;
