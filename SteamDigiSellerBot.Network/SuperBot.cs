@@ -12,6 +12,7 @@ using SteamKit2.Authentication;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,6 +28,7 @@ using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Converters;
 using SteamDigiSellerBot.Utilities.Services;
 
 namespace SteamDigiSellerBot.Network
@@ -211,7 +213,7 @@ namespace SteamDigiSellerBot.Network
             {
                 await ModifySteamProfilePrivacySettings();
             }
-            catch (HttpRequestException exc)
+            catch (SteamKitWebRequestException exc)
             {
                 _logger.LogError("Не удалось задать настройки приватности для бота {0}. {1}", _bot.UserName, exc.Message);
             }
@@ -240,11 +242,9 @@ namespace SteamDigiSellerBot.Network
 
         private async Task ModifySteamProfilePrivacySettings()
         {
-            var sessionId = await GetSessiondId();
-            
             var privacySettings = new
             {
-                PrivacyProfile = 1,         // My profile: Public
+                PrivacyProfile = 3,         // My profile: Public
                 PrivacyInventory = 3,       // Inventory: Public
                 PrivacyInventoryGifts = 3,  // ☐ Always keep Steam Gifts private even if users can see my inventory.
                 PrivacyOwnedGames = 3,      // Game details: Public
@@ -256,7 +256,9 @@ namespace SteamDigiSellerBot.Network
             // Public = 1
             // Friends Only = 0
             // Private = 2
-            const string commentPermission = "1";
+            const string commentPermission = "2";
+            
+            var sessionId = await GetSessiondId();
 
             var formData = new Dictionary<string, string>()
             {
@@ -278,31 +280,25 @@ namespace SteamDigiSellerBot.Network
             
             using var response = await client.PostAsync(
                     url,
-                    CreateMultipartFormContent(formData)
+                    HttpHelper.CreateMultipartFormContent(formData)
                 );
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
+                dynamic responseData = JsonConvert.DeserializeObject<ExpandoObject>(responseContent, new ExpandoObjectConverter());// JObject.Parse(responseContent);
+
+                if (responseData?.success != 1)
+                {
+                    throw new SteamKitWebRequestException("Параметры не были изменены.", response);
+                }
             }
             else
             {
-                //throw new SteamKitWebRequestException()
+                throw new SteamKitWebRequestException($"Ошибка при выполнении запроса. {response.RequestMessage}", response);
             }
         }
         
-        static MultipartFormDataContent CreateMultipartFormContent(Dictionary<string, string> formData)
-        {
-            var result = new MultipartFormDataContent();
-            foreach (var pair in formData)
-            {
-                var content = new System.Net.Http.StringContent(pair.Value);
-                content.Headers.ContentType = null;
-                result.Add(content, pair.Key);
-            }
-            return result;
-        }
-
         public void UpdateBotWithRegionProblem(
             CurrencyData currencyData, Bot bot)
         {
