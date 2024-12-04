@@ -47,6 +47,8 @@ namespace SteamDigiSellerBot.Network
 
         private readonly SuperBotSteamLicenses _steamLicenses;
 
+        public SuperBotSteamLicenses SteamLicenses => _steamLicenses; 
+
         public bool _isRunning { get; set; }
         private string code = string.Empty;
         public string accessToken = string.Empty;
@@ -215,25 +217,7 @@ namespace SteamDigiSellerBot.Network
             {
                 _bot.State = botState;
             }
-
-            try
-            {
-                await ModifySteamProfilePrivacySettings();
-            }
-            catch (SteamKitWebRequestException exc)
-            {
-                _logger.LogError("Не удалось задать настройки приватности для бота {0}. {1}", _bot.UserName, exc.Message);
-            }
-
-            try
-            {
-                await _steamLicenses.SaveToDatabase();
-            }
-            catch (Exception exc)
-            {
-                _logger.LogError("Не удалось сохранить список лицензий для бота {0}. {1}", _bot.UserName, exc.Message);
-            }
-
+            
             (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) = 
                 GetSendedGiftsSum(currencyData, _bot.Region, _bot.BotRegionSetting);
             if (sendedParseSuccess)
@@ -256,7 +240,7 @@ namespace SteamDigiSellerBot.Network
             }
         }
 
-        private async Task ModifySteamProfilePrivacySettings()
+        public async Task ModifySteamProfilePrivacySettings()
         {
             var privacySettings = new
             {

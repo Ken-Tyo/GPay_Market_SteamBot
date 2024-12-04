@@ -9,7 +9,7 @@ using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 namespace SteamDigiSellerBot.Network
 {
     /// <summary>
-    /// Синхронизирует список лицензий, которыми обладает аккаунт Steam Бота с базой данных.
+    /// Содержит список лицензий, которыми обладает Steam-аккаунт Бота.
     /// </summary>
     public class SuperBotSteamLicenses
     {
@@ -81,14 +81,6 @@ namespace SteamDigiSellerBot.Network
             }
 
             _logger.LogInformation($"У бота {_bot.UserName} на аккаунте зарегистрировано{_subIdList.Count} комплектов и {_appIdList.Count} приложений.");
-        }
-
-        /// <summary>
-        /// Сохраняет список лицензий, хранящийся в памяти в базу данных.
-        /// </summary>
-        public async Task SaveToDatabase()
-        {
-            
         }
     }
 }
