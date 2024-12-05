@@ -99,9 +99,7 @@ namespace SteamDigiSellerBot.Controllers
 
             Bot bot = _mapper.Map<Bot>(model);
 
-            //bot.PasswordC = model.Password;
             bot.Password = CryptographyUtilityService.Encrypt(model.Password);
-            //bot.ProxyStrC = model.Proxy;
             bot.ProxyStr = CryptographyUtilityService.Encrypt(model.Proxy);
 
             Bot oldBot = null;
@@ -123,7 +121,6 @@ namespace SteamDigiSellerBot.Controllers
                 if (model.MaFile is null)
                 {
                     bot.MaFileStr = oldBot.MaFileStr;
-                    //bot.MaFileStrC = oldBot.MaFileStrC;
                 }
 
                 bot.BotRegionSetting = oldBot.BotRegionSetting;

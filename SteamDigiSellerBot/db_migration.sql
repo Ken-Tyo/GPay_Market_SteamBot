@@ -452,7 +452,7 @@ comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество �
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
 
 24.11 Задача #70 - GiftBan
-ALTER TABLE "Bot" add "RemainingSumToGift" numeric null;
+ALTER TABLE "Bots" add "RemainingSumToGift" numeric null;
 23.11
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
 INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "Description") VALUES (49, 23, 'Ошибка (Нет игры)', '#E13F29', NULL);
@@ -480,3 +480,14 @@ CREATE TABLE "BotSteamLicenses"
         ON DELETE CASCADE
         NOT VALID
 );
+
+05.12.2024 96-шифровать-хешировать-пароли-в-бд-ботов-steam-аккаунтов-при-добавлении-в-разделе
+ALTER TABLE "Bots" drop column "PasswordC";
+ALTER TABLE "Bots" drop column "ProxyStrC";
+ALTER TABLE "Bots" drop column "MaFileStrC";
+ALTER TABLE "Bots" drop column "SteamCookiesStrC";
+ALTER TABLE "SteamProxies" drop column "PasswordC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
+ALTER TABLE "Users" drop column "DigisellerIDC";
+ALTER TABLE "Users" drop column "DigisellerApiKeyC";
