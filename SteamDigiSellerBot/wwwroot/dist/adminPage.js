@@ -64040,8 +64040,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref3) {
     onCancel = _ref3.onCancel,
     onSave = _ref3.onSave,
     response = _ref3.response,
-    resetResponse = _ref3.resetResponse,
-    isReserve = _ref3.isReserve;
+    resetResponse = _ref3.resetResponse;
   var initialValue = {
     id: null,
     userName: null,
@@ -64103,7 +64102,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref3) {
             name: 'Запасной бот:',
             onChange: function onChange(val) {
               apiBotSetIsReserve(item.id, val);
-              handleChange('isReserve');
+              handleChange('isReserve')(val);
             },
             value: item.isReserve
           })]
