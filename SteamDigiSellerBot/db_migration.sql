@@ -480,3 +480,14 @@ CREATE TABLE "BotSteamLicenses"
         ON DELETE CASCADE
         NOT VALID
 );
+
+05.12.2024 96-шифровать-хешировать-пароли-в-бд-ботов-steam-аккаунтов-при-добавлении-в-разделе
+ALTER TABLE "Bots" drop column "PasswordC";
+ALTER TABLE "Bots" drop column "ProxyStrC";
+ALTER TABLE "Bots" drop column "MaFileStrC";
+ALTER TABLE "Bots" drop column "SteamCookiesStrC";
+ALTER TABLE "SteamProxies" drop column "PasswordC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
+ALTER TABLE "Users" drop column "DigisellerIDC";
+ALTER TABLE "Users" drop column "DigisellerApiKeyC";

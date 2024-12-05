@@ -18,12 +18,6 @@ namespace SteamDigiSellerBot.Database.Entities
         public DateTimeOffset? DigisellerTokenExp { get; set; }
         public string DigisellerID { get; set; }
 
-        [IgnoreDataMember]
-        public string DigisellerIDC { get; set; }
-
         public string DigisellerApiKey { get; set; }
-
-        [IgnoreDataMember]
-        public string DigisellerApiKeyC { get; set; }
     }
 }

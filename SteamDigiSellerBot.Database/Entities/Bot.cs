@@ -31,26 +31,14 @@ namespace SteamDigiSellerBot.Database.Entities
         public string PersonName { get; set; }
 
         public string Password { get; set; }
-        
-        [IgnoreDataMember]
-        public string PasswordC { get; set; }
 
         public string MaFileStr { get; set; }
-
-        [IgnoreDataMember]
-        public string MaFileStrC { get; set; }
 
         public string UserAgent { get; set; }
 
         public string ProxyStr { get; set; }
 
-        [IgnoreDataMember]
-        public string ProxyStrC { get; set; }
-
         public string SteamCookiesStr { get; set; }
-
-        [IgnoreDataMember]
-        public string SteamCookiesStrC { get; set; }
 
         public string Region { get; set; }
         public string SteamId { get; set; }
@@ -96,14 +84,12 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             get
             {
-                //return new CookieDictionary(string.IsNullOrEmpty(SteamCookiesStrC) ? SteamCookiesStr : CryptographyUtilityService.Decrypt(SteamCookiesStr));
                 return new CookieDictionary(CryptographyUtilityService.Decrypt(SteamCookiesStr));
             }
             set
             {
                 Console.WriteLine($"BotEncrytpZone {nameof(SteamCookies)} {UserName} {value}");
-                //При отказе от незашифрованного значения закомментировать
-                //SteamCookiesStrC = value.ToString();
+
                 SteamCookiesStr = CryptographyUtilityService.Encrypt(value.ToString());
             }
         }
