@@ -318,5 +318,24 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok();
         }
+
+        [HttpPut, Route("bots/setisreserve")]
+        public async Task<IActionResult> SetIsReserve(EditBotIsReserve req)
+        {
+            if (req.BotId > 0)
+            {
+                await using var db = _steamBotRepository.GetContext();
+                Bot bot = await _steamBotRepository.GetByIdAsync(db, req.BotId);
+
+                if (bot != null)
+                {
+                    bot.IsReserve = req.IsReserve;
+                 
+                    await _steamBotRepository.EditAsync(db, bot);
+                }
+            }
+
+            return Ok();
+        }
     }
 }

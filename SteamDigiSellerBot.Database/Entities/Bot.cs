@@ -60,6 +60,8 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public bool IsON { get; set; }
 
+        public bool IsReserve { get; set; }
+
         //public virtual List<BotTransaction> BotTransactions { get; set; }
 
         [Column(TypeName = "json")]

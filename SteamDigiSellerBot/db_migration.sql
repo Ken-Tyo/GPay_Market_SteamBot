@@ -491,3 +491,6 @@ ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
 ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
 ALTER TABLE "Users" drop column "DigisellerIDC";
 ALTER TABLE "Users" drop column "DigisellerApiKeyC";
+
+19.11.2024
+ALTER TABLE public."Bots" ADD COLUMN "IsReserve" BOOL DEFAULT false
