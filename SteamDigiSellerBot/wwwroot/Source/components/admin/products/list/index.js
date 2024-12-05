@@ -189,7 +189,7 @@ const products = () => {
   };
 
     // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
-    const getItemsBetweenSelectedIds = (firstId, secondId) => {
+    const getItemsBetweenSelected = (firstId, secondId) => {
         const startIndex = sortedItems.findIndex(item => item.id === firstId);
         const endIndex = sortedItems.findIndex(item => item.id === secondId);
 
@@ -199,14 +199,90 @@ const products = () => {
 
         const sliceStart = Math.min(startIndex, endIndex);
         const sliceEnd = Math.max(startIndex, endIndex);
-        if (sliceEnd == (sortedItems.length - 1)) {
-            return sortedItems.slice(sliceStart).map(item => item.id);
-        }
-        else {
-            return sortedItems.slice(sliceStart, sliceEnd + 1).map(item => item.id);
-        }
+
+        return getSliceOfSortedItems(sliceStart, sliceEnd);
     };
 
+    //Shift on the unselected
+    const addItemsToSelected = (shiftId) => {
+        let startIndex = -1;
+        let endIndex = -1;
+        let curId = -1;
+        let shiftIndex = sortedItems.findIndex(item => item.id === shiftId);
+
+        if (selectedItems.length == 0) return [sortedItems[shiftIndex]];
+                
+        for (let i = 0; i < sortedItems.length; i++) {
+            curId = sortedItems[i].id;
+            if (selectedItems.includes(curId)) {
+                if (startIndex < 0) startIndex = i;
+                endIndex = i;
+            }
+        }
+        if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+
+        const sliceStart = Math.min(startIndex, endIndex, shiftIndex);
+        const sliceEnd = Math.max(startIndex, endIndex, shiftIndex);
+
+        return getSliceOfSortedItems(sliceStart, sliceEnd);
+    };
+
+    //Shift on the selected
+    const removeItemsFromSelected = (shiftId) => {
+        let startIndex = -1;
+        let endIndex = -1;
+        let curId = -1;
+        let shiftIndex = sortedItems.findIndex(item => item.id === shiftId);
+
+        if (selectedItems.length == 1) return [];
+
+        for (let i = 0; i < sortedItems.length; i++) {
+            curId = sortedItems[i].id;
+            if (selectedItems.includes(curId)) {
+                if (startIndex < 0) startIndex = i;
+                endIndex = i;
+            }
+        }
+
+        if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+        let sliceStart;
+        let sliceEnd;
+
+        //Just to be sure that shiftIndex between start and end
+        if (shiftIndex < startIndex || startIndex > endIndex) return [];
+        if (shiftIndex == startIndex) {
+            sliceStart = startIndex + 1;
+            sliceEnd = endIndex;
+        }
+        else if (shiftIndex == endIndex) {
+            sliceStart = startIndex;
+            sliceEnd = endIndex - 1;
+        }
+        else {
+            // Reduce top or botton of selected
+            if (lastSelectedId < shiftIndex) {
+                sliceStart = startIndex;
+                sliceEnd = shiftIndex - 1;
+            }
+            else {
+                sliceStart = shiftIndex + 1;
+                sliceEnd = endIndex;
+            }
+        }
+
+        return getSliceOfSortedItems(sliceStart, sliceEnd);
+    };
+
+    const getSliceOfSortedItems = (sliceStart, sliceEnd) => {
+        let arrNew;
+
+        if (sliceEnd >= (sortedItems.length - 1))
+            arrNew = sortedItems.slice(sliceStart).map(item => item.id);
+        else
+            arrNew = sortedItems.slice(sliceStart, sliceEnd + 1).map(item => item.id);
+
+        return arrNew; 
+    }
 
   const getBtnMassDescriptionBlock = (lines) => {
     return <div className={css.massDescriptionText}>{lines.map(line => (<div>{line}</div>))}</div>;
@@ -297,28 +373,37 @@ const products = () => {
                   <div className={css.listItemCheckbox}>
                     <CheckBox
                         onCheckedChange={(val, shiftPressed) => {
+                        let arrNew;
                         if (shiftPressed) {
-                            //Shift-mouse click: Select all items betweeen the current row and the last selected
-                            if (lastSelectedId > 0 && i.id > 0 && lastSelectedId != i.id) {
-                                let newArr = getItemsBetweenSelectedIds(lastSelectedId, i.id);
-                                setSelectedItems(newArr);
-                                setLastSelectedId(-1);
+                            if (val) {
+                                // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
+                                if (lastSelectedId > 0) {
+                                    arrNew = getItemsBetweenSelected(lastSelectedId, i.id);
+                                    setLastSelectedId(-1);
+                                }
+                                else {  //Add new portion  (2-nd shift selects new)
+                                    arrNew = addItemsToSelected(i.id);
+                                }
+                            }
+                            else { // Remove portion  (2-nd shift unselects old)
+                                arrNew = removeItemsFromSelected(i.id);
                             }
                         }
                         else { 
                             let newLastId = -1;
                             if (val) {
-                                setSelectedItems([...selectedItems, i.id]);
+                                arrNew = [...selectedItems, i.id];
                                 newLastId = i.id;
                             } else {
-                                let newArr = selectedItems.filter((id) => id != i.id);
-                                setSelectedItems(newArr);
-                                if (newArr.length == 1) newLastId = newArr[0];
+                                arrNew =  selectedItems.filter((id) => id != i.id);
+                                if (arrNew.length == 1) newLastId = newArr[0];
                             }
                             setLastSelectedId(newLastId);
                         }
-                      }}
-                      value={selectedItems.indexOf(i.id) !== -1}
+                        setSelectedItems(arrNew);
+                     }
+                     }
+                      value= {selectedItems.indexOf(i.id) !== -1}
                     />
                   </div>
                 </div>
