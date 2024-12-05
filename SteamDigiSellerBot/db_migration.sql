@@ -452,7 +452,7 @@ comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество �
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
 
 24.11 Задача #70 - GiftBan
-ALTER TABLE "Bot" add "RemainingSumToGift" numeric null;
+ALTER TABLE "Bots" add "RemainingSumToGift" numeric null;
 23.11
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
 INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "Description") VALUES (49, 23, 'Ошибка (Нет игры)', '#E13F29', NULL);
@@ -463,3 +463,34 @@ ALTER TABLE "Bots" ADD "IgnoreSendLimits" BOOLEAN  not null default FALSE;
 
 02.12
 ALTER TABLE "GameSessions" ADD "Market" int null;
+
+04.12 *fix
+ALTER TABLE "GameSessions" ADD "ItemSteamCountryCodeId" int null;
+
+05.12 Задача 163 - Список игр (приложений и комплектов), которые принадлежат боту
+CREATE TABLE "BotSteamLicenses"
+(
+    "Id" integer NOT NULL,
+    "AppIdList" integer[] NOT NULL,
+    "SubIdList" integer[] NOT NULL,
+    CONSTRAINT "PK_BotSteamLicanses" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_BotSteamLicenses_Bots" FOREIGN KEY ("Id")
+        REFERENCES "Bots" ("Id") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
+);
+
+05.12.2024 96-шифровать-хешировать-пароли-в-бд-ботов-steam-аккаунтов-при-добавлении-в-разделе
+ALTER TABLE "Bots" drop column "PasswordC";
+ALTER TABLE "Bots" drop column "ProxyStrC";
+ALTER TABLE "Bots" drop column "MaFileStrC";
+ALTER TABLE "Bots" drop column "SteamCookiesStrC";
+ALTER TABLE "SteamProxies" drop column "PasswordC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
+ALTER TABLE "Users" drop column "DigisellerIDC";
+ALTER TABLE "Users" drop column "DigisellerApiKeyC";
+
+19.11.2024
+ALTER TABLE public."Bots" ADD COLUMN "IsReserve" BOOL DEFAULT false

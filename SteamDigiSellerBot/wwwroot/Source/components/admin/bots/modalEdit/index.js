@@ -4,6 +4,8 @@ import ModalBase from '../../../shared/modalBase';
 import TextBox from './textbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import css from './styles.scss';
+import Switch from '../../../shared/switch';
+import { apiBotSetIsReserve } from '../../../../containers/admin/state';
 
 const FromItemText = ({ name, onChange, hint, value, cymbol }) => {
   return (
@@ -21,6 +23,20 @@ const FromItemText = ({ name, onChange, hint, value, cymbol }) => {
   );
 };
 
+const FromItemSwitch = ({ name, value, onChange }) => {
+  return (
+    <div className={css.formItem}>
+      <div className={css.name}>{name}</div>
+      <div style={{ marginTop: "10px", marginRight: "60px" }}>
+        <Switch
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+    </div>
+  );
+};
+
 const ModalEdit = ({
   isOpen,
   value,
@@ -28,6 +44,7 @@ const ModalEdit = ({
   onSave,
   response,
   resetResponse,
+  isReserve,
 }) => {
   const initialValue = {
     id: null,
@@ -36,6 +53,7 @@ const ModalEdit = ({
     proxy: null,
     maFile: null,
     gameSendLimit: null,
+    isReserve:null,
   };
   const [item, setItem] = useState(initialValue);
 
@@ -56,7 +74,7 @@ const ModalEdit = ({
   };
 
   const fileRef = React.useRef();
-  const modalHeight = item.id ? 732 : 599;
+  const modalHeight = item.id ? 835 : 599;
 
   return (
     <ModalBase
@@ -95,6 +113,16 @@ const ModalEdit = ({
                   onChange={handleChange('gameSendLimitAddParam')}
                   value={item.gameSendLimitAddParam}
                   cymbol={'$'}
+                />
+              )}
+              {item.id && (
+                <FromItemSwitch
+                  name={'Запасной бот:'} 
+                  onChange={(val) => {
+                     apiBotSetIsReserve(item.id, val);
+                     handleChange('isReserve');
+                  }}
+                  value={item.isReserve}
                 />
               )}
             </div>

@@ -33,6 +33,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly IGameSessionRepository _gameSessionRepository;
         private readonly ISuperBotPool _botPool;
         private readonly IBotSendGameAttemptsRepository _botSendGameAttemptsRepository;
+        private readonly IBotSteamLicensesRepository _botSteamLicensesRepository;
         private readonly IConfiguration _configuration;
 
         private readonly DatabaseContext db;
@@ -47,6 +48,7 @@ namespace SteamDigiSellerBot.Controllers
             IGameSessionRepository gameSessionRepository,
             ISuperBotPool botPoolService,
             IBotSendGameAttemptsRepository botSendGameAttemptsRepository,
+            IBotSteamLicensesRepository botSteamLicensesRepository,
             IConfiguration configuration,
             IMapper mapper,
             ILogger<BotsController> logger,
@@ -62,6 +64,7 @@ namespace SteamDigiSellerBot.Controllers
             _logger = logger;
             _configuration = configuration;
             db =dbContext;
+            _botSteamLicensesRepository = botSteamLicensesRepository;
         }
 
         [HttpGet, Route("bots/list")]
@@ -96,9 +99,7 @@ namespace SteamDigiSellerBot.Controllers
 
             Bot bot = _mapper.Map<Bot>(model);
 
-            //bot.PasswordC = model.Password;
             bot.Password = CryptographyUtilityService.Encrypt(model.Password);
-            //bot.ProxyStrC = model.Proxy;
             bot.ProxyStr = CryptographyUtilityService.Encrypt(model.Proxy);
 
             Bot oldBot = null;
@@ -120,7 +121,6 @@ namespace SteamDigiSellerBot.Controllers
                 if (model.MaFile is null)
                 {
                     bot.MaFileStr = oldBot.MaFileStr;
-                    //bot.MaFileStrC = oldBot.MaFileStrC;
                 }
 
                 bot.BotRegionSetting = oldBot.BotRegionSetting;
@@ -181,6 +181,24 @@ namespace SteamDigiSellerBot.Controllers
                     }
                 }
                 
+                try
+                {
+                    await superBot.ModifySteamProfilePrivacySettings();
+                }
+                catch (SteamKitWebRequestException exc)
+                {
+                    _logger.LogError("Не удалось задать настройки приватности для бота {0}. {1}", superBot.Bot.UserName, exc.Message);
+                }
+
+                try
+                {
+                    await SaveSteamAccountLicenses(superBot);
+                }
+                catch (Exception exc)
+                {
+                    _logger.LogError("Не удалось сохранить список лицензий для бота {0}. {1}", superBot.Bot.UserName, exc.Message);
+                }
+                
                 if (!botAuthOK)
                 {
                     ModelState.AddModelError("", "Произошла ошибка при авторизации в Steam!\nСтатус соединения " + (bot.Result?.ToString() ?? "не установлено" ) + (bot.ResultExtDescription !=null ? "("+bot.ResultExtDescription.ToString()+")" :""));
@@ -195,6 +213,14 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             return createBadRequest();
+        }
+
+        private async Task SaveSteamAccountLicenses(SuperBot superBot)
+        {
+            await _botSteamLicensesRepository.SetForBot(superBot.Bot.Id, superBot.SteamLicenses.SubIdList,
+                superBot.SteamLicenses.AppIdList);
+            
+            _logger.LogInformation($"Сохранен список лицензии Steam для бота {superBot.Bot.UserName}.");
         }
 
         [HttpGet, Route("bots/delete")]
@@ -287,6 +313,25 @@ namespace SteamDigiSellerBot.Controllers
                     }
                     else
                         _botPool.Remove(bot);
+                }
+            }
+
+            return Ok();
+        }
+
+        [HttpPut, Route("bots/setisreserve")]
+        public async Task<IActionResult> SetIsReserve(EditBotIsReserve req)
+        {
+            if (req.BotId > 0)
+            {
+                await using var db = _steamBotRepository.GetContext();
+                Bot bot = await _steamBotRepository.GetByIdAsync(db, req.BotId);
+
+                if (bot != null)
+                {
+                    bot.IsReserve = req.IsReserve;
+                 
+                    await _steamBotRepository.EditAsync(db, bot);
                 }
             }
 

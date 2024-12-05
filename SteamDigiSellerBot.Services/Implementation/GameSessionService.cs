@@ -563,7 +563,6 @@ namespace SteamDigiSellerBot.Services.Implementation
         public async Task<(BotFilterParams, IEnumerable<Bot>)> GetSuitableBotsFor(
             GameSession gs, HashSet<int> botIdFilter = null)
         {
-            var res = Enumerable.Empty<Bot>();
             await using var db = _botRepository.GetContext();
             IEnumerable<Bot> botFilterRes = await _botRepository
                 .ListAsync(db, b => (b.State == BotState.active || b.State == BotState.tempLimit) 
@@ -586,12 +585,43 @@ namespace SteamDigiSellerBot.Services.Implementation
             _logger.LogInformation(
                 $"GS ID {gs.Id} after filter bot state - {JsonConvert.SerializeObject(botFilterRes.Select(b => new { id = b.Id, name = b.UserName }))}");
 
-            var currCountryName = "";
-            var currCountryCode = "";
-
             var (maxFailUsingCount, prices) = GetSortedPriorityPrices(gs.Item);
             var currencies = await _currencyDataService.GetCurrencyDictionary();
             var steamCountries = await _steamCountryCodeRepository.GetByCurrencies();
+
+            IEnumerable<Bot> res = null;
+            string selectedRegion = "";
+            {
+                var mainBots = botFilterRes.Where(x => x.IsReserve == false).ToList();
+                (res, selectedRegion) = await MatchBotByPrice(prices, currencies, steamCountries, mainBots, gs);
+            }
+            if (!res.Any())
+            {
+                // поиск по резервным ботам.
+
+                var reserveBots = botFilterRes.Where(x => x.IsReserve == true).ToList();
+                (res, selectedRegion) = await MatchBotByPrice(prices, currencies, steamCountries, reserveBots, gs);
+            } 
+
+            if (botIdFilter != null && botIdFilter.Count > 0)
+                res = res.Where(b => !botIdFilter.Contains(b.Id)).ToList();
+
+            var filterParams = new BotFilterParams();
+            filterParams.FailUsingCount = maxFailUsingCount;
+            filterParams.SelectedRegion = selectedRegion;
+            filterParams.WithMaxBalance = gs.Item.CurrentDigiSellerPrice >= 1000;
+
+            return (filterParams, res.OrderBy(b => b.Attempt_Count()).ToList());
+        }
+
+        async Task<(IEnumerable<Bot>, string)> MatchBotByPrice(List<GamePrice> prices, Dictionary<int, Currency> currencies, 
+            List<SteamCountryCode> steamCountries, IEnumerable<Bot> botFilterRes, GameSession gs)
+        {
+            string currCountryName = "";
+            string currCountryCode = "";
+            
+            IEnumerable<Bot> res = Enumerable.Empty<Bot>();
+
             foreach (var price in prices)
             {
                 //берем код региона
@@ -675,15 +705,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 break;
             }
 
-            if (botIdFilter != null && botIdFilter.Count > 0)
-                res = res.Where(b => !botIdFilter.Contains(b.Id)).ToList();
-
-            var filterParams = new BotFilterParams();
-            filterParams.FailUsingCount = maxFailUsingCount;
-            filterParams.SelectedRegion = $"{currCountryName} ({currCountryCode})";
-            filterParams.WithMaxBalance = gs.Item.CurrentDigiSellerPrice >= 1000;
-
-            return (filterParams, res.OrderBy(b => b.Attempt_Count()).ToList());
+            string selectedRegion = $"{currCountryName} ({currCountryCode})";
+            return (res, selectedRegion);
         }
 
         public async Task<Bot> GetFirstBotByItemCriteration(GameSession gs, IEnumerable<Bot> botFilterRes)
@@ -1586,8 +1609,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                     {
                         new StoreItemID()
                         {
-                            appid = uint.Parse(gs.Item.AppId), bundleid = gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0,
-                            packageid = !gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0
+                            appid = uint.Parse(gs.Item.AppId)
+                            //, bundleid = gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0,
+                            //packageid = !gs.Item.IsBundle ? uint.Parse(gs.Item.SubId) : 0
                         }
                     }
                 };
@@ -1595,14 +1619,13 @@ namespace SteamDigiSellerBot.Services.Implementation
                 var response = api.CallProtobufAsync<CStoreBrowse_GetItems_Response>(
                     HttpMethod.Get, "GetItems", args: sb.PrepareProtobufArguments(r, sb.accessToken)).GetAwaiter().GetResult();
                 var po = response.store_items.FirstOrDefault(x => x.appid == r.ids[0].appid)
-                    ?.purchase_options?.FirstOrDefault(x =>
-                        x.bundleid == r.ids[0].bundleid && x.packageid == r.ids[0].packageid);
+                    ?.purchase_options?.FirstOrDefault(x => gs.Item.SubId == (x.packageid == 0 ? x.bundleid : x.packageid).ToString());
                 if (po != null)
                 {
                     var old = newPriorityPriceRub;
                     convertToRub = _currencyDataService
                         .TryConvertToRUB(po.final_price_in_cents / 100M, firstPrice.SteamCurrencyId).GetAwaiter().GetResult();
-                    newPriorityPriceRub = convertToRub.success ? convertToRub.value : null;
+                    newPriorityPriceRub = convertToRub.success ? convertToRub.value : old;
                     _logger.LogWarning(
                         $"{nameof(GetCurrentPrice)} GS ID {gs.Id} пересчет цены  перед окончанием скидки. Цена расчетная {newPriorityPriceRub?.ToString("0.00")}, проблемная {old?.ToString("0.00")}, цена создания {gs.PriorityPrice?.ToString("0.00")}, диги {gs.DigiSellerDealPriceUsd?.ToString("0.00")}");
                 }

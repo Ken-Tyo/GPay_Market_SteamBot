@@ -13,6 +13,8 @@ namespace SteamDigiSellerBot.Database.Contexts
     public class DatabaseContext : IdentityDbContext<User>
     {
         public DbSet<Bot> Bots { get; set; }
+        
+        public DbSet<BotSteamLicenses> BotSteamLicenses { get; set; }
 
         public DbSet<Game> Games { get; set; }
 

@@ -7,12 +7,6 @@ namespace SteamDigiSellerBot.Database.Models
     {
         public string DigisellerID { get; set; }
 
-        [IgnoreDataMember]
-        public string DigisellerIDC { get; set; }
-
         public string DigisellerApiKey { get; set; }
-
-        [IgnoreDataMember]
-        public string DigisellerApiKeyC { get; set; }
     }
 }

@@ -84,7 +84,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             new Currency { SteamId = 2, Code = "GBP", SteamSymbol = "£", Position = 101, Name = "Фунт", CountryCode = "GB" },
             new Currency { SteamId = 3, Code = "EUR", SteamSymbol = "€", Position = 4, Name = "Евро", CountryCode = "FR" },
             new Currency { SteamId = 4, Code = "CHF", SteamSymbol = "CHF", Position = 102, Name = "Швейцарский франк", CountryCode = "CH" },
-            new Currency { SteamId = 5, Code = "RUB", SteamSymbol = "pуб.", Position = 1, Name = "Рубли", CountryCode = "RU" },
+            new Currency { SteamId = 5, Code = "RUB", SteamSymbol = "руб.", Position = 1, Name = "Рубли", CountryCode = "RU" },
             new Currency { SteamId = 6, Code = "PLN", SteamSymbol = "zł", Position = 103, Name = "Польский злотый", CountryCode = "PL" },
             new Currency { SteamId = 7, Code = "BRL", SteamSymbol = "R$", Position = 9, Name = "Бразильский реал", CountryCode = "BR" },
             new Currency { SteamId = 8, Code = "JPY", SteamSymbol = "¥", Position = 104, Name = "Японская иена", CountryCode = "JP" },

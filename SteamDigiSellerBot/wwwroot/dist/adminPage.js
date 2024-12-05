@@ -26499,6 +26499,7 @@ __webpack_require__.d(state_namespaceObject, {
   Fj: () => (apiAddCommentGameSession),
   aU: () => (apiAddGameSession),
   he: () => (apiBotSetIsOn),
+  OY: () => (apiBotSetIsReserve),
   To: () => (apiBulkDeleteItem),
   tr: () => (apiChangeDigisellerData),
   CG: () => (apiChangeItem),
@@ -27195,7 +27196,7 @@ var initAdmin = /*#__PURE__*/function () {
 }();
 var initBotsPage = /*#__PURE__*/function () {
   var _ref3 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee3() {
-    var params, botId, _state$get2, bots, bot;
+    var params, botId, bot;
     return state_regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -27209,22 +27210,21 @@ var initBotsPage = /*#__PURE__*/function () {
           console.log("params", params);
           botId = Number(params.id || 0);
           if (!botId) {
-            _context3.next = 14;
+            _context3.next = 13;
             break;
           }
-          _state$get2 = state.get(), bots = _state$get2.bots;
           bot = bots.find(function (b) {
             return b.id === botId;
           }); //console.log(botId, bots, bot);
           if (!bot) {
-            _context3.next = 14;
+            _context3.next = 13;
             break;
           }
-          _context3.next = 13;
+          _context3.next = 12;
           return setSelectedBot(bot);
-        case 13:
+        case 12:
           toggleBotDetailsModal(true);
-        case 14:
+        case 13:
         case "end":
           return _context3.stop();
       }
@@ -27976,102 +27976,101 @@ var apiBotSetIsOn = /*#__PURE__*/function () {
     return _ref26.apply(this, arguments);
   };
 }();
-var apiSaveBotRegionSettings = /*#__PURE__*/function () {
-  var _ref27 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee27(item) {
-    var res, errors;
+var apiBotSetIsReserve = /*#__PURE__*/function () {
+  var _ref27 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee27(id, isreserve) {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee27$(_context27) {
       while (1) switch (_context27.prev = _context27.next) {
         case 0:
-          setStateProp("saveBotRegionSetResponse", {
-            loading: true,
-            errors: []
+          _context27.next = 2;
+          return fetch("/bots/setisreserve", {
+            method: "PUT",
+            body: mapToFormData({
+              botId: id,
+              isReserve: isreserve
+            })
           });
-          _context27.next = 3;
-          return fetch("/bots/regionsettings", {
-            method: "POST",
-            body: mapToFormData(item)
-          });
-        case 3:
+        case 2:
           res = _context27.sent;
-          errors = [];
-          if (!res.ok) {
-            _context27.next = 11;
-            break;
+          if (res.ok) {
+            state.set(function (value) {
+              return state_objectSpread(state_objectSpread({}, value), {}, {
+                bots: value.bots.map(function (bot) {
+                  return bot.id === id ? state_objectSpread(state_objectSpread({}, bot), {}, {
+                    isReserve: isreserve
+                  }) : bot;
+                })
+              });
+            });
           }
-          toggleEditBotRegionSetModal(false);
-          _context27.next = 9;
-          return apiFetchBots();
-        case 9:
-          _context27.next = 18;
-          break;
-        case 11:
-          if (!(res.status === 500)) {
-            _context27.next = 15;
-            break;
-          }
-          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context27.next = 18;
-          break;
-        case 15:
-          _context27.next = 17;
-          return res.json();
-        case 17:
-          errors = _context27.sent.errors;
-        case 18:
-          setStateProp("saveBotRegionSetResponse", {
-            loading: false,
-            errors: errors
-          });
-          return _context27.abrupt("return", res.ok);
-        case 20:
+        case 4:
         case "end":
           return _context27.stop();
       }
     }, _callee27);
   }));
-  return function apiSaveBotRegionSettings(_x27) {
+  return function apiBotSetIsReserve(_x27, _x28) {
     return _ref27.apply(this, arguments);
   };
 }();
-var apiChangeItem = /*#__PURE__*/function () {
+var apiSaveBotRegionSettings = /*#__PURE__*/function () {
   var _ref28 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee28(item) {
-    var res;
+    var res, errors;
     return state_regeneratorRuntime().wrap(function _callee28$(_context28) {
       while (1) switch (_context28.prev = _context28.next) {
         case 0:
-          setItemsLoading(true);
-          toggleEditItemModal(false);
-          _context28.next = 4;
-          return fetch("/items/edit/".concat(item.id), {
+          setStateProp("saveBotRegionSetResponse", {
+            loading: true,
+            errors: []
+          });
+          _context28.next = 3;
+          return fetch("/bots/regionsettings", {
             method: "POST",
             body: mapToFormData(item)
           });
-        case 4:
+        case 3:
           res = _context28.sent;
+          errors = [];
           if (!res.ok) {
-            _context28.next = 10;
+            _context28.next = 11;
             break;
           }
-          _context28.next = 8;
-          return apiFetchItems();
-        case 8:
-          _context28.next = 11;
+          toggleEditBotRegionSetModal(false);
+          _context28.next = 9;
+          return apiFetchBots();
+        case 9:
+          _context28.next = 18;
           break;
-        case 10:
-          toggleEditItemModal(true);
         case 11:
-          setItemsLoading(false);
-        case 12:
+          if (!(res.status === 500)) {
+            _context28.next = 15;
+            break;
+          }
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
+          _context28.next = 18;
+          break;
+        case 15:
+          _context28.next = 17;
+          return res.json();
+        case 17:
+          errors = _context28.sent.errors;
+        case 18:
+          setStateProp("saveBotRegionSetResponse", {
+            loading: false,
+            errors: errors
+          });
+          return _context28.abrupt("return", res.ok);
+        case 20:
         case "end":
           return _context28.stop();
       }
     }, _callee28);
   }));
-  return function apiChangeItem(_x28) {
+  return function apiSaveBotRegionSettings(_x29) {
     return _ref28.apply(this, arguments);
   };
 }();
-var apiCreateItem = /*#__PURE__*/function () {
+var apiChangeItem = /*#__PURE__*/function () {
   var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(item) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee29$(_context29) {
@@ -28080,7 +28079,7 @@ var apiCreateItem = /*#__PURE__*/function () {
           setItemsLoading(true);
           toggleEditItemModal(false);
           _context29.next = 4;
-          return fetch("/items/add", {
+          return fetch("/items/edit/".concat(item.id), {
             method: "POST",
             body: mapToFormData(item)
           });
@@ -28105,8 +28104,46 @@ var apiCreateItem = /*#__PURE__*/function () {
       }
     }, _callee29);
   }));
-  return function apiCreateItem(_x29) {
+  return function apiChangeItem(_x30) {
     return _ref29.apply(this, arguments);
+  };
+}();
+var apiCreateItem = /*#__PURE__*/function () {
+  var _ref30 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee30(item) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee30$(_context30) {
+      while (1) switch (_context30.prev = _context30.next) {
+        case 0:
+          setItemsLoading(true);
+          toggleEditItemModal(false);
+          _context30.next = 4;
+          return fetch("/items/add", {
+            method: "POST",
+            body: mapToFormData(item)
+          });
+        case 4:
+          res = _context30.sent;
+          if (!res.ok) {
+            _context30.next = 10;
+            break;
+          }
+          _context30.next = 8;
+          return apiFetchItems();
+        case 8:
+          _context30.next = 11;
+          break;
+        case 10:
+          toggleEditItemModal(true);
+        case 11:
+          setItemsLoading(false);
+        case 12:
+        case "end":
+          return _context30.stop();
+      }
+    }, _callee30);
+  }));
+  return function apiCreateItem(_x31) {
+    return _ref30.apply(this, arguments);
   };
 }();
 var setItemsLoading = function setItemsLoading(isOn) {
@@ -28174,33 +28211,6 @@ var toggleViewStatusHistoryModal = function toggleViewStatusHistoryModal(isOpen)
   setStateProp("statusHistoryModalIsOpen", isOpen);
 };
 var toggleDigisellerEditModal = /*#__PURE__*/function () {
-  var _ref30 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee30(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee30$(_context30) {
-      while (1) switch (_context30.prev = _context30.next) {
-        case 0:
-          if (!(isOpen === true)) {
-            _context30.next = 3;
-            break;
-          }
-          _context30.next = 3;
-          return apiGetCurrentUser();
-        case 3:
-          state.set(function (value) {
-            return state_objectSpread(state_objectSpread({}, value), {}, {
-              digisellerEditModalIsOpen: isOpen
-            });
-          });
-        case 4:
-        case "end":
-          return _context30.stop();
-      }
-    }, _callee30);
-  }));
-  return function toggleDigisellerEditModal(_x30) {
-    return _ref30.apply(this, arguments);
-  };
-}();
-var toggleExchangeRatesModal = /*#__PURE__*/function () {
   var _ref31 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee31(isOpen) {
     return state_regeneratorRuntime().wrap(function _callee31$(_context31) {
       while (1) switch (_context31.prev = _context31.next) {
@@ -28210,6 +28220,33 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
             break;
           }
           _context31.next = 3;
+          return apiGetCurrentUser();
+        case 3:
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              digisellerEditModalIsOpen: isOpen
+            });
+          });
+        case 4:
+        case "end":
+          return _context31.stop();
+      }
+    }, _callee31);
+  }));
+  return function toggleDigisellerEditModal(_x32) {
+    return _ref31.apply(this, arguments);
+  };
+}();
+var toggleExchangeRatesModal = /*#__PURE__*/function () {
+  var _ref32 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee32(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee32$(_context32) {
+      while (1) switch (_context32.prev = _context32.next) {
+        case 0:
+          if (!(isOpen === true)) {
+            _context32.next = 3;
+            break;
+          }
+          _context32.next = 3;
           return apiGetExchageRates();
         case 3:
           state.set(function (value) {
@@ -28219,21 +28256,21 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
           });
         case 4:
         case "end":
-          return _context31.stop();
+          return _context32.stop();
       }
-    }, _callee31);
+    }, _callee32);
   }));
-  return function toggleExchangeRatesModal(_x31) {
-    return _ref31.apply(this, arguments);
+  return function toggleExchangeRatesModal(_x33) {
+    return _ref32.apply(this, arguments);
   };
 }();
 var toggleBotDetailsModal = function toggleBotDetailsModal(isOpen) {
   setStateProp("botDetailsModalIsOpen", isOpen);
 };
 var toggleChangePasswordModal = /*#__PURE__*/function () {
-  var _ref32 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee32(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee32$(_context32) {
-      while (1) switch (_context32.prev = _context32.next) {
+  var _ref33 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee33(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee33$(_context33) {
+      while (1) switch (_context33.prev = _context33.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28242,18 +28279,18 @@ var toggleChangePasswordModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context32.stop();
+          return _context33.stop();
       }
-    }, _callee32);
+    }, _callee33);
   }));
-  return function toggleChangePasswordModal(_x32) {
-    return _ref32.apply(this, arguments);
+  return function toggleChangePasswordModal(_x34) {
+    return _ref33.apply(this, arguments);
   };
 }();
 var toggleEditBotModal = /*#__PURE__*/function () {
-  var _ref33 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee33(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee33$(_context33) {
-      while (1) switch (_context33.prev = _context33.next) {
+  var _ref34 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee34(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee34$(_context34) {
+      while (1) switch (_context34.prev = _context34.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28262,18 +28299,18 @@ var toggleEditBotModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context33.stop();
+          return _context34.stop();
       }
-    }, _callee33);
+    }, _callee34);
   }));
-  return function toggleEditBotModal(_x33) {
-    return _ref33.apply(this, arguments);
+  return function toggleEditBotModal(_x35) {
+    return _ref34.apply(this, arguments);
   };
 }();
 var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
-  var _ref34 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee34(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee34$(_context34) {
-      while (1) switch (_context34.prev = _context34.next) {
+  var _ref35 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee35(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee35$(_context35) {
+      while (1) switch (_context35.prev = _context35.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28282,18 +28319,18 @@ var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context34.stop();
+          return _context35.stop();
       }
-    }, _callee34);
+    }, _callee35);
   }));
-  return function toggleEditBotRegionSetModal(_x34) {
-    return _ref34.apply(this, arguments);
+  return function toggleEditBotRegionSetModal(_x36) {
+    return _ref35.apply(this, arguments);
   };
 }();
 var toggleEditOrderModal = /*#__PURE__*/function () {
-  var _ref35 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee35(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee35$(_context35) {
-      while (1) switch (_context35.prev = _context35.next) {
+  var _ref36 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee36(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee36$(_context36) {
+      while (1) switch (_context36.prev = _context36.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28302,18 +28339,18 @@ var toggleEditOrderModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context35.stop();
+          return _context36.stop();
       }
-    }, _callee35);
+    }, _callee36);
   }));
-  return function toggleEditOrderModal(_x35) {
-    return _ref35.apply(this, arguments);
+  return function toggleEditOrderModal(_x37) {
+    return _ref36.apply(this, arguments);
   };
 }();
 var toggleFilterOrdersModal = /*#__PURE__*/function () {
-  var _ref36 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee36(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee36$(_context36) {
-      while (1) switch (_context36.prev = _context36.next) {
+  var _ref37 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee37(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee37$(_context37) {
+      while (1) switch (_context37.prev = _context37.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28322,18 +28359,18 @@ var toggleFilterOrdersModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context36.stop();
+          return _context37.stop();
       }
-    }, _callee36);
+    }, _callee37);
   }));
-  return function toggleFilterOrdersModal(_x36) {
-    return _ref36.apply(this, arguments);
+  return function toggleFilterOrdersModal(_x38) {
+    return _ref37.apply(this, arguments);
   };
 }();
 var toggleFilterProductsModal = /*#__PURE__*/function () {
-  var _ref37 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee37(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee37$(_context37) {
-      while (1) switch (_context37.prev = _context37.next) {
+  var _ref38 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee38(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee38$(_context38) {
+      while (1) switch (_context38.prev = _context38.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28342,18 +28379,18 @@ var toggleFilterProductsModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context37.stop();
+          return _context38.stop();
       }
-    }, _callee37);
+    }, _callee38);
   }));
-  return function toggleFilterProductsModal(_x37) {
-    return _ref37.apply(this, arguments);
+  return function toggleFilterProductsModal(_x39) {
+    return _ref38.apply(this, arguments);
   };
 }();
 var toggleEditItemModal = /*#__PURE__*/function () {
-  var _ref38 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee38(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee38$(_context38) {
-      while (1) switch (_context38.prev = _context38.next) {
+  var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
+      while (1) switch (_context39.prev = _context39.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28362,18 +28399,18 @@ var toggleEditItemModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context38.stop();
+          return _context39.stop();
       }
-    }, _callee38);
+    }, _callee39);
   }));
-  return function toggleEditItemModal(_x38) {
-    return _ref38.apply(this, arguments);
+  return function toggleEditItemModal(_x40) {
+    return _ref39.apply(this, arguments);
   };
 }();
 var toggleEditItemMainInfoModal = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
-  var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
-      while (1) switch (_context39.prev = _context39.next) {
+  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
+      while (1) switch (_context40.prev = _context40.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28382,18 +28419,18 @@ var toggleEditItemMainInfoModal = /*#__PURE__*/(/* unused pure expression or sup
           });
         case 1:
         case "end":
-          return _context39.stop();
+          return _context40.stop();
       }
-    }, _callee39);
+    }, _callee40);
   }));
-  return function toggleEditItemMainInfoModal(_x39) {
-    return _ref39.apply(this, arguments);
+  return function toggleEditItemMainInfoModal(_x41) {
+    return _ref40.apply(this, arguments);
   };
 }()));
 var toggleEditItemAdditionalInfoModal = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
-  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
-      while (1) switch (_context40.prev = _context40.next) {
+  var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
+      while (1) switch (_context41.prev = _context41.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28402,18 +28439,18 @@ var toggleEditItemAdditionalInfoModal = /*#__PURE__*/(/* unused pure expression 
           });
         case 1:
         case "end":
-          return _context40.stop();
+          return _context41.stop();
       }
-    }, _callee40);
+    }, _callee41);
   }));
-  return function toggleEditItemAdditionalInfoModal(_x40) {
-    return _ref40.apply(this, arguments);
+  return function toggleEditItemAdditionalInfoModal(_x42) {
+    return _ref41.apply(this, arguments);
   };
 }()));
 var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
-  var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
-      while (1) switch (_context41.prev = _context41.next) {
+  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
+      while (1) switch (_context42.prev = _context42.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28422,53 +28459,16 @@ var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context41.stop();
-      }
-    }, _callee41);
-  }));
-  return function toggleOrderCreationInfoModal(_x41) {
-    return _ref41.apply(this, arguments);
-  };
-}();
-var apiChangeItemBulk = /*#__PURE__*/function () {
-  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
-    var res;
-    return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
-      while (1) switch (_context42.prev = _context42.next) {
-        case 0:
-          setItemsLoading(true);
-          setStateProp("changeItemBulkResponse", {
-            loading: true
-          });
-          _context42.next = 4;
-          return fetch("/items/bulk/change", {
-            method: "POST",
-            body: mapToFormData({
-              SteamPercent: SteamPercent,
-              IncreaseDecreaseOperator: IncreaseDecreaseOperator,
-              IncreaseDecreasePercent: IncreaseDecreasePercent,
-              Ids: Ids
-            })
-          });
-        case 4:
-          res = _context42.sent;
-          setStateProp("changeItemBulkResponse", {
-            loading: false
-          });
-          _context42.next = 8;
-          return apiFetchItems();
-        case 8:
-        case "end":
           return _context42.stop();
       }
     }, _callee42);
   }));
-  return function apiChangeItemBulk(_x42, _x43, _x44, _x45) {
+  return function toggleOrderCreationInfoModal(_x43) {
     return _ref42.apply(this, arguments);
   };
 }();
-var apiChangePriceBasisBulk = /*#__PURE__*/function () {
-  var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43(SteamCurrencyId, Ids) {
+var apiChangeItemBulk = /*#__PURE__*/function () {
+  var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee43$(_context43) {
       while (1) switch (_context43.prev = _context43.next) {
@@ -28478,10 +28478,12 @@ var apiChangePriceBasisBulk = /*#__PURE__*/function () {
             loading: true
           });
           _context43.next = 4;
-          return fetch("/items/bulk/pricebasis", {
+          return fetch("/items/bulk/change", {
             method: "POST",
             body: mapToFormData({
-              SteamCurrencyId: SteamCurrencyId,
+              SteamPercent: SteamPercent,
+              IncreaseDecreaseOperator: IncreaseDecreaseOperator,
+              IncreaseDecreasePercent: IncreaseDecreasePercent,
               Ids: Ids
             })
           });
@@ -28498,94 +28500,100 @@ var apiChangePriceBasisBulk = /*#__PURE__*/function () {
       }
     }, _callee43);
   }));
-  return function apiChangePriceBasisBulk(_x46, _x47) {
+  return function apiChangeItemBulk(_x44, _x45, _x46, _x47) {
     return _ref43.apply(this, arguments);
   };
 }();
-var apiChangeDigisellerData = /*#__PURE__*/function () {
-  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(data) {
+var apiChangePriceBasisBulk = /*#__PURE__*/function () {
+  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(SteamCurrencyId, Ids) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee44$(_context44) {
       while (1) switch (_context44.prev = _context44.next) {
         case 0:
-          _context44.next = 2;
-          return fetch("/user/edit/digiseller", {
-            method: "POST",
-            body: mapToFormData(data)
+          setItemsLoading(true);
+          setStateProp("changeItemBulkResponse", {
+            loading: true
           });
-        case 2:
+          _context44.next = 4;
+          return fetch("/items/bulk/pricebasis", {
+            method: "POST",
+            body: mapToFormData({
+              SteamCurrencyId: SteamCurrencyId,
+              Ids: Ids
+            })
+          });
+        case 4:
           res = _context44.sent;
-        case 3:
+          setStateProp("changeItemBulkResponse", {
+            loading: false
+          });
+          _context44.next = 8;
+          return apiFetchItems();
+        case 8:
         case "end":
           return _context44.stop();
       }
     }, _callee44);
   }));
-  return function apiChangeDigisellerData(_x48) {
+  return function apiChangePriceBasisBulk(_x48, _x49) {
     return _ref44.apply(this, arguments);
   };
 }();
-var apiChangeUserPassword = /*#__PURE__*/function () {
+var apiChangeDigisellerData = /*#__PURE__*/function () {
   var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45(data) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
       while (1) switch (_context45.prev = _context45.next) {
         case 0:
           _context45.next = 2;
-          return fetch("/user/password", {
+          return fetch("/user/edit/digiseller", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 2:
           res = _context45.sent;
-          toggleChangePasswordModal(!res.ok);
-        case 4:
+        case 3:
         case "end":
           return _context45.stop();
       }
     }, _callee45);
   }));
-  return function apiChangeUserPassword(_x49) {
+  return function apiChangeDigisellerData(_x50) {
     return _ref45.apply(this, arguments);
   };
 }();
-var apiGetCurrentUser = /*#__PURE__*/function () {
-  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46() {
-    var res, data;
+var apiChangeUserPassword = /*#__PURE__*/function () {
+  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46(data) {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
       while (1) switch (_context46.prev = _context46.next) {
         case 0:
           _context46.next = 2;
-          return fetch("/user");
+          return fetch("/user/password", {
+            method: "POST",
+            body: mapToFormData(data)
+          });
         case 2:
           res = _context46.sent;
-          _context46.next = 5;
-          return res.json();
-        case 5:
-          data = _context46.sent;
-          state.set(function (value) {
-            return state_objectSpread(state_objectSpread({}, value), {}, {
-              user: data
-            });
-          });
-        case 7:
+          toggleChangePasswordModal(!res.ok);
+        case 4:
         case "end":
           return _context46.stop();
       }
     }, _callee46);
   }));
-  return function apiGetCurrentUser() {
+  return function apiChangeUserPassword(_x51) {
     return _ref46.apply(this, arguments);
   };
 }();
-var apiGetExchageRates = /*#__PURE__*/function () {
+var apiGetCurrentUser = /*#__PURE__*/function () {
   var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47() {
     var res, data;
     return state_regeneratorRuntime().wrap(function _callee47$(_context47) {
       while (1) switch (_context47.prev = _context47.next) {
         case 0:
           _context47.next = 2;
-          return fetch("/exchangerates/list");
+          return fetch("/user");
         case 2:
           res = _context47.sent;
           _context47.next = 5;
@@ -28594,7 +28602,7 @@ var apiGetExchageRates = /*#__PURE__*/function () {
           data = _context47.sent;
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
-              exchageRates: data
+              user: data
             });
           });
         case 7:
@@ -28603,14 +28611,43 @@ var apiGetExchageRates = /*#__PURE__*/function () {
       }
     }, _callee47);
   }));
-  return function apiGetExchageRates() {
+  return function apiGetCurrentUser() {
     return _ref47.apply(this, arguments);
   };
 }();
-var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
-  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48(data) {
+var apiGetExchageRates = /*#__PURE__*/function () {
+  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48() {
+    var res, data;
     return state_regeneratorRuntime().wrap(function _callee48$(_context48) {
       while (1) switch (_context48.prev = _context48.next) {
+        case 0:
+          _context48.next = 2;
+          return fetch("/exchangerates/list");
+        case 2:
+          res = _context48.sent;
+          _context48.next = 5;
+          return res.json();
+        case 5:
+          data = _context48.sent;
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              exchageRates: data
+            });
+          });
+        case 7:
+        case "end":
+          return _context48.stop();
+      }
+    }, _callee48);
+  }));
+  return function apiGetExchageRates() {
+    return _ref48.apply(this, arguments);
+  };
+}();
+var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
+  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(data) {
+    return state_regeneratorRuntime().wrap(function _callee49$(_context49) {
+      while (1) switch (_context49.prev = _context49.next) {
         case 0:
           //let res = await
           fetch("/exchangerates/update", {
@@ -28622,35 +28659,35 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
           toggleExchangeRatesModal(false);
         case 2:
         case "end":
-          return _context48.stop();
+          return _context49.stop();
       }
-    }, _callee48);
+    }, _callee49);
   }));
-  return function apiUpdateExchangeDataManual(_x50) {
-    return _ref48.apply(this, arguments);
+  return function apiUpdateExchangeDataManual(_x52) {
+    return _ref49.apply(this, arguments);
   };
 }();
 var apiGetCurrencies = /*#__PURE__*/function () {
-  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49() {
+  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50() {
     var currencies, res, data;
-    return state_regeneratorRuntime().wrap(function _callee49$(_context49) {
-      while (1) switch (_context49.prev = _context49.next) {
+    return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
+      while (1) switch (_context50.prev = _context50.next) {
         case 0:
           currencies = state.get().currencies;
           if (!(currencies && currencies.length > 0)) {
-            _context49.next = 3;
+            _context50.next = 3;
             break;
           }
-          return _context49.abrupt("return");
+          return _context50.abrupt("return");
         case 3:
-          _context49.next = 5;
+          _context50.next = 5;
           return fetch("/exchangerates/list");
         case 5:
-          res = _context49.sent;
-          _context49.next = 8;
+          res = _context50.sent;
+          _context50.next = 8;
           return res.json();
         case 8:
-          data = _context49.sent;
+          data = _context50.sent;
           currencies = data.currencies.map(function (c) {
             return {
               code: c.code,
@@ -28666,112 +28703,85 @@ var apiGetCurrencies = /*#__PURE__*/function () {
           });
         case 11:
         case "end":
-          return _context49.stop();
-      }
-    }, _callee49);
-  }));
-  return function apiGetCurrencies() {
-    return _ref49.apply(this, arguments);
-  };
-}();
-var apiGetItem = /*#__PURE__*/function () {
-  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50(id) {
-    var res, data;
-    return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
-      while (1) switch (_context50.prev = _context50.next) {
-        case 0:
-          _context50.next = 2;
-          return fetch("/items/".concat(id, "/info"));
-        case 2:
-          res = _context50.sent;
-          _context50.next = 5;
-          return res.json();
-        case 5:
-          data = _context50.sent;
-          return _context50.abrupt("return", data);
-        case 7:
-        case "end":
           return _context50.stop();
       }
     }, _callee50);
   }));
-  return function apiGetItem(_x51) {
+  return function apiGetCurrencies() {
     return _ref50.apply(this, arguments);
   };
 }();
-var apiGetSteamRegions = /*#__PURE__*/function () {
-  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51() {
-    var steamRegions, res, data;
+var apiGetItem = /*#__PURE__*/function () {
+  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(id) {
+    var res, data;
     return state_regeneratorRuntime().wrap(function _callee51$(_context51) {
       while (1) switch (_context51.prev = _context51.next) {
         case 0:
-          steamRegions = state.get().steamRegions;
-          if (!(steamRegions && steamRegions.length > 0)) {
-            _context51.next = 3;
-            break;
-          }
-          return _context51.abrupt("return");
-        case 3:
-          _context51.next = 5;
-          return fetch("/dict/regions");
-        case 5:
+          _context51.next = 2;
+          return fetch("/items/".concat(id, "/info"));
+        case 2:
           res = _context51.sent;
-          _context51.next = 8;
+          _context51.next = 5;
           return res.json();
-        case 8:
+        case 5:
           data = _context51.sent;
-          steamRegions = data;
-          setStateProp("steamRegions", steamRegions);
-        case 11:
+          return _context51.abrupt("return", data);
+        case 7:
         case "end":
           return _context51.stop();
       }
     }, _callee51);
   }));
-  return function apiGetSteamRegions() {
+  return function apiGetItem(_x53) {
     return _ref51.apply(this, arguments);
   };
 }();
-var apiSetGameSessionStatus = /*#__PURE__*/function () {
-  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(gSesId, statusId) {
-    var _state$get3, gameSessionsFilter, res;
+var apiGetSteamRegions = /*#__PURE__*/function () {
+  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52() {
+    var steamRegions, res, data;
     return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
       while (1) switch (_context52.prev = _context52.next) {
         case 0:
-          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
-          _context52.next = 3;
-          return fetch("/gamesessions/setstatus", {
-            method: "POST",
-            body: mapToFormData({
-              gameSessionId: gSesId,
-              statusId: statusId
-            })
-          });
+          steamRegions = state.get().steamRegions;
+          if (!(steamRegions && steamRegions.length > 0)) {
+            _context52.next = 3;
+            break;
+          }
+          return _context52.abrupt("return");
         case 3:
-          res = _context52.sent;
-          apiFetchGameSessions(gameSessionsFilter);
+          _context52.next = 5;
+          return fetch("/dict/regions");
         case 5:
+          res = _context52.sent;
+          _context52.next = 8;
+          return res.json();
+        case 8:
+          data = _context52.sent;
+          steamRegions = data;
+          setStateProp("steamRegions", steamRegions);
+        case 11:
         case "end":
           return _context52.stop();
       }
     }, _callee52);
   }));
-  return function apiSetGameSessionStatus(_x52, _x53) {
+  return function apiGetSteamRegions() {
     return _ref52.apply(this, arguments);
   };
 }();
-var apiResetGameSession = /*#__PURE__*/function () {
-  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(gSesId) {
-    var _state$get4, gameSessionsFilter, res;
+var apiSetGameSessionStatus = /*#__PURE__*/function () {
+  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(gSesId, statusId) {
+    var _state$get2, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
       while (1) switch (_context53.prev = _context53.next) {
         case 0:
-          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
+          _state$get2 = state.get(), gameSessionsFilter = _state$get2.gameSessionsFilter;
           _context53.next = 3;
-          return fetch("/gamesessions/reset", {
+          return fetch("/gamesessions/setstatus", {
             method: "POST",
             body: mapToFormData({
-              gameSessionId: gSesId
+              gameSessionId: gSesId,
+              statusId: statusId
             })
           });
         case 3:
@@ -28783,19 +28793,46 @@ var apiResetGameSession = /*#__PURE__*/function () {
       }
     }, _callee53);
   }));
-  return function apiResetGameSession(_x54) {
+  return function apiSetGameSessionStatus(_x54, _x55) {
     return _ref53.apply(this, arguments);
   };
 }();
-var apiAddCommentGameSession = /*#__PURE__*/function () {
-  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(gSesId, comment) {
-    var _state$get5, gameSessionsFilter, res;
+var apiResetGameSession = /*#__PURE__*/function () {
+  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(gSesId) {
+    var _state$get3, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
       while (1) switch (_context54.prev = _context54.next) {
         case 0:
-          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
+          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
+          _context54.next = 3;
+          return fetch("/gamesessions/reset", {
+            method: "POST",
+            body: mapToFormData({
+              gameSessionId: gSesId
+            })
+          });
+        case 3:
+          res = _context54.sent;
+          apiFetchGameSessions(gameSessionsFilter);
+        case 5:
+        case "end":
+          return _context54.stop();
+      }
+    }, _callee54);
+  }));
+  return function apiResetGameSession(_x56) {
+    return _ref54.apply(this, arguments);
+  };
+}();
+var apiAddCommentGameSession = /*#__PURE__*/function () {
+  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(gSesId, comment) {
+    var _state$get4, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
+      while (1) switch (_context55.prev = _context55.next) {
+        case 0:
+          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
           toggleAddGameSesCommentModal(false);
-          _context54.next = 4;
+          _context55.next = 4;
           return fetch("/gamesessions/comment", {
             method: "POST",
             body: mapToFormData({
@@ -28804,117 +28841,117 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context54.sent;
+          res = _context55.sent;
           apiFetchGameSessions(gameSessionsFilter);
-        case 6:
-        case "end":
-          return _context54.stop();
-      }
-    }, _callee54);
-  }));
-  return function apiAddCommentGameSession(_x55, _x56) {
-    return _ref54.apply(this, arguments);
-  };
-}();
-var updateGameSessionsFilter = /*#__PURE__*/function () {
-  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(newData) {
-    var _state$get6, gameSessionsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
-      while (1) switch (_context55.prev = _context55.next) {
-        case 0:
-          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("gameSessionsFilter", newFilter);
-          _context55.next = 6;
-          return apiFetchGameSessions(newFilter);
         case 6:
         case "end":
           return _context55.stop();
       }
     }, _callee55);
   }));
-  return function updateGameSessionsFilter(_x57) {
+  return function apiAddCommentGameSession(_x57, _x58) {
     return _ref55.apply(this, arguments);
   };
 }();
-var updateProductsFilter = /*#__PURE__*/function () {
+var updateGameSessionsFilter = /*#__PURE__*/function () {
   var _ref56 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(newData) {
-    var _state$get7, productsFilter, newFilter;
+    var _state$get5, gameSessionsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee56$(_context56) {
       while (1) switch (_context56.prev = _context56.next) {
         case 0:
-          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
           console.log("new f", newFilter);
-          setStateProp("productsFilter", newFilter);
+          setStateProp("gameSessionsFilter", newFilter);
           _context56.next = 6;
-          return apiFetchItems(newFilter);
+          return apiFetchGameSessions(newFilter);
         case 6:
         case "end":
           return _context56.stop();
       }
     }, _callee56);
   }));
-  return function updateProductsFilter(_x58) {
+  return function updateGameSessionsFilter(_x59) {
     return _ref56.apply(this, arguments);
   };
 }();
-var apiAddGameSession = /*#__PURE__*/function () {
-  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(data) {
-    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+var updateProductsFilter = /*#__PURE__*/function () {
+  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(newData) {
+    var _state$get6, productsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
       while (1) switch (_context57.prev = _context57.next) {
+        case 0:
+          _state$get6 = state.get(), productsFilter = _state$get6.productsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("productsFilter", newFilter);
+          _context57.next = 6;
+          return apiFetchItems(newFilter);
+        case 6:
+        case "end":
+          return _context57.stop();
+      }
+    }, _callee57);
+  }));
+  return function updateProductsFilter(_x60) {
+    return _ref57.apply(this, arguments);
+  };
+}();
+var apiAddGameSession = /*#__PURE__*/function () {
+  var _ref58 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee58(data) {
+    var res, errors, _state$get7, gameSessionsFilter, newUniqueCodes;
+    return state_regeneratorRuntime().wrap(function _callee58$(_context58) {
+      while (1) switch (_context58.prev = _context58.next) {
         case 0:
           setStateProp("editOrderResponse", {
             loading: true,
             errors: []
           });
-          _context57.next = 3;
+          _context58.next = 3;
           return fetch("/gamesession", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 3:
-          res = _context57.sent;
+          res = _context58.sent;
           errors = [];
           if (!res.ok) {
-            _context57.next = 12;
+            _context58.next = 12;
             break;
           }
-          _state$get8 = state.get(), gameSessionsFilter = _state$get8.gameSessionsFilter;
-          _context57.next = 9;
+          _state$get7 = state.get(), gameSessionsFilter = _state$get7.gameSessionsFilter;
+          _context58.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
           toggleEditOrderModal(false);
-          _context57.next = 19;
+          _context58.next = 19;
           break;
         case 12:
           if (!(res.status === 500)) {
-            _context57.next = 16;
+            _context58.next = 16;
             break;
           }
           errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context57.next = 19;
+          _context58.next = 19;
           break;
         case 16:
-          _context57.next = 18;
+          _context58.next = 18;
           return res.json();
         case 18:
-          errors = _context57.sent.errors;
+          errors = _context58.sent.errors;
         case 19:
           setStateProp("editOrderResponse", {
             loading: false,
             errors: errors
           });
           if (!res.ok) {
-            _context57.next = 27;
+            _context58.next = 27;
             break;
           }
-          _context57.next = 23;
+          _context58.next = 23;
           return res.json();
         case 23:
-          newUniqueCodes = _context57.sent;
+          newUniqueCodes = _context58.sent;
           console.log(newUniqueCodes);
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28924,84 +28961,84 @@ var apiAddGameSession = /*#__PURE__*/function () {
           toggleOrderCreationInfoModal(true);
         case 27:
         case "end":
-          return _context57.stop();
-      }
-    }, _callee57);
-  }));
-  return function apiAddGameSession(_x59) {
-    return _ref57.apply(this, arguments);
-  };
-}();
-var apiFetchItemInfoTemplates = /*#__PURE__*/function () {
-  var _ref58 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee58(userId) {
-    var result, json;
-    return state_regeneratorRuntime().wrap(function _callee58$(_context58) {
-      while (1) switch (_context58.prev = _context58.next) {
-        case 0:
-          setItemInfoTemplatesLoading(true);
-          _context58.next = 3;
-          return fetch("/iteminfotemplate?userId=".concat(userId));
-        case 3:
-          result = _context58.sent;
-          if (!result.ok) {
-            _context58.next = 9;
-            break;
-          }
-          _context58.next = 7;
-          return result.json();
-        case 7:
-          json = _context58.sent;
-          setItemInfoTemplates(json);
-        case 9:
-          setItemInfoTemplatesLoading(false);
-        case 10:
-        case "end":
           return _context58.stop();
       }
     }, _callee58);
   }));
-  return function apiFetchItemInfoTemplates(_x60) {
+  return function apiAddGameSession(_x61) {
     return _ref58.apply(this, arguments);
   };
 }();
-var apiFetchItemInfoTemplateValues = /*#__PURE__*/function () {
-  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(itemInfoTemplateId) {
-    var result;
+var apiFetchItemInfoTemplates = /*#__PURE__*/function () {
+  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(userId) {
+    var result, json;
     return state_regeneratorRuntime().wrap(function _callee59$(_context59) {
       while (1) switch (_context59.prev = _context59.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           _context59.next = 3;
-          return fetch("/iteminfotemplatevalue/".concat(itemInfoTemplateId));
+          return fetch("/iteminfotemplate?userId=".concat(userId));
         case 3:
           result = _context59.sent;
           if (!result.ok) {
             _context59.next = 9;
             break;
           }
-          setItemInfoTemplatesLoading(false);
-          _context59.next = 8;
+          _context59.next = 7;
           return result.json();
-        case 8:
-          return _context59.abrupt("return", _context59.sent);
+        case 7:
+          json = _context59.sent;
+          setItemInfoTemplates(json);
         case 9:
           setItemInfoTemplatesLoading(false);
-          return _context59.abrupt("return", null);
-        case 11:
+        case 10:
         case "end":
           return _context59.stop();
       }
     }, _callee59);
   }));
-  return function apiFetchItemInfoTemplateValues(_x61) {
+  return function apiFetchItemInfoTemplates(_x62) {
     return _ref59.apply(this, arguments);
   };
 }();
-var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
-  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(itemInfoTemplateValues) {
-    var headers, options, res;
+var apiFetchItemInfoTemplateValues = /*#__PURE__*/function () {
+  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(itemInfoTemplateId) {
+    var result;
     return state_regeneratorRuntime().wrap(function _callee60$(_context60) {
       while (1) switch (_context60.prev = _context60.next) {
+        case 0:
+          setItemInfoTemplatesLoading(true);
+          _context60.next = 3;
+          return fetch("/iteminfotemplatevalue/".concat(itemInfoTemplateId));
+        case 3:
+          result = _context60.sent;
+          if (!result.ok) {
+            _context60.next = 9;
+            break;
+          }
+          setItemInfoTemplatesLoading(false);
+          _context60.next = 8;
+          return result.json();
+        case 8:
+          return _context60.abrupt("return", _context60.sent);
+        case 9:
+          setItemInfoTemplatesLoading(false);
+          return _context60.abrupt("return", null);
+        case 11:
+        case "end":
+          return _context60.stop();
+      }
+    }, _callee60);
+  }));
+  return function apiFetchItemInfoTemplateValues(_x63) {
+    return _ref60.apply(this, arguments);
+  };
+}();
+var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
+  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(itemInfoTemplateValues) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee61$(_context61) {
+      while (1) switch (_context61.prev = _context61.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           headers = new Headers();
@@ -29012,65 +29049,65 @@ var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(itemInfoTemplateValues)
           };
-          _context60.next = 7;
+          _context61.next = 7;
           return fetch("/iteminfotemplate", options);
         case 7:
-          res = _context60.sent;
+          res = _context61.sent;
           if (!res.ok) {
-            _context60.next = 11;
+            _context61.next = 11;
             break;
           }
-          _context60.next = 11;
+          _context61.next = 11;
           return apiFetchItemInfoTemplates(0);
         case 11:
           setItemInfoTemplatesLoading(false);
         case 12:
         case "end":
-          return _context60.stop();
+          return _context61.stop();
       }
-    }, _callee60);
+    }, _callee61);
   }));
-  return function apiCreateItemInfoTemplate(_x62) {
-    return _ref60.apply(this, arguments);
+  return function apiCreateItemInfoTemplate(_x64) {
+    return _ref61.apply(this, arguments);
   };
 }();
 var apiDeleteItemInfoTemplate = /*#__PURE__*/function () {
-  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(itemInfoTemplateId) {
+  var _ref62 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee62(itemInfoTemplateId) {
     var options, res;
-    return state_regeneratorRuntime().wrap(function _callee61$(_context61) {
-      while (1) switch (_context61.prev = _context61.next) {
+    return state_regeneratorRuntime().wrap(function _callee62$(_context62) {
+      while (1) switch (_context62.prev = _context62.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           options = {
             method: "DELETE"
           };
-          _context61.next = 4;
+          _context62.next = 4;
           return fetch("/iteminfotemplate/".concat(itemInfoTemplateId), options);
         case 4:
-          res = _context61.sent;
+          res = _context62.sent;
           if (!res.ok) {
-            _context61.next = 8;
+            _context62.next = 8;
             break;
           }
-          _context61.next = 8;
+          _context62.next = 8;
           return apiFetchItemInfoTemplates(0);
         case 8:
           setItemInfoTemplatesLoading(false);
         case 9:
         case "end":
-          return _context61.stop();
+          return _context62.stop();
       }
-    }, _callee61);
+    }, _callee62);
   }));
-  return function apiDeleteItemInfoTemplate(_x63) {
-    return _ref61.apply(this, arguments);
+  return function apiDeleteItemInfoTemplate(_x65) {
+    return _ref62.apply(this, arguments);
   };
 }();
 var apiUpdateItemInfoes = /*#__PURE__*/function () {
-  var _ref62 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee62(itemInfoesValues) {
+  var _ref63 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee63(itemInfoesValues) {
     var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee62$(_context62) {
-      while (1) switch (_context62.prev = _context62.next) {
+    return state_regeneratorRuntime().wrap(function _callee63$(_context63) {
+      while (1) switch (_context63.prev = _context63.next) {
         case 0:
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
@@ -29078,7 +29115,7 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
           setStateProp("changeItemBulkResponse", {
             loadingItemInfo: true
           });
-          _context62.prev = 4;
+          _context63.prev = 4;
           headers = new Headers();
           headers.append("Content-Type", "application/json");
           headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
@@ -29087,38 +29124,38 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(itemInfoesValues)
           };
-          _context62.next = 11;
+          _context63.next = 11;
           return fetch("/iteminfo", options);
         case 11:
-          res = _context62.sent;
+          res = _context63.sent;
           if (!res.ok) {
-            _context62.next = 15;
+            _context63.next = 15;
             break;
           }
-          _context62.next = 15;
+          _context63.next = 15;
           return apiFetchItems();
         case 15:
-          _context62.prev = 15;
+          _context63.prev = 15;
           setStateProp("changeItemBulkResponse", {
             loadingItemInfo: false
           });
           setItemsLoading(false);
-          return _context62.finish(15);
+          return _context63.finish(15);
         case 19:
         case "end":
-          return _context62.stop();
+          return _context63.stop();
       }
-    }, _callee62, null, [[4,, 15, 19]]);
+    }, _callee63, null, [[4,, 15, 19]]);
   }));
-  return function apiUpdateItemInfoes(_x64) {
-    return _ref62.apply(this, arguments);
+  return function apiUpdateItemInfoes(_x66) {
+    return _ref63.apply(this, arguments);
   };
 }();
 var apiTagTypeReplacementValues = /*#__PURE__*/function () {
-  var _ref63 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee63(data) {
+  var _ref64 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee64(data) {
     var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee63$(_context63) {
-      while (1) switch (_context63.prev = _context63.next) {
+    return state_regeneratorRuntime().wrap(function _callee64$(_context64) {
+      while (1) switch (_context64.prev = _context64.next) {
         case 0:
           headers = new Headers();
           headers.append("Content-Type", "application/json");
@@ -29128,66 +29165,35 @@ var apiTagTypeReplacementValues = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(data)
           };
-          _context63.next = 6;
+          _context64.next = 6;
           return fetch("/tagtypereplacementvalue", options);
         case 6:
-          res = _context63.sent;
-          if (!res.ok) {
-            _context63.next = 9;
-            break;
-          }
-          return _context63.abrupt("return", true);
-        case 9:
-          return _context63.abrupt("return", false);
-        case 10:
-        case "end":
-          return _context63.stop();
-      }
-    }, _callee63);
-  }));
-  return function apiTagTypeReplacementValues(_x65) {
-    return _ref63.apply(this, arguments);
-  };
-}();
-var apiFetchTagTypeReplacementValues = /*#__PURE__*/function () {
-  var _ref64 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee64() {
-    var res, json;
-    return state_regeneratorRuntime().wrap(function _callee64$(_context64) {
-      while (1) switch (_context64.prev = _context64.next) {
-        case 0:
-          _context64.next = 2;
-          return fetch("/tagtypereplacementvalue");
-        case 2:
           res = _context64.sent;
           if (!res.ok) {
-            _context64.next = 8;
+            _context64.next = 9;
             break;
           }
-          _context64.next = 6;
-          return res.json();
-        case 6:
-          json = _context64.sent;
-          return _context64.abrupt("return", json);
-        case 8:
-          return _context64.abrupt("return", null);
+          return _context64.abrupt("return", true);
         case 9:
+          return _context64.abrupt("return", false);
+        case 10:
         case "end":
           return _context64.stop();
       }
     }, _callee64);
   }));
-  return function apiFetchTagTypeReplacementValues() {
+  return function apiTagTypeReplacementValues(_x67) {
     return _ref64.apply(this, arguments);
   };
 }();
-var apiFetchMarketPlaces = /*#__PURE__*/function () {
+var apiFetchTagTypeReplacementValues = /*#__PURE__*/function () {
   var _ref65 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee65() {
     var res, json;
     return state_regeneratorRuntime().wrap(function _callee65$(_context65) {
       while (1) switch (_context65.prev = _context65.next) {
         case 0:
           _context65.next = 2;
-          return fetch("/marketplace");
+          return fetch("/tagtypereplacementvalue");
         case 2:
           res = _context65.sent;
           if (!res.ok) {
@@ -29207,18 +29213,18 @@ var apiFetchMarketPlaces = /*#__PURE__*/function () {
       }
     }, _callee65);
   }));
-  return function apiFetchMarketPlaces() {
+  return function apiFetchTagTypeReplacementValues() {
     return _ref65.apply(this, arguments);
   };
 }();
-var apiFetchLanguages = /*#__PURE__*/function () {
+var apiFetchMarketPlaces = /*#__PURE__*/function () {
   var _ref66 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee66() {
     var res, json;
     return state_regeneratorRuntime().wrap(function _callee66$(_context66) {
       while (1) switch (_context66.prev = _context66.next) {
         case 0:
           _context66.next = 2;
-          return fetch("/language");
+          return fetch("/marketplace");
         case 2:
           res = _context66.sent;
           if (!res.ok) {
@@ -29238,18 +29244,18 @@ var apiFetchLanguages = /*#__PURE__*/function () {
       }
     }, _callee66);
   }));
-  return function apiFetchLanguages() {
+  return function apiFetchMarketPlaces() {
     return _ref66.apply(this, arguments);
   };
 }();
-var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
+var apiFetchLanguages = /*#__PURE__*/function () {
   var _ref67 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee67() {
     var res, json;
     return state_regeneratorRuntime().wrap(function _callee67$(_context67) {
       while (1) switch (_context67.prev = _context67.next) {
         case 0:
           _context67.next = 2;
-          return fetch("/tagpromoreplacementvalue");
+          return fetch("/language");
         case 2:
           res = _context67.sent;
           if (!res.ok) {
@@ -29269,147 +29275,112 @@ var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
       }
     }, _callee67);
   }));
-  return function apiFetchTagPromoReplacementValues() {
+  return function apiFetchLanguages() {
     return _ref67.apply(this, arguments);
   };
 }();
-var apiTagPromoReplacementValues = /*#__PURE__*/function () {
-  var _ref68 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee68(data) {
-    var headers, options, res;
+var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref68 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee68() {
+    var res, json;
     return state_regeneratorRuntime().wrap(function _callee68$(_context68) {
       while (1) switch (_context68.prev = _context68.next) {
         case 0:
-          headers = new Headers();
-          headers.append("Content-Type", "application/json");
-          headers.append("Content-Length", JSON.stringify(data).length);
-          options = {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(data)
-          };
-          _context68.next = 6;
-          return fetch("/tagpromoreplacementvalue", options);
-        case 6:
+          _context68.next = 2;
+          return fetch("/tagpromoreplacementvalue");
+        case 2:
           res = _context68.sent;
           if (!res.ok) {
-            _context68.next = 9;
+            _context68.next = 8;
             break;
           }
-          return _context68.abrupt("return", true);
+          _context68.next = 6;
+          return res.json();
+        case 6:
+          json = _context68.sent;
+          return _context68.abrupt("return", json);
+        case 8:
+          return _context68.abrupt("return", null);
         case 9:
-          return _context68.abrupt("return", false);
-        case 10:
         case "end":
           return _context68.stop();
       }
     }, _callee68);
   }));
-  return function apiTagPromoReplacementValues(_x66) {
+  return function apiFetchTagPromoReplacementValues() {
     return _ref68.apply(this, arguments);
   };
 }();
-var apiFetchTagInfoAppsReplacementValues = /*#__PURE__*/function () {
-  var _ref69 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee69() {
-    var res, json;
+var apiTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref69 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee69(data) {
+    var headers, options, res;
     return state_regeneratorRuntime().wrap(function _callee69$(_context69) {
       while (1) switch (_context69.prev = _context69.next) {
         case 0:
-          _context69.next = 2;
-          return fetch("/taginfoappsreplacementvalue");
-        case 2:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context69.next = 6;
+          return fetch("/tagpromoreplacementvalue", options);
+        case 6:
           res = _context69.sent;
           if (!res.ok) {
-            _context69.next = 8;
+            _context69.next = 9;
             break;
           }
-          _context69.next = 6;
-          return res.json();
-        case 6:
-          json = _context69.sent;
-          return _context69.abrupt("return", json);
-        case 8:
-          return _context69.abrupt("return", null);
+          return _context69.abrupt("return", true);
         case 9:
+          return _context69.abrupt("return", false);
+        case 10:
         case "end":
           return _context69.stop();
       }
     }, _callee69);
   }));
-  return function apiFetchTagInfoAppsReplacementValues() {
+  return function apiTagPromoReplacementValues(_x68) {
     return _ref69.apply(this, arguments);
   };
 }();
-var apiTagInfoAppsReplacementValues = /*#__PURE__*/function () {
-  var _ref70 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee70(data) {
-    var headers, options, res;
+var apiFetchTagInfoAppsReplacementValues = /*#__PURE__*/function () {
+  var _ref70 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee70() {
+    var res, json;
     return state_regeneratorRuntime().wrap(function _callee70$(_context70) {
       while (1) switch (_context70.prev = _context70.next) {
         case 0:
-          headers = new Headers();
-          headers.append("Content-Type", "application/json");
-          headers.append("Content-Length", JSON.stringify(data).length);
-          options = {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(data)
-          };
-          _context70.next = 6;
-          return fetch("/taginfoappsreplacementvalue", options);
-        case 6:
+          _context70.next = 2;
+          return fetch("/taginfoappsreplacementvalue");
+        case 2:
           res = _context70.sent;
           if (!res.ok) {
-            _context70.next = 9;
+            _context70.next = 8;
             break;
           }
-          return _context70.abrupt("return", true);
+          _context70.next = 6;
+          return res.json();
+        case 6:
+          json = _context70.sent;
+          return _context70.abrupt("return", json);
+        case 8:
+          return _context70.abrupt("return", null);
         case 9:
-          return _context70.abrupt("return", false);
-        case 10:
         case "end":
           return _context70.stop();
       }
     }, _callee70);
   }));
-  return function apiTagInfoAppsReplacementValues(_x67) {
+  return function apiFetchTagInfoAppsReplacementValues() {
     return _ref70.apply(this, arguments);
   };
 }();
-var apiFetchTagInfoDlcReplacementValues = /*#__PURE__*/function () {
-  var _ref71 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee71() {
-    var res, json;
+var apiTagInfoAppsReplacementValues = /*#__PURE__*/function () {
+  var _ref71 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee71(data) {
+    var headers, options, res;
     return state_regeneratorRuntime().wrap(function _callee71$(_context71) {
       while (1) switch (_context71.prev = _context71.next) {
-        case 0:
-          _context71.next = 2;
-          return fetch("/taginfodlcreplacementvalue");
-        case 2:
-          res = _context71.sent;
-          if (!res.ok) {
-            _context71.next = 8;
-            break;
-          }
-          _context71.next = 6;
-          return res.json();
-        case 6:
-          json = _context71.sent;
-          return _context71.abrupt("return", json);
-        case 8:
-          return _context71.abrupt("return", null);
-        case 9:
-        case "end":
-          return _context71.stop();
-      }
-    }, _callee71);
-  }));
-  return function apiFetchTagInfoDlcReplacementValues() {
-    return _ref71.apply(this, arguments);
-  };
-}();
-var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
-  var _ref72 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee72(data) {
-    var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee72$(_context72) {
-      while (1) switch (_context72.prev = _context72.next) {
         case 0:
           headers = new Headers();
           headers.append("Content-Type", "application/json");
@@ -29419,32 +29390,98 @@ var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(data)
           };
-          _context72.next = 6;
-          return fetch("/taginfodlcreplacementvalue", options);
+          _context71.next = 6;
+          return fetch("/taginfoappsreplacementvalue", options);
         case 6:
-          res = _context72.sent;
+          res = _context71.sent;
           if (!res.ok) {
-            _context72.next = 9;
+            _context71.next = 9;
             break;
           }
-          return _context72.abrupt("return", true);
+          return _context71.abrupt("return", true);
         case 9:
-          return _context72.abrupt("return", false);
+          return _context71.abrupt("return", false);
         case 10:
+        case "end":
+          return _context71.stop();
+      }
+    }, _callee71);
+  }));
+  return function apiTagInfoAppsReplacementValues(_x69) {
+    return _ref71.apply(this, arguments);
+  };
+}();
+var apiFetchTagInfoDlcReplacementValues = /*#__PURE__*/function () {
+  var _ref72 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee72() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee72$(_context72) {
+      while (1) switch (_context72.prev = _context72.next) {
+        case 0:
+          _context72.next = 2;
+          return fetch("/taginfodlcreplacementvalue");
+        case 2:
+          res = _context72.sent;
+          if (!res.ok) {
+            _context72.next = 8;
+            break;
+          }
+          _context72.next = 6;
+          return res.json();
+        case 6:
+          json = _context72.sent;
+          return _context72.abrupt("return", json);
+        case 8:
+          return _context72.abrupt("return", null);
+        case 9:
         case "end":
           return _context72.stop();
       }
     }, _callee72);
   }));
-  return function apiTagInfoDlcReplacementValues(_x68) {
+  return function apiFetchTagInfoDlcReplacementValues() {
     return _ref72.apply(this, arguments);
   };
 }();
-var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
-  var _ref73 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee73() {
-    var headers, options, res, json;
+var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
+  var _ref73 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee73(data) {
+    var headers, options, res;
     return state_regeneratorRuntime().wrap(function _callee73$(_context73) {
       while (1) switch (_context73.prev = _context73.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context73.next = 6;
+          return fetch("/taginfodlcreplacementvalue", options);
+        case 6:
+          res = _context73.sent;
+          if (!res.ok) {
+            _context73.next = 9;
+            break;
+          }
+          return _context73.abrupt("return", true);
+        case 9:
+          return _context73.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context73.stop();
+      }
+    }, _callee73);
+  }));
+  return function apiTagInfoDlcReplacementValues(_x70) {
+    return _ref73.apply(this, arguments);
+  };
+}();
+var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
+  var _ref74 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee74() {
+    var headers, options, res, json;
+    return state_regeneratorRuntime().wrap(function _callee74$(_context74) {
+      while (1) switch (_context74.prev = _context74.next) {
         case 0:
           headers = new Headers();
           headers.append("Content-Type", "application/json");
@@ -29452,29 +29489,29 @@ var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
             method: "GET",
             headers: headers
           };
-          _context73.next = 5;
+          _context74.next = 5;
           return fetch("/iteminfo/jobstatistics", options);
         case 5:
-          res = _context73.sent;
+          res = _context74.sent;
           if (!res.ok) {
-            _context73.next = 11;
+            _context74.next = 11;
             break;
           }
-          _context73.next = 9;
+          _context74.next = 9;
           return res.json();
         case 9:
-          json = _context73.sent;
-          return _context73.abrupt("return", json);
+          json = _context74.sent;
+          return _context74.abrupt("return", json);
         case 11:
-          return _context73.abrupt("return", null);
+          return _context74.abrupt("return", null);
         case 12:
         case "end":
-          return _context73.stop();
+          return _context74.stop();
       }
-    }, _callee73);
+    }, _callee74);
   }));
   return function apiGetUpdateItemInfoJobStatistics() {
-    return _ref73.apply(this, arguments);
+    return _ref74.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -63672,7 +63709,7 @@ var HtmlTooltip = styles_styled(function (_ref2) {
 
 
 
-var bots = function bots() {
+var bots_bots = function bots() {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: bots_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
@@ -63684,7 +63721,7 @@ var bots = function bots() {
     })]
   });
 };
-/* harmony default export */ const admin_bots = (bots);
+/* harmony default export */ const admin_bots = (bots_bots);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/Table/TableContext.js
 
 
@@ -65027,6 +65064,8 @@ function bots_modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr
 
 
 
+
+
 var modalEdit_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
@@ -65048,20 +65087,43 @@ var modalEdit_FromItemText = function FromItemText(_ref) {
     })]
   });
 };
-var modalEdit_ModalEdit = function ModalEdit(_ref2) {
-  var isOpen = _ref2.isOpen,
+var modalEdit_FromItemSwitch = function FromItemSwitch(_ref2) {
+  var name = _ref2.name,
     value = _ref2.value,
-    onCancel = _ref2.onCancel,
-    onSave = _ref2.onSave,
-    response = _ref2.response,
-    resetResponse = _ref2.resetResponse;
+    onChange = _ref2.onChange;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: bots_modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: bots_modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      style: {
+        marginTop: "10px",
+        marginRight: "60px"
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
+        value: value,
+        onChange: onChange
+      })
+    })]
+  });
+};
+var modalEdit_ModalEdit = function ModalEdit(_ref3) {
+  var isOpen = _ref3.isOpen,
+    value = _ref3.value,
+    onCancel = _ref3.onCancel,
+    onSave = _ref3.onSave,
+    response = _ref3.response,
+    resetResponse = _ref3.resetResponse,
+    isReserve = _ref3.isReserve;
   var initialValue = {
     id: null,
     userName: null,
     password: null,
     proxy: null,
     maFile: null,
-    gameSendLimit: null
+    gameSendLimit: null,
+    isReserve: null
   };
   var _useState = (0,react.useState)(initialValue),
     _useState2 = bots_modalEdit_slicedToArray(_useState, 2),
@@ -65081,7 +65143,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
     };
   };
   var fileRef = react.useRef();
-  var modalHeight = item.id ? 732 : 599;
+  var modalHeight = item.id ? 835 : 599;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: item.id ? 'Редактировать бота' : 'Добавить бота',
@@ -65111,6 +65173,13 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
             onChange: handleChange('gameSendLimitAddParam'),
             value: item.gameSendLimitAddParam,
             cymbol: '$'
+          }), item.id && /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemSwitch, {
+            name: 'Запасной бот:',
+            onChange: function onChange(val) {
+              apiBotSetIsReserve(item.id, val);
+              handleChange('isReserve');
+            },
+            value: item.isReserve
           })]
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
