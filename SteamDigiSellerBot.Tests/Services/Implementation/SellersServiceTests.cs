@@ -28,48 +28,40 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
             _userManagerMock = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
             _sellerService = new SellersService(_sellerRepositoryMock.Object, _userManagerMock.Object);
 
-            var userCreateMock = _userManagerMock
-                .Setup(manager => manager.CreateAsync(It.IsAny<User>()))
+            _userManagerMock.Setup(manager => manager.CreateAsync(It.IsAny<User>()))
                 .ReturnsAsync(IdentityResult.Success);
             
-            var passwordSetMock = _userManagerMock
-                .Setup(manager => manager.AddPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
+            _userManagerMock.Setup(manager => manager.AddPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var sellerCreateMock = _sellerRepositoryMock
-                .Setup(repo => repo.AddAsync(It.IsAny<Seller>(), CancellationToken.None));
+            _userManagerMock.Setup(manager => manager.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
 
-            var userGetMock = _userManagerMock
-                .Setup(manager => manager.FindByIdAsync(It.IsAny<string>()))
+            _userManagerMock.Setup(manager => manager.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(new User(){});
+            
+            _userManagerMock.Setup(manager => manager.UpdateAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
 
-            var sellerListMock = _sellerRepositoryMock
-                .Setup(repo => repo.ListAsync(CancellationToken.None))
+            _userManagerMock.Setup(manager => manager.RemovePasswordAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _userManagerMock.Setup(manager => manager.DeleteAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            _sellerRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Seller>(), CancellationToken.None));
+
+            _sellerRepositoryMock.Setup(repo => repo.ListAsync(CancellationToken.None))
                 .ReturnsAsync(new List<Seller>());
 
-            var sellerGetMock = _sellerRepositoryMock
-                .Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
+            _sellerRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(new Seller(){
                     Permissions = new SellerPermissions()
                 });
-            
-            var userUpdateMock = _userManagerMock
-                .Setup(manager => manager.UpdateAsync(It.IsAny<User>()))
-                .ReturnsAsync(IdentityResult.Success);
 
-            var passwordRemoveSetMock = _userManagerMock
-                .Setup(manager => manager.RemovePasswordAsync(It.IsAny<User>()))
-                .ReturnsAsync(IdentityResult.Success);
+            _sellerRepositoryMock.Setup(repo => repo.Updatesync(It.IsAny<Seller>(), CancellationToken.None));
 
-            var sellerUpdateMock = _sellerRepositoryMock
-                .Setup(repo => repo.Updatesync(It.IsAny<Seller>(), CancellationToken.None));
-
-            var userDeleteMock = _userManagerMock
-                .Setup(manager => manager.DeleteAsync(It.IsAny<User>()))
-                .ReturnsAsync(IdentityResult.Success);
-
-            var sellerUDeleteMock = _sellerRepositoryMock
-                .Setup(repo => repo.DeleteAsync(It.IsAny<Seller>(), CancellationToken.None));
+            _sellerRepositoryMock.Setup(repo => repo.DeleteAsync(It.IsAny<Seller>(), CancellationToken.None));
         }
 
         [Test]
@@ -101,6 +93,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
 
             _userManagerMock.Verify(manager => manager.CreateAsync(It.IsAny<User>()),Times.Once);
             _userManagerMock.Verify(manager => manager.AddPasswordAsync(It.IsAny<User>(), It.IsAny<string>()),Times.Once);
+            _userManagerMock.Verify(manager => manager.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Once);
             _sellerRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Seller>(), CancellationToken.None), Times.Once);
             _sellerRepositoryMock.Verify(repo => repo.GetByIdAsync(It.IsAny<int>()), Times.Once);
             _userManagerMock.Verify(manager => manager.FindByIdAsync(It.IsAny<string>()), Times.Once);

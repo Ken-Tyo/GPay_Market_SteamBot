@@ -13,10 +13,14 @@ namespace SteamDigiSellerBot.Services.Implementation
 {
     public class SellersService: ISellersService
     {
+        private const string SellerRoleName = "Seller";
         private readonly ISellerRepository _sellerRepository;
         private readonly UserManager<User> _userManager;
 
-        public SellersService(ISellerRepository sellerRepository, UserManager<User> userManager)
+        public SellersService(
+            ISellerRepository sellerRepository, 
+            UserManager<User> userManager
+            )
         {
             _sellerRepository = sellerRepository;
             _userManager = userManager;
@@ -62,6 +66,13 @@ namespace SteamDigiSellerBot.Services.Implementation
             {
                 await _userManager.DeleteAsync(user);
                 throw new ArgumentException(identityPasswordResult.Errors.First().Description);
+            }
+
+            var identityAddToRoleResult = await _userManager.AddToRoleAsync(user, SellerRoleName);
+            if (!identityAddToRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+                throw new ArgumentException(identityAddToRoleResult.Errors.First().Description);
             }
 
             var seller = new Seller(){
