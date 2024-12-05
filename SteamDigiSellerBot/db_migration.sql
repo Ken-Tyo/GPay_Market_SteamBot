@@ -452,7 +452,7 @@ comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество �
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
 
 24.11 Задача #70 - GiftBan
-ALTER TABLE "Bot" add "RemainingSumToGift" numeric null;
+ALTER TABLE "Bots" add "RemainingSumToGift" numeric null;
 23.11
 alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
 INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "Description") VALUES (49, 23, 'Ошибка (Нет игры)', '#E13F29', NULL);
