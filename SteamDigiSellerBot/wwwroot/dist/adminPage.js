@@ -26607,6 +26607,9 @@ var listCheckBox = function listCheckBox(_ref) {
   }, [value]);
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
+    style: {
+      userSelect: 'none'
+    },
     onClick: function onClick(event) {
       var newVal = !checked;
       setChecked(newVal);
@@ -46379,6 +46382,9 @@ var products = function products() {
   };
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
+    style: {
+      userSelect: 'none'
+    },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(sortedItems),
