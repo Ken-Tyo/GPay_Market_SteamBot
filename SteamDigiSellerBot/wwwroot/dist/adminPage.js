@@ -26010,6 +26010,7 @@ var map = {
 	"./CO.svg": 8582,
 	"./EU.svg": 6850,
 	"./GB.svg": 2231,
+	"./HK.svg": 4971,
 	"./IL.svg": 1559,
 	"./IN.svg": 4981,
 	"./JP.svg": 8510,
@@ -26019,6 +26020,7 @@ var map = {
 	"./NZ.svg": 280,
 	"./RU.svg": 2763,
 	"./SAsia$.svg": 879,
+	"./SG.svg": 6238,
 	"./TR$.svg": 2862,
 	"./UA.svg": 1710,
 	"./US.svg": 2172,
@@ -26121,6 +26123,14 @@ module.exports = __webpack_require__.p + "4a547390d28fc3f487b4.svg";
 
 /***/ }),
 
+/***/ 4971:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "5834aa6cd5f8c71551b6.svg";
+
+/***/ }),
+
 /***/ 1559:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -26190,6 +26200,14 @@ module.exports = __webpack_require__.p + "69cf005a5dd815b9bf27.svg";
 
 "use strict";
 module.exports = __webpack_require__.p + "f69431faf158d3201f0e.svg";
+
+/***/ }),
+
+/***/ 6238:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "ffcd6d10337892efee00.svg";
 
 /***/ }),
 
@@ -26481,10 +26499,12 @@ __webpack_require__.d(state_namespaceObject, {
   Fj: () => (apiAddCommentGameSession),
   aU: () => (apiAddGameSession),
   he: () => (apiBotSetIsOn),
+  OY: () => (apiBotSetIsReserve),
   To: () => (apiBulkDeleteItem),
   tr: () => (apiChangeDigisellerData),
   CG: () => (apiChangeItem),
   sD: () => (apiChangeItemBulk),
+  aF: () => (apiChangePriceBasisBulk),
   VI: () => (apiChangeUserPassword),
   MZ: () => (apiCreateItem),
   w_: () => (apiCreateItemInfoTemplate),
@@ -26498,15 +26518,26 @@ __webpack_require__.d(state_namespaceObject, {
   ZW: () => (apiFetchGameSessionsWithCurrentFilter),
   av: () => (apiFetchItemInfoTemplateValues),
   PK: () => (apiFetchItems),
+  iI: () => (apiFetchLanguages),
+  BI: () => (apiFetchMarketPlaces),
   hz: () => (apiFetchProxies),
+  nK: () => (apiFetchTagInfoAppsReplacementValues),
+  Qo: () => (apiFetchTagInfoDlcReplacementValues),
+  K0: () => (apiFetchTagPromoReplacementValues),
+  rE: () => (apiFetchTagTypeReplacementValues),
   QE: () => (apiGetCurrencies),
   oq: () => (apiGetItem),
   wL: () => (apiGetSteamRegions),
+  nt: () => (apiGetUpdateItemInfoJobStatistics),
   bh: () => (apiLoadNewProxy),
   aS: () => (apiResetGameSession),
   wE: () => (apiSaveBotRegionSettings),
   T2: () => (apiSetGameSessionStatus),
   ib: () => (apiSetItemActiveStatus),
+  zD: () => (apiTagInfoAppsReplacementValues),
+  C: () => (apiTagInfoDlcReplacementValues),
+  iH: () => (apiTagPromoReplacementValues),
+  xW: () => (apiTagTypeReplacementValues),
   DP: () => (apiUpdateExchangeDataManual),
   $H: () => (apiUpdateItemInfoes),
   My: () => (initAdmin),
@@ -26521,6 +26552,7 @@ __webpack_require__.d(state_namespaceObject, {
   R8: () => (toggleAddGameSesCommentModal),
   vV: () => (toggleBotDetailsModal),
   f4: () => (toggleBulkEditPercentModal),
+  DN: () => (toggleBulkEditPriceBasisModal),
   J0: () => (toggleChangePasswordModal),
   wA: () => (toggleDigisellerEditModal),
   $s: () => (toggleEditBotModal),
@@ -26565,7 +26597,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var listCheckBox = function listCheckBox(_ref) {
   var value = _ref.value,
-    _onClick = _ref.onClick;
+    onCheckedChange = _ref.onCheckedChange;
   var _useState = (0,react.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     checked = _useState2[0],
@@ -26575,10 +26607,13 @@ var listCheckBox = function listCheckBox(_ref) {
   }, [value]);
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
-    onClick: function onClick() {
+    style: {
+      userSelect: 'none'
+    },
+    onClick: function onClick(event) {
       var newVal = !checked;
       setChecked(newVal);
-      if (_onClick) _onClick(newVal);
+      if (onCheckedChange) onCheckedChange(newVal, event.shiftKey);
     },
     children: checked && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: styles.checked
@@ -27068,6 +27103,7 @@ var state = es_entity({
   itemsMode: common_itemsMode[1],
   itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
+  bulkEditPriceBasisModalIsOpen: false,
   changeItemBulkResponse: {
     loading: false,
     loadingItemInfo: false
@@ -27163,7 +27199,7 @@ var initAdmin = /*#__PURE__*/function () {
 }();
 var initBotsPage = /*#__PURE__*/function () {
   var _ref3 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee3() {
-    var params, botId, _state$get2, bots, bot;
+    var params, botId, bot;
     return state_regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -27177,22 +27213,21 @@ var initBotsPage = /*#__PURE__*/function () {
           console.log("params", params);
           botId = Number(params.id || 0);
           if (!botId) {
-            _context3.next = 14;
+            _context3.next = 13;
             break;
           }
-          _state$get2 = state.get(), bots = _state$get2.bots;
           bot = bots.find(function (b) {
             return b.id === botId;
           }); //console.log(botId, bots, bot);
           if (!bot) {
-            _context3.next = 14;
+            _context3.next = 13;
             break;
           }
-          _context3.next = 13;
+          _context3.next = 12;
           return setSelectedBot(bot);
-        case 13:
+        case 12:
           toggleBotDetailsModal(true);
-        case 14:
+        case 13:
         case "end":
           return _context3.stop();
       }
@@ -27944,102 +27979,101 @@ var apiBotSetIsOn = /*#__PURE__*/function () {
     return _ref26.apply(this, arguments);
   };
 }();
-var apiSaveBotRegionSettings = /*#__PURE__*/function () {
-  var _ref27 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee27(item) {
-    var res, errors;
+var apiBotSetIsReserve = /*#__PURE__*/function () {
+  var _ref27 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee27(id, isreserve) {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee27$(_context27) {
       while (1) switch (_context27.prev = _context27.next) {
         case 0:
-          setStateProp("saveBotRegionSetResponse", {
-            loading: true,
-            errors: []
+          _context27.next = 2;
+          return fetch("/bots/setisreserve", {
+            method: "PUT",
+            body: mapToFormData({
+              botId: id,
+              isReserve: isreserve
+            })
           });
-          _context27.next = 3;
-          return fetch("/bots/regionsettings", {
-            method: "POST",
-            body: mapToFormData(item)
-          });
-        case 3:
+        case 2:
           res = _context27.sent;
-          errors = [];
-          if (!res.ok) {
-            _context27.next = 11;
-            break;
+          if (res.ok) {
+            state.set(function (value) {
+              return state_objectSpread(state_objectSpread({}, value), {}, {
+                bots: value.bots.map(function (bot) {
+                  return bot.id === id ? state_objectSpread(state_objectSpread({}, bot), {}, {
+                    isReserve: isreserve
+                  }) : bot;
+                })
+              });
+            });
           }
-          toggleEditBotRegionSetModal(false);
-          _context27.next = 9;
-          return apiFetchBots();
-        case 9:
-          _context27.next = 18;
-          break;
-        case 11:
-          if (!(res.status === 500)) {
-            _context27.next = 15;
-            break;
-          }
-          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context27.next = 18;
-          break;
-        case 15:
-          _context27.next = 17;
-          return res.json();
-        case 17:
-          errors = _context27.sent.errors;
-        case 18:
-          setStateProp("saveBotRegionSetResponse", {
-            loading: false,
-            errors: errors
-          });
-          return _context27.abrupt("return", res.ok);
-        case 20:
+        case 4:
         case "end":
           return _context27.stop();
       }
     }, _callee27);
   }));
-  return function apiSaveBotRegionSettings(_x27) {
+  return function apiBotSetIsReserve(_x27, _x28) {
     return _ref27.apply(this, arguments);
   };
 }();
-var apiChangeItem = /*#__PURE__*/function () {
+var apiSaveBotRegionSettings = /*#__PURE__*/function () {
   var _ref28 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee28(item) {
-    var res;
+    var res, errors;
     return state_regeneratorRuntime().wrap(function _callee28$(_context28) {
       while (1) switch (_context28.prev = _context28.next) {
         case 0:
-          setItemsLoading(true);
-          toggleEditItemModal(false);
-          _context28.next = 4;
-          return fetch("/items/edit/".concat(item.id), {
+          setStateProp("saveBotRegionSetResponse", {
+            loading: true,
+            errors: []
+          });
+          _context28.next = 3;
+          return fetch("/bots/regionsettings", {
             method: "POST",
             body: mapToFormData(item)
           });
-        case 4:
+        case 3:
           res = _context28.sent;
+          errors = [];
           if (!res.ok) {
-            _context28.next = 10;
+            _context28.next = 11;
             break;
           }
-          _context28.next = 8;
-          return apiFetchItems();
-        case 8:
-          _context28.next = 11;
+          toggleEditBotRegionSetModal(false);
+          _context28.next = 9;
+          return apiFetchBots();
+        case 9:
+          _context28.next = 18;
           break;
-        case 10:
-          toggleEditItemModal(true);
         case 11:
-          setItemsLoading(false);
-        case 12:
+          if (!(res.status === 500)) {
+            _context28.next = 15;
+            break;
+          }
+          errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
+          _context28.next = 18;
+          break;
+        case 15:
+          _context28.next = 17;
+          return res.json();
+        case 17:
+          errors = _context28.sent.errors;
+        case 18:
+          setStateProp("saveBotRegionSetResponse", {
+            loading: false,
+            errors: errors
+          });
+          return _context28.abrupt("return", res.ok);
+        case 20:
         case "end":
           return _context28.stop();
       }
     }, _callee28);
   }));
-  return function apiChangeItem(_x28) {
+  return function apiSaveBotRegionSettings(_x29) {
     return _ref28.apply(this, arguments);
   };
 }();
-var apiCreateItem = /*#__PURE__*/function () {
+var apiChangeItem = /*#__PURE__*/function () {
   var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(item) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee29$(_context29) {
@@ -28048,7 +28082,7 @@ var apiCreateItem = /*#__PURE__*/function () {
           setItemsLoading(true);
           toggleEditItemModal(false);
           _context29.next = 4;
-          return fetch("/items/add", {
+          return fetch("/items/edit/".concat(item.id), {
             method: "POST",
             body: mapToFormData(item)
           });
@@ -28073,8 +28107,46 @@ var apiCreateItem = /*#__PURE__*/function () {
       }
     }, _callee29);
   }));
-  return function apiCreateItem(_x29) {
+  return function apiChangeItem(_x30) {
     return _ref29.apply(this, arguments);
+  };
+}();
+var apiCreateItem = /*#__PURE__*/function () {
+  var _ref30 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee30(item) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee30$(_context30) {
+      while (1) switch (_context30.prev = _context30.next) {
+        case 0:
+          setItemsLoading(true);
+          toggleEditItemModal(false);
+          _context30.next = 4;
+          return fetch("/items/add", {
+            method: "POST",
+            body: mapToFormData(item)
+          });
+        case 4:
+          res = _context30.sent;
+          if (!res.ok) {
+            _context30.next = 10;
+            break;
+          }
+          _context30.next = 8;
+          return apiFetchItems();
+        case 8:
+          _context30.next = 11;
+          break;
+        case 10:
+          toggleEditItemModal(true);
+        case 11:
+          setItemsLoading(false);
+        case 12:
+        case "end":
+          return _context30.stop();
+      }
+    }, _callee30);
+  }));
+  return function apiCreateItem(_x31) {
+    return _ref30.apply(this, arguments);
   };
 }();
 var setItemsLoading = function setItemsLoading(isOn) {
@@ -28102,6 +28174,13 @@ var toggleBulkEditPercentModal = function toggleBulkEditPercentModal(isOpen) {
   state.set(function (value) {
     return state_objectSpread(state_objectSpread({}, value), {}, {
       bulkEditPercentModalIsOpen: isOpen
+    });
+  });
+};
+var toggleBulkEditPriceBasisModal = function toggleBulkEditPriceBasisModal(isOpen) {
+  state.set(function (value) {
+    return state_objectSpread(state_objectSpread({}, value), {}, {
+      bulkEditPriceBasisModalIsOpen: isOpen
     });
   });
 };
@@ -28135,33 +28214,6 @@ var toggleViewStatusHistoryModal = function toggleViewStatusHistoryModal(isOpen)
   setStateProp("statusHistoryModalIsOpen", isOpen);
 };
 var toggleDigisellerEditModal = /*#__PURE__*/function () {
-  var _ref30 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee30(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee30$(_context30) {
-      while (1) switch (_context30.prev = _context30.next) {
-        case 0:
-          if (!(isOpen === true)) {
-            _context30.next = 3;
-            break;
-          }
-          _context30.next = 3;
-          return apiGetCurrentUser();
-        case 3:
-          state.set(function (value) {
-            return state_objectSpread(state_objectSpread({}, value), {}, {
-              digisellerEditModalIsOpen: isOpen
-            });
-          });
-        case 4:
-        case "end":
-          return _context30.stop();
-      }
-    }, _callee30);
-  }));
-  return function toggleDigisellerEditModal(_x30) {
-    return _ref30.apply(this, arguments);
-  };
-}();
-var toggleExchangeRatesModal = /*#__PURE__*/function () {
   var _ref31 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee31(isOpen) {
     return state_regeneratorRuntime().wrap(function _callee31$(_context31) {
       while (1) switch (_context31.prev = _context31.next) {
@@ -28171,6 +28223,33 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
             break;
           }
           _context31.next = 3;
+          return apiGetCurrentUser();
+        case 3:
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              digisellerEditModalIsOpen: isOpen
+            });
+          });
+        case 4:
+        case "end":
+          return _context31.stop();
+      }
+    }, _callee31);
+  }));
+  return function toggleDigisellerEditModal(_x32) {
+    return _ref31.apply(this, arguments);
+  };
+}();
+var toggleExchangeRatesModal = /*#__PURE__*/function () {
+  var _ref32 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee32(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee32$(_context32) {
+      while (1) switch (_context32.prev = _context32.next) {
+        case 0:
+          if (!(isOpen === true)) {
+            _context32.next = 3;
+            break;
+          }
+          _context32.next = 3;
           return apiGetExchageRates();
         case 3:
           state.set(function (value) {
@@ -28180,21 +28259,21 @@ var toggleExchangeRatesModal = /*#__PURE__*/function () {
           });
         case 4:
         case "end":
-          return _context31.stop();
+          return _context32.stop();
       }
-    }, _callee31);
+    }, _callee32);
   }));
-  return function toggleExchangeRatesModal(_x31) {
-    return _ref31.apply(this, arguments);
+  return function toggleExchangeRatesModal(_x33) {
+    return _ref32.apply(this, arguments);
   };
 }();
 var toggleBotDetailsModal = function toggleBotDetailsModal(isOpen) {
   setStateProp("botDetailsModalIsOpen", isOpen);
 };
 var toggleChangePasswordModal = /*#__PURE__*/function () {
-  var _ref32 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee32(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee32$(_context32) {
-      while (1) switch (_context32.prev = _context32.next) {
+  var _ref33 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee33(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee33$(_context33) {
+      while (1) switch (_context33.prev = _context33.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28203,18 +28282,18 @@ var toggleChangePasswordModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context32.stop();
+          return _context33.stop();
       }
-    }, _callee32);
+    }, _callee33);
   }));
-  return function toggleChangePasswordModal(_x32) {
-    return _ref32.apply(this, arguments);
+  return function toggleChangePasswordModal(_x34) {
+    return _ref33.apply(this, arguments);
   };
 }();
 var toggleEditBotModal = /*#__PURE__*/function () {
-  var _ref33 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee33(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee33$(_context33) {
-      while (1) switch (_context33.prev = _context33.next) {
+  var _ref34 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee34(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee34$(_context34) {
+      while (1) switch (_context34.prev = _context34.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28223,18 +28302,18 @@ var toggleEditBotModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context33.stop();
+          return _context34.stop();
       }
-    }, _callee33);
+    }, _callee34);
   }));
-  return function toggleEditBotModal(_x33) {
-    return _ref33.apply(this, arguments);
+  return function toggleEditBotModal(_x35) {
+    return _ref34.apply(this, arguments);
   };
 }();
 var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
-  var _ref34 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee34(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee34$(_context34) {
-      while (1) switch (_context34.prev = _context34.next) {
+  var _ref35 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee35(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee35$(_context35) {
+      while (1) switch (_context35.prev = _context35.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28243,18 +28322,18 @@ var toggleEditBotRegionSetModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context34.stop();
+          return _context35.stop();
       }
-    }, _callee34);
+    }, _callee35);
   }));
-  return function toggleEditBotRegionSetModal(_x34) {
-    return _ref34.apply(this, arguments);
+  return function toggleEditBotRegionSetModal(_x36) {
+    return _ref35.apply(this, arguments);
   };
 }();
 var toggleEditOrderModal = /*#__PURE__*/function () {
-  var _ref35 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee35(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee35$(_context35) {
-      while (1) switch (_context35.prev = _context35.next) {
+  var _ref36 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee36(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee36$(_context36) {
+      while (1) switch (_context36.prev = _context36.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28263,18 +28342,18 @@ var toggleEditOrderModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context35.stop();
+          return _context36.stop();
       }
-    }, _callee35);
+    }, _callee36);
   }));
-  return function toggleEditOrderModal(_x35) {
-    return _ref35.apply(this, arguments);
+  return function toggleEditOrderModal(_x37) {
+    return _ref36.apply(this, arguments);
   };
 }();
 var toggleFilterOrdersModal = /*#__PURE__*/function () {
-  var _ref36 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee36(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee36$(_context36) {
-      while (1) switch (_context36.prev = _context36.next) {
+  var _ref37 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee37(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee37$(_context37) {
+      while (1) switch (_context37.prev = _context37.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28283,18 +28362,18 @@ var toggleFilterOrdersModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context36.stop();
+          return _context37.stop();
       }
-    }, _callee36);
+    }, _callee37);
   }));
-  return function toggleFilterOrdersModal(_x36) {
-    return _ref36.apply(this, arguments);
+  return function toggleFilterOrdersModal(_x38) {
+    return _ref37.apply(this, arguments);
   };
 }();
 var toggleFilterProductsModal = /*#__PURE__*/function () {
-  var _ref37 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee37(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee37$(_context37) {
-      while (1) switch (_context37.prev = _context37.next) {
+  var _ref38 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee38(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee38$(_context38) {
+      while (1) switch (_context38.prev = _context38.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28303,18 +28382,18 @@ var toggleFilterProductsModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context37.stop();
+          return _context38.stop();
       }
-    }, _callee37);
+    }, _callee38);
   }));
-  return function toggleFilterProductsModal(_x37) {
-    return _ref37.apply(this, arguments);
+  return function toggleFilterProductsModal(_x39) {
+    return _ref38.apply(this, arguments);
   };
 }();
 var toggleEditItemModal = /*#__PURE__*/function () {
-  var _ref38 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee38(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee38$(_context38) {
-      while (1) switch (_context38.prev = _context38.next) {
+  var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
+      while (1) switch (_context39.prev = _context39.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28323,18 +28402,18 @@ var toggleEditItemModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context38.stop();
+          return _context39.stop();
       }
-    }, _callee38);
+    }, _callee39);
   }));
-  return function toggleEditItemModal(_x38) {
-    return _ref38.apply(this, arguments);
+  return function toggleEditItemModal(_x40) {
+    return _ref39.apply(this, arguments);
   };
 }();
 var toggleEditItemMainInfoModal = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
-  var _ref39 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee39(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee39$(_context39) {
-      while (1) switch (_context39.prev = _context39.next) {
+  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
+      while (1) switch (_context40.prev = _context40.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28343,18 +28422,18 @@ var toggleEditItemMainInfoModal = /*#__PURE__*/(/* unused pure expression or sup
           });
         case 1:
         case "end":
-          return _context39.stop();
+          return _context40.stop();
       }
-    }, _callee39);
+    }, _callee40);
   }));
-  return function toggleEditItemMainInfoModal(_x39) {
-    return _ref39.apply(this, arguments);
+  return function toggleEditItemMainInfoModal(_x41) {
+    return _ref40.apply(this, arguments);
   };
 }()));
 var toggleEditItemAdditionalInfoModal = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
-  var _ref40 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee40(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee40$(_context40) {
-      while (1) switch (_context40.prev = _context40.next) {
+  var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
+      while (1) switch (_context41.prev = _context41.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28363,18 +28442,18 @@ var toggleEditItemAdditionalInfoModal = /*#__PURE__*/(/* unused pure expression 
           });
         case 1:
         case "end":
-          return _context40.stop();
+          return _context41.stop();
       }
-    }, _callee40);
+    }, _callee41);
   }));
-  return function toggleEditItemAdditionalInfoModal(_x40) {
-    return _ref40.apply(this, arguments);
+  return function toggleEditItemAdditionalInfoModal(_x42) {
+    return _ref41.apply(this, arguments);
   };
 }()));
 var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
-  var _ref41 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee41(isOpen) {
-    return state_regeneratorRuntime().wrap(function _callee41$(_context41) {
-      while (1) switch (_context41.prev = _context41.next) {
+  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(isOpen) {
+    return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
+      while (1) switch (_context42.prev = _context42.next) {
         case 0:
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28383,25 +28462,25 @@ var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
           });
         case 1:
         case "end":
-          return _context41.stop();
+          return _context42.stop();
       }
-    }, _callee41);
+    }, _callee42);
   }));
-  return function toggleOrderCreationInfoModal(_x41) {
-    return _ref41.apply(this, arguments);
+  return function toggleOrderCreationInfoModal(_x43) {
+    return _ref42.apply(this, arguments);
   };
 }();
 var apiChangeItemBulk = /*#__PURE__*/function () {
-  var _ref42 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee42(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
+  var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
     var res;
-    return state_regeneratorRuntime().wrap(function _callee42$(_context42) {
-      while (1) switch (_context42.prev = _context42.next) {
+    return state_regeneratorRuntime().wrap(function _callee43$(_context43) {
+      while (1) switch (_context43.prev = _context43.next) {
         case 0:
           setItemsLoading(true);
           setStateProp("changeItemBulkResponse", {
             loading: true
           });
-          _context42.next = 4;
+          _context43.next = 4;
           return fetch("/items/bulk/change", {
             method: "POST",
             body: mapToFormData({
@@ -28412,83 +28491,118 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context42.sent;
+          res = _context43.sent;
           setStateProp("changeItemBulkResponse", {
             loading: false
           });
-          _context42.next = 8;
+          _context43.next = 8;
           return apiFetchItems();
         case 8:
-        case "end":
-          return _context42.stop();
-      }
-    }, _callee42);
-  }));
-  return function apiChangeItemBulk(_x42, _x43, _x44, _x45) {
-    return _ref42.apply(this, arguments);
-  };
-}();
-var apiChangeDigisellerData = /*#__PURE__*/function () {
-  var _ref43 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee43(data) {
-    var res;
-    return state_regeneratorRuntime().wrap(function _callee43$(_context43) {
-      while (1) switch (_context43.prev = _context43.next) {
-        case 0:
-          _context43.next = 2;
-          return fetch("/user/edit/digiseller", {
-            method: "POST",
-            body: mapToFormData(data)
-          });
-        case 2:
-          res = _context43.sent;
-        case 3:
         case "end":
           return _context43.stop();
       }
     }, _callee43);
   }));
-  return function apiChangeDigisellerData(_x46) {
+  return function apiChangeItemBulk(_x44, _x45, _x46, _x47) {
     return _ref43.apply(this, arguments);
   };
 }();
-var apiChangeUserPassword = /*#__PURE__*/function () {
-  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(data) {
+var apiChangePriceBasisBulk = /*#__PURE__*/function () {
+  var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(SteamCurrencyId, Ids) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee44$(_context44) {
       while (1) switch (_context44.prev = _context44.next) {
         case 0:
-          _context44.next = 2;
-          return fetch("/user/password", {
-            method: "POST",
-            body: mapToFormData(data)
+          setItemsLoading(true);
+          setStateProp("changeItemBulkResponse", {
+            loading: true
           });
-        case 2:
-          res = _context44.sent;
-          toggleChangePasswordModal(!res.ok);
+          _context44.next = 4;
+          return fetch("/items/bulk/pricebasis", {
+            method: "POST",
+            body: mapToFormData({
+              SteamCurrencyId: SteamCurrencyId,
+              Ids: Ids
+            })
+          });
         case 4:
+          res = _context44.sent;
+          setStateProp("changeItemBulkResponse", {
+            loading: false
+          });
+          _context44.next = 8;
+          return apiFetchItems();
+        case 8:
         case "end":
           return _context44.stop();
       }
     }, _callee44);
   }));
-  return function apiChangeUserPassword(_x47) {
+  return function apiChangePriceBasisBulk(_x48, _x49) {
     return _ref44.apply(this, arguments);
   };
 }();
-var apiGetCurrentUser = /*#__PURE__*/function () {
-  var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45() {
-    var res, data;
+var apiChangeDigisellerData = /*#__PURE__*/function () {
+  var _ref45 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee45(data) {
+    var res;
     return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
       while (1) switch (_context45.prev = _context45.next) {
         case 0:
           _context45.next = 2;
-          return fetch("/user");
+          return fetch("/user/edit/digiseller", {
+            method: "POST",
+            body: mapToFormData(data)
+          });
         case 2:
           res = _context45.sent;
-          _context45.next = 5;
+        case 3:
+        case "end":
+          return _context45.stop();
+      }
+    }, _callee45);
+  }));
+  return function apiChangeDigisellerData(_x50) {
+    return _ref45.apply(this, arguments);
+  };
+}();
+var apiChangeUserPassword = /*#__PURE__*/function () {
+  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46(data) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
+      while (1) switch (_context46.prev = _context46.next) {
+        case 0:
+          _context46.next = 2;
+          return fetch("/user/password", {
+            method: "POST",
+            body: mapToFormData(data)
+          });
+        case 2:
+          res = _context46.sent;
+          toggleChangePasswordModal(!res.ok);
+        case 4:
+        case "end":
+          return _context46.stop();
+      }
+    }, _callee46);
+  }));
+  return function apiChangeUserPassword(_x51) {
+    return _ref46.apply(this, arguments);
+  };
+}();
+var apiGetCurrentUser = /*#__PURE__*/function () {
+  var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47() {
+    var res, data;
+    return state_regeneratorRuntime().wrap(function _callee47$(_context47) {
+      while (1) switch (_context47.prev = _context47.next) {
+        case 0:
+          _context47.next = 2;
+          return fetch("/user");
+        case 2:
+          res = _context47.sent;
+          _context47.next = 5;
           return res.json();
         case 5:
-          data = _context45.sent;
+          data = _context47.sent;
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
               user: data
@@ -28496,28 +28610,28 @@ var apiGetCurrentUser = /*#__PURE__*/function () {
           });
         case 7:
         case "end":
-          return _context45.stop();
+          return _context47.stop();
       }
-    }, _callee45);
+    }, _callee47);
   }));
   return function apiGetCurrentUser() {
-    return _ref45.apply(this, arguments);
+    return _ref47.apply(this, arguments);
   };
 }();
 var apiGetExchageRates = /*#__PURE__*/function () {
-  var _ref46 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee46() {
+  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48() {
     var res, data;
-    return state_regeneratorRuntime().wrap(function _callee46$(_context46) {
-      while (1) switch (_context46.prev = _context46.next) {
+    return state_regeneratorRuntime().wrap(function _callee48$(_context48) {
+      while (1) switch (_context48.prev = _context48.next) {
         case 0:
-          _context46.next = 2;
+          _context48.next = 2;
           return fetch("/exchangerates/list");
         case 2:
-          res = _context46.sent;
-          _context46.next = 5;
+          res = _context48.sent;
+          _context48.next = 5;
           return res.json();
         case 5:
-          data = _context46.sent;
+          data = _context48.sent;
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
               exchageRates: data
@@ -28525,18 +28639,18 @@ var apiGetExchageRates = /*#__PURE__*/function () {
           });
         case 7:
         case "end":
-          return _context46.stop();
+          return _context48.stop();
       }
-    }, _callee46);
+    }, _callee48);
   }));
   return function apiGetExchageRates() {
-    return _ref46.apply(this, arguments);
+    return _ref48.apply(this, arguments);
   };
 }();
 var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
-  var _ref47 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee47(data) {
-    return state_regeneratorRuntime().wrap(function _callee47$(_context47) {
-      while (1) switch (_context47.prev = _context47.next) {
+  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(data) {
+    return state_regeneratorRuntime().wrap(function _callee49$(_context49) {
+      while (1) switch (_context49.prev = _context49.next) {
         case 0:
           //let res = await
           fetch("/exchangerates/update", {
@@ -28548,40 +28662,41 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
           toggleExchangeRatesModal(false);
         case 2:
         case "end":
-          return _context47.stop();
+          return _context49.stop();
       }
-    }, _callee47);
+    }, _callee49);
   }));
-  return function apiUpdateExchangeDataManual(_x48) {
-    return _ref47.apply(this, arguments);
+  return function apiUpdateExchangeDataManual(_x52) {
+    return _ref49.apply(this, arguments);
   };
 }();
 var apiGetCurrencies = /*#__PURE__*/function () {
-  var _ref48 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee48() {
+  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50() {
     var currencies, res, data;
-    return state_regeneratorRuntime().wrap(function _callee48$(_context48) {
-      while (1) switch (_context48.prev = _context48.next) {
+    return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
+      while (1) switch (_context50.prev = _context50.next) {
         case 0:
           currencies = state.get().currencies;
           if (!(currencies && currencies.length > 0)) {
-            _context48.next = 3;
+            _context50.next = 3;
             break;
           }
-          return _context48.abrupt("return");
+          return _context50.abrupt("return");
         case 3:
-          _context48.next = 5;
+          _context50.next = 5;
           return fetch("/exchangerates/list");
         case 5:
-          res = _context48.sent;
-          _context48.next = 8;
+          res = _context50.sent;
+          _context50.next = 8;
           return res.json();
         case 8:
-          data = _context48.sent;
+          data = _context50.sent;
           currencies = data.currencies.map(function (c) {
             return {
               code: c.code,
               steamId: c.steamId,
-              steamSymbol: c.steamSymbol
+              steamSymbol: c.steamSymbol,
+              steamValue: c.value
             };
           });
           state.set(function (value) {
@@ -28591,80 +28706,80 @@ var apiGetCurrencies = /*#__PURE__*/function () {
           });
         case 11:
         case "end":
-          return _context48.stop();
-      }
-    }, _callee48);
-  }));
-  return function apiGetCurrencies() {
-    return _ref48.apply(this, arguments);
-  };
-}();
-var apiGetItem = /*#__PURE__*/function () {
-  var _ref49 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee49(id) {
-    var res, data;
-    return state_regeneratorRuntime().wrap(function _callee49$(_context49) {
-      while (1) switch (_context49.prev = _context49.next) {
-        case 0:
-          _context49.next = 2;
-          return fetch("/items/".concat(id, "/info"));
-        case 2:
-          res = _context49.sent;
-          _context49.next = 5;
-          return res.json();
-        case 5:
-          data = _context49.sent;
-          return _context49.abrupt("return", data);
-        case 7:
-        case "end":
-          return _context49.stop();
-      }
-    }, _callee49);
-  }));
-  return function apiGetItem(_x49) {
-    return _ref49.apply(this, arguments);
-  };
-}();
-var apiGetSteamRegions = /*#__PURE__*/function () {
-  var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50() {
-    var steamRegions, res, data;
-    return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
-      while (1) switch (_context50.prev = _context50.next) {
-        case 0:
-          steamRegions = state.get().steamRegions;
-          if (!(steamRegions && steamRegions.length > 0)) {
-            _context50.next = 3;
-            break;
-          }
-          return _context50.abrupt("return");
-        case 3:
-          _context50.next = 5;
-          return fetch("/dict/regions");
-        case 5:
-          res = _context50.sent;
-          _context50.next = 8;
-          return res.json();
-        case 8:
-          data = _context50.sent;
-          steamRegions = data;
-          setStateProp("steamRegions", steamRegions);
-        case 11:
-        case "end":
           return _context50.stop();
       }
     }, _callee50);
   }));
-  return function apiGetSteamRegions() {
+  return function apiGetCurrencies() {
     return _ref50.apply(this, arguments);
   };
 }();
-var apiSetGameSessionStatus = /*#__PURE__*/function () {
-  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(gSesId, statusId) {
-    var _state$get3, gameSessionsFilter, res;
+var apiGetItem = /*#__PURE__*/function () {
+  var _ref51 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee51(id) {
+    var res, data;
     return state_regeneratorRuntime().wrap(function _callee51$(_context51) {
       while (1) switch (_context51.prev = _context51.next) {
         case 0:
-          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
-          _context51.next = 3;
+          _context51.next = 2;
+          return fetch("/items/".concat(id, "/info"));
+        case 2:
+          res = _context51.sent;
+          _context51.next = 5;
+          return res.json();
+        case 5:
+          data = _context51.sent;
+          return _context51.abrupt("return", data);
+        case 7:
+        case "end":
+          return _context51.stop();
+      }
+    }, _callee51);
+  }));
+  return function apiGetItem(_x53) {
+    return _ref51.apply(this, arguments);
+  };
+}();
+var apiGetSteamRegions = /*#__PURE__*/function () {
+  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52() {
+    var steamRegions, res, data;
+    return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
+      while (1) switch (_context52.prev = _context52.next) {
+        case 0:
+          steamRegions = state.get().steamRegions;
+          if (!(steamRegions && steamRegions.length > 0)) {
+            _context52.next = 3;
+            break;
+          }
+          return _context52.abrupt("return");
+        case 3:
+          _context52.next = 5;
+          return fetch("/dict/regions");
+        case 5:
+          res = _context52.sent;
+          _context52.next = 8;
+          return res.json();
+        case 8:
+          data = _context52.sent;
+          steamRegions = data;
+          setStateProp("steamRegions", steamRegions);
+        case 11:
+        case "end":
+          return _context52.stop();
+      }
+    }, _callee52);
+  }));
+  return function apiGetSteamRegions() {
+    return _ref52.apply(this, arguments);
+  };
+}();
+var apiSetGameSessionStatus = /*#__PURE__*/function () {
+  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(gSesId, statusId) {
+    var _state$get2, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
+      while (1) switch (_context53.prev = _context53.next) {
+        case 0:
+          _state$get2 = state.get(), gameSessionsFilter = _state$get2.gameSessionsFilter;
+          _context53.next = 3;
           return fetch("/gamesessions/setstatus", {
             method: "POST",
             body: mapToFormData({
@@ -28673,26 +28788,26 @@ var apiSetGameSessionStatus = /*#__PURE__*/function () {
             })
           });
         case 3:
-          res = _context51.sent;
+          res = _context53.sent;
           apiFetchGameSessions(gameSessionsFilter);
         case 5:
         case "end":
-          return _context51.stop();
+          return _context53.stop();
       }
-    }, _callee51);
+    }, _callee53);
   }));
-  return function apiSetGameSessionStatus(_x50, _x51) {
-    return _ref51.apply(this, arguments);
+  return function apiSetGameSessionStatus(_x54, _x55) {
+    return _ref53.apply(this, arguments);
   };
 }();
 var apiResetGameSession = /*#__PURE__*/function () {
-  var _ref52 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee52(gSesId) {
-    var _state$get4, gameSessionsFilter, res;
-    return state_regeneratorRuntime().wrap(function _callee52$(_context52) {
-      while (1) switch (_context52.prev = _context52.next) {
+  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(gSesId) {
+    var _state$get3, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
+      while (1) switch (_context54.prev = _context54.next) {
         case 0:
-          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
-          _context52.next = 3;
+          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
+          _context54.next = 3;
           return fetch("/gamesessions/reset", {
             method: "POST",
             body: mapToFormData({
@@ -28700,27 +28815,27 @@ var apiResetGameSession = /*#__PURE__*/function () {
             })
           });
         case 3:
-          res = _context52.sent;
+          res = _context54.sent;
           apiFetchGameSessions(gameSessionsFilter);
         case 5:
         case "end":
-          return _context52.stop();
+          return _context54.stop();
       }
-    }, _callee52);
+    }, _callee54);
   }));
-  return function apiResetGameSession(_x52) {
-    return _ref52.apply(this, arguments);
+  return function apiResetGameSession(_x56) {
+    return _ref54.apply(this, arguments);
   };
 }();
 var apiAddCommentGameSession = /*#__PURE__*/function () {
-  var _ref53 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee53(gSesId, comment) {
-    var _state$get5, gameSessionsFilter, res;
-    return state_regeneratorRuntime().wrap(function _callee53$(_context53) {
-      while (1) switch (_context53.prev = _context53.next) {
+  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(gSesId, comment) {
+    var _state$get4, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
+      while (1) switch (_context55.prev = _context55.next) {
         case 0:
-          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
+          _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
           toggleAddGameSesCommentModal(false);
-          _context53.next = 4;
+          _context55.next = 4;
           return fetch("/gamesessions/comment", {
             method: "POST",
             body: mapToFormData({
@@ -28729,117 +28844,117 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context53.sent;
+          res = _context55.sent;
           apiFetchGameSessions(gameSessionsFilter);
-        case 6:
-        case "end":
-          return _context53.stop();
-      }
-    }, _callee53);
-  }));
-  return function apiAddCommentGameSession(_x53, _x54) {
-    return _ref53.apply(this, arguments);
-  };
-}();
-var updateGameSessionsFilter = /*#__PURE__*/function () {
-  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(newData) {
-    var _state$get6, gameSessionsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
-      while (1) switch (_context54.prev = _context54.next) {
-        case 0:
-          _state$get6 = state.get(), gameSessionsFilter = _state$get6.gameSessionsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("gameSessionsFilter", newFilter);
-          _context54.next = 6;
-          return apiFetchGameSessions(newFilter);
-        case 6:
-        case "end":
-          return _context54.stop();
-      }
-    }, _callee54);
-  }));
-  return function updateGameSessionsFilter(_x55) {
-    return _ref54.apply(this, arguments);
-  };
-}();
-var updateProductsFilter = /*#__PURE__*/function () {
-  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(newData) {
-    var _state$get7, productsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
-      while (1) switch (_context55.prev = _context55.next) {
-        case 0:
-          _state$get7 = state.get(), productsFilter = _state$get7.productsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("productsFilter", newFilter);
-          _context55.next = 6;
-          return apiFetchItems(newFilter);
         case 6:
         case "end":
           return _context55.stop();
       }
     }, _callee55);
   }));
-  return function updateProductsFilter(_x56) {
+  return function apiAddCommentGameSession(_x57, _x58) {
     return _ref55.apply(this, arguments);
   };
 }();
-var apiAddGameSession = /*#__PURE__*/function () {
-  var _ref56 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(data) {
-    var res, errors, _state$get8, gameSessionsFilter, newUniqueCodes;
+var updateGameSessionsFilter = /*#__PURE__*/function () {
+  var _ref56 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(newData) {
+    var _state$get5, gameSessionsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee56$(_context56) {
       while (1) switch (_context56.prev = _context56.next) {
+        case 0:
+          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("gameSessionsFilter", newFilter);
+          _context56.next = 6;
+          return apiFetchGameSessions(newFilter);
+        case 6:
+        case "end":
+          return _context56.stop();
+      }
+    }, _callee56);
+  }));
+  return function updateGameSessionsFilter(_x59) {
+    return _ref56.apply(this, arguments);
+  };
+}();
+var updateProductsFilter = /*#__PURE__*/function () {
+  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(newData) {
+    var _state$get6, productsFilter, newFilter;
+    return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
+      while (1) switch (_context57.prev = _context57.next) {
+        case 0:
+          _state$get6 = state.get(), productsFilter = _state$get6.productsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("productsFilter", newFilter);
+          _context57.next = 6;
+          return apiFetchItems(newFilter);
+        case 6:
+        case "end":
+          return _context57.stop();
+      }
+    }, _callee57);
+  }));
+  return function updateProductsFilter(_x60) {
+    return _ref57.apply(this, arguments);
+  };
+}();
+var apiAddGameSession = /*#__PURE__*/function () {
+  var _ref58 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee58(data) {
+    var res, errors, _state$get7, gameSessionsFilter, newUniqueCodes;
+    return state_regeneratorRuntime().wrap(function _callee58$(_context58) {
+      while (1) switch (_context58.prev = _context58.next) {
         case 0:
           setStateProp("editOrderResponse", {
             loading: true,
             errors: []
           });
-          _context56.next = 3;
+          _context58.next = 3;
           return fetch("/gamesession", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 3:
-          res = _context56.sent;
+          res = _context58.sent;
           errors = [];
           if (!res.ok) {
-            _context56.next = 12;
+            _context58.next = 12;
             break;
           }
-          _state$get8 = state.get(), gameSessionsFilter = _state$get8.gameSessionsFilter;
-          _context56.next = 9;
+          _state$get7 = state.get(), gameSessionsFilter = _state$get7.gameSessionsFilter;
+          _context58.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
           toggleEditOrderModal(false);
-          _context56.next = 19;
+          _context58.next = 19;
           break;
         case 12:
           if (!(res.status === 500)) {
-            _context56.next = 16;
+            _context58.next = 16;
             break;
           }
           errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context56.next = 19;
+          _context58.next = 19;
           break;
         case 16:
-          _context56.next = 18;
+          _context58.next = 18;
           return res.json();
         case 18:
-          errors = _context56.sent.errors;
+          errors = _context58.sent.errors;
         case 19:
           setStateProp("editOrderResponse", {
             loading: false,
             errors: errors
           });
           if (!res.ok) {
-            _context56.next = 27;
+            _context58.next = 27;
             break;
           }
-          _context56.next = 23;
+          _context58.next = 23;
           return res.json();
         case 23:
-          newUniqueCodes = _context56.sent;
+          newUniqueCodes = _context58.sent;
           console.log(newUniqueCodes);
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -28849,84 +28964,84 @@ var apiAddGameSession = /*#__PURE__*/function () {
           toggleOrderCreationInfoModal(true);
         case 27:
         case "end":
-          return _context56.stop();
+          return _context58.stop();
       }
-    }, _callee56);
+    }, _callee58);
   }));
-  return function apiAddGameSession(_x57) {
-    return _ref56.apply(this, arguments);
+  return function apiAddGameSession(_x61) {
+    return _ref58.apply(this, arguments);
   };
 }();
 var apiFetchItemInfoTemplates = /*#__PURE__*/function () {
-  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(userId) {
+  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(userId) {
     var result, json;
-    return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
-      while (1) switch (_context57.prev = _context57.next) {
+    return state_regeneratorRuntime().wrap(function _callee59$(_context59) {
+      while (1) switch (_context59.prev = _context59.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
-          _context57.next = 3;
+          _context59.next = 3;
           return fetch("/iteminfotemplate?userId=".concat(userId));
         case 3:
-          result = _context57.sent;
+          result = _context59.sent;
           if (!result.ok) {
-            _context57.next = 9;
+            _context59.next = 9;
             break;
           }
-          _context57.next = 7;
+          _context59.next = 7;
           return result.json();
         case 7:
-          json = _context57.sent;
+          json = _context59.sent;
           setItemInfoTemplates(json);
         case 9:
           setItemInfoTemplatesLoading(false);
         case 10:
         case "end":
-          return _context57.stop();
+          return _context59.stop();
       }
-    }, _callee57);
+    }, _callee59);
   }));
-  return function apiFetchItemInfoTemplates(_x58) {
-    return _ref57.apply(this, arguments);
+  return function apiFetchItemInfoTemplates(_x62) {
+    return _ref59.apply(this, arguments);
   };
 }();
 var apiFetchItemInfoTemplateValues = /*#__PURE__*/function () {
-  var _ref58 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee58(itemInfoTemplateId) {
+  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(itemInfoTemplateId) {
     var result;
-    return state_regeneratorRuntime().wrap(function _callee58$(_context58) {
-      while (1) switch (_context58.prev = _context58.next) {
+    return state_regeneratorRuntime().wrap(function _callee60$(_context60) {
+      while (1) switch (_context60.prev = _context60.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
-          _context58.next = 3;
+          _context60.next = 3;
           return fetch("/iteminfotemplatevalue/".concat(itemInfoTemplateId));
         case 3:
-          result = _context58.sent;
+          result = _context60.sent;
           if (!result.ok) {
-            _context58.next = 9;
+            _context60.next = 9;
             break;
           }
           setItemInfoTemplatesLoading(false);
-          _context58.next = 8;
+          _context60.next = 8;
           return result.json();
         case 8:
-          return _context58.abrupt("return", _context58.sent);
+          return _context60.abrupt("return", _context60.sent);
         case 9:
           setItemInfoTemplatesLoading(false);
-          return _context58.abrupt("return", null);
+          return _context60.abrupt("return", null);
         case 11:
         case "end":
-          return _context58.stop();
+          return _context60.stop();
       }
-    }, _callee58);
+    }, _callee60);
   }));
-  return function apiFetchItemInfoTemplateValues(_x59) {
-    return _ref58.apply(this, arguments);
+  return function apiFetchItemInfoTemplateValues(_x63) {
+    return _ref60.apply(this, arguments);
   };
 }();
 var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
-  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(itemInfoTemplateValues) {
+  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(itemInfoTemplateValues) {
     var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee59$(_context59) {
-      while (1) switch (_context59.prev = _context59.next) {
+    return state_regeneratorRuntime().wrap(function _callee61$(_context61) {
+      while (1) switch (_context61.prev = _context61.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           headers = new Headers();
@@ -28937,65 +29052,65 @@ var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(itemInfoTemplateValues)
           };
-          _context59.next = 7;
+          _context61.next = 7;
           return fetch("/iteminfotemplate", options);
         case 7:
-          res = _context59.sent;
+          res = _context61.sent;
           if (!res.ok) {
-            _context59.next = 11;
+            _context61.next = 11;
             break;
           }
-          _context59.next = 11;
+          _context61.next = 11;
           return apiFetchItemInfoTemplates(0);
         case 11:
           setItemInfoTemplatesLoading(false);
         case 12:
         case "end":
-          return _context59.stop();
+          return _context61.stop();
       }
-    }, _callee59);
+    }, _callee61);
   }));
-  return function apiCreateItemInfoTemplate(_x60) {
-    return _ref59.apply(this, arguments);
+  return function apiCreateItemInfoTemplate(_x64) {
+    return _ref61.apply(this, arguments);
   };
 }();
 var apiDeleteItemInfoTemplate = /*#__PURE__*/function () {
-  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(itemInfoTemplateId) {
+  var _ref62 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee62(itemInfoTemplateId) {
     var options, res;
-    return state_regeneratorRuntime().wrap(function _callee60$(_context60) {
-      while (1) switch (_context60.prev = _context60.next) {
+    return state_regeneratorRuntime().wrap(function _callee62$(_context62) {
+      while (1) switch (_context62.prev = _context62.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           options = {
             method: "DELETE"
           };
-          _context60.next = 4;
+          _context62.next = 4;
           return fetch("/iteminfotemplate/".concat(itemInfoTemplateId), options);
         case 4:
-          res = _context60.sent;
+          res = _context62.sent;
           if (!res.ok) {
-            _context60.next = 8;
+            _context62.next = 8;
             break;
           }
-          _context60.next = 8;
+          _context62.next = 8;
           return apiFetchItemInfoTemplates(0);
         case 8:
           setItemInfoTemplatesLoading(false);
         case 9:
         case "end":
-          return _context60.stop();
+          return _context62.stop();
       }
-    }, _callee60);
+    }, _callee62);
   }));
-  return function apiDeleteItemInfoTemplate(_x61) {
-    return _ref60.apply(this, arguments);
+  return function apiDeleteItemInfoTemplate(_x65) {
+    return _ref62.apply(this, arguments);
   };
 }();
 var apiUpdateItemInfoes = /*#__PURE__*/function () {
-  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(itemInfoesValues) {
+  var _ref63 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee63(itemInfoesValues) {
     var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee61$(_context61) {
-      while (1) switch (_context61.prev = _context61.next) {
+    return state_regeneratorRuntime().wrap(function _callee63$(_context63) {
+      while (1) switch (_context63.prev = _context63.next) {
         case 0:
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
@@ -29003,7 +29118,7 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
           setStateProp("changeItemBulkResponse", {
             loadingItemInfo: true
           });
-          _context61.prev = 4;
+          _context63.prev = 4;
           headers = new Headers();
           headers.append("Content-Type", "application/json");
           headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
@@ -29012,31 +29127,394 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(itemInfoesValues)
           };
-          _context61.next = 11;
+          _context63.next = 11;
           return fetch("/iteminfo", options);
         case 11:
-          res = _context61.sent;
+          res = _context63.sent;
           if (!res.ok) {
-            _context61.next = 15;
+            _context63.next = 15;
             break;
           }
-          _context61.next = 15;
+          _context63.next = 15;
           return apiFetchItems();
         case 15:
-          _context61.prev = 15;
+          _context63.prev = 15;
           setStateProp("changeItemBulkResponse", {
             loadingItemInfo: false
           });
           setItemsLoading(false);
-          return _context61.finish(15);
+          return _context63.finish(15);
         case 19:
         case "end":
-          return _context61.stop();
+          return _context63.stop();
       }
-    }, _callee61, null, [[4,, 15, 19]]);
+    }, _callee63, null, [[4,, 15, 19]]);
   }));
-  return function apiUpdateItemInfoes(_x62) {
-    return _ref61.apply(this, arguments);
+  return function apiUpdateItemInfoes(_x66) {
+    return _ref63.apply(this, arguments);
+  };
+}();
+var apiTagTypeReplacementValues = /*#__PURE__*/function () {
+  var _ref64 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee64(data) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee64$(_context64) {
+      while (1) switch (_context64.prev = _context64.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context64.next = 6;
+          return fetch("/tagtypereplacementvalue", options);
+        case 6:
+          res = _context64.sent;
+          if (!res.ok) {
+            _context64.next = 9;
+            break;
+          }
+          return _context64.abrupt("return", true);
+        case 9:
+          return _context64.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context64.stop();
+      }
+    }, _callee64);
+  }));
+  return function apiTagTypeReplacementValues(_x67) {
+    return _ref64.apply(this, arguments);
+  };
+}();
+var apiFetchTagTypeReplacementValues = /*#__PURE__*/function () {
+  var _ref65 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee65() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee65$(_context65) {
+      while (1) switch (_context65.prev = _context65.next) {
+        case 0:
+          _context65.next = 2;
+          return fetch("/tagtypereplacementvalue");
+        case 2:
+          res = _context65.sent;
+          if (!res.ok) {
+            _context65.next = 8;
+            break;
+          }
+          _context65.next = 6;
+          return res.json();
+        case 6:
+          json = _context65.sent;
+          return _context65.abrupt("return", json);
+        case 8:
+          return _context65.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context65.stop();
+      }
+    }, _callee65);
+  }));
+  return function apiFetchTagTypeReplacementValues() {
+    return _ref65.apply(this, arguments);
+  };
+}();
+var apiFetchMarketPlaces = /*#__PURE__*/function () {
+  var _ref66 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee66() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee66$(_context66) {
+      while (1) switch (_context66.prev = _context66.next) {
+        case 0:
+          _context66.next = 2;
+          return fetch("/marketplace");
+        case 2:
+          res = _context66.sent;
+          if (!res.ok) {
+            _context66.next = 8;
+            break;
+          }
+          _context66.next = 6;
+          return res.json();
+        case 6:
+          json = _context66.sent;
+          return _context66.abrupt("return", json);
+        case 8:
+          return _context66.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context66.stop();
+      }
+    }, _callee66);
+  }));
+  return function apiFetchMarketPlaces() {
+    return _ref66.apply(this, arguments);
+  };
+}();
+var apiFetchLanguages = /*#__PURE__*/function () {
+  var _ref67 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee67() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee67$(_context67) {
+      while (1) switch (_context67.prev = _context67.next) {
+        case 0:
+          _context67.next = 2;
+          return fetch("/language");
+        case 2:
+          res = _context67.sent;
+          if (!res.ok) {
+            _context67.next = 8;
+            break;
+          }
+          _context67.next = 6;
+          return res.json();
+        case 6:
+          json = _context67.sent;
+          return _context67.abrupt("return", json);
+        case 8:
+          return _context67.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context67.stop();
+      }
+    }, _callee67);
+  }));
+  return function apiFetchLanguages() {
+    return _ref67.apply(this, arguments);
+  };
+}();
+var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref68 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee68() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee68$(_context68) {
+      while (1) switch (_context68.prev = _context68.next) {
+        case 0:
+          _context68.next = 2;
+          return fetch("/tagpromoreplacementvalue");
+        case 2:
+          res = _context68.sent;
+          if (!res.ok) {
+            _context68.next = 8;
+            break;
+          }
+          _context68.next = 6;
+          return res.json();
+        case 6:
+          json = _context68.sent;
+          return _context68.abrupt("return", json);
+        case 8:
+          return _context68.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context68.stop();
+      }
+    }, _callee68);
+  }));
+  return function apiFetchTagPromoReplacementValues() {
+    return _ref68.apply(this, arguments);
+  };
+}();
+var apiTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref69 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee69(data) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee69$(_context69) {
+      while (1) switch (_context69.prev = _context69.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context69.next = 6;
+          return fetch("/tagpromoreplacementvalue", options);
+        case 6:
+          res = _context69.sent;
+          if (!res.ok) {
+            _context69.next = 9;
+            break;
+          }
+          return _context69.abrupt("return", true);
+        case 9:
+          return _context69.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context69.stop();
+      }
+    }, _callee69);
+  }));
+  return function apiTagPromoReplacementValues(_x68) {
+    return _ref69.apply(this, arguments);
+  };
+}();
+var apiFetchTagInfoAppsReplacementValues = /*#__PURE__*/function () {
+  var _ref70 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee70() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee70$(_context70) {
+      while (1) switch (_context70.prev = _context70.next) {
+        case 0:
+          _context70.next = 2;
+          return fetch("/taginfoappsreplacementvalue");
+        case 2:
+          res = _context70.sent;
+          if (!res.ok) {
+            _context70.next = 8;
+            break;
+          }
+          _context70.next = 6;
+          return res.json();
+        case 6:
+          json = _context70.sent;
+          return _context70.abrupt("return", json);
+        case 8:
+          return _context70.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context70.stop();
+      }
+    }, _callee70);
+  }));
+  return function apiFetchTagInfoAppsReplacementValues() {
+    return _ref70.apply(this, arguments);
+  };
+}();
+var apiTagInfoAppsReplacementValues = /*#__PURE__*/function () {
+  var _ref71 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee71(data) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee71$(_context71) {
+      while (1) switch (_context71.prev = _context71.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context71.next = 6;
+          return fetch("/taginfoappsreplacementvalue", options);
+        case 6:
+          res = _context71.sent;
+          if (!res.ok) {
+            _context71.next = 9;
+            break;
+          }
+          return _context71.abrupt("return", true);
+        case 9:
+          return _context71.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context71.stop();
+      }
+    }, _callee71);
+  }));
+  return function apiTagInfoAppsReplacementValues(_x69) {
+    return _ref71.apply(this, arguments);
+  };
+}();
+var apiFetchTagInfoDlcReplacementValues = /*#__PURE__*/function () {
+  var _ref72 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee72() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee72$(_context72) {
+      while (1) switch (_context72.prev = _context72.next) {
+        case 0:
+          _context72.next = 2;
+          return fetch("/taginfodlcreplacementvalue");
+        case 2:
+          res = _context72.sent;
+          if (!res.ok) {
+            _context72.next = 8;
+            break;
+          }
+          _context72.next = 6;
+          return res.json();
+        case 6:
+          json = _context72.sent;
+          return _context72.abrupt("return", json);
+        case 8:
+          return _context72.abrupt("return", null);
+        case 9:
+        case "end":
+          return _context72.stop();
+      }
+    }, _callee72);
+  }));
+  return function apiFetchTagInfoDlcReplacementValues() {
+    return _ref72.apply(this, arguments);
+  };
+}();
+var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
+  var _ref73 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee73(data) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee73$(_context73) {
+      while (1) switch (_context73.prev = _context73.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context73.next = 6;
+          return fetch("/taginfodlcreplacementvalue", options);
+        case 6:
+          res = _context73.sent;
+          if (!res.ok) {
+            _context73.next = 9;
+            break;
+          }
+          return _context73.abrupt("return", true);
+        case 9:
+          return _context73.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context73.stop();
+      }
+    }, _callee73);
+  }));
+  return function apiTagInfoDlcReplacementValues(_x70) {
+    return _ref73.apply(this, arguments);
+  };
+}();
+var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
+  var _ref74 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee74() {
+    var headers, options, res, json;
+    return state_regeneratorRuntime().wrap(function _callee74$(_context74) {
+      while (1) switch (_context74.prev = _context74.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          options = {
+            method: "GET",
+            headers: headers
+          };
+          _context74.next = 5;
+          return fetch("/iteminfo/jobstatistics", options);
+        case 5:
+          res = _context74.sent;
+          if (!res.ok) {
+            _context74.next = 11;
+            break;
+          }
+          _context74.next = 9;
+          return res.json();
+        case 9:
+          json = _context74.sent;
+          return _context74.abrupt("return", json);
+        case 11:
+          return _context74.abrupt("return", null);
+        case 12:
+        case "end":
+          return _context74.stop();
+      }
+    }, _callee74);
+  }));
+  return function apiGetUpdateItemInfoJobStatistics() {
+    return _ref74.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -37553,13 +38031,16 @@ function ModalBase(_ref) {
   var isOpen = _ref.isOpen,
     children = _ref.children,
     title = _ref.title,
+    renderTitleBtn = _ref.renderTitleBtn,
     height = _ref.height,
     width = _ref.width,
     marginTop = _ref.marginTop,
     letterSpacing = _ref.letterSpacing,
+    className = _ref.className,
     isLoading = _ref.isLoading;
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     children: /*#__PURE__*/(0,jsx_runtime.jsx)(Dialog_Dialog, {
+      className: className !== null && className !== void 0 ? className : '',
       open: isOpen,
       "aria-labelledby": "alert-dialog-title",
       "aria-describedby": "alert-dialog-description",
@@ -37596,7 +38077,7 @@ function ModalBase(_ref) {
           style: {
             flex: '0 1 auto'
           },
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)(DialogTitle_DialogTitle, {
+          children: /*#__PURE__*/(0,jsx_runtime.jsxs)(DialogTitle_DialogTitle, {
             sx: {
               color: '#FFFFFF',
               fontSize: '28px',
@@ -37608,7 +38089,7 @@ function ModalBase(_ref) {
               letterSpacing: letterSpacing !== null && letterSpacing !== void 0 ? letterSpacing : '0.0075em'
             },
             id: "alert-dialog-title",
-            children: title
+            children: [title, renderTitleBtn ? renderTitleBtn() : '']
           })
         }), !isLoading && children, isLoading && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           style: {
@@ -42646,7 +43127,412 @@ var ModalEdit = function ModalEdit(_ref5) {
 /* harmony default export */ const modalEdit = (ModalEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalItemInfoEdit_styles = ({"wrapper":"styles__wrapper--jBnWE","textareaWrapper":"styles__textareaWrapper--jyrSH","textareaContent":"styles__textareaContent--ynM1R","templates":"styles__templates--fG8d5","loadTemplate":"styles__loadTemplate--cvFnw","disabled":"styles__disabled--v4WR7","btnCreateTemplate":"styles__btnCreateTemplate--cL14X","actions":"styles__actions--UIzI_"});
+/* harmony default export */ const modalItemInfoEdit_styles = ({"wrapper":"styles__wrapper--jBnWE","textareaWrapper":"styles__textareaWrapper--jyrSH","error":"styles__error--Wg7zh","textareaContent":"styles__textareaContent--ynM1R","templates":"styles__templates--fG8d5","loadTemplate":"styles__loadTemplate--cvFnw","disabled":"styles__disabled--v4WR7","btnCreateTemplate":"styles__btnCreateTemplate--cL14X","actions":"styles__actions--UIzI_","titleButton":"styles__titleButton--RqDkS"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalTypeTagEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalTypeTagEdit_styles = ({"tagTypeEditModalContent":"styles__tagTypeEditModalContent--r4GBO","title":"styles__title--usGNp","titleDescription":"styles__titleDescription--UMvQa","tagItemEdit":"styles__tagItemEdit--YDfGH","tagItemEditLang":"styles__tagItemEditLang--JOZye","tagItemEditLangTitle":"styles__tagItemEditLangTitle--LXpkg","tagItemValue":"styles__tagItemValue--_lEvD","tagTypeEditButtons":"styles__tagTypeEditButtons--FgvI9"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const shared_textbox_styles = ({"wrapper":"styles__wrapper--H8Xnp"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/index.js
+
+
+
+var shared_textbox_TextBox = function TextBox(_ref) {
+  var onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue,
+    width = _ref.width,
+    placeholder = _ref.placeholder,
+    className = _ref.className;
+  var onChangeText = function onChangeText(event) {
+    var val = event.target.value;
+    if (onChange) onChange(val);
+  };
+  var wrapperStyle = {
+    width: width || '226px'
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: shared_textbox_styles.wrapper + (className ? shared_textbox_styles.className : ''),
+    onChange: onChangeText,
+    style: wrapperStyle,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+      type: 'text',
+      defaultValue: defaultValue,
+      placeholder: placeholder
+    })
+  });
+};
+/* harmony default export */ const shared_textbox = (shared_textbox_TextBox);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalTypeTagEdit/index.js
+function ModalTypeTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalTypeTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalTypeTagEdit_typeof(o); }
+function ModalTypeTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalTypeTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function ModalTypeTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalTypeTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalTypeTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalTypeTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function ModalTypeTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function ModalTypeTagEdit_slicedToArray(arr, i) { return ModalTypeTagEdit_arrayWithHoles(arr) || ModalTypeTagEdit_iterableToArrayLimit(arr, i) || ModalTypeTagEdit_unsupportedIterableToArray(arr, i) || ModalTypeTagEdit_nonIterableRest(); }
+function ModalTypeTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalTypeTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalTypeTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalTypeTagEdit_arrayLikeToArray(o, minLen); }
+function ModalTypeTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalTypeTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalTypeTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var languageCodes = ['ru-RU', 'en-US'];
+  var _useState = (0,react.useState)(''),
+    _useState2 = ModalTypeTagEdit_slicedToArray(_useState, 2),
+    tagGameRu = _useState2[0],
+    setTagGameRu = _useState2[1];
+  var _useState3 = (0,react.useState)(''),
+    _useState4 = ModalTypeTagEdit_slicedToArray(_useState3, 2),
+    tagGameEn = _useState4[0],
+    setTagGameEn = _useState4[1];
+  var _useState5 = (0,react.useState)(''),
+    _useState6 = ModalTypeTagEdit_slicedToArray(_useState5, 2),
+    tagDlcRu = _useState6[0],
+    setTagDlcRu = _useState6[1];
+  var _useState7 = (0,react.useState)(''),
+    _useState8 = ModalTypeTagEdit_slicedToArray(_useState7, 2),
+    tagDlcEn = _useState8[0],
+    setTagDlcEn = _useState8[1];
+  var languageCodesSetters = new Map().set(languageCodes[0], function (isDlc) {
+    return isDlc == true ? setTagDlcRu : setTagGameRu;
+  }).set(languageCodes[1], function (isDlc) {
+    return isDlc == true ? setTagDlcEn : setTagGameEn;
+  });
+  var handleChange = function handleChange(setValue, event) {
+    var val = event.target.value;
+    setValue(val);
+  };
+  var onSave = /*#__PURE__*/function () {
+    var _ref2 = ModalTypeTagEdit_asyncToGenerator( /*#__PURE__*/ModalTypeTagEdit_regeneratorRuntime().mark(function _callee() {
+      var data;
+      return ModalTypeTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            data = [{
+              isDlc: true,
+              values: [{
+                languageCode: languageCodes[0],
+                value: tagDlcRu
+              }, {
+                languageCode: languageCodes[1],
+                value: tagDlcEn
+              }]
+            }, {
+              isDlc: false,
+              values: [{
+                languageCode: languageCodes[0],
+                value: tagGameRu
+              }, {
+                languageCode: languageCodes[1],
+                value: tagGameEn
+              }]
+            }];
+            _context.next = 3;
+            return apiTagTypeReplacementValues(data);
+          case 3:
+            onClose();
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function onSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  (0,react.useEffect)(function () {
+    apiFetchTagTypeReplacementValues().then(function (data) {
+      if (!data || data.length == 0) {
+        return;
+      }
+      var _iterator = ModalTypeTagEdit_createForOfIteratorHelper(data),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var item = _step.value;
+          if (!item.tagTypeReplacementValues || item.tagTypeReplacementValues.length == 0) {
+            continue;
+          }
+          var _iterator2 = ModalTypeTagEdit_createForOfIteratorHelper(item.tagTypeReplacementValues),
+            _step2;
+          try {
+            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+              var tagTypeReplacementValue = _step2.value;
+              var setter = languageCodesSetters.get(tagTypeReplacementValue.languageCode)(item.isDlc);
+              if (!tagTypeReplacementValue.value) {
+                continue;
+              }
+              setter(tagTypeReplacementValue.value);
+            }
+          } catch (err) {
+            _iterator2.e(err);
+          } finally {
+            _iterator2.f();
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    });
+  }, []);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    className: ModalTypeTagEdit_styles.tagTypeEditModalContent,
+    width: '685px',
+    height: 'auto',
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalTypeTagEdit_styles.title,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+        children: "\u0422\u0435\u0433\u0438 - %type%"
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalTypeTagEdit_styles.titleDescription,
+      children: "\u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0442\u0438\u043F \u043F\u0440\u043E\u0434\u0443\u043A\u0442\u0430 - \u0418\u0433\u0440\u0430/\u0414\u043E\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435"
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalTypeTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "33",
+            height: "23",
+            viewBox: "0 0 33 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+              fill: "white"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+              fill: "#D52B1E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+              fill: "#0039A6"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "\u0418\u0433\u0440\u0430"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagGameRu,
+            value: tagGameRu,
+            placeholder: 'Игра',
+            onChange: function onChange(event) {
+              return handleChange(setTagGameRu, event);
+            }
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "32",
+            height: "23",
+            viewBox: "0 0 32 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+              fill: "#FEFEFE"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 14.813H27.542L32 17.0407V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+              fill: "#C8102E"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "\u0418\u0433\u0440\u0430"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagGameEn,
+            value: tagGameEn,
+            placeholder: 'Game',
+            onChange: function onChange(event) {
+              return handleChange(setTagGameEn, event);
+            }
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalTypeTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "33",
+            height: "23",
+            viewBox: "0 0 33 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+              fill: "white"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+              fill: "#D52B1E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+              fill: "#0039A6"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "DLC"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagDlcRu,
+            value: tagDlcRu,
+            placeholder: 'Дополнение',
+            onChange: function onChange(event) {
+              return handleChange(setTagDlcRu, event);
+            }
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+            width: "32",
+            height: "23",
+            viewBox: "0 0 32 23",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+              fill: "#FEFEFE"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 14.813H27.542L32 17.0407V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+              fill: "#012169"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+              fill: "#C8102E"
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+              fill: "#C8102E"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+            children: "DLC"
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalTypeTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
+            type: 'text',
+            defaultValue: tagDlcEn,
+            value: tagDlcEn,
+            placeholder: 'DLC',
+            onChange: function onChange(event) {
+              return handleChange(setTagDlcEn, event);
+            }
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalTypeTagEdit_styles.tagTypeEditButtons,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onSave,
+        children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const ModalTagsView_ModalTypeTagEdit = (ModalTypeTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalPromoTagEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalPromoTagEdit_styles = ({"tagPromoEditModalContent":"styles__tagPromoEditModalContent--xlZGl","title":"styles__title--hFwZq","titleDescription":"styles__titleDescription--kGV5u","tagItemEdit":"styles__tagItemEdit--licj8","tagItemEditLang":"styles__tagItemEditLang--xpw7v","tagItemEditLangTitle":"styles__tagItemEditLangTitle--RNveZ","tagItemEditLangPlatforms":"styles__tagItemEditLangPlatforms--ci0wA","activeTab":"styles__activeTab--hg_2M","tagItemValue":"styles__tagItemValue--WcOhs","tagPromoEditButtons":"styles__tagPromoEditButtons--bPKTS"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textarea/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const textarea_styles = ({"wrapper":"styles__wrapper--gUZ9v","inputControl":"styles__inputControl--NWJQk","boxes":"styles__boxes--BQWU_","textarea":"styles__textarea--c283q"});
@@ -42694,6 +43580,1004 @@ var Textarea = function Textarea(_ref) {
   });
 };
 /* harmony default export */ const shared_textarea = (Textarea);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalPromoTagEdit/index.js
+function ModalPromoTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalPromoTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalPromoTagEdit_typeof(o); }
+function ModalPromoTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalPromoTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalPromoTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalPromoTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function ModalPromoTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function ModalPromoTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalPromoTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function ModalPromoTagEdit_slicedToArray(arr, i) { return ModalPromoTagEdit_arrayWithHoles(arr) || ModalPromoTagEdit_iterableToArrayLimit(arr, i) || ModalPromoTagEdit_unsupportedIterableToArray(arr, i) || ModalPromoTagEdit_nonIterableRest(); }
+function ModalPromoTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalPromoTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalPromoTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalPromoTagEdit_arrayLikeToArray(o, minLen); }
+function ModalPromoTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalPromoTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalPromoTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var _useState = (0,react.useState)([]),
+    _useState2 = ModalPromoTagEdit_slicedToArray(_useState, 2),
+    languages = _useState2[0],
+    setLanguages = _useState2[1];
+  var _useState3 = (0,react.useState)([]),
+    _useState4 = ModalPromoTagEdit_slicedToArray(_useState3, 2),
+    marketPlaces = _useState4[0],
+    setMarketPlaces = _useState4[1];
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = ModalPromoTagEdit_slicedToArray(_useState5, 2),
+    selectedRuPlatform = _useState6[0],
+    setSelectedRuPlatform = _useState6[1];
+  var _useState7 = (0,react.useState)(null),
+    _useState8 = ModalPromoTagEdit_slicedToArray(_useState7, 2),
+    selectedEnPlatform = _useState8[0],
+    setSelectedEnPlatform = _useState8[1];
+  var _useState9 = (0,react.useState)(new Map()),
+    _useState10 = ModalPromoTagEdit_slicedToArray(_useState9, 2),
+    values = _useState10[0],
+    setValues = _useState10[1];
+  var getInitValues = function getInitValues(marketPlaceData, langData) {
+    var map = new Map();
+    marketPlaceData.forEach(function (item) {
+      langData.forEach(function (lang) {
+        map.set("".concat(item.id).concat(lang), '');
+      });
+    });
+    return map;
+  };
+  (0,react.useEffect)(function () {
+    apiFetchLanguages().then(function (langData) {
+      if (!langData || langData.length == 0) {
+        return;
+      }
+      var langData = langData.map(function (x) {
+        return x.code;
+      });
+      setLanguages(langData);
+      apiFetchMarketPlaces().then(function (marketPlaceData) {
+        if (!marketPlaceData || marketPlaceData.length == 0) {
+          return;
+        }
+        setMarketPlaces(marketPlaceData);
+        setSelectedEnPlatform(marketPlaceData[0]);
+        setSelectedRuPlatform(marketPlaceData[0]);
+        apiFetchTagPromoReplacementValues().then(function (data) {
+          if (!data || data.length == 0) {
+            return;
+          }
+          var newMap = new Map(getInitValues(marketPlaceData, langData));
+          var _iterator = ModalPromoTagEdit_createForOfIteratorHelper(data),
+            _step;
+          try {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
+              var item = _step.value;
+              if (!item.replacementValues || item.replacementValues.length == 0) {
+                continue;
+              }
+              var _iterator2 = ModalPromoTagEdit_createForOfIteratorHelper(item.replacementValues),
+                _step2;
+              try {
+                for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                  var tagPromoReplacementValue = _step2.value;
+                  if (!tagPromoReplacementValue.value) {
+                    continue;
+                  }
+                  newMap = new Map(newMap.set("".concat(item.marketPlaceId).concat(tagPromoReplacementValue.languageCode), tagPromoReplacementValue.value));
+                }
+              } catch (err) {
+                _iterator2.e(err);
+              } finally {
+                _iterator2.f();
+              }
+            }
+          } catch (err) {
+            _iterator.e(err);
+          } finally {
+            _iterator.f();
+          }
+          setValues(newMap);
+        });
+      });
+    });
+  }, []);
+  var handleChangeRussianText = function handleChangeRussianText(text) {
+    setValues(new Map(values.set("".concat(selectedRuPlatform.id).concat(languages[0]), text)));
+  };
+  var handleChangeEnglishText = function handleChangeEnglishText(text) {
+    setValues(new Map(values.set("".concat(selectedEnPlatform.id).concat(languages[1]), text)));
+  };
+  var onSave = /*#__PURE__*/function () {
+    var _ref2 = ModalPromoTagEdit_asyncToGenerator( /*#__PURE__*/ModalPromoTagEdit_regeneratorRuntime().mark(function _callee() {
+      var data, _iterator3, _step3, item, marketPlaceItem, _iterator4, _step4, language;
+      return ModalPromoTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            data = [];
+            _iterator3 = ModalPromoTagEdit_createForOfIteratorHelper(marketPlaces);
+            try {
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                item = _step3.value;
+                marketPlaceItem = {
+                  marketPlaceId: item.id,
+                  values: []
+                };
+                _iterator4 = ModalPromoTagEdit_createForOfIteratorHelper(languages);
+                try {
+                  for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+                    language = _step4.value;
+                    marketPlaceItem.values.push({
+                      languageCode: language,
+                      value: values.get("".concat(item.id).concat(language))
+                    });
+                  }
+                } catch (err) {
+                  _iterator4.e(err);
+                } finally {
+                  _iterator4.f();
+                }
+                data.push(marketPlaceItem);
+              }
+            } catch (err) {
+              _iterator3.e(err);
+            } finally {
+              _iterator3.f();
+            }
+            _context.next = 5;
+            return apiTagPromoReplacementValues(data);
+          case 5:
+            onClose();
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function onSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var renderPlatforms = function renderPlatforms(lang) {
+    if (!marketPlaces || marketPlaces.length == 0) {
+      return null;
+    }
+    return marketPlaces.map(function (value) {
+      return renderPlatform(lang, value);
+    });
+  };
+  var renderPlatform = function renderPlatform(lang, value) {
+    if (lang == languages[0]) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: (selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id) == value.id ? ModalPromoTagEdit_styles.activeTab : '',
+        onClick: function onClick() {
+          return setSelectedRuPlatform(value);
+        },
+        children: value.name
+      });
+    } else if (lang == languages[1]) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: (selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id) == value.id ? ModalPromoTagEdit_styles.activeTab : '',
+        onClick: function onClick() {
+          return setSelectedEnPlatform(value);
+        },
+        children: value.name
+      });
+    }
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    className: ModalPromoTagEdit_styles.tagPromoEditModalContent,
+    width: '890px',
+    height: 'auto',
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalPromoTagEdit_styles.title,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+        children: "\u0422\u0435\u0433\u0438 - %promo%"
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalPromoTagEdit_styles.titleDescription,
+      children: ["\u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0440\u0435\u043A\u043B\u0430\u043C\u043D\u043E\u0435 \u043F\u0440\u043E\u043C\u043E, \u043C\u043E\u0436\u043D\u043E \u0443\u043A\u0430\u0437\u0430\u0442\u044C", /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), "\u0442\u043E\u0432\u0430\u0440\u044B \u043F\u0440\u043E\u0434\u0430\u0432\u0446\u0430 \u0434\u043B\u044F \u043F\u0440\u043E\u0434\u0432\u0438\u0436\u0435\u043D\u0438\u044F"]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalPromoTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalPromoTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalPromoTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "33",
+              height: "23",
+              viewBox: "0 0 33 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+                fill: "white"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+                fill: "#D52B1E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+                fill: "#0039A6"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+              children: "\u0418\u0433\u0440\u0430"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: ModalPromoTagEdit_styles.tagItemEditLangPlatforms,
+            children: renderPlatforms(languages[0])
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalPromoTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeRussianText,
+            defaultValue: values ? values.get("".concat(selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id).concat(languages[0])) : '',
+            value: values ? values.get("".concat(selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id).concat(languages[0])) : '',
+            placeholder: 'Введенный текст промо',
+            height: '327px',
+            width: '100%'
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalPromoTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalPromoTagEdit_styles.tagItemEditLangTitle,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "32",
+              height: "23",
+              viewBox: "0 0 32 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+                fill: "#FEFEFE"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 14.813H27.542L32 17.0407V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+                fill: "#C8102E"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+              children: "\u0418\u0433\u0440\u0430"
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: ModalPromoTagEdit_styles.tagItemEditLangPlatforms,
+            children: renderPlatforms(languages[1])
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalPromoTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeEnglishText,
+            defaultValue: values ? values.get("".concat(selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id).concat(languages[1])) : '',
+            value: values ? values.get("".concat(selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id).concat(languages[1])) : '',
+            placeholder: 'Введенный текст промо',
+            height: '327px',
+            width: '100%'
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalPromoTagEdit_styles.tagPromoEditButtons,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onSave,
+        children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const ModalTagsView_ModalPromoTagEdit = (ModalPromoTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoAppsTagEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalInfoAppsTagEdit_styles = ({"tagInfoAppsEditModalContent":"styles__tagInfoAppsEditModalContent--flH6S","title":"styles__title--hASLs","titleDescription":"styles__titleDescription--uOGnv","tagItemEdit":"styles__tagItemEdit--vs48I","tagItemEditLang":"styles__tagItemEditLang--skCVc","tagItemEditLangTitle":"styles__tagItemEditLangTitle--tcHsb","tagItemValue":"styles__tagItemValue--pXo4k","tagInfoAppsEditButtons":"styles__tagInfoAppsEditButtons--hfrFf"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoAppsTagEdit/index.js
+function ModalInfoAppsTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalInfoAppsTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalInfoAppsTagEdit_typeof(o); }
+function ModalInfoAppsTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalInfoAppsTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalInfoAppsTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalInfoAppsTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function ModalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function ModalInfoAppsTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function ModalInfoAppsTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalInfoAppsTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function ModalInfoAppsTagEdit_slicedToArray(arr, i) { return ModalInfoAppsTagEdit_arrayWithHoles(arr) || ModalInfoAppsTagEdit_iterableToArrayLimit(arr, i) || ModalInfoAppsTagEdit_unsupportedIterableToArray(arr, i) || ModalInfoAppsTagEdit_nonIterableRest(); }
+function ModalInfoAppsTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalInfoAppsTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalInfoAppsTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalInfoAppsTagEdit_arrayLikeToArray(o, minLen); }
+function ModalInfoAppsTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalInfoAppsTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalInfoAppsTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var _useState = (0,react.useState)([]),
+    _useState2 = ModalInfoAppsTagEdit_slicedToArray(_useState, 2),
+    languages = _useState2[0],
+    setLanguages = _useState2[1];
+  var _useState3 = (0,react.useState)(null),
+    _useState4 = ModalInfoAppsTagEdit_slicedToArray(_useState3, 2),
+    selectedRuPlatform = _useState4[0],
+    setSelectedRuPlatform = _useState4[1];
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = ModalInfoAppsTagEdit_slicedToArray(_useState5, 2),
+    selectedEnPlatform = _useState6[0],
+    setSelectedEnPlatform = _useState6[1];
+  var _useState7 = (0,react.useState)(new Map()),
+    _useState8 = ModalInfoAppsTagEdit_slicedToArray(_useState7, 2),
+    values = _useState8[0],
+    setValues = _useState8[1];
+  (0,react.useEffect)(function () {
+    apiFetchLanguages().then(function (langData) {
+      if (!langData || langData.length == 0) {
+        return;
+      }
+      var langData = langData.map(function (x) {
+        return x.code;
+      });
+      setLanguages(langData);
+      apiFetchTagInfoAppsReplacementValues().then(function (data) {
+        if (!data || data.length == 0) {
+          return;
+        }
+        var valuesMap = new Map();
+        var _iterator = ModalInfoAppsTagEdit_createForOfIteratorHelper(data),
+          _step;
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var item = _step.value;
+            if (!item.replacementValues || item.replacementValues.length == 0) {
+              continue;
+            }
+            var _iterator2 = ModalInfoAppsTagEdit_createForOfIteratorHelper(item.replacementValues),
+              _step2;
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                var tagInfoAppsReplacementValue = _step2.value;
+                if (!tagInfoAppsReplacementValue.value) {
+                  continue;
+                }
+                valuesMap.set("".concat(tagInfoAppsReplacementValue.languageCode), tagInfoAppsReplacementValue.value);
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+        setValues(valuesMap);
+      });
+    });
+  }, []);
+  var handleChangeRussianText = function handleChangeRussianText(text) {
+    setValues(new Map(values.set("".concat(languages[0]), text)));
+  };
+  var handleChangeEnglishText = function handleChangeEnglishText(text) {
+    setValues(new Map(values.set("".concat(languages[1]), text)));
+  };
+  var onSave = /*#__PURE__*/function () {
+    var _ref2 = ModalInfoAppsTagEdit_asyncToGenerator( /*#__PURE__*/ModalInfoAppsTagEdit_regeneratorRuntime().mark(function _callee() {
+      var data, _iterator3, _step3, language;
+      return ModalInfoAppsTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            data = [];
+            _iterator3 = ModalInfoAppsTagEdit_createForOfIteratorHelper(languages);
+            try {
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                language = _step3.value;
+                data.push({
+                  languageCode: language,
+                  value: values.get("".concat(language))
+                });
+              }
+            } catch (err) {
+              _iterator3.e(err);
+            } finally {
+              _iterator3.f();
+            }
+            _context.next = 5;
+            return apiTagInfoAppsReplacementValues({
+              values: data
+            });
+          case 5:
+            onClose();
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function onSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    className: ModalInfoAppsTagEdit_styles.tagInfoAppsEditModalContent,
+    width: '890px',
+    height: 'auto',
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalInfoAppsTagEdit_styles.title,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+        children: "\u0422\u0435\u0433\u0438 - %infoApps%"
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalInfoAppsTagEdit_styles.titleDescription,
+      children: "\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u0430 \u0438\u0437\u0434\u0430\u043D\u0438\u044F"
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalInfoAppsTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalInfoAppsTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoAppsTagEdit_styles.tagItemEditLangTitle,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "33",
+              height: "23",
+              viewBox: "0 0 33 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+                fill: "white"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+                fill: "#D52B1E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+                fill: "#0039A6"
+              })]
+            })
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoAppsTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeRussianText,
+            defaultValue: values ? values.get("".concat(languages[0])) : '',
+            value: values ? values.get("".concat(languages[0])) : '',
+            placeholder: 'Состав данного изделия: <apps_list>',
+            height: '190px',
+            width: '100%'
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalInfoAppsTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoAppsTagEdit_styles.tagItemEditLangTitle,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "32",
+              height: "23",
+              viewBox: "0 0 32 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+                fill: "#FEFEFE"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 14.813H27.542L32 17.0407V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+                fill: "#C8102E"
+              })]
+            })
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoAppsTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeEnglishText,
+            defaultValue: values ? values.get("".concat(languages[1])) : '',
+            value: values ? values.get("".concat(languages[1])) : '',
+            placeholder: 'The composition of this publication: <apps_list>',
+            height: '190px',
+            width: '100%'
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalInfoAppsTagEdit_styles.tagInfoAppsEditButtons,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onSave,
+        children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const ModalTagsView_ModalInfoAppsTagEdit = (ModalInfoAppsTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoDlcTagEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalInfoDlcTagEdit_styles = ({"tagInfoDlcEditModalContent":"styles__tagInfoDlcEditModalContent--J0dBF","title":"styles__title--AVagL","titleDescription":"styles__titleDescription--OIQT7","tagItemEdit":"styles__tagItemEdit--CXMYE","tagItemEditLang":"styles__tagItemEditLang--Jrzzv","tagItemEditLangTitle":"styles__tagItemEditLangTitle--TDtnl","tagItemValue":"styles__tagItemValue--Sqv6d","tagInfoDlcEditButtons":"styles__tagInfoDlcEditButtons--cyv1L"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoDlcTagEdit/index.js
+function ModalInfoDlcTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalInfoDlcTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalInfoDlcTagEdit_typeof(o); }
+function ModalInfoDlcTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalInfoDlcTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalInfoDlcTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalInfoDlcTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function ModalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function ModalInfoDlcTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function ModalInfoDlcTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalInfoDlcTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function ModalInfoDlcTagEdit_slicedToArray(arr, i) { return ModalInfoDlcTagEdit_arrayWithHoles(arr) || ModalInfoDlcTagEdit_iterableToArrayLimit(arr, i) || ModalInfoDlcTagEdit_unsupportedIterableToArray(arr, i) || ModalInfoDlcTagEdit_nonIterableRest(); }
+function ModalInfoDlcTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalInfoDlcTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalInfoDlcTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalInfoDlcTagEdit_arrayLikeToArray(o, minLen); }
+function ModalInfoDlcTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalInfoDlcTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalInfoDlcTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var _useState = (0,react.useState)([]),
+    _useState2 = ModalInfoDlcTagEdit_slicedToArray(_useState, 2),
+    languages = _useState2[0],
+    setLanguages = _useState2[1];
+  var _useState3 = (0,react.useState)(null),
+    _useState4 = ModalInfoDlcTagEdit_slicedToArray(_useState3, 2),
+    selectedRuPlatform = _useState4[0],
+    setSelectedRuPlatform = _useState4[1];
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = ModalInfoDlcTagEdit_slicedToArray(_useState5, 2),
+    selectedEnPlatform = _useState6[0],
+    setSelectedEnPlatform = _useState6[1];
+  var _useState7 = (0,react.useState)(new Map()),
+    _useState8 = ModalInfoDlcTagEdit_slicedToArray(_useState7, 2),
+    values = _useState8[0],
+    setValues = _useState8[1];
+  (0,react.useEffect)(function () {
+    apiFetchLanguages().then(function (langData) {
+      if (!langData || langData.length == 0) {
+        return;
+      }
+      var langData = langData.map(function (x) {
+        return x.code;
+      });
+      setLanguages(langData);
+      apiFetchTagInfoDlcReplacementValues().then(function (data) {
+        if (!data || data.length == 0) {
+          return;
+        }
+        var valuesMap = new Map();
+        var _iterator = ModalInfoDlcTagEdit_createForOfIteratorHelper(data),
+          _step;
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var item = _step.value;
+            if (!item.replacementValues || item.replacementValues.length == 0) {
+              continue;
+            }
+            var _iterator2 = ModalInfoDlcTagEdit_createForOfIteratorHelper(item.replacementValues),
+              _step2;
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                var tagInfoDlcReplacementValue = _step2.value;
+                if (!tagInfoDlcReplacementValue.value) {
+                  continue;
+                }
+                valuesMap.set("".concat(tagInfoDlcReplacementValue.languageCode), tagInfoDlcReplacementValue.value);
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+        setValues(valuesMap);
+      });
+    });
+  }, []);
+  var handleChangeRussianText = function handleChangeRussianText(text) {
+    setValues(new Map(values.set("".concat(languages[0]), text)));
+  };
+  var handleChangeEnglishText = function handleChangeEnglishText(text) {
+    setValues(new Map(values.set("".concat(languages[1]), text)));
+  };
+  var onSave = /*#__PURE__*/function () {
+    var _ref2 = ModalInfoDlcTagEdit_asyncToGenerator( /*#__PURE__*/ModalInfoDlcTagEdit_regeneratorRuntime().mark(function _callee() {
+      var data, _iterator3, _step3, language;
+      return ModalInfoDlcTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            data = [];
+            _iterator3 = ModalInfoDlcTagEdit_createForOfIteratorHelper(languages);
+            try {
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                language = _step3.value;
+                data.push({
+                  languageCode: language,
+                  value: values.get("".concat(language))
+                });
+              }
+            } catch (err) {
+              _iterator3.e(err);
+            } finally {
+              _iterator3.f();
+            }
+            _context.next = 5;
+            return apiTagInfoDlcReplacementValues({
+              values: data
+            });
+          case 5:
+            onClose();
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function onSave() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    className: ModalInfoDlcTagEdit_styles.tagInfoDlcEditModalContent,
+    width: '890px',
+    height: 'auto',
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalInfoDlcTagEdit_styles.title,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+        children: "\u0422\u0435\u0433\u0438 - %infoDLC%"
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: ModalInfoDlcTagEdit_styles.titleDescription,
+      children: "\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u0430 \u0438\u0437\u0434\u0430\u043D\u0438\u044F"
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalInfoDlcTagEdit_styles.tagItemEdit,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalInfoDlcTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoDlcTagEdit_styles.tagItemEditLangTitle,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "33",
+              height: "23",
+              viewBox: "0 0 33 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+                fill: "white"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+                fill: "#D52B1E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+                fill: "#0039A6"
+              })]
+            })
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoDlcTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeRussianText,
+            defaultValue: values ? values.get("".concat(languages[0])) : '',
+            value: values ? values.get("".concat(languages[0])) : '',
+            placeholder: 'Состав данного изделия: <apps_list>',
+            height: '190px',
+            width: '100%'
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalInfoDlcTagEdit_styles.tagItemEditLang,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoDlcTagEdit_styles.tagItemEditLangTitle,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "32",
+              height: "23",
+              viewBox: "0 0 32 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+                fill: "#FEFEFE"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 14.813H27.542L32 17.0407V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+                fill: "#C8102E"
+              })]
+            })
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: ModalInfoDlcTagEdit_styles.tagItemValue,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+            onChange: handleChangeEnglishText,
+            defaultValue: values ? values.get("".concat(languages[1])) : '',
+            value: values ? values.get("".concat(languages[1])) : '',
+            placeholder: 'The composition of this publication: <apps_list>',
+            height: '190px',
+            width: '100%'
+          })
+        })]
+      })]
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: ModalInfoDlcTagEdit_styles.tagInfoDlcEditButtons,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onSave,
+        children: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: '217px',
+        height: 'auto',
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    })]
+  });
+};
+/* harmony default export */ const ModalTagsView_ModalInfoDlcTagEdit = (ModalInfoDlcTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const ModalTagsView_styles = ({"tagsViewModalContent":"styles__tagsViewModalContent--MItAf","title":"styles__title--wOjwr","tagButtons":"styles__tagButtons--gCyRC","tagButtonsRow":"styles__tagButtonsRow--HJNTS","closeTagViewButton":"styles__closeTagViewButton--b53oI"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/index.js
+function ModalTagsView_slicedToArray(arr, i) { return ModalTagsView_arrayWithHoles(arr) || ModalTagsView_iterableToArrayLimit(arr, i) || ModalTagsView_unsupportedIterableToArray(arr, i) || ModalTagsView_nonIterableRest(); }
+function ModalTagsView_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function ModalTagsView_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalTagsView_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalTagsView_arrayLikeToArray(o, minLen); }
+function ModalTagsView_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ModalTagsView_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function ModalTagsView_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+var ModalTagsView = function ModalTagsView(_ref) {
+  var isOpen = _ref.isOpen,
+    onClose = _ref.onClose;
+  if (!isOpen) return;
+  var _useState = (0,react.useState)(false),
+    _useState2 = ModalTagsView_slicedToArray(_useState, 2),
+    showTagTypeEditModal = _useState2[0],
+    setShowTagTypeEditModal = _useState2[1];
+  var _useState3 = (0,react.useState)(false),
+    _useState4 = ModalTagsView_slicedToArray(_useState3, 2),
+    showTagPromoEditModal = _useState4[0],
+    setShowTagPromoEditModal = _useState4[1];
+  var _useState5 = (0,react.useState)(false),
+    _useState6 = ModalTagsView_slicedToArray(_useState5, 2),
+    showTagInfoAppsEditModal = _useState6[0],
+    setShowTagInfoAppsEditModal = _useState6[1];
+  var _useState7 = (0,react.useState)(false),
+    _useState8 = ModalTagsView_slicedToArray(_useState7, 2),
+    showTagInfoDlcEditModal = _useState8[0],
+    setShowTagInfoDlcEditModal = _useState8[1];
+  var renderModals = function renderModals() {
+    if (showTagTypeEditModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalTypeTagEdit, {
+        isOpen: showTagTypeEditModal,
+        onClose: function onClose() {
+          return setShowTagTypeEditModal(!showTagTypeEditModal);
+        }
+      });
+    }
+    if (showTagPromoEditModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalPromoTagEdit, {
+        isOpen: showTagPromoEditModal,
+        onClose: function onClose() {
+          return setShowTagPromoEditModal(!showTagPromoEditModal);
+        }
+      });
+    }
+    if (showTagInfoAppsEditModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalInfoAppsTagEdit, {
+        isOpen: showTagInfoAppsEditModal,
+        onClose: function onClose() {
+          return setShowTagInfoAppsEditModal(!showTagInfoAppsEditModal);
+        }
+      });
+    }
+    if (showTagInfoDlcEditModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalInfoDlcTagEdit, {
+        isOpen: showTagInfoDlcEditModal,
+        onClose: function onClose() {
+          return setShowTagInfoDlcEditModal(!showTagInfoDlcEditModal);
+        }
+      });
+    }
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+      isOpen: isOpen,
+      className: ModalTagsView_styles.tagsViewModalContent,
+      width: '730px',
+      height: 'auto',
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: ModalTagsView_styles.title,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
+          children: "\u0422\u0435\u0433\u0438 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432"
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: ModalTagsView_styles.tagButtons,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTagsView_styles.tagButtonsRow,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            onClick: function onClick() {
+              return setShowTagTypeEditModal(true);
+            },
+            text: '%type%',
+            width: '190px',
+            height: '70px'
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            onClick: function onClick() {
+              return setShowTagPromoEditModal(true);
+            },
+            text: '%promo%',
+            width: '190px',
+            height: '70px'
+          })]
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: ModalTagsView_styles.tagButtonsRow,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            onClick: function onClick() {
+              return setShowTagInfoAppsEditModal(true);
+            },
+            text: '%infoApps%',
+            width: '190px',
+            height: '70px'
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            onClick: function onClick() {
+              return setShowTagInfoDlcEditModal(true);
+            },
+            text: '%infoDlc%',
+            width: '190px',
+            height: '70px'
+          })]
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        width: 'auto',
+        height: 'auto',
+        className: ModalTagsView_styles.closeTagViewButton,
+        onClick: onClose,
+        children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+      })]
+    }), renderModals()]
+  });
+};
+/* harmony default export */ const modalItemInfoEdit_ModalTagsView = (ModalTagsView);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/index.js
 function modalItemInfoEdit_typeof(o) { "@babel/helpers - typeof"; return modalItemInfoEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalItemInfoEdit_typeof(o); }
 function modalItemInfoEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalItemInfoEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalItemInfoEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalItemInfoEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -42714,6 +44598,7 @@ function modalItemInfoEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return 
 
 
 
+
 var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
   var isOpen = _ref.isOpen,
     onSave = _ref.onSave,
@@ -42721,6 +44606,9 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     viewMode = _ref.viewMode,
     itemInfoTemplates = _ref.itemInfoTemplates;
   if (!isOpen) return;
+  var maxRussianTextLength = 3969;
+  var maxEnglishTextLength = 3988;
+  var languageCodes = ['ru-RU', 'en-US'];
   var buttonWidth = '386px';
   var buttonTemplateWidth = '172px';
   var buttonCreateTemplateWidth = '207px';
@@ -42734,6 +44622,51 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
     _useState4 = modalItemInfoEdit_slicedToArray(_useState3, 2),
     englishText = _useState4[0],
     setEnglishText = _useState4[1];
+  var _useState5 = (0,react.useState)(''),
+    _useState6 = modalItemInfoEdit_slicedToArray(_useState5, 2),
+    errorRussianText = _useState6[0],
+    setErrorRussianText = _useState6[1];
+  var _useState7 = (0,react.useState)(''),
+    _useState8 = modalItemInfoEdit_slicedToArray(_useState7, 2),
+    errorEnglishText = _useState8[0],
+    setErrorEnglishText = _useState8[1];
+  var _useState9 = (0,react.useState)(false),
+    _useState10 = modalItemInfoEdit_slicedToArray(_useState9, 2),
+    showTagsModal = _useState10[0],
+    setShowTagsModal = _useState10[1];
+  var _useState11 = (0,react.useState)([]),
+    _useState12 = modalItemInfoEdit_slicedToArray(_useState11, 2),
+    tagPromoReplacementValues = _useState12[0],
+    setTagPromoReplacementValues = _useState12[1];
+  var _useState13 = (0,react.useState)([]),
+    _useState14 = modalItemInfoEdit_slicedToArray(_useState13, 2),
+    tagTypeReplacementValues = _useState14[0],
+    setTagTypeReplacementValues = _useState14[1];
+  (0,react.useEffect)(function () {
+    apiFetchTagPromoReplacementValues().then(function (data) {
+      if (!data || data.length == 0) {
+        return;
+      }
+      setTagPromoReplacementValues(data.flatMap(function (x) {
+        return x.replacementValues;
+      }));
+    });
+  }, []);
+  (0,react.useEffect)(function () {
+    apiFetchTagTypeReplacementValues().then(function (data) {
+      if (!data || data.length == 0) {
+        return;
+      }
+      setTagTypeReplacementValues(data.flatMap(function (x) {
+        return x.replacementValues;
+      }));
+    });
+  }, []);
+  (0,react.useEffect)(function () {
+    apiGetUpdateItemInfoJobStatistics().then(function (data) {
+      console.log("job statistics:", data);
+    });
+  }, []);
   var getTitle = function getTitle() {
     if (viewMode === 'main') {
       return 'Настроить описание товара';
@@ -42760,10 +44693,10 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
   };
   var onCreateTemplate = function onCreateTemplate() {
     var itemInfoTemplateValues = [{
-      LanguageCode: "ru-RU",
+      LanguageCode: languageCodes[0],
       Value: russianText
     }, {
-      LanguageCode: "en-US",
+      LanguageCode: languageCodes[1],
       Value: englishText
     }];
     apiCreateItemInfoTemplate(itemInfoTemplateValues);
@@ -42824,146 +44757,225 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
       className: modalItemInfoEdit_styles.btnCreateTemplate
     });
   };
-  return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalBase, {
-    isOpen: isOpen,
-    title: getTitle(),
-    width: 1548,
-    height: 836,
-    letterSpacing: '0.03em',
-    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: modalItemInfoEdit_styles.wrapper,
-      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: modalItemInfoEdit_styles.textareaWrapper,
+  var renderTitleBtn = function renderTitleBtn() {
+    return /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+      width: "auto",
+      minWidth: "auto",
+      height: "auto",
+      className: modalItemInfoEdit_styles.titleButton,
+      text: "\u0422\u0435\u0433\u0438",
+      onClick: function onClick() {
+        setShowTagsModal(!showTagsModal);
+      }
+    });
+  };
+  var renderModals = function renderModals() {
+    if (showTagsModal) {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit_ModalTagsView, {
+        isOpen: showTagsModal,
+        onClose: function onClose() {
+          return setShowTagsModal(!showTagsModal);
+        }
+      });
+    }
+  };
+  var validateText = function validateText(russianText, englishText) {
+    var russianTextLength = russianText.length + getTextActualLengthDiff(russianText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[0]) + getTextActualLengthDiff(russianText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[0]);
+    if (russianTextLength > maxRussianTextLength) {
+      setErrorRussianText("\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0442\u0435\u043A\u0441\u0442\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435 (".concat(maxRussianTextLength, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"));
+      return false;
+    } else {
+      setErrorRussianText('');
+    }
+    var englishTextLength = englishText.length + getTextActualLengthDiff(englishText, tagTypeReplacementValues, /%type%/g, "%type%", languageCodes[1]) + getTextActualLengthDiff(englishText, tagPromoReplacementValues, /%promo%/g, "%promo%", languageCodes[1]);
+    if (englishTextLength > maxEnglishTextLength) {
+      setErrorEnglishText("\u041F\u0440\u0435\u0432\u044B\u0448\u0435\u043D\u0430 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0442\u0435\u043A\u0441\u0442\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043D\u0430 \u0430\u043D\u0433\u043B\u0438\u0439\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435 (".concat(maxEnglishTextLength, " \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"));
+      return false;
+    } else {
+      setErrorEnglishText('');
+    }
+    return true;
+  };
+  var getTextActualLengthDiff = function getTextActualLengthDiff(source, tagReplacementValues, patternTagValue, tagValue, languageCode) {
+    if (tagReplacementValues.length == 0) {
+      return 0;
+    }
+    var tagCount = ((source || '').match(patternTagValue) || []).length;
+    if (tagCount > 0) {
+      var findedTagValue = tagReplacementValues.find(function (x) {
+        return x.languageCode == languageCode;
+      });
+      if (findedTagValue.value) {
+        var diffTagReplacementValuesLength = findedTagValue.value.length - tagValue.length;
+        return diffTagReplacementValuesLength * tagCount;
+      }
+    }
+    return 0;
+  };
+  var renderRussianErrors = function renderRussianErrors() {
+    if (!errorRussianText) {
+      return;
+    }
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalItemInfoEdit_styles.error,
+      children: errorRussianText
+    });
+  };
+  var renderEnglishErrors = function renderEnglishErrors() {
+    if (!errorEnglishText) {
+      return;
+    }
+    return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalItemInfoEdit_styles.error,
+      children: errorEnglishText
+    });
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ModalBase, {
+      isOpen: isOpen,
+      title: getTitle(),
+      renderTitleBtn: renderTitleBtn,
+      width: 1548,
+      height: 836,
+      letterSpacing: '0.03em',
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalItemInfoEdit_styles.wrapper,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: modalItemInfoEdit_styles.textareaContent,
-          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
-            width: "33",
-            height: "23",
-            viewBox: "0 0 33 23",
-            fill: "none",
-            xmlns: "http://www.w3.org/2000/svg",
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
-              fill: "white"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
-              fill: "#D52B1E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
-              fill: "#0039A6"
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
-            onChange: handleChangeRussianText,
-            defaultValue: russianText,
-            value: russianText,
-            placeholder: 'Введенный текст с описанием товара',
-            height: '492px',
-            width: '100%'
+          className: modalItemInfoEdit_styles.textareaWrapper,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalItemInfoEdit_styles.textareaContent,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "33",
+              height: "23",
+              viewBox: "0 0 33 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.77223 0H30.5082C31.4849 0 32.2804 0.793988 32.2804 1.76896V11.2092H0V1.76896C0 0.793988 0.795458 0 1.77223 0Z",
+                fill: "white"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 11.2095H32.2862V20.6498C32.2862 21.6247 31.4908 22.4187 30.514 22.4187H1.77223C0.795458 22.4187 0 21.6189 0 20.6498V11.2095Z",
+                fill: "#D52B1E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.47266H32.2862V14.9455H0V7.47266Z",
+                fill: "#0039A6"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+              onChange: handleChangeRussianText,
+              defaultValue: russianText,
+              value: russianText,
+              placeholder: 'Введенный текст с описанием товара',
+              height: '492px',
+              width: '100%'
+            }), renderRussianErrors()]
+          }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: modalItemInfoEdit_styles.textareaContent,
+            children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
+              width: "32",
+              height: "23",
+              viewBox: "0 0 32 23",
+              fill: "none",
+              xmlns: "http://www.w3.org/2000/svg",
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
+                fill: "#FEFEFE"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 14.813H27.542L32 17.0407V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M0 14.813H4.43478L0 17.0292V14.813Z",
+                fill: "#012169"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
+                fill: "#C8102E"
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
+                d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
+                fill: "#C8102E"
+              })]
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
+              onChange: handleChangeEnglishText,
+              defaultValue: englishText,
+              value: englishText,
+              placeholder: 'Введенный текст с описанием товара',
+              height: '492px',
+              width: '100%'
+            }), renderEnglishErrors()]
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: modalItemInfoEdit_styles.textareaContent,
-          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
-            width: "32",
-            height: "23",
-            viewBox: "0 0 32 23",
-            fill: "none",
-            xmlns: "http://www.w3.org/2000/svg",
-            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M1.66377 22.2197H30.3362C31.258 22.1676 32 21.3981 32 20.4664V1.75328C32 0.792735 31.2174 0.00578639 30.2551 0H1.74493C0.782609 0.00578639 0 0.792735 0 1.75328V20.4607C0 21.3981 0.742029 22.1676 1.66377 22.2197Z",
-              fill: "#FEFEFE"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M13.7623 13.326V22.2197H18.2145V13.326H32V8.8821H18.2145V0H13.7623V8.8821H0V13.326H13.7623Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M19.6985 7.19248V0H30.2666C30.997 0.0115728 31.6231 0.468697 31.8782 1.11099L19.6985 7.19248Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M19.6985 15.0273V22.2198H30.3362C31.0376 22.1793 31.6289 21.728 31.8782 21.1088L19.6985 15.0273Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M12.2782 15.0273V22.2198H1.66373C0.962284 22.1793 0.365182 21.728 0.121704 21.0973L12.2782 15.0273Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M12.2782 7.19248V0H1.7333C1.00286 0.0115728 0.370979 0.474484 0.121704 1.12256L12.2782 7.19248Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 7.40662H4.43478L0 5.19043V7.40662Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M32 7.40647H27.542L32 5.17871V7.40647Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M32 14.813H27.542L32 17.0407V14.813Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M0 14.813H4.43478L0 17.0292V14.813Z",
-              fill: "#012169"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M32 1.88037L20.9565 7.40637H23.4261L32 3.12444V1.88037Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M11.0203 14.813H8.55072L0 19.0833V20.3274L11.0435 14.813H11.0203Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M6.09855 7.4123H8.56812L0 3.13037V4.36866L6.09855 7.4123Z",
-              fill: "#C8102E"
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("path", {
-              d: "M25.8724 14.8076H23.4028L31.9999 19.1069V17.8686L25.8724 14.8076Z",
-              fill: "#C8102E"
-            })]
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
-            onChange: handleChangeEnglishText,
-            defaultValue: englishText,
-            value: englishText,
-            placeholder: 'Введенный текст с описанием товара',
-            height: '492px',
-            width: '100%'
+          className: modalItemInfoEdit_styles.templates,
+          children: [getButtonsTemplate(), getCreateTemplateButton()]
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: modalItemInfoEdit_styles.actions,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Сохранить',
+            style: {
+              backgroundColor: '#478C35',
+              marginRight: '46px'
+            },
+            width: buttonWidth,
+            onClick: function onClick() {
+              if (!validateText(russianText, englishText)) {
+                return;
+              }
+              onSave(russianText, englishText);
+              setRussianText('');
+              setEnglishText('');
+            },
+            isDisabled: state_namespaceObject.itemInfoTemplatesLoading
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: 'Назад',
+            onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
+              return modalItemInfoEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+                while (1) switch (_context.prev = _context.next) {
+                  case 0:
+                    if (onCancel) {
+                      setRussianText('');
+                      setEnglishText('');
+                      onCancel();
+                    }
+                  case 1:
+                  case "end":
+                    return _context.stop();
+                }
+              }, _callee);
+            })),
+            width: buttonWidth,
+            style: {
+              backgroundColor: '#9A7AA9',
+              marginLeft: '0px'
+            },
+            isDisabled: state_namespaceObject.itemInfoTemplatesLoading
           })]
         })]
-      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: modalItemInfoEdit_styles.templates,
-        children: [getButtonsTemplate(), getCreateTemplateButton()]
-      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: modalItemInfoEdit_styles.actions,
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-          text: 'Сохранить',
-          style: {
-            backgroundColor: '#478C35',
-            marginRight: '46px'
-          },
-          width: buttonWidth,
-          onClick: function onClick() {
-            onSave(russianText, englishText);
-            setRussianText('');
-            setEnglishText('');
-          },
-          isDisabled: state_namespaceObject.itemInfoTemplatesLoading
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-          text: 'Назад',
-          onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
-            return modalItemInfoEdit_regeneratorRuntime().wrap(function _callee$(_context) {
-              while (1) switch (_context.prev = _context.next) {
-                case 0:
-                  if (onCancel) {
-                    setRussianText('');
-                    setEnglishText('');
-                    onCancel();
-                  }
-                case 1:
-                case "end":
-                  return _context.stop();
-              }
-            }, _callee);
-          })),
-          width: buttonWidth,
-          style: {
-            backgroundColor: '#9A7AA9',
-            marginLeft: '0px'
-          },
-          isDisabled: state_namespaceObject.itemInfoTemplatesLoading
-        })]
-      })]
-    })
+      })
+    }), renderModals()]
   });
 };
 /* harmony default export */ const modalItemInfoEdit = (ModalItemInfoEdit);
@@ -43210,6 +45222,133 @@ var ModalBulkPercentEdit = function ModalBulkPercentEdit(_ref3) {
   });
 };
 /* harmony default export */ const modalBulkPercentEdit = (ModalBulkPercentEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPriceBasisEdit/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const modalBulkPriceBasisEdit_styles = ({"content":"styles__content--I7rqi","formItem":"styles__formItem--S9AKP","name":"styles__name--MDyhB","doubleControl":"styles__doubleControl--iXuxe","custTitle":"styles__custTitle--USZ8T","t2":"styles__t2--kFGt3","actions":"styles__actions--ejX2J"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalBulkPriceBasisEdit/index.js
+function modalBulkPriceBasisEdit_slicedToArray(arr, i) { return modalBulkPriceBasisEdit_arrayWithHoles(arr) || modalBulkPriceBasisEdit_iterableToArrayLimit(arr, i) || modalBulkPriceBasisEdit_unsupportedIterableToArray(arr, i) || modalBulkPriceBasisEdit_nonIterableRest(); }
+function modalBulkPriceBasisEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalBulkPriceBasisEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalBulkPriceBasisEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalBulkPriceBasisEdit_arrayLikeToArray(o, minLen); }
+function modalBulkPriceBasisEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalBulkPriceBasisEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalBulkPriceBasisEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var modalBulkPriceBasisEdit_FromItemSelect = function FromItemSelect(_ref) {
+  var name = _ref.name,
+    onChange = _ref.onChange,
+    value = _ref.value,
+    options = _ref.options,
+    hint = _ref.hint;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalBulkPriceBasisEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPriceBasisEdit_styles.name,
+      style: {
+        marginRight: '70px'
+      },
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(MultipleSelectPlaceholder, {
+        options: options,
+        defaultValue: value,
+        onChange: onChange,
+        hint: hint
+      })
+    })]
+  });
+};
+var ModalBulkPriceBasisEdit = function ModalBulkPriceBasisEdit(_ref2) {
+  var isOpen = _ref2.isOpen,
+    onCancel = _ref2.onCancel,
+    onSave = _ref2.onSave,
+    selectedCount = _ref2.selectedCount;
+  var _useState = (0,react.useState)(5),
+    _useState2 = modalBulkPriceBasisEdit_slicedToArray(_useState, 2),
+    steamCurrencyId = _useState2[0],
+    setSteamCurrencyId = _useState2[1];
+  var currencies = state.use().currencies.map(function (c) {
+    return {
+      id: c.steamId,
+      name: c.code
+    };
+  });
+  var handleChange = function handleChange(prop) {
+    return function (val) {
+      if (prop === 'steamCurrencyId') {
+        val = currencies.find(function (c) {
+          return c.name === val;
+        }).id;
+      }
+      setSteamCurrencyId(val);
+    };
+  };
+  var currencyVal = (currencies.find(function (c) {
+    return c.id === steamCurrencyId;
+  }) || {}).name;
+  var title = /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: modalBulkPriceBasisEdit_styles.custTitle,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPriceBasisEdit_styles.t1,
+      children: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0446\u0435\u043D\u043E\u0432\u0443\u044E \u043E\u0441\u043D\u043E\u0432\u0443"
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalBulkPriceBasisEdit_styles.t2,
+      children: ["\u0412\u044B\u0431\u0440\u0430\u043D\u043E ", selectedCount, " \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u0434\u043B\u044F \u0440\u0435\u0434\u0430\u043A\u0438\u0442\u0440\u043E\u0432\u0430\u043D\u0438\u044F"]
+    })]
+  });
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
+    isOpen: isOpen,
+    title: title,
+    marginTop: '10px',
+    letterSpacing: '0.04em',
+    width: 600,
+    height: 450,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: modalBulkPriceBasisEdit_styles.content,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+        className: modalBulkPriceBasisEdit_styles.formItem,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPriceBasisEdit_FromItemSelect, {
+          name: "Ценовая основа:",
+          options: currencies,
+          onChange: handleChange('steamCurrencyId'),
+          value: currencyVal,
+          hint: 'Валюта, которая будет браться за основу цены товара. Стоимость будет конвертирована и установлена в рублях исходя из установленного курса в настройках.'
+        })
+      })
+    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: modalBulkPriceBasisEdit_styles.actions,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Сохранить',
+        style: {
+          backgroundColor: '#478C35',
+          marginRight: '24px'
+        },
+        onClick: function onClick() {
+          onSave(steamCurrencyId);
+        },
+        width: '290px',
+        height: '70px'
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+        text: 'Отмена',
+        onClick: function onClick() {
+          if (onCancel) onCancel();
+        },
+        style: {
+          backgroundColor: '#9A7AA9',
+          marginLeft: '0px'
+        },
+        width: '200px',
+        height: '70px'
+      })]
+    })]
+  });
+};
+/* harmony default export */ const modalBulkPriceBasisEdit = (ModalBulkPriceBasisEdit);
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/sortAsc.svg
 const sortAsc_namespaceObject = __webpack_require__.p + "4f79e53b8b75a873f823.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/sortDesc.svg
@@ -43283,6 +45422,12 @@ var ToggleSort = function ToggleSort(_ref) {
           return onSort('price');
         },
         children: "\u041F\u043E \u0441\u0443\u043C\u043C\u0435 \u0447\u0438\u0441\u0435\u043B"
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)("p", {
+        className: modalSort_styles.sortPriceDropDownItem,
+        onClick: function onClick() {
+          return onSort('discountPercent');
+        },
+        children: "\u041F\u043E \u043F\u0440\u043E\u0446\u0435\u043D\u0442\u0443 \u0441\u043A\u0438\u0434\u043A\u0438"
       })]
     })]
   });
@@ -43934,11 +46079,13 @@ function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var products = function products() {
   var _state$use = state.use(),
     items = _state$use.items,
     itemsLoading = _state$use.itemsLoading,
     bulkEditPercentModalIsOpen = _state$use.bulkEditPercentModalIsOpen,
+    bulkEditPriceBasisModalIsOpen = _state$use.bulkEditPriceBasisModalIsOpen,
     editItemModalIsOpen = _state$use.editItemModalIsOpen,
     editItemMainInfoModalIsOpen = _state$use.editItemMainInfoModalIsOpen,
     editItemAdditionalInfoModalIsOpen = _state$use.editItemAdditionalInfoModalIsOpen,
@@ -43978,6 +46125,10 @@ var products = function products() {
     _useState12 = list_slicedToArray(_useState11, 2),
     subMenuVisibility = _useState12[0],
     setSubMenuVisibility = _useState12[1];
+  var _useState13 = (0,react.useState)(-1),
+    _useState14 = list_slicedToArray(_useState13, 2),
+    lastSelectedId = _useState14[0],
+    setLastSelectedId = _useState14[1];
   var open = Boolean(anchorEl);
   var massChangeButStyle = {
     width: "200px",
@@ -44035,6 +46186,18 @@ var products = function products() {
           }
           return b.steamPercent - a.steamPercent;
         }
+      });
+    } else if (type === 'discountPercent') {
+      var getDiscountValue = function getDiscountValue(discount) {
+        if (discount != null && discount > 0) {
+          return sortOrder === "asc" ? discount : -discount;
+        }
+        return Infinity;
+      };
+      sorted.sort(function (a, b) {
+        var aDiscount = getDiscountValue(a.discountPercent);
+        var bDiscount = getDiscountValue(b.discountPercent);
+        return aDiscount - bDiscount;
       });
     } else {
       sorted.sort(function (a, b) {
@@ -44104,6 +46267,93 @@ var products = function products() {
     options: "Опции",
     active: ""
   };
+
+  // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
+  var getItemsBetweenSelected = function getItemsBetweenSelected(firstId, secondId) {
+    var startIndex = sortedItems.findIndex(function (item) {
+      return item.id === firstId;
+    });
+    var endIndex = sortedItems.findIndex(function (item) {
+      return item.id === secondId;
+    });
+    if (startIndex === -1 || endIndex === -1) return [];
+    if (startIndex == endIndex) return [sortedItems[startIndex]];
+    var sliceStart = Math.min(startIndex, endIndex);
+    var sliceEnd = Math.max(startIndex, endIndex);
+    return getSliceOfSortedItems(sliceStart, sliceEnd);
+  };
+
+  //Shift on the unselected
+  var addItemsToSelected = function addItemsToSelected(shiftId) {
+    var startIndex = -1;
+    var endIndex = -1;
+    var curId = -1;
+    var shiftIndex = sortedItems.findIndex(function (item) {
+      return item.id === shiftId;
+    });
+    if (selectedItems.length == 0) return [sortedItems[shiftIndex]];
+    for (var i = 0; i < sortedItems.length; i++) {
+      curId = sortedItems[i].id;
+      if (selectedItems.includes(curId)) {
+        if (startIndex < 0) startIndex = i;
+        endIndex = i;
+      }
+    }
+    if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+    var sliceStart = Math.min(startIndex, endIndex, shiftIndex);
+    var sliceEnd = Math.max(startIndex, endIndex, shiftIndex);
+    return getSliceOfSortedItems(sliceStart, sliceEnd);
+  };
+
+  //Shift on the selected
+  var removeItemsFromSelected = function removeItemsFromSelected(shiftId) {
+    var startIndex = -1;
+    var endIndex = -1;
+    var curId = -1;
+    var shiftIndex = sortedItems.findIndex(function (item) {
+      return item.id === shiftId;
+    });
+    if (selectedItems.length == 1) return [];
+    for (var i = 0; i < sortedItems.length; i++) {
+      curId = sortedItems[i].id;
+      if (selectedItems.includes(curId)) {
+        if (startIndex < 0) startIndex = i;
+        endIndex = i;
+      }
+    }
+    if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+    var sliceStart;
+    var sliceEnd;
+
+    //Just to be sure that shiftIndex between start and end
+    if (shiftIndex < startIndex || startIndex > endIndex) return [];
+    if (shiftIndex == startIndex) {
+      sliceStart = startIndex + 1;
+      sliceEnd = endIndex;
+    } else if (shiftIndex == endIndex) {
+      sliceStart = startIndex;
+      sliceEnd = endIndex - 1;
+    } else {
+      // Reduce top or botton of selected
+      if (lastSelectedId < shiftIndex) {
+        sliceStart = startIndex;
+        sliceEnd = shiftIndex - 1;
+      } else {
+        sliceStart = shiftIndex + 1;
+        sliceEnd = endIndex;
+      }
+    }
+    return getSliceOfSortedItems(sliceStart, sliceEnd);
+  };
+  var getSliceOfSortedItems = function getSliceOfSortedItems(sliceStart, sliceEnd) {
+    var arrNew;
+    if (sliceEnd >= sortedItems.length - 1) arrNew = sortedItems.slice(sliceStart).map(function (item) {
+      return item.id;
+    });else arrNew = sortedItems.slice(sliceStart, sliceEnd + 1).map(function (item) {
+      return item.id;
+    });
+    return arrNew;
+  };
   var getBtnMassDescriptionBlock = function getBtnMassDescriptionBlock(lines) {
     return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: list_styles.massDescriptionText,
@@ -44132,6 +46382,9 @@ var products = function products() {
   };
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
+    style: {
+      userSelect: 'none'
+    },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(sortedItems),
@@ -44175,17 +46428,36 @@ var products = function products() {
               children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 className: list_styles.listItemCheckbox,
                 children: /*#__PURE__*/(0,jsx_runtime.jsx)(list_listCheckBox, {
-                  onClick: function onClick(val) {
-                    if (val) {
-                      var newArr = _toConsumableArray(selectedItems);
-                      newArr.push(i.id);
-                      setSelectedItems(newArr);
+                  onCheckedChange: function onCheckedChange(val, shiftPressed) {
+                    var arrNew;
+                    if (shiftPressed) {
+                      if (val) {
+                        // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
+                        if (lastSelectedId > 0) {
+                          arrNew = getItemsBetweenSelected(lastSelectedId, i.id);
+                          setLastSelectedId(-1);
+                        } else {
+                          //Add new portion  (2-nd shift selects new)
+                          arrNew = addItemsToSelected(i.id);
+                        }
+                      } else {
+                        // Remove portion  (2-nd shift unselects old)
+                        arrNew = removeItemsFromSelected(i.id);
+                      }
                     } else {
-                      var _newArr = selectedItems.filter(function (id) {
-                        return id != i.id;
-                      });
-                      setSelectedItems(_newArr);
+                      var newLastId = -1;
+                      if (val) {
+                        arrNew = [].concat(_toConsumableArray(selectedItems), [i.id]);
+                        newLastId = i.id;
+                      } else {
+                        arrNew = selectedItems.filter(function (id) {
+                          return id != i.id;
+                        });
+                        if (arrNew.length == 1) newLastId = newArr[0];
+                      }
+                      setLastSelectedId(newLastId);
                     }
+                    setSelectedItems(arrNew);
                   },
                   value: selectedItems.indexOf(i.id) !== -1
                 })
@@ -44461,6 +46733,15 @@ var products = function products() {
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: list_styles.btnWrapper,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
+            text: "Смена ценовой основы",
+            style: massChangeButStyle,
+            onClick: function onClick() {
+              toggleBulkEditPriceBasisModal(true);
+            }
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: list_styles.btnWrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
             text: "Удалить все",
             style: massChangeButStyle,
             onClick: function onClick() {
@@ -44476,7 +46757,6 @@ var products = function products() {
         toggleEditItemModal(false);
       },
       onSave: function onSave(newItem) {
-        console.log(newItem);
         if (newItem.id) apiChangeItem(newItem);else apiCreateItem(newItem);
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit, {
@@ -44487,32 +46767,34 @@ var products = function products() {
         toggleItemAdditionalInfoModal(false);
       },
       onSave: function onSave(russianText, englishText) {
-        var updateItemInfoesCommand = items.filter(function (i) {
+        var goods = items.filter(function (i) {
           return selectedItems.includes(i.id);
-        }).flatMap(function (x) {
-          return x.digiSellerIds;
         }).map(function (x) {
           return {
-            digiSellerId: x,
-            description: editItemMainInfoModalIsOpen ? [{
-              locale: "ru-RU",
-              value: russianText
-            }, {
-              locale: "en-US",
-              value: englishText
-            }] : [],
-            add_info: !editItemMainInfoModalIsOpen ? [{
-              locale: "ru-RU",
-              value: russianText
-            }, {
-              locale: "en-US",
-              value: englishText
-            }] : []
+            digiSellerIds: x.digiSellerIds,
+            itemId: x.id
           };
         });
+        var updateItemInfoesCommands = {
+          description: editItemMainInfoModalIsOpen ? [{
+            locale: "ru-RU",
+            value: russianText
+          }, {
+            locale: "en-US",
+            value: englishText
+          }] : [],
+          add_info: !editItemMainInfoModalIsOpen ? [{
+            locale: "ru-RU",
+            value: russianText
+          }, {
+            locale: "en-US",
+            value: englishText
+          }] : [],
+          goods: goods
+        };
         toggleItemMainInfoModal(false);
         toggleItemAdditionalInfoModal(false);
-        apiUpdateItemInfoes(updateItemInfoesCommand);
+        apiUpdateItemInfoes(updateItemInfoesCommands);
       },
       itemInfoTemplates: itemInfoTemplates
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
@@ -44558,6 +46840,16 @@ var products = function products() {
         toggleBulkEditPercentModal(false);
         apiChangeItemBulk(val, increaseDecreaseOperator.id, increaseDecreaseVal, selectedItems);
       }
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPriceBasisEdit, {
+      isOpen: bulkEditPriceBasisModalIsOpen,
+      onCancel: function onCancel() {
+        toggleBulkEditPriceBasisModal(false);
+      },
+      onSave: function onSave(val) {
+        toggleBulkEditPriceBasisModal(false);
+        apiChangePriceBasisBulk(val, selectedItems);
+      },
+      selectedCount: selectedItems.length
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(Popover_Popover, {
       id: "mouse-over-popover",
       sx: {
@@ -58972,6 +61264,17 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
   var _state$use = state.use(),
     statuses = _state$use.gameSessionsStatuses;
   var navigate = dist_useNavigate();
+  var handleKeyUp = function handleKeyUp(event) {
+    if (event.key === 'Escape' && isOpen) {
+      onCancel();
+    }
+  };
+  (0,react.useEffect)(function () {
+    window.addEventListener("keyup", handleKeyUp);
+    return function () {
+      return window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [isOpen]);
   var createBotLink = function createBotLink(val) {
     return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
       className: modalStatusHistory_styles.link,
@@ -59096,6 +61399,21 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
                         color: '#d836e7'
                       },
                       children: val.botRegionName || val.botRegionCode
+                    })]
+                  })]
+                });
+              } else if (sid === 24 && val) {
+                return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  children: [val.botName && val.botId && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u0411\u043E\u0442: ", createBotLink(val)]
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: val.message
+                  }), val.itemPrice && val.itemCurrencyCode && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u0441\u0443\u043C\u043C\u0430 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0438\u0433\u0440\u044B: ", /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                      style: {
+                        color: '#D3AE29'
+                      },
+                      children: [val.itemPrice, " ", val.itemCurrencyCode]
                     })]
                   })]
                 });
@@ -59856,7 +62174,7 @@ var orders = function orders() {
 /* harmony default export */ const admin_orders = (orders);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/bots/grid/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const grid_styles = ({"grid":"styles__grid--geGov","item":"styles__item--qPacC","header":"styles__header--zilir","image":"styles__image--DpbHq","problem":"styles__problem--cW2_Z","info":"styles__info--umdmA","login":"styles__login--IgU1M","data":"styles__data--Ki8fl","region":"styles__region--vAHZz","flag":"styles__flag--Aq_JM","proxy":"styles__proxy--ic8k9","vacWrapper":"styles__vacWrapper--f52iJ","vac":"styles__vac--LQW7Q","text":"styles__text--EvoRC","lineWrapper":"styles__lineWrapper--sqSlG","line":"styles__line--AMYQt","prices":"styles__prices--EePG_","left":"styles__left--OtEnd","right":"styles__right--CPaMp","leftPrice":"styles__leftPrice--z0QWH","rightPrice":"styles__rightPrice--FQr4q","buttonWrapper":"styles__buttonWrapper--xWSjn","buttons":"styles__buttons--HsrdH","editBtn":"styles__editBtn--AZQxn","delBtn":"styles__delBtn--TqqLy","vacSide":"styles__vacSide--IAjKk","list":"styles__list--kLmj2","vacItem":"styles__vacItem--WqdSB","vacBackButWrapper":"styles__vacBackButWrapper--VNNs4","vacBackBut":"styles__vacBackBut--NPnBw","addItem":"styles__addItem--S8kYT","item2":"styles__item2--LlKTM","item-header":"styles__item-header--af2F5","header-content":"styles__header-content--h2_vg","name":"styles__name--O12RZ","lang":"styles__lang--kAN5I","vac-info":"styles__vac-info--WLsM9","active":"styles__active--eWHDT","time-limit":"styles__time-limit--oKorI","limit":"styles__limit--_jNL9","blocked":"styles__blocked--nI_x9","add":"styles__add--_3Cqz","item-content":"styles__item-content--SS4nW","money":"styles__money--OQ_Ys","money-stats":"styles__money-stats--Cn2EN","money-stats-left":"styles__money-stats-left--nxBaa","money-stats-general":"styles__money-stats-general--le9eX","yellow":"styles__yellow--AO5cE","green":"styles__green--n5iGL","red":"styles__red--uhuK4","item-controls":"styles__item-controls--w3VeX","button":"styles__button--C0Jpe","item-edit":"styles__item-edit--cJ0y7","item-delete":"styles__item-delete--yJZle","stats":"styles__stats--gcI1n","circle":"styles__circle--nzg55","count":"styles__count--Y7cJE"});
+/* harmony default export */ const grid_styles = ({"grid":"styles__grid--geGov","item":"styles__item--qPacC","header":"styles__header--zilir","image":"styles__image--DpbHq","problem":"styles__problem--cW2_Z","info":"styles__info--umdmA","login":"styles__login--IgU1M","data":"styles__data--Ki8fl","region":"styles__region--vAHZz","flag":"styles__flag--Aq_JM","proxy":"styles__proxy--ic8k9","vacWrapper":"styles__vacWrapper--f52iJ","vac":"styles__vac--LQW7Q","text":"styles__text--EvoRC","lineWrapper":"styles__lineWrapper--sqSlG","line":"styles__line--AMYQt","prices":"styles__prices--EePG_","left":"styles__left--OtEnd","right":"styles__right--CPaMp","leftPrice":"styles__leftPrice--z0QWH","rightPrice":"styles__rightPrice--FQr4q","remainingRight":"styles__remainingRight--wX6I6","remainingPrice":"styles__remainingPrice--D9gNE","buttonWrapper":"styles__buttonWrapper--xWSjn","buttons":"styles__buttons--HsrdH","editBtn":"styles__editBtn--AZQxn","delBtn":"styles__delBtn--TqqLy","vacSide":"styles__vacSide--IAjKk","list":"styles__list--kLmj2","vacItem":"styles__vacItem--WqdSB","vacBackButWrapper":"styles__vacBackButWrapper--VNNs4","vacBackBut":"styles__vacBackBut--NPnBw","addItem":"styles__addItem--S8kYT","item2":"styles__item2--LlKTM","item-header":"styles__item-header--af2F5","header-content":"styles__header-content--h2_vg","name":"styles__name--O12RZ","lang":"styles__lang--kAN5I","vac-info":"styles__vac-info--WLsM9","active":"styles__active--eWHDT","time-limit":"styles__time-limit--oKorI","limit":"styles__limit--_jNL9","blocked":"styles__blocked--nI_x9","add":"styles__add--_3Cqz","item-content":"styles__item-content--SS4nW","money":"styles__money--OQ_Ys","money-stats":"styles__money-stats--Cn2EN","money-stats-left":"styles__money-stats-left--nxBaa","money-stats-general":"styles__money-stats-general--le9eX","yellow":"styles__yellow--AO5cE","green":"styles__green--n5iGL","red":"styles__red--uhuK4","item-controls":"styles__item-controls--w3VeX","button":"styles__button--C0Jpe","item-edit":"styles__item-edit--cJ0y7","item-delete":"styles__item-delete--yJZle","stats":"styles__stats--gcI1n","circle":"styles__circle--nzg55","count":"styles__count--Y7cJE"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/botavatar.svg
 const botavatar_namespaceObject = __webpack_require__.p + "0f41de6a27016f007d91.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/addbot.svg
@@ -61241,7 +63559,7 @@ var grid_grid = function grid() {
                 className: grid_styles.text,
                 children: [i.balance, " ", (_currencyDict$i$steam = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam === void 0 ? void 0 : _currencyDict$i$steam.steamSymbol]
               })
-            }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            }), i.remainingSumToGift === null || i.remainingSumToGift === undefined ? /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
               className: grid_styles.right,
               children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 className: grid_styles.leftPrice,
@@ -61260,6 +63578,9 @@ var grid_grid = function grid() {
                   }), ' ', "/ ", i.maxSendedGiftsSum.toFixed(2), ' ', (_currencyDict$i$steam3 = currencyDict[i.steamCurrencyId]) === null || _currencyDict$i$steam3 === void 0 ? void 0 : _currencyDict$i$steam3.steamSymbol]
                 })
               })]
+            }) : /*#__PURE__*/(0,jsx_runtime.jsx)(LimitContainer, {
+              bot: i,
+              currDict: currencyDict
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             className: grid_styles.buttonWrapper,
@@ -61345,16 +63666,36 @@ var grid_grid = function grid() {
     })]
   });
 };
-var HtmlTooltip = styles_styled(function (_ref) {
-  var className = _ref.className,
-    props = _objectWithoutProperties(_ref, grid_excluded);
+var LimitContainer = function LimitContainer(_ref) {
+  var _currDict$bot$steamCu, _currDict$bot$steamCu2;
+  var bot = _ref.bot,
+    currDict = _ref.currDict;
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: grid_styles.remainingRight,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: grid_styles.remainingPrice,
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        style: {},
+        children: ['до ', /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+          style: {
+            color: '#C5443C'
+          },
+          children: (bot.remainingSumToGift * ((_currDict$bot$steamCu = currDict[bot.steamCurrencyId]) === null || _currDict$bot$steamCu === void 0 ? void 0 : _currDict$bot$steamCu.steamValue)).toFixed(2)
+        }), ' ', (_currDict$bot$steamCu2 = currDict[bot.steamCurrencyId]) === null || _currDict$bot$steamCu2 === void 0 ? void 0 : _currDict$bot$steamCu2.steamSymbol]
+      })
+    })
+  });
+};
+var HtmlTooltip = styles_styled(function (_ref2) {
+  var className = _ref2.className,
+    props = _objectWithoutProperties(_ref2, grid_excluded);
   return /*#__PURE__*/(0,jsx_runtime.jsx)(Tooltip_Tooltip, grid_objectSpread(grid_objectSpread({}, props), {}, {
     classes: {
       popper: className
     }
   }));
-})(function (_ref2) {
-  var theme = _ref2.theme;
+})(function (_ref3) {
+  var theme = _ref3.theme;
   return grid_defineProperty({}, "& .".concat(Tooltip_tooltipClasses.tooltip), {
     backgroundColor: '#43294B',
     color: '#D4D4D4',
@@ -61374,7 +63715,7 @@ var HtmlTooltip = styles_styled(function (_ref) {
 
 
 
-var bots = function bots() {
+var bots_bots = function bots() {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: bots_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(admin_pageHeader, {
@@ -61386,7 +63727,7 @@ var bots = function bots() {
     })]
   });
 };
-/* harmony default export */ const admin_bots = (bots);
+/* harmony default export */ const admin_bots = (bots_bots);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/Table/TableContext.js
 
 
@@ -62149,7 +64490,7 @@ const arrowLeft_namespaceObject = __webpack_require__.p + "96780ec48f6c1b85e039.
 const arrowRight_namespaceObject = __webpack_require__.p + "f2076a772b23a44d6772.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const leftMenu_styles = ({"wrapper":"styles__wrapper--Enr_z","titleSection":"styles__titleSection--GXD_6","title":"styles__title--GJMSN","menuSection":"styles__menuSection--l24r9","menuList":"styles__menuList--VGVfU","menuItem":"styles__menuItem--cB2Wo","icon":"styles__icon--NmqaV","arrowIcon":"styles__arrowIcon--Vx09I","subMenu":"styles__subMenu--EEbna","subMenuItem":"styles__subMenuItem--xVLM8","isOpen":"styles__isOpen--uNqls","filterButton":"styles__filterButton--S1_Lr","massButton":"styles__massButton--XOeJd"});
+/* harmony default export */ const leftMenu_styles = ({"toggleButton":"styles__toggleButton--qG8Pf","closed":"styles__closed--L88sh","wrapper":"styles__wrapper--Enr_z","titleSection":"styles__titleSection--GXD_6","title":"styles__title--GJMSN","menuSection":"styles__menuSection--l24r9","menuList":"styles__menuList--VGVfU","menuItem":"styles__menuItem--cB2Wo","icon":"styles__icon--NmqaV","arrowIcon":"styles__arrowIcon--Vx09I","subMenu":"styles__subMenu--EEbna","subMenuItem":"styles__subMenuItem--xVLM8","isOpen":"styles__isOpen--uNqls","filterButton":"styles__filterButton--S1_Lr","massButton":"styles__massButton--XOeJd"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/menuItem.js
 
 
@@ -62260,6 +64601,11 @@ var BotStats = function BotStats(_ref) {
       count: 0,
       color: '#3C965A'
     },
+    //5: {
+    //    name: 'Отключен вручную',
+    //    count: 0,
+    //    color: '#A09F9B',
+    //},
     2: {
       name: 'Временный лимит',
       count: 0,
@@ -62278,7 +64624,11 @@ var BotStats = function BotStats(_ref) {
   };
   (data || []).forEach(function (bot) {
     if (!bot.state) return;
-    val[bot.state].count++;
+    try {
+      if (bot.state == 1) {
+        if (bot.isON) val[bot.state].count++;
+      } else val[bot.state].count++;
+    } catch (ex) {}
   });
   var states = [];
   for (var prop in val) states.push(val[prop]);
@@ -62309,37 +64659,6 @@ var BotStats = function BotStats(_ref) {
   });
 };
 /* harmony default export */ const botStats = (BotStats);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/styles.scss
-// extracted by mini-css-extract-plugin
-/* harmony default export */ const shared_textbox_styles = ({"wrapper":"styles__wrapper--H8Xnp"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/index.js
-
-
-
-var shared_textbox_TextBox = function TextBox(_ref) {
-  var onChange = _ref.onChange,
-    defaultValue = _ref.defaultValue,
-    width = _ref.width,
-    placeholder = _ref.placeholder;
-  var onChangeText = function onChangeText(event) {
-    var val = event.target.value;
-    if (onChange) onChange(val);
-  };
-  var wrapperStyle = {
-    width: width || '226px'
-  };
-  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-    className: shared_textbox_styles.wrapper,
-    onChange: onChangeText,
-    style: wrapperStyle,
-    children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
-      type: 'text',
-      defaultValue: defaultValue,
-      placeholder: placeholder
-    })
-  });
-};
-/* harmony default export */ const shared_textbox = (shared_textbox_TextBox);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/leftMenu/modalDigisellerEdit/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalDigisellerEdit_styles = ({"content":"styles__content--Ihpor","boxes":"styles__boxes--VDgRX","actions":"styles__actions--rvof6"});
@@ -62751,6 +65070,8 @@ function bots_modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr
 
 
 
+
+
 var modalEdit_FromItemText = function FromItemText(_ref) {
   var name = _ref.name,
     onChange = _ref.onChange,
@@ -62772,20 +65093,43 @@ var modalEdit_FromItemText = function FromItemText(_ref) {
     })]
   });
 };
-var modalEdit_ModalEdit = function ModalEdit(_ref2) {
-  var isOpen = _ref2.isOpen,
+var modalEdit_FromItemSwitch = function FromItemSwitch(_ref2) {
+  var name = _ref2.name,
     value = _ref2.value,
-    onCancel = _ref2.onCancel,
-    onSave = _ref2.onSave,
-    response = _ref2.response,
-    resetResponse = _ref2.resetResponse;
+    onChange = _ref2.onChange;
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+    className: bots_modalEdit_styles.formItem,
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: bots_modalEdit_styles.name,
+      children: name
+    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      style: {
+        marginTop: "10px",
+        marginRight: "60px"
+      },
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
+        value: value,
+        onChange: onChange
+      })
+    })]
+  });
+};
+var modalEdit_ModalEdit = function ModalEdit(_ref3) {
+  var isOpen = _ref3.isOpen,
+    value = _ref3.value,
+    onCancel = _ref3.onCancel,
+    onSave = _ref3.onSave,
+    response = _ref3.response,
+    resetResponse = _ref3.resetResponse,
+    isReserve = _ref3.isReserve;
   var initialValue = {
     id: null,
     userName: null,
     password: null,
     proxy: null,
     maFile: null,
-    gameSendLimit: null
+    gameSendLimit: null,
+    isReserve: null
   };
   var _useState = (0,react.useState)(initialValue),
     _useState2 = bots_modalEdit_slicedToArray(_useState, 2),
@@ -62805,7 +65149,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
     };
   };
   var fileRef = react.useRef();
-  var modalHeight = item.id ? 732 : 599;
+  var modalHeight = item.id ? 835 : 599;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
     title: item.id ? 'Редактировать бота' : 'Добавить бота',
@@ -62835,6 +65179,13 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
             onChange: handleChange('gameSendLimitAddParam'),
             value: item.gameSendLimitAddParam,
             cymbol: '$'
+          }), item.id && /*#__PURE__*/(0,jsx_runtime.jsx)(modalEdit_FromItemSwitch, {
+            name: 'Запасной бот:',
+            onChange: function onChange(val) {
+              apiBotSetIsReserve(item.id, val);
+              handleChange('isReserve');
+            },
+            value: item.isReserve
           })]
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
@@ -63634,286 +65985,301 @@ var leftMenu = function leftMenu() {
     exchageRates = _state$use.exchageRates,
     gameSessionsFilter = _state$use.gameSessionsFilter,
     gameSessionsTotal = _state$use.gameSessionsTotal;
-  var gameSessionsPages = gameSessionsTotal / gameSessionsFilter.size > (gameSessionsTotal / gameSessionsFilter.size).toFixed(0) ? Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0)) + 1 : Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0));
-  var _useState = (0,react.useState)(menuArrData),
+  var _useState = (0,react.useState)(true),
     _useState2 = leftMenu_slicedToArray(_useState, 2),
-    menuData = _useState2[0],
-    setMenuDate = _useState2[1];
-  var _useState3 = (0,react.useState)(false),
+    showMenu = _useState2[0],
+    setShowMenu = _useState2[1];
+  var toggleMenu = function toggleMenu() {
+    return setShowMenu(function (prev) {
+      return !prev;
+    });
+  };
+  var gameSessionsPages = gameSessionsTotal / gameSessionsFilter.size > (gameSessionsTotal / gameSessionsFilter.size).toFixed(0) ? Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0)) + 1 : Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0));
+  var _useState3 = (0,react.useState)(menuArrData),
     _useState4 = leftMenu_slicedToArray(_useState3, 2),
-    confirmMassActiveChangeIsOpen = _useState4[0],
-    setConfirmMassActiveChangeIsOpen = _useState4[1];
-  return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-    className: leftMenu_styles.wrapper,
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-      className: leftMenu_styles.titleSection,
-      height: 65,
-      width: 254,
-      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: leftMenu_styles.title,
-        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("img", {
-          src: G_namespaceObject
-        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          children: "Pay Panel"
-        })]
-      })
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-      className: leftMenu_styles.menuSection,
-      height: 266,
-      width: 254,
-      children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: leftMenu_styles.menuList,
-        children: menuData.map(function (i) {
-          return /*#__PURE__*/(0,jsx_runtime.jsx)(menuItem, leftMenu_objectSpread(leftMenu_objectSpread({}, i), {}, {
-            isOpen: i.isOpen,
-            onClick: function onClick() {
-              if (!i.subMenu || !i.subMenu.length) return;
-              var newMenuData = leftMenu_toConsumableArray(menuData);
-              newMenuData.forEach(function (mi) {
-                if (mi.name === i.name) {
-                  mi.isOpen = !mi.isOpen;
-                } else {
-                  mi.isOpen = false;
-                }
-              });
-              setMenuDate(newMenuData);
-            },
-            onClickOutside: function onClickOutside() {
-              var newMenuData = leftMenu_toConsumableArray(menuData);
-              newMenuData.forEach(function (mi) {
-                mi.isOpen = false;
-              });
-              setMenuDate(newMenuData);
-            }
-          }));
-        })
-      })
-    }), /*#__PURE__*/(0,jsx_runtime.jsxs)(Routes, {
-      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "products",
-        element: !selectedItems || selectedItems.length === 0 ? /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
-          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.massButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              toggleBulkEditPercentModal(true);
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u0441\u043C\u0435\u043D\u0430 \u0446\u0435\u043D"
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.massButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              setConfirmMassActiveChangeIsOpen(true);
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0432\u043A\u043B/\u0432\u044B\u043A\u043B \u0442\u043E\u0432\u0430\u0440\u043E\u0432"
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.massButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              toggleFilterProductsModal(true);
-            },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
-            })
+    menuData = _useState4[0],
+    setMenuDate = _useState4[1];
+  var _useState5 = (0,react.useState)(false),
+    _useState6 = leftMenu_slicedToArray(_useState5, 2),
+    confirmMassActiveChangeIsOpen = _useState6[0],
+    setConfirmMassActiveChangeIsOpen = _useState6[1];
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("button", {
+      className: "".concat(leftMenu_styles.toggleButton, " ").concat(!showMenu ? leftMenu_styles.closed : ''),
+      onClick: toggleMenu,
+      children: showMenu ? '❮' : '❯'
+    }), showMenu && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+      className: leftMenu_styles.wrapper,
+      children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+        className: leftMenu_styles.titleSection,
+        height: 65,
+        width: 254,
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: leftMenu_styles.title,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+            src: G_namespaceObject
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            children: "Pay Panel"
           })]
-        }) : null
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "proxy",
-        element: /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-          className: leftMenu_styles.massButton,
-          height: 49,
-          width: 254,
-          onClick: function onClick() {
-            apiDeleteProxyAll();
-          },
-          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: leftMenu_styles.title,
-            children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u043A\u0441\u0438"
+        })
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+        className: leftMenu_styles.menuSection,
+        height: 266,
+        width: 254,
+        children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: leftMenu_styles.menuList,
+          children: menuData.map(function (i) {
+            return /*#__PURE__*/(0,jsx_runtime.jsx)(menuItem, leftMenu_objectSpread(leftMenu_objectSpread({}, i), {}, {
+              isOpen: i.isOpen,
+              onClick: function onClick() {
+                if (!i.subMenu || !i.subMenu.length) return;
+                var newMenuData = leftMenu_toConsumableArray(menuData);
+                newMenuData.forEach(function (mi) {
+                  if (mi.name === i.name) {
+                    mi.isOpen = !mi.isOpen;
+                  } else {
+                    mi.isOpen = false;
+                  }
+                });
+                setMenuDate(newMenuData);
+              },
+              onClickOutside: function onClickOutside() {
+                var newMenuData = leftMenu_toConsumableArray(menuData);
+                newMenuData.forEach(function (mi) {
+                  mi.isOpen = false;
+                });
+                setMenuDate(newMenuData);
+              }
+            }));
           })
         })
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "bots",
-        element: /*#__PURE__*/(0,jsx_runtime.jsx)(botStats, {
-          data: bots
-        })
-      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
-        path: "orders",
-        element: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          style: {
-            marginTop: '19px'
-          },
-          children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_paggination, {
-            val: gameSessionsFilter.page,
-            max: gameSessionsPages > 0 ? gameSessionsPages : 1,
-            onChange: ( /*#__PURE__*/function () {
-              var _ref = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee(page) {
-                return leftMenu_regeneratorRuntime().wrap(function _callee$(_context) {
-                  while (1) switch (_context.prev = _context.next) {
-                    case 0:
-                      _context.next = 2;
-                      return updateGameSessionsFilter({
-                        page: page
-                      });
-                    case 2:
-                    case "end":
-                      return _context.stop();
-                  }
-                }, _callee);
-              }));
-              return function (_x) {
-                return _ref.apply(this, arguments);
-              };
-            }())
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.filterButton,
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)(Routes, {
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "products",
+          element: !selectedItems || selectedItems.length === 0 ? /*#__PURE__*/(0,jsx_runtime.jsxs)(jsx_runtime.Fragment, {
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.massButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleBulkEditPercentModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u0441\u043C\u0435\u043D\u0430 \u0446\u0435\u043D"
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.massButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                setConfirmMassActiveChangeIsOpen(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u041C\u0430\u0441\u0441\u043E\u0432\u043E\u0435 \u0432\u043A\u043B/\u0432\u044B\u043A\u043B \u0442\u043E\u0432\u0430\u0440\u043E\u0432"
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.massButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleFilterProductsModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
+              })
+            })]
+          }) : null
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "proxy",
+          element: /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+            className: leftMenu_styles.massButton,
             height: 49,
             width: 254,
             onClick: function onClick() {
-              toggleFilterOrdersModal(true);
+              apiDeleteProxyAll();
             },
             children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: leftMenu_styles.title,
-              children: "\u0424\u0438\u043B\u044C\u0442\u0440\u044B"
+              children: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0432\u0441\u0435 \u043F\u0440\u043E\u043A\u0441\u0438"
             })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-            className: leftMenu_styles.filterButton,
-            height: 49,
-            width: 254,
-            onClick: function onClick() {
-              toggleEditOrderModal(true);
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "bots",
+          element: /*#__PURE__*/(0,jsx_runtime.jsx)(botStats, {
+            data: bots
+          })
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {
+          path: "orders",
+          element: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            style: {
+              marginTop: '19px'
             },
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: leftMenu_styles.title,
-              children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0435\u0441\u0441\u0438\u044E \u0437\u0430\u043A\u0430\u0437\u0430"
-            })
-          })]
-        })
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_paggination, {
+              val: gameSessionsFilter.page,
+              max: gameSessionsPages > 0 ? gameSessionsPages : 1,
+              onChange: ( /*#__PURE__*/function () {
+                var _ref = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee(page) {
+                  return leftMenu_regeneratorRuntime().wrap(function _callee$(_context) {
+                    while (1) switch (_context.prev = _context.next) {
+                      case 0:
+                        _context.next = 2;
+                        return updateGameSessionsFilter({
+                          page: page
+                        });
+                      case 2:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }, _callee);
+                }));
+                return function (_x) {
+                  return _ref.apply(this, arguments);
+                };
+              }())
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.filterButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleFilterOrdersModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u0424\u0438\u043B\u044C\u0442\u0440\u044B"
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+              className: leftMenu_styles.filterButton,
+              height: 49,
+              width: 254,
+              onClick: function onClick() {
+                toggleEditOrderModal(true);
+              },
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: leftMenu_styles.title,
+                children: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0441\u0435\u0441\u0441\u0438\u044E \u0437\u0430\u043A\u0430\u0437\u0430"
+              })
+            })]
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit, {
+        isOpen: editOrderModalIsOpen
+        //value={{}}
+        ,
+        response: editOrderResponse,
+        resetResponse: function resetResponse() {
+          setStateProp('editOrderResponse', {
+            loading: false,
+            errors: []
+          });
+        },
+        onCancel: function onCancel() {
+          toggleEditOrderModal(false);
+        },
+        onSave: function onSave(val) {
+          apiAddGameSession(val);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalShowInfoList, {
+        isOpen: orderCreationInfoIsOpen,
+        title: "Список заказов",
+        onOk: {
+          label: 'OK',
+          action: function action() {
+            toggleOrderCreationInfoModal(false);
+          }
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(bots_modalEdit, {
+        isOpen: editBotModalIsOpen,
+        value: selectedBot,
+        response: editBotResponse,
+        resetResponse: function resetResponse() {
+          setStateProp('editBotResponse', {
+            loading: false,
+            errors: []
+          });
+        },
+        onCancel: function onCancel() {
+          toggleEditBotModal(false);
+          setSelectedBot({});
+        },
+        onSave: function onSave(val) {
+          apiEditBot(val);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalDigisellerEdit, {
+        isOpen: digisellerEditModalIsOpen,
+        value: {
+          digisellerApiKey: user.digisellerApiKey,
+          digisellerId: user.digisellerId
+        },
+        onSave: function onSave(val) {
+          apiChangeDigisellerData(val);
+          toggleDigisellerEditModal(false);
+        },
+        onCancel: function onCancel() {
+          toggleDigisellerEditModal(false);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalChangePassword, {
+        isOpen: changePasswordModalIsOpen,
+        onSave: ( /*#__PURE__*/function () {
+          var _ref2 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee2(val) {
+            return leftMenu_regeneratorRuntime().wrap(function _callee2$(_context2) {
+              while (1) switch (_context2.prev = _context2.next) {
+                case 0:
+                  apiChangeUserPassword(val);
+                case 1:
+                case "end":
+                  return _context2.stop();
+              }
+            }, _callee2);
+          }));
+          return function (_x2) {
+            return _ref2.apply(this, arguments);
+          };
+        }()),
+        onCancel: function onCancel() {
+          toggleChangePasswordModal(false);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates, {
+        isOpen: exchangeRatesModalIsOpen,
+        value: exchageRates,
+        onSave: ( /*#__PURE__*/function () {
+          var _ref3 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee3(val) {
+            return leftMenu_regeneratorRuntime().wrap(function _callee3$(_context3) {
+              while (1) switch (_context3.prev = _context3.next) {
+                case 0:
+                  //console.log('newVal', val);
+                  apiUpdateExchangeDataManual(val);
+                case 1:
+                case "end":
+                  return _context3.stop();
+              }
+            }, _callee3);
+          }));
+          return function (_x3) {
+            return _ref3.apply(this, arguments);
+          };
+        }()),
+        onCancel: function onCancel() {
+          toggleExchangeRatesModal(false);
+        }
+      }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
+        isOpen: confirmMassActiveChangeIsOpen,
+        title: 'Массовое вкл/выкл товаров',
+        content: 'Вы точно хотите включить/выключить все товары?',
+        onConfirm: {
+          text: 'Подтвердить',
+          action: function action() {
+            apiSetItemActiveStatus();
+          }
+        },
+        onCancel: {
+          action: function action() {
+            setConfirmMassActiveChangeIsOpen(false);
+          }
+        }
       })]
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalEdit, {
-      isOpen: editOrderModalIsOpen
-      //value={{}}
-      ,
-      response: editOrderResponse,
-      resetResponse: function resetResponse() {
-        setStateProp('editOrderResponse', {
-          loading: false,
-          errors: []
-        });
-      },
-      onCancel: function onCancel() {
-        toggleEditOrderModal(false);
-      },
-      onSave: function onSave(val) {
-        apiAddGameSession(val);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(orders_modalShowInfoList, {
-      isOpen: orderCreationInfoIsOpen,
-      title: "Список заказов",
-      onOk: {
-        label: 'OK',
-        action: function action() {
-          toggleOrderCreationInfoModal(false);
-        }
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(bots_modalEdit, {
-      isOpen: editBotModalIsOpen,
-      value: selectedBot,
-      response: editBotResponse,
-      resetResponse: function resetResponse() {
-        setStateProp('editBotResponse', {
-          loading: false,
-          errors: []
-        });
-      },
-      onCancel: function onCancel() {
-        toggleEditBotModal(false);
-        setSelectedBot({});
-      },
-      onSave: function onSave(val) {
-        apiEditBot(val);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalDigisellerEdit, {
-      isOpen: digisellerEditModalIsOpen,
-      value: {
-        digisellerApiKey: user.digisellerApiKey,
-        digisellerId: user.digisellerId
-      },
-      onSave: function onSave(val) {
-        apiChangeDigisellerData(val);
-        toggleDigisellerEditModal(false);
-      },
-      onCancel: function onCancel() {
-        toggleDigisellerEditModal(false);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalChangePassword, {
-      isOpen: changePasswordModalIsOpen,
-      onSave: ( /*#__PURE__*/function () {
-        var _ref2 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee2(val) {
-          return leftMenu_regeneratorRuntime().wrap(function _callee2$(_context2) {
-            while (1) switch (_context2.prev = _context2.next) {
-              case 0:
-                apiChangeUserPassword(val);
-              case 1:
-              case "end":
-                return _context2.stop();
-            }
-          }, _callee2);
-        }));
-        return function (_x2) {
-          return _ref2.apply(this, arguments);
-        };
-      }()),
-      onCancel: function onCancel() {
-        toggleChangePasswordModal(false);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalExchangeRates, {
-      isOpen: exchangeRatesModalIsOpen,
-      value: exchageRates,
-      onSave: ( /*#__PURE__*/function () {
-        var _ref3 = leftMenu_asyncToGenerator( /*#__PURE__*/leftMenu_regeneratorRuntime().mark(function _callee3(val) {
-          return leftMenu_regeneratorRuntime().wrap(function _callee3$(_context3) {
-            while (1) switch (_context3.prev = _context3.next) {
-              case 0:
-                //console.log('newVal', val);
-                apiUpdateExchangeDataManual(val);
-              case 1:
-              case "end":
-                return _context3.stop();
-            }
-          }, _callee3);
-        }));
-        return function (_x3) {
-          return _ref3.apply(this, arguments);
-        };
-      }()),
-      onCancel: function onCancel() {
-        toggleExchangeRatesModal(false);
-      }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(ConfirmModal, {
-      isOpen: confirmMassActiveChangeIsOpen,
-      title: 'Массовое вкл/выкл товаров',
-      content: 'Вы точно хотите включить/выключить все товары?',
-      onConfirm: {
-        text: 'Подтвердить',
-        action: function action() {
-          apiSetItemActiveStatus();
-        }
-      },
-      onCancel: {
-        action: function action() {
-          setConfirmMassActiveChangeIsOpen(false);
-        }
-      }
     })]
   });
 };
@@ -63981,6 +66347,7 @@ var menuArrData = [{
     }
   }],
   subMenuStyle: {
+    zIndex: 4,
     top: -174,
     width: 198,
     right: -198

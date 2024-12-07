@@ -1,13 +1,15 @@
 ﻿using DatabaseRepository.Entities;
-using Newtonsoft.Json;
 using Org.Mentalis.Network.ProxySocket.Models;
 using SteamAuthCore;
 using SteamDigiSellerBot.Database.Enums;
+using SteamDigiSellerBot.Utilities.Services;
 using SteamKit2;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using xNet;
 
 namespace SteamDigiSellerBot.Database.Entities
@@ -43,6 +45,8 @@ namespace SteamDigiSellerBot.Database.Entities
         public decimal TotalPurchaseSumUSD { get; set; }
         public decimal SendedGiftsSum { get; set; }
         public decimal MaxSendedGiftsSum { get; set; }
+        public decimal? RemainingSumToGift { get; set; }
+        public bool IgnoreSendLimits { get; set; }
         public string AvatarUrl { get; set; }
         public int GameSendLimitAddParam { get; set; }
         public int? SteamCurrencyId { get; set; }
@@ -51,22 +55,30 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public bool IsProblemRegion { get; set; }
         public bool HasProblemPurchase { get; set; }
+        [JsonIgnore]
         public virtual BotRegionSetting BotRegionSetting { get; set; }
 
         public bool IsON { get; set; }
+
+        public bool IsReserve { get; set; }
 
         //public virtual List<BotTransaction> BotTransactions { get; set; }
 
         [Column(TypeName = "json")]
         public IEnumerable<VacGame> VacGames { get; set; }
-
+        [JsonIgnore]
         public virtual List<BotSendGameAttempts> SendGameAttempts { get; set; }
 
         //public string CountryCode { get; set; }
         public EResult? LoginResult { get; set; }
 
         [NotMapped]
-        public EResult Result { get; set; }
+        public EResult? Result { get; set; }
+        [NotMapped]
+        public EResult? ResultExtDescription { get; set; }
+        [NotMapped]
+        public DateTime? ResultSetTime { get; set; }
+
 
 
         [NotMapped]
@@ -74,15 +86,19 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             get
             {
-                return new CookieDictionary(SteamCookiesStr);
+                return new CookieDictionary(CryptographyUtilityService.Decrypt(SteamCookiesStr));
             }
             set
             {
-                SteamCookiesStr = value.ToString();
+                Console.WriteLine($"BotEncrytpZone {nameof(SteamCookies)} {UserName} {value}");
+
+                SteamCookiesStr = CryptographyUtilityService.Encrypt(value.ToString());
             }
         }
 
         [NotMapped]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public HttpRequest SteamHttpRequest
         {
             get
@@ -95,7 +111,7 @@ namespace SteamDigiSellerBot.Database.Entities
 
                 if (!string.IsNullOrWhiteSpace(ProxyStr))
                 {
-                    steamHttpRequest.Proxy = HttpProxyClient.Parse(ProxyStr);
+                    steamHttpRequest.Proxy = HttpProxyClient.Parse(CryptographyUtilityService.Decrypt(ProxyStr));
                 }
 
                 return steamHttpRequest;
@@ -103,13 +119,14 @@ namespace SteamDigiSellerBot.Database.Entities
         }
 
         [NotMapped]
+        [JsonIgnore]
         public Proxy Proxy
         {
             get
             {
                 if (!string.IsNullOrWhiteSpace(ProxyStr))
                 {
-                    return new Proxy(ProxyStr);
+                    return new Proxy(CryptographyUtilityService.Decrypt(ProxyStr));
                 }
 
                 return null;
@@ -123,7 +140,7 @@ namespace SteamDigiSellerBot.Database.Entities
             {
                 if (!string.IsNullOrWhiteSpace(MaFileStr))
                 {
-                    return JsonConvert.DeserializeObject<SteamGuardAccount>(MaFileStr);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamGuardAccount>(CryptographyUtilityService.Decrypt(MaFileStr));
                 }
 
                 return null;

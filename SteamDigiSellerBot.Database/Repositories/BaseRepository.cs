@@ -92,7 +92,7 @@ namespace DatabaseRepository.Repositories
         public async Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate)
         {
             await using var databaseContext = _databaseContextFactory.CreateDbContext();
-            return await ListAsync(databaseContext);
+            return await ListAsync(databaseContext, predicate);
         }
         public async Task<List<T>> ListAsync(DbContext databaseContext, Expression<Func<T, bool>> predicate)
         {
@@ -166,8 +166,8 @@ namespace DatabaseRepository.Repositories
         public async Task ReplaceAsync(DbContext databaseContext, T oldEntity, T newEntity)
         {
             newEntity.Id = oldEntity.Id;
-            databaseContext.Entry<T>(oldEntity).CurrentValues.SetValues((object)newEntity);
-            int num = await databaseContext.SaveChangesAsync();
+            databaseContext.Entry(oldEntity).CurrentValues.SetValues(newEntity);
+            await databaseContext.SaveChangesAsync();
         }
 
         public DbContext GetContext()

@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿extern alias OverrideProto;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using SteamAuthCore;
 using SteamDigiSellerBot.Database.Entities;
@@ -11,7 +12,6 @@ using SteamDigiSellerBot.Utilities.Models;
 using SteamKit2;
 using SteamKit2.Authentication;
 using SteamKit2.Internal;
-using SteamKit2.WebUI.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -32,6 +32,7 @@ using Bot = SteamDigiSellerBot.Database.Entities.Bot;
 using HttpMethod = System.Net.Http.HttpMethod;
 using HttpRequest = xNet.HttpRequest;
 using Microsoft.Extensions.Logging;
+using OverrideProto::SteamKit2.WebUI.Internal;
 
 namespace SteamDigiSellerBot.Network
 {
@@ -160,11 +161,13 @@ namespace SteamDigiSellerBot.Network
                 {
                     if (_bot.IsON && LastLogin != null && LastLogin < DateTime.UtcNow.AddMinutes(-45))
                     {
+                        this._isRunning = false;
                         this.Login();
+                        await Task.Delay(TimeSpan.FromSeconds(5));
                     }
                     if (_bot.Result != EResult.OK)
                     {
-                        logger.LogWarning($"BalanceMonitor: {_bot.UserName} offline ({nameof(GetBotBalance_Proto)})");
+                        logger?.LogWarning($"BalanceMonitor: {_bot.UserName} offline ({nameof(GetBotBalance_Proto)})");
                         return (false, 0);
                     }
                 }
@@ -187,6 +190,7 @@ namespace SteamDigiSellerBot.Network
                     {
                         if (repeat && LastLogin!=null && LastLogin < DateTime.UtcNow.AddMinutes(-30))
                         {
+                            this._isRunning = false;
                             this.Login();
                             await Task.Delay(TimeSpan.FromSeconds(5));
                             return await _GetBotBalance_Proto(logger, false);
@@ -243,9 +247,9 @@ namespace SteamDigiSellerBot.Network
         {
             CCheckout_GetFriendOwnershipForGifting_Request item = new();
             if (isBundle)
-                item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { bundleid = subId });
+                item.item_ids.Add(new OverrideProto::SteamKit2.WebUI.Internal.StoreItemID() { bundleid = subId });
             else
-                item.item_ids.Add(new SteamKit2.WebUI.Internal.StoreItemID() { packageid = subId });
+                item.item_ids.Add(new OverrideProto::SteamKit2.WebUI.Internal.StoreItemID() { packageid = subId });
             var api = _steamClient.Configuration.GetAsyncWebAPIInterface("ICheckoutService");
             var response = await api.CallProtobufAsync<CCheckout_GetFriendOwnershipForGifting_Response>(
                 HttpMethod.Get, "GetFriendOwnershipForGifting", args: PrepareProtobufArguments(item, accessToken));
@@ -255,7 +259,7 @@ namespace SteamDigiSellerBot.Network
             return false;
         }
 
-        Dictionary<string, object?> PrepareProtobufArguments<T>(T request, string accessToken)
+        public Dictionary<string, object?> PrepareProtobufArguments<T>(T request, string accessToken)
         {
             var args = new Dictionary<string, object?>()
             {
@@ -269,7 +273,7 @@ namespace SteamDigiSellerBot.Network
             return args;
         }
 
-
+        private bool _cartInProcess = false;
         public async Task<SendGameResponse> SendGameProto(
             uint appId, uint subId, bool isBundle, string gifteeAccountId, string receiverName, string comment,
             string countryCode)
@@ -278,8 +282,10 @@ namespace SteamDigiSellerBot.Network
 
             try
             {
+                _cartInProcess = true;
                 var sessionId = await GetSessiondId();
                 var res = new SendGameResponse();
+                int retryCount = 1;
 
                 //добаляем в корзину
                 bool errorRepeat = false;
@@ -356,13 +362,48 @@ namespace SteamDigiSellerBot.Network
                     {
                         errorRepeat = true;
                         await Task.Delay(TimeSpan.FromSeconds(15));
-                        goto cartRepeat;
                     }
                 }
 
                 sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
+                if (string.IsNullOrWhiteSpace(sessionId))
+                {
+                  
+                    ResetSteamClient();
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    _logger.LogInformation(
+                        $"BOT {Bot.UserName} is logged ON on SendGame {comment} - status: {Bot.Result + (Bot.ResultSetTime != null ? " " + Bot.ResultSetTime.Value.ToShortTimeString() : " не было авторизации") + (_isRunning ? "" : " (не запущен)")}");
+                    _logger.LogInformation(new string('-', 70));
+                    sessionId = await GetSessiondId("https://checkout.steampowered.com/checkout/?accountcart=1");
+                    if (string.IsNullOrEmpty(sessionId) && !IsOk())
+                    {
+                        res.result = SendeGameResult.error;
+                        res.errMessage = "Не удалось авторизоваться на этапе оплаты";
+                        res.ChangeBot = true;
+                        return res;
+                    }
+                }
+                _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} start transaction");
                 var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
                     sessionId, res);
+                if ((result.errCode is 7 or 3 or 8 or 9 or 57)   && retryCount > 0)
+                {
+                    var attemptsCount = _bot.Attempt_Add(DateTimeOffset.UtcNow.ToUniversalTime(),false);
+                    if (attemptsCount < 10)
+                    {
+                        _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} send result {result.errCode} повторная попытка");
+                        retryCount--;
+                        await Task.Delay(TimeSpan.FromMinutes(3));
+                        await DeleteCart(sessionId);
+                        goto cartRepeat;
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} send result {result.errCode} смена бота");
+                        result.ChangeBot = true;
+                    }
+                }
+
                 return result;
             }
             catch (TaskCanceledException ex)
@@ -404,7 +445,7 @@ namespace SteamDigiSellerBot.Network
 
             finally
             {
-
+                _cartInProcess = false;
             }
 
             //return new SendGameResponse()

@@ -142,7 +142,7 @@
 
     .massChangeMenu {
         position: absolute;
-        height: 400px;
+        height: auto;
         width: 254px;
         background-color: #502863;
         bottom: 120px;
@@ -214,6 +214,7 @@
 
                 .subMenuHidden {
                     opacity: 0;
+                    display: none;
                 }
             }
         }

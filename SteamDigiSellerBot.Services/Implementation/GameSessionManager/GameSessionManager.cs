@@ -174,13 +174,9 @@ namespace SteamDigiSellerBot.Services.Implementation
                 
                 if (sender == GSSCommon.WaitConfirmationGSQ)
                 {
-                    _logger.LogInformation($"[ASHT] GameSessionCommon.Send gsId={gsId}");
-
                     GSSCommon.WaitConfirmationGSQ.Remove(gsId);
                     if (res is Done)
                     {
-                        _logger.LogInformation($"[ASHT] GameSessionCommon.Send UpdateStage=AddToFriend gsId={gsId}");
-
                         var ur = UpdateStage(gsId, GameSessionStage.AddToFriend).GetAwaiter().GetResult();
                         GSSCommon.AddToFriendGSQ.Add(gsId);
                     }
@@ -260,11 +256,25 @@ namespace SteamDigiSellerBot.Services.Implementation
                         else
                         {
                             var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+
+                        }
+
+                        if (!sf.BlockOrder)
+                        {
+                            if (GSSCommon.SendGameGSQ.BanOnAdd.Contains(gsId))
+                                GSSCommon.SendGameGSQ.BanOnAdd.Remove(gsId);
+                            if (GSSCommon.AddToFriendGSQ.BanOnAdd.Contains(gsId))
+                                GSSCommon.AddToFriendGSQ.BanOnAdd.Remove(gsId);
+                            if (GSSCommon.CheckFriendGSQ.BanOnAdd.Contains(gsId))
+                                GSSCommon.CheckFriendGSQ.BanOnAdd.Remove(gsId);
                         }
                     }
                     else if (res is Sended)
                     {
                         var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
+                        var gs = new GameSession { Id = gsId };
+                        gs.BlockOrder = true;
+                        gsr.UpdateFieldAsync(gs, gs => gs.BlockOrder);
                     }
                 }
                 else if (sender == GSSCommon.ActivationExpiredGSQ)
@@ -436,6 +446,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 gs.StatusId = lastStatusId.Value;
 
             await _gsRepo.UpdateFieldAsync(gs, gs => gs.Stage);
+
             return true;
         }
     }

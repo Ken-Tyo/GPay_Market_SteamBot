@@ -1,64 +1,69 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="5.1.1" />
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-    <PackageReference Include="Moq" Version="4.20.69" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
-    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
-    <PackageReference Include="coverlet.collector" Version="3.2.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Castle.Core" Version="5.1.1" />
+		<PackageReference Include="FluentAssertions" Version="6.12.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.17" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+		<PackageReference Include="Moq" Version="4.20.69" />
+		<PackageReference Include="NUnit" Version="3.13.3" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
+		<PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
+		<PackageReference Include="coverlet.collector" Version="3.2.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SteamDigiSellerBot.Database\SteamDigiSellerBot.Database.csproj" />
-    <ProjectReference Include="..\SteamDigiSellerBot.Network\SteamDigiSellerBot.Network.csproj" />
-    <ProjectReference Include="..\SteamDigiSellerBot.Services\SteamDigiSellerBot.Services.csproj" />
-    <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SteamDigiSellerBot.Database\SteamDigiSellerBot.Database.csproj" />
+		<ProjectReference Include="..\SteamDigiSellerBot.Network\SteamDigiSellerBot.Network.csproj" />
+		<ProjectReference Include="..\SteamDigiSellerBot.Services\SteamDigiSellerBot.Services.csproj" />
+		<ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="SteamKit2">
+			<HintPath>..\SteamKit2.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\html\bundleDiscount.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\gameEditionDiscountWithWrongTimer.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\gameEditionDiscountWithTimer.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\noDiscountGame.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\notEndlessDiscount.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\TrueBundleAndEndlessSale.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\userProfilePageAvatartWithFrame.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\userProfilePageJsonWithSemicolonSymbol.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\userProfilePageJsonSimple.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\html\сorrectlyInfiniteTimer.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Data\html\bundleDiscount.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\gameEditionDiscountWithWrongTimer.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\gameEditionDiscountWithTimer.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\noDiscountGame.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\notEndlessDiscount.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\TrueBundleAndEndlessSale.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\userProfilePageAvatartWithFrame.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\userProfilePageJsonWithSemicolonSymbol.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\userProfilePageJsonSimple.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\html\сorrectlyInfiniteTimer.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

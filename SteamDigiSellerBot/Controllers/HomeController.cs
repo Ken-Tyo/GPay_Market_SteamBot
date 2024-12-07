@@ -225,21 +225,53 @@ namespace SteamDigiSellerBot.Controllers
 
             //if (user == null)
             //    return BadRequest();
-
+            
             DigiSellerSoldItem soldItem = await _digiSellerNetworkService.GetSoldItemFromCode(
                 uniquecode, user.AspNetUser.Id);
-
             if (soldItem != null)
             {
+                _logger?.LogInformation($"Продажа {uniquecode}: {System.Text.Json.JsonSerializer.Serialize(soldItem)}");
                 isCorrectCode = true;
                 Item item = await _itemRepository.GetByPredicateAsync(db, x => x.Active && x.DigiSellerIds.Contains(soldItem.ItemId.ToString()));
+                
 
                 if (item != null)
                 {
                     var (_, prices) = _gameSessionService.GetSortedPriorityPrices(item);
                     var firstPrice = prices.First();
-                    var priorityPriceRub = await _currencyDataService
-                            .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+                    var convertToRub = await _currencyDataService
+                        .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+                    var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
+
+
+                    if (DateTime.TryParseExact(soldItem.DatePay, "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out var datePay))
+                    {
+                        
+                        if (datePay.AddDays(7) < DateTime.UtcNow)
+                        {
+                            _logger?.LogWarning($"Продажа {uniquecode}: просрочена {datePay}");
+                            gs = new GameSession()
+                            {
+                                User = user,
+                                Item = item,
+                                DigiSellerDealId = soldItem.DealId.ToString(),
+                                DigiSellerDealPriceUsd = (decimal)soldItem.AmountUsd,
+                                IsSteamMonitoring = true,
+                                UniqueCode = uniquecode,
+                                StatusId = GameSessionStatusEnum.ExpiredDiscount,
+                                PriorityPrice = priorityPriceRub,
+                                MaxSellPercent = null,
+                                Stage = GameSessionStage.Done,
+                                Market = soldItem.Purchase?.content?.owner,
+                                BlockOrder = true
+                            };
+                            await _gameSessionRepository.AddAsync(db, gs);
+                            await _gameSessionService.SetSteamContact(db, gs, soldItem.Options.ToArray());
+                            return (isCorrectCode, gs);
+                        }
+                        
+                    }
 
                     gs = new GameSession()
                     {
@@ -251,7 +283,8 @@ namespace SteamDigiSellerBot.Controllers
                         UniqueCode = uniquecode,
                         StatusId = GameSessionStatusEnum.ProfileNoSet,//не указан профиль
                         PriorityPrice = priorityPriceRub,
-                        MaxSellPercent = null
+                        MaxSellPercent = null,
+                        Market = soldItem.Purchase?.content?.owner
                     };
                     await _gameSessionRepository.AddAsync(db, gs);
                     await _gameSessionService.SetSteamContact(db, gs, soldItem.Options.ToArray());

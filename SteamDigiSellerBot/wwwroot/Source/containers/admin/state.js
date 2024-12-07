@@ -46,6 +46,7 @@ export const state = entity({
   itemsMode: iMode[1],
   itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
+  bulkEditPriceBasisModalIsOpen: false,
   changeItemBulkResponse: { loading: false, loadingItemInfo: false },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
@@ -111,7 +112,6 @@ export const initBotsPage = async () => {
   console.log("params", params);
   let botId = Number(params.id || 0);
   if (botId) {
-    const { bots } = state.get();
     let bot = bots.find((b) => b.id === botId);
     //console.log(botId, bots, bot);
     if (bot) {
@@ -463,6 +463,25 @@ export const apiBotSetIsOn = async (id, isOn) => {
   //await apiFetchBots();
 };
 
+export const apiBotSetIsReserve = async (id, isreserve) => {
+  let res = await fetch(`/bots/setisreserve`, {
+    method: "PUT",
+    body: mapToFormData({
+      botId: id,
+      isReserve: isreserve,
+    }),
+  });
+  if (res.ok) {
+    state.set((value) => {
+      return {
+        ...value,
+        bots: value.bots.map((bot) =>
+          bot.id === id ? { ...bot, isReserve: isreserve } : bot)
+      };
+    });
+  }
+};
+
 export const apiSaveBotRegionSettings = async (item) => {
   setStateProp("saveBotRegionSetResponse", {
     loading: true,
@@ -556,12 +575,21 @@ export const setItemInfoTemplates = (itemInfoTemplates) => {
 };
 
 export const toggleBulkEditPercentModal = (isOpen) => {
-  state.set((value) => {
+    state.set((value) => {
     return {
       ...value,
       bulkEditPercentModalIsOpen: isOpen,
     };
   });
+};
+
+export const toggleBulkEditPriceBasisModal = (isOpen) => {
+    state.set((value) => {
+        return {
+            ...value,
+            bulkEditPriceBasisModalIsOpen: isOpen,
+        };
+    });
 };
 
 export const toggleItemMainInfoModal = (isOpen) => {
@@ -736,12 +764,27 @@ export const apiChangeItemBulk = async (
       SteamPercent,
       IncreaseDecreaseOperator,
       IncreaseDecreasePercent,
-      Ids,
+      Ids
     }),
   });
   setStateProp("changeItemBulkResponse", { loading: false });
   await apiFetchItems();
 };
+
+export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
+    setItemsLoading(true);
+    setStateProp("changeItemBulkResponse", { loading: true });
+    let res = await fetch(`/items/bulk/pricebasis`, {
+        method: "POST",
+        body: mapToFormData({
+            SteamCurrencyId,
+            Ids
+        }),
+    });
+    setStateProp("changeItemBulkResponse", { loading: false });
+    await apiFetchItems();
+};
+
 
 export const apiChangeDigisellerData = async (data) => {
   let res = await fetch(`/user/edit/digiseller`, {
@@ -804,6 +847,7 @@ export const apiGetCurrencies = async () => {
       code: c.code,
       steamId: c.steamId,
       steamSymbol: c.steamSymbol,
+      steamValue: c.value
     };
   });
   let productFilterCurrencies = [
@@ -1045,4 +1089,165 @@ export const apiUpdateItemInfoes = async (itemInfoesValues) => {
     setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
     setItemsLoading(false);
   }
+};
+
+export const apiTagTypeReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/tagtypereplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagTypeReplacementValues = async () => {
+  let res = await fetch(`/tagtypereplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiFetchMarketPlaces = async () => {
+  let res = await fetch(`/marketplace`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiFetchLanguages = async () => {
+  let res = await fetch(`/language`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiFetchTagPromoReplacementValues = async () => {
+  let res = await fetch(`/tagpromoreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagPromoReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/tagpromoreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagInfoAppsReplacementValues = async () => {
+  let res = await fetch(`/taginfoappsreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagInfoAppsReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/taginfoappsreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagInfoDlcReplacementValues = async () => {
+  let res = await fetch(`/taginfodlcreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagInfoDlcReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/taginfodlcreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiGetUpdateItemInfoJobStatistics = async () => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+
+  const options = {
+    method: "GET",
+    headers: headers
+  }
+
+  let res = await fetch(`/iteminfo/jobstatistics`, options);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
 };

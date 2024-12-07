@@ -141,6 +141,8 @@ namespace SteamDigiSellerBot.Controllers
             if (req.StatusId == GameSessionStatusEnum.Done || req.StatusId == GameSessionStatusEnum.Closed)
             {
                 _gameSessionManager.RemoveWithStatus(gs.Id, req.StatusId);
+                gs.BlockOrder = true;
+                await _gameSessionRepository.UpdateFieldAsync(db, gs, gs => gs.BlockOrder);
                 //_gameSessionManager.Remove(gs.Id);
                 //gs.Stage = GameSessionStage.Done;
                 //await _gameSessionRepository.UpdateFieldAsync(gs, gs => gs.Stage);
@@ -192,11 +194,13 @@ namespace SteamDigiSellerBot.Controllers
 
             var (_, prices) = _gameSessionService.GetSortedPriorityPrices(gs.Item);
             var firstPrice = prices.First();
-            var priorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                    .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
 
             gs.Bot = null;
             gs.BotSwitchList = new();
+            gs.AccountSwitchList = new();
             gs.SteamProfileUrl = null;
             gs.StatusId = GameSessionStatusEnum.ProfileNoSet;//Не указан профиль
             gs.SteamContactValue = null;
@@ -212,7 +216,7 @@ namespace SteamDigiSellerBot.Controllers
             {
                 InsertDate = DateTimeOffset.UtcNow,
                 StatusId = gs.StatusId,
-                Value = new ValueJson { message = "Сброс заказа" }
+                Value = new ValueJson { message = GameSessionService.ResetString }
             });
 
             await _gameSessionRepository.EditAsync(db,gs);
@@ -220,6 +224,8 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok();
         }
+
+
 
         [Authorize, HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
@@ -260,8 +266,9 @@ namespace SteamDigiSellerBot.Controllers
                 return this.CreateBadRequest();
             }
 
-            var priorityPriceRub = await _currencyDataService
-                    .ConvertRUBto(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var convertToRub = await _currencyDataService
+                .TryConvertToRUB(firstPrice.CurrentSteamPrice, firstPrice.SteamCurrencyId);
+            var priorityPriceRub = convertToRub.success ? convertToRub.value : null;
 
             var count = Math.Min(req.CopyCount ?? 1, 50);
 
@@ -327,6 +334,10 @@ namespace SteamDigiSellerBot.Controllers
             if (!_gameSessionManager.ConfirmProfile(gs.Id))
                 return BadRequest();
 
+            if (!(gs.Stage is GameSessionStage.New or GameSessionStage.WaitConfirmation))
+                return BadRequest();
+
+
             gs.Stage = GameSessionStage.AddToFriend;
             gs.StatusId = GameSessionStatusEnum.OrderConfirmed;
             gs.AutoSendInvitationTime = null;
@@ -363,6 +374,29 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
+            if (gsi.CantSwitchAccount)
+            {
+                ModelState.AddModelError("", "Превышено количество смены аккаунтов в час. Ожидайте или обратитесь в поддержку.");
+                return this.CreateBadRequest();
+            }
+             
+            return Ok(gsi);
+        }
+
+        [HttpPost, Route("gamesession/resetbot"), ValidationActionFilter]
+        public async Task<IActionResult> ResetBot(ResetProfileUrlReq req)
+        {
+            if (!ModelState.IsValid)
+                return this.CreateBadRequest();
+
+            var gs = await _gameSessionService.ChangeBot(db, req.Uniquecode);
+            if (gs == null)
+            {
+                ModelState.AddModelError("", "такой заказ не найден");
+                return this.CreateBadRequest();
+            }
+
+            var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
 
             return Ok(gsi);
         }
@@ -382,13 +416,14 @@ namespace SteamDigiSellerBot.Controllers
 
             if (gs.StatusId != GameSessionStatusEnum.RequestReject && 
                 gs.StatusId != GameSessionStatusEnum.GameIsExists &&
-                gs.StatusId != GameSessionStatusEnum.InvitationBlocked)
+                gs.StatusId != GameSessionStatusEnum.InvitationBlocked &&
+                gs.StatusId != GameSessionStatusEnum.GameRequired)
             {
                 ModelState.AddModelError("", "не корректный статус заказа");
                 return this.CreateBadRequest();
             }
 
-            if (gs.StatusId == GameSessionStatusEnum.GameIsExists)
+            if (gs.StatusId is GameSessionStatusEnum.GameIsExists or GameSessionStatusEnum.GameRequired)
             {
                 gs.GameExistsRepeatSendCount++;
             }
@@ -397,7 +432,7 @@ namespace SteamDigiSellerBot.Controllers
             gs.Stage = GameSessionStage.CheckFriend;
             await _gameSessionRepository.EditAsync(db, gs);
             _gameSessionManager.CheckFriend(gs.Id);
-
+            await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
             return Ok();
         }
     }

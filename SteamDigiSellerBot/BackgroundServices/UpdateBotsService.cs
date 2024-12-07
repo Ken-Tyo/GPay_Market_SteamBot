@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SteamDigiSellerBot.Utilities;
+using SteamKit2;
 using static SteamDigiSellerBot.Network.SuperBot;
 
 namespace SteamDigiSellerBot.Services
@@ -55,6 +57,7 @@ namespace SteamDigiSellerBot.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            DebugLog.AddListener((s,e)=> this._logger?.LogInformation("SteamKit logger:"+s+"\n"+e));
             await Task.Factory.StartNew(() => UpdateBotState(stoppingToken));
 
             while (!stoppingToken.IsCancellationRequested)
@@ -66,8 +69,8 @@ namespace SteamDigiSellerBot.Services
                 GC.Collect();
                 _logger.LogInformation("Bot updates started");
                 var scope = _serviceProvider.CreateScope();
-                await using var db = _botRepository.GetContext();
-                List<Bot> bots = await _botRepository.ListAsync(db, b => b.IsON);
+                await using var db_task = _botRepository.GetContext();
+                List<Bot> bots = await _botRepository.ListAsync(db_task, b => b.IsON);
 
                 //var adminID = _configuration["adminID"];
 
@@ -76,29 +79,37 @@ namespace SteamDigiSellerBot.Services
                 //User user = await _userManager.FindByIdAsync(adminID);
 
                 CurrencyData currencyData = await _currencyDataService.GetCurrencyData();
-                List<VacGame> vacCheckList = await _vacGameRepository.ListAsync(db);
-                
-                foreach (var bot in bots)
+                List<VacGame> vacCheckList = await _vacGameRepository.ListAsync(db_task);
+
+                var tasks =  bots.Select( async bot => 
                 {
+                    await using var db = _botRepository.GetContext();
                     try
                     {
                         var sb = _superBotPool.GetById(bot.Id);
                         if (!sb.IsOk())
                         {
-                            if (sb.Bot.IsON && sb.LastLogin != null && sb.LastLogin < DateTime.UtcNow.AddMinutes(-45))
+                            if (sb.Bot.IsON && ((sb.LastLogin == null) ||
+                                                (sb.LastLogin != null &&
+                                                 sb.LastLogin < DateTime.UtcNow.AddMinutes(-45))))
                             {
-                                sb.Login();
+                                sb= _superBotPool.ReLogin(sb.Bot);
                             }
 
                             if (!sb.IsOk())
                             {
                                 _logger?.LogWarning(
                                     $"UpdateBotsService: {sb?.Bot.UserName} offline ({nameof(UpdateBotsService)})");
-                                continue;
+                                return;
+                            }
+                            else
+                            {
+                                _logger?.LogInformation(
+                                    $"UpdateBotsService: {sb?.Bot.UserName} online ({nameof(UpdateBotsService)})");
                             }
                         }
 
-                        
+
 
                         if (string.IsNullOrWhiteSpace(bot.Region))
                         {
@@ -120,13 +131,15 @@ namespace SteamDigiSellerBot.Services
                                 _logger?.LogInformation(
                                     $"BalanceMonitor: {bot.UserName} изменил баланс с {bot.Balance} на {balance}");
                             bot.Balance = balance;
-                            bot.LastTimeBalanceUpdated= DateTime.UtcNow;
-                            await _botRepository.UpdateFieldsAsync(db, bot, b => b.Balance, b=> b.LastTimeBalanceUpdated);
+                            bot.LastTimeBalanceUpdated = DateTime.UtcNow;
+                            await _botRepository.UpdateFieldsAsync(db, bot, b => b.Balance,
+                                b => b.LastTimeBalanceUpdated);
                         }
-                        else 
+                        else
                             _logger?.LogWarning($"BalanceMonitor: {bot.UserName} не смог обновить баланс");
 
-                        (bool, List<Database.Entities.Bot.VacGame>) vacParse = await sb.GetBotVacGames(vacCheckList, bot.Region);
+                        (bool, List<Database.Entities.Bot.VacGame>) vacParse =
+                            await sb.GetBotVacGames(vacCheckList, bot.Region);
                         if (vacParse.Item1)
                         {
                             bot.VacGames = vacParse.Item2;
@@ -137,13 +150,14 @@ namespace SteamDigiSellerBot.Services
                         if (startCount % 3 == 0)
                         {
                             (bool stateParsed, BotState state) = //, DateTimeOffset tempLimitDeadline, int count) =
-                                       sb.GetBotState(bot);
-                            
+                                sb.GetBotState(bot);
+
                             if (stateParsed)
                             {
-                           
+
                                 bot.State = state;
-                                if (bot.State == BotState.active && bot.TempLimitDeadline > DateTimeOffset.UtcNow.ToUniversalTime())
+                                if (bot.State == BotState.active &&
+                                    bot.TempLimitDeadline > DateTimeOffset.UtcNow.ToUniversalTime())
                                     bot.State = BotState.tempLimit;
                                 await _botRepository.UpdateFieldAsync(db, bot, b => b.State);
                             }
@@ -158,7 +172,7 @@ namespace SteamDigiSellerBot.Services
                             }
 
                             if (bot.State != BotState.blocked
-                             && bot.State != BotState.limit)
+                                && bot.State != BotState.limit)
                             {
                                 (bool sendedParseSuccess, decimal sendedGiftsSum, int steamCurrencyId) =
                                     sb.GetSendedGiftsSum(currencyData, bot.Region, bot.BotRegionSetting);
@@ -173,7 +187,8 @@ namespace SteamDigiSellerBot.Services
                                     bot.SendedGiftsSum = sendedGiftsSum;
                                     await _botRepository.UpdateFieldAsync(db, bot, b => b.SendedGiftsSum);
 
-                                    _logger.LogInformation($"BOT {bot.Id} {bot.UserName} - GetSendedGiftsSum - {sendedGiftsSum}, {steamCurrencyId}");
+                                    _logger.LogInformation(
+                                        $"BOT {bot.Id} {bot.UserName} - GetSendedGiftsSum - {sendedGiftsSum}, {steamCurrencyId}");
                                 }
                             }
                         }
@@ -193,11 +208,12 @@ namespace SteamDigiSellerBot.Services
                                 await _botRepository.UpdateFieldsAsync(db, bot,
                                     b => b.IsProblemRegion,
                                     b => b.HasProblemPurchase,
-                                    b => b.TotalPurchaseSumUSD, 
-                                    b => b.MaxSendedGiftsSum, 
+                                    b => b.TotalPurchaseSumUSD,
+                                    b => b.MaxSendedGiftsSum,
                                     b => b.MaxSendedGiftsUpdateDate);
 
-                                _logger.LogInformation($"BOT {bot.Id} {bot.UserName} - GetMaxSendedGiftsSumResult - {JsonConvert.SerializeObject(getMaxSendedRes, Formatting.Indented)}");
+                                _logger.LogInformation(
+                                    $"BOT {bot.Id} {bot.UserName} - GetMaxSendedGiftsSumResult - {JsonConvert.SerializeObject(getMaxSendedRes, Formatting.Indented)}");
                             }
                         }
 
@@ -205,10 +221,14 @@ namespace SteamDigiSellerBot.Services
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(default(EventId), ex, $"Error while update bot: {bot.Id} {bot.UserName} , Marker:{id}");
+                        _logger.LogError(default(EventId), ex,
+                            $"Error while update bot: {bot.Id} {bot.UserName} , Marker:{id}");
                     }
-                }
-                _logger.LogInformation("Bot updates finished");
+                }).ToList();
+                _logger.LogInformation($"UpdateBotsService: Bots {tasks.Count} to update");
+                foreach (var b in tasks.Batch(8))
+                    await Task.WhenAll(b);
+                _logger.LogInformation("UpdateBotsService: Bot updates finished");
                 //_logger.LogError($"{nameof(UpdateBotsService)} ExecuteAsync Marker:{id} Finish");
                 await Task.Delay(TimeSpan.FromHours(1));
             }

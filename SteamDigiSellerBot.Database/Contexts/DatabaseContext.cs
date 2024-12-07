@@ -6,12 +6,15 @@ using SteamDigiSellerBot.Database.Models;
 using System;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SteamDigiSellerBot.Database.Entities.Templates;
+using SteamDigiSellerBot.Database.Entities.TagReplacements;
 
 namespace SteamDigiSellerBot.Database.Contexts
 {
     public class DatabaseContext : IdentityDbContext<User>
     {
         public DbSet<Bot> Bots { get; set; }
+        
+        public DbSet<BotSteamLicenses> BotSteamLicenses { get; set; }
 
         public DbSet<Game> Games { get; set; }
 
@@ -45,6 +48,19 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<ItemAdditionalInfoTemplate> ItemAdditionalInfoTemplates { get; set; }
         public DbSet<ItemAdditionalInfoTemplateValue> ItemAdditionalInfoTemplateValues { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<UpdateItemInfoStat> UpdateItemInfoStats { get; set; }
+        #endregion
+
+        #region Тэги
+        public DbSet<MarketPlace> MarketPlaces { get; set; }
+        public DbSet<TagPromoReplacement> TagPromoReplacements { get; set; }
+        public DbSet<TagPromoReplacementValue> TagPromoReplacementValues { get; set; }
+        public DbSet<TagTypeReplacement> TagTypeReplacements { get; set; }
+        public DbSet<TagTypeReplacementValue> TagTypeReplacementValues { get; set; }
+        public DbSet<TagInfoAppsReplacement> TagInfoAppsReplacements { get; set; }
+        public DbSet<TagInfoAppsReplacementValue> TagInfoAppsReplacementValues { get; set; }
+        public DbSet<TagInfoDlcReplacement> TagInfoDlcReplacements { get; set; }
+        public DbSet<TagInfoDlcReplacementValue> TagInfoDlcReplacementValues { get; set; }
         #endregion
 
 
@@ -80,6 +96,52 @@ namespace SteamDigiSellerBot.Database.Contexts
 
             builder.Entity<Language>()
                 .HasKey(x => x.Code);
+
+            builder.Entity<TagTypeReplacementValue>()
+                .HasKey(x => new { x.TagTypeReplacementId, x.LanguageCode });
+
+            builder.Entity<TagTypeReplacement>()
+                .HasKey(x => new { x.Id });
+
+            builder.Entity<TagTypeReplacement>()
+                .HasMany(x => x.ReplacementValues)
+                .WithOne(x => x.TagTypeReplacement);
+
+            builder.Entity<TagPromoReplacementValue>()
+                .HasKey(x => new { x.TagPromoReplacementId, x.LanguageCode });
+
+            builder.Entity<TagPromoReplacement>()
+                .HasKey(x => new { x.Id });
+
+            builder.Entity<TagPromoReplacement>()
+                .HasOne(x => x.MarketPlace)
+                .WithMany(x => x.TagPromoReplacements);
+
+            builder.Entity<TagPromoReplacement>()
+                .HasMany(x => x.ReplacementValues)
+                .WithOne(x => x.TagPromoReplacement);
+
+            builder.Entity<TagInfoAppsReplacementValue>()
+                .HasKey(x => new { x.TagInfoAppsReplacementId, x.LanguageCode });
+
+            builder.Entity<TagInfoAppsReplacement>()
+                .HasKey(x => new { x.Id });
+
+            builder.Entity<TagInfoAppsReplacement>()
+                .HasMany(x => x.ReplacementValues)
+                .WithOne(x => x.TagInfoAppsReplacement);
+
+            builder.Entity<TagInfoDlcReplacementValue>()
+                .HasKey(x => new { x.TagInfoDlcReplacementId, x.LanguageCode });
+
+            builder.Entity<TagInfoDlcReplacement>()
+                .HasKey(x => new { x.Id });
+
+            builder.Entity<TagInfoDlcReplacement>()
+                .HasMany(x => x.ReplacementValues)
+                .WithOne(x => x.TagInfoDlcReplacement);
+
+            builder.Entity<UpdateItemInfoStat>().HasKey(x => x.JobCode);
 
             base.OnModelCreating(builder);
         }

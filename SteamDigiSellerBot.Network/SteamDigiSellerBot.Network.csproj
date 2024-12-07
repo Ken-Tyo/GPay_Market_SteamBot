@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.14" />
+    <PackageReference Include="Hangfire.PostgreSql.Npgsql5" Version="1.9.9" />
     <PackageReference Include="HtmlAgilityPack" Version="1.10.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="protobuf-net" Version="3.2.30" />
@@ -12,6 +15,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SteamDigiSellerBot.Database\SteamDigiSellerBot.Database.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Protos\SteamDigiSellerBot.Protos.csproj" >
+	    <Aliases>OverrideProto</Aliases>
+    </ProjectReference>
     <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
   </ItemGroup>
 

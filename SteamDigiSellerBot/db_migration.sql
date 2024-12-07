@@ -1,4 +1,4 @@
-alter table "GameSessions" drop column "CopyCount";
+﻿alter table "GameSessions" drop column "CopyCount";
 
 задача 68
 
@@ -287,33 +287,210 @@ alter table "GameSessions" add "BlockOrder" boolean not null default false;
 alter table "Bots" add "LastTimeUpdated" timestamp without time zone null;
 alter table "Bots" add "LastTimeBalanceUpdated" timestamp without time zone null;
 
-29.08
-ALTER TABLE public."Items" ADD "Modified" timestamptz NULL;
-ALTER TABLE public."Games" ADD "Modified" timestamptz NULL;
-ALTER TABLE public."GameSessions" ADD "Modified" timestamptz NULL;
+05.09.2024 Задача 68
+CREATE TABLE "TagTypeReplacements" (
+	"Id" serial PRIMARY KEY,
+	"IsDlc" BOOL DEFAULT false
+);
 
-CREATE OR REPLACE FUNCTION public.trigger_set_Modified()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-BEGIN
-  NEW."Modified" = NOW();
-  RETURN NEW;
-END;
-$function$
-;
+comment on table "TagTypeReplacements" is 'Замены тэгов типа продукта - %type%';
+comment on column "TagTypeReplacements"."Id" is 'Идентификатор';
+comment on column "TagTypeReplacements"."IsDlc" is 'Признак DLC';
 
-create trigger set_items_modified before
-update
-    on
-    public."Items" for each row execute function trigger_set_Modified();
+CREATE TABLE "TagTypeReplacementValues" (
+	"TagTypeReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagTypeReplacementId", "LanguageCode")
+);
 
-create trigger set_games_modified before
-update
-    on
-    public."Games" for each row execute function trigger_set_Modified();
+comment on table "TagTypeReplacementValues" is 'Значения для замены тэгов продукта %type%';
+comment on column "TagTypeReplacementValues"."TagTypeReplacementId" is 'ИД замены тэга продукта';
+comment on column "TagTypeReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagTypeReplacementValues"."Value" is 'Значение для замены тэга';
 
-create trigger set_gamesessions_modified before
-update
-    on
-    public."GameSessions" for each row execute function trigger_set_Modified();
+ALTER TABLE "TagTypeReplacementValues" add constraint "TagTypeReplacementValues_TagTypeReplacementId_fkey" 
+foreign key ("TagTypeReplacementId") references "TagTypeReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagTypeReplacementValues" add constraint "TagTypeReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+CREATE TABLE "MarketPlaces" (
+	"Id" INT PRIMARY KEY,
+	"Name" VARCHAR(16)
+);
+
+comment on table "MarketPlaces" is 'Площадки';
+comment on column "MarketPlaces"."Id" is 'Идентификатор';
+comment on column "MarketPlaces"."Name" is 'Наименование';
+
+INSERT INTO "MarketPlaces"("Id", "Name") VALUES(1, 'WMCentre');
+INSERT INTO "MarketPlaces"("Id", "Name") VALUES(2, 'GGSel');
+INSERT INTO "MarketPlaces"("Id", "Name") VALUES(3, 'Plati');
+
+CREATE TABLE "TagPromoReplacements" (
+	"Id" serial PRIMARY KEY,
+	"MarketPlaceId" INT
+);
+
+ALTER TABLE "TagPromoReplacements" add constraint "TagPromoReplacements_MarketPlaceId_fkey" 
+foreign key ("MarketPlaceId") references "MarketPlaces"("Id") on delete cascade;
+
+comment on table "TagPromoReplacements" is 'Замены тэгов типа продукта - %promo%';
+comment on column "TagPromoReplacements"."Id" is 'Идентификатор';
+comment on column "TagPromoReplacements"."MarketPlaceId" is 'ИД площадки';
+
+CREATE TABLE "TagPromoReplacementValues" (
+	"TagPromoReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagPromoReplacementId", "LanguageCode")
+);
+
+comment on table "TagPromoReplacementValues" is 'Значения для замены тэгов промо-акции %promo%';
+comment on column "TagPromoReplacementValues"."TagPromoReplacementId" is 'ИД замены тэга промо-акции';
+comment on column "TagPromoReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagPromoReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagPromoReplacementValues" add constraint "TagPromoReplacementValues_TagPromoReplacementId_fkey" 
+foreign key ("TagPromoReplacementId") references "TagPromoReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagPromoReplacementValues" add constraint "TagPromoReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+insert into "TagTypeReplacements"  ("Id", "IsDlc") values (1, false)
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (1, 'ru-RU', 'игра / программа')
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (1, 'en-US', 'game / software')
+insert into "TagTypeReplacements" ("Id", "IsDlc") values (2, true)
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'ru-RU', 'дополнение')
+insert into "TagTypeReplacementValues" ("TagTypeReplacementId", "LanguageCode", "Value") values (2, 'en-US', 'DLC')
+
+
+27.10.2024 96-шифровать-хешировать-пароли-в-бд-ботов-steam-аккаунтов-при-добавлении-в-разделе
+ALTER TABLE "Bots" ADD "PasswordC" text NULL;
+ALTER TABLE "Bots" ADD "ProxyStrC" text NULL;
+ALTER TABLE "Bots" ADD "MaFileStrC" text NULL;
+ALTER TABLE "Bots" ADD "SteamCookiesStrC" text NULL;
+ALTER TABLE "SteamProxies" ADD "PasswordC" text NULL;
+ALTER TABLE "AspNetUsers" ADD "DigisellerIDC" text NULL;
+ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
+ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
+ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
+
+19.11 
+ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
+
+21.11
+alter table "Games" ADD "GameInfo" JSON null;
+
+19.11.2024 Задача 142 - Добавление тэга %infoApps%
+CREATE TABLE "TagInfoAppsReplacements" (
+	"Id" serial PRIMARY KEY
+);
+
+comment on table "TagInfoAppsReplacements" is 'Замены тэгов состава изделия - %infoApps%';
+comment on column "TagInfoAppsReplacements"."Id" is 'Идентификатор';
+
+CREATE TABLE "TagInfoAppsReplacementValues" (
+	"TagInfoAppsReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagInfoAppsReplacementId", "LanguageCode")
+);
+
+comment on table "TagInfoAppsReplacementValues" is 'Значения для замены тэгов состава изделия - %infoApps%';
+comment on column "TagInfoAppsReplacementValues"."TagInfoAppsReplacementId" is 'ИД замены тэга состава изделия';
+comment on column "TagInfoAppsReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagInfoAppsReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagInfoAppsReplacementValues" add constraint "TagInfoAppsReplacementValues_TagInfoAppsReplacementId_fkey" 
+foreign key ("TagInfoAppsReplacementId") references "TagInfoAppsReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagInfoAppsReplacementValues" add constraint "TagInfoAppsReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+20.11.2024 Задача 141 - Добавление тэга %infoDLC%
+CREATE TABLE "TagInfoDlcReplacements" (
+	"Id" serial PRIMARY KEY
+);
+
+comment on table "TagInfoDlcReplacements" is 'Замены тэгов состава изделия - %infoDLC%';
+comment on column "TagInfoDlcReplacements"."Id" is 'Идентификатор';
+
+CREATE TABLE "TagInfoDlcReplacementValues" (
+	"TagInfoDlcReplacementId" serial,
+	"LanguageCode" varchar(8) not null,
+	"Value" VARCHAR(512) not null,
+	PRIMARY KEY("TagInfoDlcReplacementId", "LanguageCode")
+);
+
+comment on table "TagInfoDlcReplacementValues" is 'Значения для замены тэгов с требованиями основной игры к DLC - %infoDLC%';
+comment on column "TagInfoDlcReplacementValues"."TagInfoDlcReplacementId" is 'ИД замены тэга с требованиями основной игры к DLC';
+comment on column "TagInfoDlcReplacementValues"."LanguageCode" is 'Код языка';
+comment on column "TagInfoDlcReplacementValues"."Value" is 'Значение для замены тэга';
+
+ALTER TABLE "TagInfoDlcReplacementValues" add constraint "TagInfoDlcReplacementValues_TagInfoDlcReplacementId_fkey" 
+foreign key ("TagInfoDlcReplacementId") references "TagInfoDlcReplacements"("Id") on delete cascade;
+
+ALTER TABLE "TagInfoDlcReplacementValues" add constraint "TagInfoDlcReplacementValues_LanguageCode_fkey" 
+foreign key ("LanguageCode") references "Languages"("Code") on delete cascade;
+
+22.11.2024 Задача 68
+CREATE TABLE "UpdateItemInfoStat" (
+	"JobCode" varchar(16),
+	"UpdateDate" date,
+	"RequestCount" int not null,
+	PRIMARY KEY("JobCode")
+);
+
+comment on table "UpdateItemInfoStat" is 'Статистика обновлений описаний товаров за день';
+comment on column "UpdateItemInfoStat"."JobCode" is 'Код задачи на обновление';
+comment on column "UpdateItemInfoStat"."UpdateDate" is 'Дата обновления';
+comment on column "UpdateItemInfoStat"."RequestCount" is 'Количество отправленных запросов';
+
+23.11 - ДУБЛЬ СТРОКИ 125
+alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
+
+24.11 Задача #70 - GiftBan
+ALTER TABLE "Bots" add "RemainingSumToGift" numeric null;
+23.11
+alter table "Items" add "SteamCountryCodeId" int null references "SteamCountryCodes"("Id");
+INSERT INTO "public"."GameSessionStatus" ("Id", "StatusId", "Name", "Color", "Description") VALUES (49, 23, 'Ошибка (Нет игры)', '#E13F29', NULL);
+
+26.11
+ALTER TABLE "GameSessions" ADD "AccountSwitchList" JSON null;
+ALTER TABLE "Bots" ADD "IgnoreSendLimits" BOOLEAN  not null default FALSE;
+
+02.12
+ALTER TABLE "GameSessions" ADD "Market" int null;
+
+04.12 *fix
+ALTER TABLE "GameSessions" ADD "ItemSteamCountryCodeId" int null;
+
+05.12 Задача 163 - Список игр (приложений и комплектов), которые принадлежат боту
+CREATE TABLE "BotSteamLicenses"
+(
+    "Id" integer NOT NULL,
+    "AppIdList" integer[] NOT NULL,
+    "SubIdList" integer[] NOT NULL,
+    CONSTRAINT "PK_BotSteamLicanses" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_BotSteamLicenses_Bots" FOREIGN KEY ("Id")
+        REFERENCES "Bots" ("Id") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
+);
+
+05.12.2024 96-шифровать-хешировать-пароли-в-бд-ботов-steam-аккаунтов-при-добавлении-в-разделе
+ALTER TABLE "Bots" drop column "PasswordC";
+ALTER TABLE "Bots" drop column "ProxyStrC";
+ALTER TABLE "Bots" drop column "MaFileStrC";
+ALTER TABLE "Bots" drop column "SteamCookiesStrC";
+ALTER TABLE "SteamProxies" drop column "PasswordC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
+ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
+ALTER TABLE "Users" drop column "DigisellerIDC";
+ALTER TABLE "Users" drop column "DigisellerApiKeyC";
+
+19.11.2024
+ALTER TABLE public."Bots" ADD COLUMN "IsReserve" BOOL DEFAULT false

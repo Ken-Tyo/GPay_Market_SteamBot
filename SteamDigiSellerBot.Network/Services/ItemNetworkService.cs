@@ -24,6 +24,10 @@ using static System.Net.Mime.MediaTypeNames;
 using SteamDigiSellerBot.Network.Models;
 using static SteamDigiSellerBot.Network.Services.DigiSellerNetworkService;
 using SteamDigiSellerBot.Network.Extensions;
+using SteamDigiSellerBot.Database.Repositories.TagRepositories;
+using SteamDigiSellerBot.Database.Entities.TagReplacements;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Text;
 
 namespace SteamDigiSellerBot.Network.Services
 {
@@ -34,14 +38,34 @@ namespace SteamDigiSellerBot.Network.Services
 
         Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
-        Task SetPrices(string appId, string subId, string aspNetUserId,
-            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
 
-        Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken);
+        Task UpdateItemsInfoesAsync(
+            UpdateItemInfoCommands updateItemInfoCommands,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
+            CancellationToken cancellationToken);
     }
 
     public class ItemNetworkService : IItemNetworkService
     {
+        private const int ChunkSize = 1000;
+        private const string GamesWithMultipleSubIdPlainSQL = @"
+WITH cte AS
+(SELECT DISTINCT
+	""Id"",
+	COUNT(1) OVER(PARTITION BY ""AppId"") AS GamesByAppIdCnt
+FROM
+	public.""Games"" g)
+SELECT
+    g.* 
+FROM
+	""Games"" g
+JOIN cte ON cte.GamesByAppIdCnt > 1 AND cte.""Id"" = g.""Id""
+ORDER BY g.""AppId""";
+
         private readonly ISteamNetworkService _steamNetworkService;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly IConfiguration _configuration;
@@ -49,7 +73,8 @@ namespace SteamDigiSellerBot.Network.Services
         private readonly ICurrencyDataRepository _currencyDataRepository;
         private readonly ILogger<ItemNetworkService> _logger;
         private readonly ISteamProxyRepository _steamProxyRepository;
-        private readonly UpdateItemsInfoService _updateItemsInfoService;
+        private readonly IUpdateItemsInfoService _updateItemsInfoService;
+        private readonly GameAppsRepository _gameAppsRepository;
 
         public ItemNetworkService(
            ISteamNetworkService steamNetworkService,
@@ -59,7 +84,8 @@ namespace SteamDigiSellerBot.Network.Services
            IConfiguration configuration,
            ILogger<ItemNetworkService> logger,
            ISteamProxyRepository steamProxyRepository,
-           UpdateItemsInfoService updateItemsInfoService)
+           IUpdateItemsInfoService updateItemsInfoService,
+           GameAppsRepository gameAppsRepository)
         {
             _steamNetworkService = steamNetworkService;
             _digiSellerNetworkService = digiSellerNetworkService;
@@ -69,6 +95,7 @@ namespace SteamDigiSellerBot.Network.Services
             _logger = logger;
             _steamProxyRepository = steamProxyRepository;
             _updateItemsInfoService = updateItemsInfoService ?? throw new ArgumentNullException(nameof(updateItemsInfoService));
+            _gameAppsRepository = gameAppsRepository ?? throw new ArgumentNullException(nameof(gameAppsRepository));
         }
 
         public async Task SetPrices(
@@ -77,13 +104,6 @@ namespace SteamDigiSellerBot.Network.Services
         {
             var itemsSet = items.Select(i => i.SubId).ToHashSet();
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
-        }
-
-        public async Task SetPrices(
-            string appId, string subId, string aspNetUserId,
-            bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true)
-        {
-            await SetPrices(appId, new List<string>{ subId }.ToHashSet(), aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
         public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null, bool manualUpdate = true)
@@ -176,80 +196,200 @@ namespace SteamDigiSellerBot.Network.Services
         }
 
         /// <inheritdoc/>
-        public async Task UpdateItemsInfoesAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, string aspNetUserId, CancellationToken cancellationToken)
+        public async Task UpdateItemsInfoesAsync(
+            UpdateItemInfoCommands updateItemInfoCommands,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
+            CancellationToken cancellationToken)
         {
-            var languageCodes = updateItemInfoCommands
-                    .SelectMany(x => x.InfoData?.Any() == true ? x.InfoData.Select(x => x.Locale) : x.AdditionalInfoData.Select(x => x.Locale))
-                    .ToHashSet();
+            var languageCodes = updateItemInfoCommands.InfoData?.Any() == true
+                ? updateItemInfoCommands.InfoData.Select(x => x.Locale).ToHashSet()
+                : updateItemInfoCommands.AdditionalInfoData.Select(x => x.Locale).ToHashSet();
 
-            var getProductsBaseAsyncTask = GetProductsBaseAsync(updateItemInfoCommands, languageCodes, cancellationToken);
-            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(updateItemInfoCommands, cancellationToken);
+            var getProductsBaseAsyncTask = GetProductsBaseAsync(updateItemInfoCommands.Goods, languageCodes, cancellationToken);
+            var replaceTagsAsyncTask = ReplaceAllLocalValueDataTagsAsync(
+                updateItemInfoCommands,
+                aspNetUserId,
+                tagTypeReplacements,
+                tagPromoReplacements,
+                tagInfoAppsReplacements,
+                tagInfoDlcReplacements,
+                cancellationToken);
             await Task.WhenAll(getProductsBaseAsyncTask, replaceTagsAsyncTask);
 
-            EnrichUpdateItemInfoCommands(updateItemInfoCommands, getProductsBaseAsyncTask.Result, languageCodes);
+            EnrichUpdateItemInfoCommands(updateItemInfoCommands.Goods, getProductsBaseAsyncTask.Result, languageCodes);
             await _updateItemsInfoService.UpdateItemsInfoesAsync(updateItemInfoCommands, aspNetUserId, cancellationToken);
         }
 
-        private async Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(List<UpdateItemInfoCommand> updateItemInfoCommands, HashSet<string> languageCodes, CancellationToken cancellationToken) =>
+        private async Task<IReadOnlyList<ProductBaseLanguageDecorator>> GetProductsBaseAsync(List<UpdateItemInfoGoods> updateItemInfoGoods, HashSet<string> languageCodes, CancellationToken cancellationToken) =>
             await _digiSellerNetworkService.GetProductsBaseAsync(
                 languageCodes,
                 cancellationToken,
-                updateItemInfoCommands.Select(x => x.DigiSellerId).ToArray());
+                updateItemInfoGoods.SelectMany(x => x.DigiSellerIds).ToArray());
 
         private async Task ReplaceAllLocalValueDataTagsAsync(
-            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            UpdateItemInfoCommands updateItemInfoCommands,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
             CancellationToken cancellationToken)
         {
-            await ReplaceTagsAsync(updateItemInfoCommands, updateItemInfoCommands => updateItemInfoCommands.InfoData, cancellationToken);
-            await ReplaceTagsAsync(updateItemInfoCommands, updateItemInfoCommands => updateItemInfoCommands.AdditionalInfoData, cancellationToken);
+            if (updateItemInfoCommands.InfoData.ContainsTags())
+            {
+                await ReplaceTagsAsync(
+                    updateItemInfoCommands.Goods,
+                    updateItemInfoCommands.InfoData,
+                    aspNetUserId,
+                    tagTypeReplacements,
+                    tagPromoReplacements,
+                    tagInfoAppsReplacements,
+                    tagInfoDlcReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> infoData) => updateItemInfoGoods.SetInfoData(infoData),
+                    cancellationToken);
+            }
+
+
+            if (updateItemInfoCommands.AdditionalInfoData.ContainsTags())
+            {
+                await ReplaceTagsAsync(
+                    updateItemInfoCommands.Goods,
+                    updateItemInfoCommands.AdditionalInfoData,
+                    aspNetUserId,
+                    tagTypeReplacements,
+                    tagPromoReplacements,
+                    tagInfoAppsReplacements,
+                    tagInfoDlcReplacements,
+                    (UpdateItemInfoGoods updateItemInfoGoods, List<LocaleValuePair> additionalInfoData) => updateItemInfoGoods.SetAdditionalInfoData(additionalInfoData),
+                    cancellationToken);
+            }
         }
 
         private async Task ReplaceTagsAsync(
-            List<UpdateItemInfoCommand> updateItemInfoCommands,
-            Func<UpdateItemInfoCommand, List<LocaleValuePair>> getLocaleValuePair,
+            List<UpdateItemInfoGoods> updateItemInfoGoods,
+            List<LocaleValuePair> infoData,
+            string aspNetUserId,
+            IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements,
+            Action<UpdateItemInfoGoods, List<LocaleValuePair>> setData,
             CancellationToken cancellationToken)
         {
             // Replace tags by item specification
             await using var db = _contextFactory.CreateDbContext();
-            var digiSellerIdsWithTags = updateItemInfoCommands.Where(c => getLocaleValuePair(c).ContainsTags()).Select(x => x.DigiSellerId.ToString()).ToArray();
-            if (digiSellerIdsWithTags.Any())
-            {
-                var itemsWithTags = await db
+            var digiSellerIdsWithTags = updateItemInfoGoods.SelectMany(x => x.DigiSellerIds).ToList();
+            var itemsWithTags = await db
                     .Items
-                    .Where(x => x.DigiSellerIds.Any(digiSellerId => digiSellerIdsWithTags.Contains(digiSellerId)))
+                    .Where(x => updateItemInfoGoods.Select(x => x.ItemId).Contains(x.Id))
                     .ToListAsync(cancellationToken);
 
-                foreach (var updateItemInfoCommand in updateItemInfoCommands)
+            var gamesByAppId = _gameAppsRepository.GetAppIdWithNames();
+            var dlcWithParent = _gameAppsRepository.GetDlcWithParent();
+
+            foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
+            {
+                var item = itemsWithTags.First(x => x.Id == updateItemInfoGoodsItem.ItemId);
+                setData(
+                    updateItemInfoGoodsItem,
+                    infoData.GetReplacedTagsToValue(
+                        item,
+                        tagTypeReplacements,
+                        tagPromoReplacements,
+                        tagInfoAppsReplacements,
+                        tagInfoDlcReplacements));
+
+                string replaceString = string.Empty;
+                if (gamesByAppId.ContainsKey(item.AppId))
                 {
-                    if (getLocaleValuePair(updateItemInfoCommand).ContainsTags())
+                    var sb = new StringBuilder();
+                    foreach (var gameByAppId in gamesByAppId[item.AppId])
                     {
-                        var item = itemsWithTags.First(x => x.DigiSellerIds.Contains(updateItemInfoCommand.DigiSellerId.ToString()));
-                        getLocaleValuePair(updateItemInfoCommand).ReplaceTagsToValue(item);
+                        sb.Append("• ").Append(gameByAppId.Name).Append(Environment.NewLine);
                     }
+                    replaceString = sb.ToString();
                 }
+
+                ReplaceStrongTag(StrongTagsConstants.AppsListTagTemplate, updateItemInfoGoodsItem, replaceString);
+
+                replaceString = string.Empty;
+                var dlc = dlcWithParent.SingleOrDefault(x => x.AppId == item.AppId && x.ParentGameApp != null);
+                if (dlc != null)
+                {
+                    replaceString = $"• {dlc.ParentGameApp.Name}";
+                }
+
+                ReplaceStrongTag(StrongTagsConstants.GameParentListTagTemplate, updateItemInfoGoodsItem, replaceString);
             }
         }
 
+        private void ReplaceStrongTag(
+            string tag,
+            UpdateItemInfoGoods updateItemInfoGoodsItem,
+            string replaceString)
+        {
+            List<LocaleValuePair> infoDataList = new List<LocaleValuePair>();
+
+            bool isChanged = false;
+            foreach (var infoData in updateItemInfoGoodsItem.InfoData)
+            {
+                if (infoData.Value.Contains(tag))
+                {
+                    infoDataList.Add(new LocaleValuePair(infoData.Locale, infoData.Value.Replace(tag, replaceString)));
+                    isChanged = true;
+                }
+                else
+                {
+                    infoDataList.Add(infoData);
+                }
+            }
+
+            if (isChanged)
+            {
+                updateItemInfoGoodsItem.SetInfoData(infoDataList);
+            }
+
+            isChanged = false;
+            List<LocaleValuePair> additionalInfoDataList = new List<LocaleValuePair>();
+            foreach (var additionalInfoData in updateItemInfoGoodsItem.AdditionalInfoData)
+            {
+                if (additionalInfoData.Value.Contains(tag))
+                {
+                    additionalInfoDataList.Add(
+                        new LocaleValuePair(
+                            additionalInfoData.Locale,
+                            additionalInfoData.Value.Replace(tag, replaceString)));
+
+                    isChanged = true;
+                }
+                else
+                {
+                    additionalInfoDataList.Add(additionalInfoData);
+                }
+            }
+
+            if (isChanged)
+            {
+                updateItemInfoGoodsItem.SetAdditionalInfoData(additionalInfoDataList);
+            }
+        }
+
+
         private static void EnrichUpdateItemInfoCommands(
-            List<UpdateItemInfoCommand> updateItemInfoCommands,
+            List<UpdateItemInfoGoods> updateItemInfoGoods,
             IReadOnlyList<ProductBaseLanguageDecorator> products,
             HashSet<string> languageCodes)
         {
-            foreach(var updateItemInfoCommand in updateItemInfoCommands)
+            foreach (var updateItemInfoGoodsItem in updateItemInfoGoods)
             {
-                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id == updateItemInfoCommand.DigiSellerId);
+                var productsByDigiSellerId = products.Where(x => x.ProductBase.Id != null && updateItemInfoGoodsItem.DigiSellerIds.Contains((int)x.ProductBase.Id));
                 if (productsByDigiSellerId.Any())
                 {
-                    updateItemInfoCommand.Name = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Name);
-                    if (updateItemInfoCommand.InfoData?.Any() != true)
-                    {
-                        updateItemInfoCommand.InfoData = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Info);
-                    }
-
-                    if (updateItemInfoCommand.AdditionalInfoData?.Any() != true)
-                    {
-                        updateItemInfoCommand.AdditionalInfoData = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.AddInfo);
-                    }
+                    updateItemInfoGoodsItem.Name = productsByDigiSellerId.GetLocaleValuePair(languageCodes, productBase => productBase.Name);
                 }
             }
         }
@@ -271,8 +411,6 @@ namespace SteamDigiSellerBot.Network.Services
         {
             try
             {
-                _logger.LogWarning($"[ASHT] ItemNetworkService.SetPrices appId={appId}, items={JsonConvert.SerializeObject(items)}");
-
                 await using var db = _contextFactory.CreateDbContext();
                 db.Database.SetCommandTimeout(TimeSpan.FromMinutes(1));
                 var currencyData = await _currencyDataRepository.GetCurrencyData(true);
@@ -305,7 +443,9 @@ namespace SteamDigiSellerBot.Network.Services
                     currencyForParse = allCurrencies.Where(c => targetCurrs.Contains(c.SteamId)).ToList();
                 }
 
-                await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
+                await _steamNetworkService.SetSteamPrices_Proto(appId, dbItems.Cast<Game>().ToList(), currencyForParse,db, 5);
+                //await _steamNetworkService.SetSteamPrices(appId, dbItems.Cast<Game>().ToList(), currencyForParse, db, 5);
+
 
                 //before update Digiseller price
                 var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
@@ -337,19 +477,20 @@ namespace SteamDigiSellerBot.Network.Services
 
                             }
 
+                            var priceDown = item.CurrentDigiSellerPrice>0 ? finalPrice / item.CurrentDigiSellerPrice : 1;
                             if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
-                                finalPrice / item.CurrentDigiSellerPrice < 0.08M)
+                                priceDown < 0.08M && !(priceDown is >= 0.048M and <= 0.052M))
                             {
                                 _logger.LogWarning(
-                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%");
+                                    $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(priceDown * 100):0.0}%");
                                 item.CurrentDigiSellerPriceNeedAttention = true;
                             }
                             else
                             {
                                 if (!manualUpdate && item.CurrentDigiSellerPrice > 1000 &&
-                                    finalPrice / item.CurrentDigiSellerPrice < 0.2M)
+                                    priceDown < 0.2M)
                                     _logger.LogInformation(
-                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(finalPrice / item.CurrentDigiSellerPrice * 100):0.0}%)");
+                                        $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} ({(priceDown * 100):0.0}%)");
                                 item.CurrentDigiSellerPriceNeedAttention = false;
                                 //FixedPrice все время в рублях
                                 item.CurrentDigiSellerPrice = finalPrice;

@@ -115,5 +115,16 @@ namespace SteamDigiSellerBot.Services.Implementation
             var currData = await GetCurrencyData();
             await UpdateCurrencyData(currData);
         }
+
+        public async Task<decimal> ConvertPriceToUsd(decimal val, int steamCurrencyId)
+        {
+            var currencies = await GetCurrencyDictionary();
+            var currency = currencies[steamCurrencyId];
+
+            if (currency.Value == 0)
+                return 0;
+
+            return val / currency.Value;
+        }
     }
 }

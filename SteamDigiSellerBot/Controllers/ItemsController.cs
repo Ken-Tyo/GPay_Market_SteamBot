@@ -42,7 +42,9 @@ namespace SteamDigiSellerBot.Controllers
         private readonly ILogger<ItemsController> _logger;
         private readonly IDigiSellerNetworkService _digiSellerNetworkService;
         private readonly DatabaseContext db;
+        private readonly IGameRepository _gameRepository;
         private readonly IItemBulkUpdateService _itemBulkUpdateService;
+        private readonly IPriceBasisBulkUpdateService _priceBasisBulkUpdateService;
 
         public ItemsController(
             IItemRepository itemRepository, 
@@ -54,7 +56,9 @@ namespace SteamDigiSellerBot.Controllers
             ILogger<ItemsController> logger,
             IDigiSellerNetworkService digiSellerNetwork,
             DatabaseContext db,
-            IItemBulkUpdateService itemBulkUpdateService)
+            IItemBulkUpdateService itemBulkUpdateService,
+            IPriceBasisBulkUpdateService priceBasisBulkUpdateService,
+            IGameRepository gameRepository)
         {
             _itemRepository = itemRepository;
             _digiSellerNetworkService = digiSellerNetwork;
@@ -68,6 +72,8 @@ namespace SteamDigiSellerBot.Controllers
             this.db = db;
 
             _itemBulkUpdateService = itemBulkUpdateService ?? throw new ArgumentNullException(nameof(itemBulkUpdateService));
+            _priceBasisBulkUpdateService = priceBasisBulkUpdateService ?? throw new ArgumentNullException(nameof(priceBasisBulkUpdateService));
+            _gameRepository = gameRepository;
 
             _logger = logger;
         }
@@ -239,6 +245,7 @@ namespace SteamDigiSellerBot.Controllers
             if (item != null)
             {
                 User user = await _userManager.GetUserAsync(User);
+
                 Item oldItem = await _itemRepository.GetByAppIdAndSubId(item.AppId, item.SubId);
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
@@ -247,14 +254,11 @@ namespace SteamDigiSellerBot.Controllers
                 }
                 else
                 {
-                    //_mapper.Map(item, oldItem);
-                    item.IsDeleted = false;
-                    item.Active = false;
-                    item.AddedDateTime = DateTime.UtcNow;
-                    await _itemRepository.ReplaceAsync(db, oldItem, item);//.EditAsync(oldItem);
+                    throw new Exception("Данный товар уже добавлен. Отредактируйте его.");
                 }
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+
                 return Ok();
             }
 
@@ -264,42 +268,22 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/edit/{id}"), ValidationActionFilter]
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
-            _logger.LogWarning($"[ASHT] ItemEdit id={id}, model={JsonConvert.SerializeObject(model)}");
-
-            Item item = await _itemRepository.GetByIdAsync(db,id);
+            Item item = await _itemRepository.GetByIdAsync(db, id);
+            
             if (item.IsDeleted)
                 return BadRequest();
 
             if (item != null)
             {
-                _logger.LogWarning($"[ASHT] ItemEdit id={id}, appId={item.AppId}, subId={item.SubId}, DigiSellerIds={JsonConvert.SerializeObject(item.DigiSellerIds)}");
-
                 User user = await _userManager.GetUserAsync(User);
 
-                Item editedItem = _mapper.Map<AddItemRequest, Item>(model, item);
-
-                string newAppId = item.AppId;
-                string newSubId = item.SubId;
-
-                if (item.AppId != model.AppId)
-                {
-                    newAppId = model.AppId;
-
-                    _logger.LogWarning($"[ASHT] ItemEdit appId different new and old: id={id}, model={JsonConvert.SerializeObject(model)}");
-                }
-
-                if (item.SubId != model.SubId)
-                {
-                    newSubId = model.SubId;
-
-                    _logger.LogWarning($"[ASHT] ItemEdit subId different new and old: id={id}, model={JsonConvert.SerializeObject(model)}");
-                }
+                Item editedItem = _mapper.Map(model, item);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
                 await _itemNetworkService.SetPrices(
-                    newAppId,
-                    newSubId,
+                    item.AppId,
+                    new List<Item>() { item },
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
@@ -325,6 +309,17 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok();
         }
+
+        [HttpPost, Route("items/bulk/pricebasis"), ValidationActionFilter]
+        public async Task<IActionResult> BulkPriceBasisAction(BulkPriceBasisRequest  request, CancellationToken cancellationToken)
+        {
+            User user = await _userManager.GetUserAsync(User);
+            await _priceBasisBulkUpdateService.UpdateAsync(
+                new PriceBasisBulkUpdateCommand(request.SteamCurrencyId, request.Ids, user), 
+                cancellationToken);
+            return Ok();
+        }
+
 
         [HttpGet, Route("items/bulk/reupdate"), ValidationActionFilter]
         public async Task<IActionResult> BulkReupdateAction()
@@ -362,17 +357,14 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/bulk/delete"), ValidationActionFilter]
         public async Task<IActionResult> BulkDelete(BulkDeleteRequest request)
         {
-            _logger.LogWarning($"[ASHT] BulkDelete request={JsonConvert.SerializeObject(request)}");
-
             foreach (var id in request.Ids)
             {
                 Item item = await _itemRepository.GetByIdAsync(db,id);
 
                 if (item != null)
                 {
-                    _logger.LogWarning($"[ASHT] BulkDelete id={id}, appId={item.AppId}, subId={item.SubId}");
-
                     await _itemRepository.DeleteItemAsync(item);
+                    //await _itemRepository.DeleteAsync(db, item);
                 }
             }
 
@@ -416,15 +408,16 @@ namespace SteamDigiSellerBot.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            _logger.LogWarning($"[ASHT] Delete id={id}");
-
             if (id > 0)
             {
                 Item item = await _itemRepository.GetByIdAsync(db,id);
                 if (item != null)
                 {
-                    _logger.LogWarning($"[ASHT] Delete id={id}, appId={item.AppId}, subId={item.SubId}");
-
+                   // await _itemRepository.DeleteAsync(db, item);
+                    
+                    /*var game = await _gameRepository.GetByIdAsync(item.Id);
+                    await _gameRepository.DeleteAsync(db, game);*/
+                    
                     await _itemRepository.DeleteItemAsync(item);
                 }
             }
