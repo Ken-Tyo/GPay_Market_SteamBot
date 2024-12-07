@@ -24,7 +24,7 @@ using SteamDigiSellerBot.Database.Enums;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class BotsController : Controller
     {
         private readonly IBotRepository _steamBotRepository;

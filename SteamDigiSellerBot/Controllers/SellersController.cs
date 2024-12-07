@@ -10,7 +10,7 @@ using SteamDigiSellerBot.Services.Interfaces;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class SellersController : Controller
     {
         private readonly ISellersService _sellersService;
