@@ -63065,7 +63065,7 @@ var ModalRulesEdit = function ModalRulesEdit(_ref) {
             headers = new Headers();
             headers.append("Content-Type", "application/json");
             headers.append("Content-Length", JSON.stringify(dto).length);
-            if (dto.rentDays = '-') {
+            if (dto.rentDays === '-') {
               dto.rentDays = null;
             }
             options = {
@@ -63289,7 +63289,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
             headers = new Headers();
             headers.append("Content-Type", "application/json");
             headers.append("Content-Length", JSON.stringify(dto).length);
-            if (dto.rentDays = '-') {
+            if (dto.rentDays === '-') {
               dto.rentDays = null;
             }
             options = {
@@ -63331,7 +63331,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
             headers = new Headers();
             headers.append("Content-Type", "application/json");
             headers.append("Content-Length", JSON.stringify(dto).length);
-            if (dto.rentDays = '-') {
+            if (dto.rentDays === '-') {
               dto.rentDays = null;
             }
             options = {
@@ -63444,6 +63444,9 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(modalRulesEdit, {
         isOpen: isModalRulesEditOpen,
         onClose: function onClose(item) {
+          if (item.rentDays === '-') {
+            item.rentDays = null;
+          }
           setItem(item);
           setIsModalRulesEditOpen(false);
         },
@@ -63495,9 +63498,6 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
           height: 65,
           onClick: function onClick() {
             save(item).then(function (res) {
-              if (item.rentDays === '-') {
-                item.rentDays = null;
-              }
               if (res.errorText && res.errorText != '') {
                 setErrors([res.errorText]);
               } else {

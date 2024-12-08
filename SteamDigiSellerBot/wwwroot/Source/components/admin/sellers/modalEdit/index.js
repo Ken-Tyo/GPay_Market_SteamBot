@@ -77,7 +77,7 @@ const ModalEdit = ({
     headers.append("Content-Type", "application/json");
     headers.append("Content-Length", JSON.stringify(dto).length);
 
-    if (dto.rentDays = '-') {
+    if (dto.rentDays === '-') {
       dto.rentDays = null
     }
 
@@ -103,7 +103,7 @@ const ModalEdit = ({
     headers.append("Content-Type", "application/json");
     headers.append("Content-Length", JSON.stringify(dto).length);
 
-    if (dto.rentDays = '-') {
+    if (dto.rentDays === '-') {
       dto.rentDays = null
     }
 
@@ -178,6 +178,10 @@ const ModalEdit = ({
           <ModalRulesEdit
             isOpen={isModalRulesEditOpen}
             onClose={(item) => {
+              if (item.rentDays === '-') {
+                item.rentDays = null
+              }
+
               setItem(item)
               setIsModalRulesEditOpen(false)
             }}
@@ -241,10 +245,6 @@ const ModalEdit = ({
               height={65}
               onClick={() => {
                 save(item).then(res => {
-                  if (item.rentDays === '-') {
-                    item.rentDays = null
-                  }
-
                   if (res.errorText && res.errorText != '') {
                     setErrors([res.errorText])
                   }

@@ -79,7 +79,7 @@ const ModalRulesEdit = ({
     headers.append("Content-Type", "application/json");
     headers.append("Content-Length", JSON.stringify(dto).length);
 
-    if (dto.rentDays = '-') {
+    if (dto.rentDays === '-') {
       dto.rentDays = null
     }
 
