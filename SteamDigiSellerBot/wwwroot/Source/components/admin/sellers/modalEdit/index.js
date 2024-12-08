@@ -82,7 +82,7 @@ const ModalEdit = ({
     }
 
     const options = {
-      method: "PUT",
+      method: "POST",
       headers: headers,
       body: JSON.stringify(dto)
     }
@@ -108,7 +108,7 @@ const ModalEdit = ({
     }
 
     const options = {
-      method: "POST",
+      method: "PUT",
       headers: headers,
       body: JSON.stringify(dto)
     }

@@ -84,7 +84,7 @@ const ModalRulesEdit = ({
     }
 
     const options = {
-      method: "POST",
+      method: "PUT",
       headers: headers,
       body: JSON.stringify(dto)
     }

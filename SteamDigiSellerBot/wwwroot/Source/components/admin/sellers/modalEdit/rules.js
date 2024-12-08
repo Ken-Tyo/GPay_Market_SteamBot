@@ -54,8 +54,7 @@ export const permissionsSetValueActions = new Map([
   ['permissionDigisellerItemsGeneration', (elem, value) => elem.permissionDigisellerItemsGeneration = value],
   ['permissionSteamPointsAutoDelivery', (elem, value) => elem.permissionSteamPointsAutoDelivery = value]])
 
-  export const initial = {
-    id: 0,
+export const initial = {
     login: '',
     password: '',
     userId: '',

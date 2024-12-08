@@ -62946,7 +62946,6 @@ var permissionsSetValueActions = new Map([['permissionDigisellerItems', function
   return elem.permissionSteamPointsAutoDelivery = value;
 }]]);
 var initial = {
-  id: 0,
   login: '',
   password: '',
   userId: '',
@@ -63070,7 +63069,7 @@ var ModalRulesEdit = function ModalRulesEdit(_ref) {
               dto.rentDays = null;
             }
             options = {
-              method: "POST",
+              method: "PUT",
               headers: headers,
               body: JSON.stringify(dto)
             };
@@ -63294,7 +63293,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
               dto.rentDays = null;
             }
             options = {
-              method: "PUT",
+              method: "POST",
               headers: headers,
               body: JSON.stringify(dto)
             };
@@ -63336,7 +63335,7 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
               dto.rentDays = null;
             }
             options = {
-              method: "POST",
+              method: "PUT",
               headers: headers,
               body: JSON.stringify(dto)
             };
@@ -63621,7 +63620,7 @@ var SellersList = function SellersList(user) {
             headers.append("Content-Type", "application/json");
             headers.append("Content-Length", JSON.stringify(dto).length);
             options = {
-              method: "POST",
+              method: "PUT",
               headers: headers,
               body: JSON.stringify(dto)
             };

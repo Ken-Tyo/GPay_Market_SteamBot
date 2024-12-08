@@ -40,7 +40,7 @@ const SellersList = (user) => {
     headers.append("Content-Length", JSON.stringify(dto).length);
 
     const options = {
-      method: "POST",
+      method: "PUT",
       headers: headers,
       body: JSON.stringify(dto)
     }
