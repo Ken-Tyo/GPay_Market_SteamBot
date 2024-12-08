@@ -82,7 +82,7 @@ namespace SteamDigiSellerBot.Controllers
             this.db = db;
         }
 
-        [Authorize, HttpPost, Route("gamesessions/list"), ValidationActionFilter]
+        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/list"), ValidationActionFilter]
         public async Task<IActionResult> List(GameSessionFilter filter)
         {
             var (gameSessions, total) = await _gameSessionRepository.Filter(
@@ -112,7 +112,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(new { list = mapped, total = total });
         }
 
-        [Authorize, HttpGet, Route("gamesessions/{id}"), ValidationActionFilter]
+        [Authorize (Roles = "Admin"), HttpGet, Route("gamesessions/{id}"), ValidationActionFilter]
         public async Task<IActionResult> GetGameSession(int id)
         {
             var gameSessions = await _gameSessionRepository.GetByIdAsync(db, id);
@@ -134,7 +134,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(await _gameSessionStatusRepository.GetGameSessionStatuses());
         }
 
-        [Authorize, HttpPost, Route("gamesessions/setstatus")]
+        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/setstatus")]
         public async Task<IActionResult> SetGameSessionStatus(SetGameSesStatusRequest req)
         {
             GameSession gs = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
@@ -162,7 +162,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [Authorize, HttpPost, Route("gamesessions/reset")]
+        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/reset")]
         public async Task<IActionResult> ResetGameSession(ResetGameSessionRequest req)
         {
             GameSession gs = await _gameSessionRepository.GetForReset(db, req.GameSessionId);
@@ -224,7 +224,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [Authorize, HttpPost, Route("gamesessions/comment")]
+        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
         {
             GameSession gameSession = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
@@ -237,7 +237,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [Authorize, HttpPost, Route("gamesession"), ValidationActionFilter]
+        [Authorize (Roles = "Admin"), HttpPost, Route("gamesession"), ValidationActionFilter]
         public async Task<IActionResult> Gamesession(CreateGameSessionRequest req)
         {
             var item = (await _itemRepository

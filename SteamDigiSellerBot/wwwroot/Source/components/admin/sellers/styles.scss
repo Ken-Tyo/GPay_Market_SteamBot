@@ -1,0 +1,92 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+::-webkit-scrollbar {
+    width: 24px
+}
+
+::-webkit-scrollbar-thumb {
+    border: 6px solid transparent;
+    background-clip: padding-box;
+    background-color: #7d5292
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+
+    .section {
+        margin-right: 40px;
+        flex-shrink: 0;
+        margin-top: 36px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 46px;
+        background-color: $purple-4;
+
+        .titleSection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: $purple-2;
+            padding: 0 59px;
+
+            .title {
+                color: $white-3;
+                font-size: 20px;
+                line-height: 20px;
+            }
+        }
+
+        .subTitle {
+            display: flex;
+            align-items: center;
+            color: $white-3;
+            margin-left: 53px;
+            font-size: 20px;
+            line-height: 20px;
+            width: 100%;
+
+            .usersHeader {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+
+                .usersTitle {
+                    display: flex;
+                    align-items: flex-end;
+
+                    svg {
+                        margin-left: 8px;
+                        cursor: pointer;
+                        transition: all .1s linear;
+                    }
+
+                    svg:hover {
+                        transform: scale(1.2)
+                    }
+                }
+
+                .notification {
+                    margin-right: 46px;
+                    display: none;
+
+                    svg {
+                        width: 50px;
+                    }
+                }
+            }
+        }
+    }
+
+    .content {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 40px;
+    }
+}

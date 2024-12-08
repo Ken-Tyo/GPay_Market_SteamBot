@@ -1,0 +1,102 @@
+@import '/wwwroot/Source/containers/admin/library';
+$percent-back: #512068;
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    overflow-y: auto;
+
+    h2.title {
+        font-size: 28px;
+        color: white;
+        font-weight: normal;
+        text-align: center;
+        margin-top: 35px;
+    }
+
+    .loginTitle {
+        text-align: center;
+        font-size: 18px;
+        display: block;
+        margin-top: 30px;
+    }
+
+    .switchWrapper {
+        padding: 0 95px 0 85px;
+        margin-top: -8px;
+        max-height: 530px;
+        overflow-y: scroll;
+
+        .switchContent {
+            display: flex;
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 28px;
+
+            .switch {
+                display: flex;
+
+                .percentValue {
+                    height: 28px;
+                    border-radius: 15px;
+                    font-size: 14px;
+                    background-color: $percent-back;
+                    padding-left: 10px;
+                }
+            }
+        }
+    }
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .formItem {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 31px;
+
+        .name {
+            padding-top: 18px;
+            padding-right: 15px;
+        }
+
+        .doubleControl {
+            display: flex;
+        }
+    }
+
+    .changeAccessRights {
+        width: 100%;
+        background-color: #a045cb;
+    }
+}
+
+.errors {
+    height: 619px;
+
+    .title {
+        margin-top: 30px;
+        font-size: 32px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $white-1;
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        margin-top: 24px;
+        padding-left: 67px;
+        padding-right: 67px;
+        color: $white-3;
+
+        .item {
+            margin-top: 10px;
+        }
+    }
+}

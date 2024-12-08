@@ -2,7 +2,7 @@ namespace SteamDigiSellerBot.Network.Models.DTO
 {
     public class SellerDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Login { get; set; }
 
@@ -15,6 +15,8 @@ namespace SteamDigiSellerBot.Network.Models.DTO
         public int? ItemsLimit { get; set; }
 
         public bool Blocked { get; set; }
+
+        public string Comments { get; set; }
 
         public bool PermissionDigisellerItems { get; set; }
 
@@ -35,5 +37,7 @@ namespace SteamDigiSellerBot.Network.Models.DTO
         public bool PermissionBotsLimitsParsing { get; set; }
 
         public bool PermissionDigisellerItemsGeneration { get; set; }
+
+        public bool PermissionSteamPointsAutoDelivery { get; set; }
     }
 }

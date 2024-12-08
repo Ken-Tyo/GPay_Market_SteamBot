@@ -13,10 +13,14 @@ namespace SteamDigiSellerBot.Services.Implementation
 {
     public class SellersService: ISellersService
     {
+        private const string SellerRoleName = "Seller";
         private readonly ISellerRepository _sellerRepository;
         private readonly UserManager<User> _userManager;
 
-        public SellersService(ISellerRepository sellerRepository, UserManager<User> userManager)
+        public SellersService(
+            ISellerRepository sellerRepository, 
+            UserManager<User> userManager
+            )
         {
             _sellerRepository = sellerRepository;
             _userManager = userManager;
@@ -64,11 +68,19 @@ namespace SteamDigiSellerBot.Services.Implementation
                 throw new ArgumentException(identityPasswordResult.Errors.First().Description);
             }
 
+            var identityAddToRoleResult = await _userManager.AddToRoleAsync(user, SellerRoleName);
+            if (!identityAddToRoleResult.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+                throw new ArgumentException(identityAddToRoleResult.Errors.First().Description);
+            }
+
             var seller = new Seller(){
                 AspNetUserId = user.Id,
                 RentDays = sellerDto.RentDays,
                 ItemsLimit = sellerDto.ItemsLimit,
                 Blocked = sellerDto.Blocked,
+                Comments = sellerDto.Comments,
                 Permissions = new SellerPermissions(){
                     DigisellerItems = sellerDto.PermissionDigisellerItems,
                     KFGItems = sellerDto.PermissionKFGItems,
@@ -80,11 +92,11 @@ namespace SteamDigiSellerBot.Services.Implementation
                     DirectBotsDeposit = sellerDto.PermissionDirectBotsDeposit,
                     BotsLimitsParsing = sellerDto.PermissionBotsLimitsParsing,
                     DigisellerItemsGeneration = sellerDto.PermissionDigisellerItemsGeneration,
+                    SteamPointsAutoDelivery = sellerDto.PermissionSteamPointsAutoDelivery
                 }
             };
 
             await _sellerRepository.AddAsync(seller);
-
 
             var resultSeller = await _sellerRepository.GetByIdAsync(seller.Id);
             var resultUser = await _userManager.FindByIdAsync(seller.AspNetUserId);
@@ -120,13 +132,17 @@ namespace SteamDigiSellerBot.Services.Implementation
                 }
             }
 
-            var seller = await _sellerRepository.GetByIdAsync(sellerDto.Id);
+            if (!sellerDto.Id.HasValue)
+                throw new ArgumentException("Id is null");
+
+            var seller = await _sellerRepository.GetByIdAsync(sellerDto.Id.Value);
 
             seller.AspNetUser = null;
             seller.AspNetUserId = user.Id;
             seller.RentDays = sellerDto.RentDays;
             seller.ItemsLimit = sellerDto.ItemsLimit;
-            seller.Blocked = sellerDto.Blocked;            
+            seller.Blocked = sellerDto.Blocked;
+            seller.Comments = sellerDto.Comments;
             seller.Permissions.DigisellerItems = sellerDto.PermissionDigisellerItems;
             seller.Permissions.KFGItems = sellerDto.PermissionKFGItems;
             seller.Permissions.FuryPayItems = sellerDto.PermissionFuryPayItems;
@@ -137,6 +153,7 @@ namespace SteamDigiSellerBot.Services.Implementation
             seller.Permissions.DirectBotsDeposit = sellerDto.PermissionDirectBotsDeposit;
             seller.Permissions.BotsLimitsParsing = sellerDto.PermissionBotsLimitsParsing;
             seller.Permissions.DigisellerItemsGeneration = sellerDto.PermissionDigisellerItemsGeneration;
+            seller.Permissions.SteamPointsAutoDelivery = sellerDto.PermissionSteamPointsAutoDelivery;
 
             await _sellerRepository.Updatesync(seller);
 
@@ -168,6 +185,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 RentDays = seller.RentDays,
                 ItemsLimit = seller.ItemsLimit,
                 Blocked = seller.Blocked,
+                Comments = seller.Comments,
                 PermissionDigisellerItems = seller.Permissions.DigisellerItems,
                 PermissionKFGItems = seller.Permissions.KFGItems,
                 PermissionFuryPayItems = seller.Permissions.FuryPayItems,
@@ -177,7 +195,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 PermissionItemsMultiregion = seller.Permissions.ItemsMultiregion,
                 PermissionDirectBotsDeposit = seller.Permissions.DirectBotsDeposit,
                 PermissionBotsLimitsParsing = seller.Permissions.BotsLimitsParsing,
-                PermissionDigisellerItemsGeneration = seller.Permissions.DigisellerItemsGeneration
+                PermissionDigisellerItemsGeneration = seller.Permissions.DigisellerItemsGeneration,
+                PermissionSteamPointsAutoDelivery = seller.Permissions.SteamPointsAutoDelivery
             };
         }
     }

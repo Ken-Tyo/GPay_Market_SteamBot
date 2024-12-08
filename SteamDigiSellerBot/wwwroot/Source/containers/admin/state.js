@@ -41,6 +41,7 @@ export const state = entity({
   ],
   editBotResponse: { loading: false, errors: [] },
   editOrderResponse: { loading: false, errors: [] },
+  editSellerResponse: { loading: false, errors: [] },
   saveBotRegionSetResponse: { loading: false, errors: [] },
   itemsMode: iMode[1],
   itemsLoading: true,
@@ -54,6 +55,7 @@ export const state = entity({
   exchangeRatesModalIsOpen: false,
   editItemModalIsOpen: false,
   editOrderModalIsOpen: false,
+  editSellerModalIsOpen: false,
   filterOrdersModalIsOpen: false,
   filterProductsModalIsOpen: false,
   botRegionSetEditModalIsOpen: false,
@@ -662,6 +664,15 @@ export const toggleEditOrderModal = async (isOpen) => {
     return {
       ...value,
       editOrderModalIsOpen: isOpen,
+    };
+  });
+};
+
+export const toggleEditSellerModal = async (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      editSellerModalIsOpen: isOpen,
     };
   });
 };

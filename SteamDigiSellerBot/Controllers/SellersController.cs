@@ -10,7 +10,7 @@ using SteamDigiSellerBot.Services.Interfaces;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class SellersController : Controller
     {
         private readonly ISellersService _sellersService;
@@ -54,7 +54,7 @@ namespace SteamDigiSellerBot.Controllers
             return response;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("sellers")]
         public async Task<SellersCreateResponse> Create([FromBody] SellerDto sellerDto)
         {
@@ -71,7 +71,7 @@ namespace SteamDigiSellerBot.Controllers
             return response;
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("sellers")]
         public async Task<SellersUpdateResponse> Update([FromBody] SellerDto sellerDto)
         {

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class ProxyController : Controller
     {
         private readonly ISteamProxyRepository _steamProxyRepository;

@@ -1027,6 +1027,9 @@ namespace SteamDigiSellerBot.Database.Migrations
                     b.Property<bool>("Blocked")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
+
                     b.Property<int?>("ItemsLimit")
                         .HasColumnType("integer");
 
@@ -1309,6 +1312,9 @@ namespace SteamDigiSellerBot.Database.Migrations
                                 .HasColumnType("boolean");
 
                             b1.Property<bool>("OrderSessionCreation")
+                                .HasColumnType("boolean");
+
+                            b1.Property<bool>("SteamPointsAutoDelivery")
                                 .HasColumnType("boolean");
 
                             b1.HasKey("SellerId");

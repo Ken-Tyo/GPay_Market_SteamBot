@@ -62,6 +62,7 @@ namespace SteamDigiSellerBot.Database.Contexts
             : base(options)
         {
             Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

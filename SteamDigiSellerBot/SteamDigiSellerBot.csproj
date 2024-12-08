@@ -54,4 +54,15 @@
     <Folder Include="wwwroot\assets\img\login\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\Source\components\admin\users\index.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\Source\components\admin\users\styles.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,78 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.content {
+    color: $white-3;
+    font-size: 16px;
+    line-height: 16px;
+    padding: 26px 83px 0 83px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .formItem {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 31px;
+
+        .name {
+            padding-top: 18px;
+            padding-right: 15px;
+        }
+
+        .doubleControl {
+            display: flex;
+        }
+    }
+
+    .changeAccessRights {
+        width: 100%;
+        background-color: #a045cb;
+    }
+
+    .blocked {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 31px;
+
+        .switchContainer {
+            display: flex;
+            width: 226px;
+        }
+    }
+}
+
+.errors {
+    .title {
+        margin-top: 30px;
+        font-size: 32px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $white-1;
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        margin-top: 24px;
+        padding-left: 67px;
+        padding-right: 67px;
+        color: $white-3;
+
+        .item {
+            margin-top: 10px;
+            color: orangered;
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    margin-top: 40px;
+}

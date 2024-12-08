@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public sealed class ItemInfoTemplateController : Controller
     {
         private const int maxTemplatesCount = 100;

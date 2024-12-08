@@ -13,6 +13,8 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public bool Blocked { get; set; }
 
+        public string Comments { get; set; }
+
         public SellerPermissions Permissions { get; set; }
     }
 
@@ -38,5 +40,7 @@ namespace SteamDigiSellerBot.Database.Entities
         public bool BotsLimitsParsing { get; set; }
 
         public bool DigisellerItemsGeneration { get; set; }
+
+        public bool SteamPointsAutoDelivery { get; set; }
     }
 }
