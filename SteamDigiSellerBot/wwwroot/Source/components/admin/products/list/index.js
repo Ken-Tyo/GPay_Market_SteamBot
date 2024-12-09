@@ -307,7 +307,7 @@ const products = () => {
   }
 
   return (
-      <div className={css.wrapper} style={{ userSelect: 'none' }}>
+      <div className={css.wrapper} >
       <List
         headers={Object.values(headers)}
         data={[...sortedItems]}
