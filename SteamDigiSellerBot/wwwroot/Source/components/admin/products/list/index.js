@@ -627,7 +627,7 @@ const products = () => {
               }}
             />
 
-            <div className={css.subMenu + ' ' + subMenuVisibility}>
+            <div className={css.subMenu + ' ' + css.massDescriptionBlockSubMenu + ' ' + subMenuVisibility}>
               <div className={css.subMenuItem} onClick={() => {
                 toggleItemMainInfoModal(true);
                 toggleMassDescriptionSubMenu();
