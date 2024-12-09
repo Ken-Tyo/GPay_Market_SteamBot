@@ -11,6 +11,6 @@ namespace SteamDigiSellerBot.Database.Entities.TagReplacements
         [ForeignKey("MarketPlaceId")]
         public virtual MarketPlace MarketPlace { get; init; }
 
-        public virtual ICollection<TagPromoReplacementValue> TagPromoReplacementValues { get; init; }
+        public virtual ICollection<TagPromoReplacementValue> ReplacementValues { get; init; }
     }
 }

@@ -16,9 +16,6 @@ namespace SteamDigiSellerBot.Database.Entities
 
         public string Password { get; set; }
 
-        [IgnoreDataMember]
-        public string PasswordC { get; set; }
-
         [NotMapped]
         public ProxyClient ProxyClient
         {

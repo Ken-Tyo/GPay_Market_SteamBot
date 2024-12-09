@@ -85,6 +85,14 @@
     "error": "Error",
     "info": "The region of the recipient of the game is different from the one purchased. It is impossible to deliver a game to a region where the game is more expensive than the cost of the selected region. Please specify another account with the correct region, or contact us to resolve the issue!"
   },
+  "gameRequired": {
+    "error": "No game on account",
+    "info_row1": "Could not send the add-on to your Steam account because you do not have the main version of the game. Buy the main game and try again, or specify the correct account where the game is present to activate the add-on!",
+    "info_row2": "If this is an error:",
+    "info_row3": "Check that your game is NOT private and everyone on the account can see it - try again after some time",
+    "info_row4": "If after some time this does not help - contact the seller for instructions",
+    "repeatSendGame":  "Repeat" 
+  },
   "orderClosed": {
     "closed": "Order closed",
     "message": "Unfortunately, this order was closed by the seller. Contact for details about this"

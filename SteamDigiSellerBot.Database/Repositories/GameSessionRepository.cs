@@ -83,6 +83,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     GameSessionStatusEnum.GameIsExists,
                     GameSessionStatusEnum.BotNotFound,
                     GameSessionStatusEnum.IncorrectRegion,
+                    GameSessionStatusEnum.GameRequired,
                     GameSessionStatusEnum.UnknownError,
                     GameSessionStatusEnum.ExpiredTimer,
                     GameSessionStatusEnum.ExpiredDiscount,
@@ -112,6 +113,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
             var list = await db.GameSessions
                 .Include(gs => gs.SendRegion)
+                .Include(gs => gs.ItemRegion)
                 .Include(gs => gs.Item)
                 .Include(gs => gs.ItemData)
                 .Include(gs => gs.Bot)

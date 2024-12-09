@@ -106,7 +106,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                         SendStatus = sendRes,
                         ReadyStatus = readyState,
                         ChangeBot = readyState == GameReadyToSendStatus.botSwitch,
-                        BlockOrder = readyState == GameReadyToSendStatus.blockOrder
+                        BlockOrder = readyState is GameReadyToSendStatus.blockOrder or GameReadyToSendStatus.discountExpired
                     }
                 );
 

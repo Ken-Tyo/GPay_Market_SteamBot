@@ -14,6 +14,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
     {
         Task SetSteamContact(DatabaseContext db, GameSession gameSession, params Option[] opts);
         Task<GameSession> ResetSteamContact(DatabaseContext db, string uniquecode);
+        Task<GameSession> ChangeBot(DatabaseContext db, string uniquecode);
         Task<bool> CheckGameSessionExpiredAndHandle(GameSession gs);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(int gsId);
         Task<(SendGameStatus, GameReadyToSendStatus)> SendGame(DatabaseContext db, GameSession gs, DateTimeOffset? timeForTest = null);
@@ -28,6 +29,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
             GameSession gs, HashSet<int> botIdFilter = null);
         Task<GameReadyToSendStatus> CheckReadyToSendGameAndHandle(GameSession gs, bool whriteReadyLog = false);
         Task<Bot> GetFirstBotByItemCriteration(GameSession gs, IEnumerable<Bot> filterRes);
+        Task<Bot> GetRandomBotByItemCriteration(GameSession gs, IEnumerable<Bot> botFilterRes, int? pre_botId);
         Task UpdateQueueInfo(GameSession gs, int position);
     }
 }

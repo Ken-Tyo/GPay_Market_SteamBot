@@ -39,6 +39,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
         private Mock<ILogger<GameSessionService>> _loggerMock;
         private Mock<IConfiguration> _configuration;
         private Mock<ICurrencyDataRepository> _currencyDateRepositoryMock;
+        private Mock<IGiftBanService> _giftBanService;
 
         private Mock<GameSessionCommon> _gameSessionManager { get; set; }
 
@@ -60,7 +61,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
             _loggerMock = new Mock<ILogger<GameSessionService>>();
             _configuration = new Mock<IConfiguration>();
             _currencyDateRepositoryMock = new Mock<ICurrencyDataRepository>();
-
+            _giftBanService = new Mock<IGiftBanService>();
             _gameSessionManager = new Mock<GameSessionCommon>();
 
             _service = new GameSessionService(
@@ -75,6 +76,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 _userDBRepositoryMock.Object,
                 _digiSellerNetworkServiceMock.Object,
                 _gameSessionStatusLogRepositoryMock.Object,
+                _giftBanService.Object,
                 _loggerMock.Object,
                 _configuration.Object
             );
@@ -215,7 +217,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
-                State = Database.Enums.BotState.active,
+                State = SteamDigiSellerBot.Database.Enums.BotState.active,
                 LastTimeUpdated = DateTime.UtcNow.AddMinutes(-5), // для проверки на последнее обновление
                 Password = "MN86^ghjfu8D",
                 ProxyStr = "195.19.169.9:62530:AwJyXm9A:hcnnkmGv",
@@ -346,7 +348,7 @@ namespace SteamDigiSellerBot.Tests.Services.Implementation
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
-                State = Database.Enums.BotState.active,
+                State = SteamDigiSellerBot.Database.Enums.BotState.active,
                 LastTimeUpdated = DateTime.UtcNow.AddMinutes(-5), // для проверки на последнее обновление
                 Password = "MN86^ghjfu8D",
                 ProxyStr = "195.19.169.9:62530:AwJyXm9A:hcnnkmGv",

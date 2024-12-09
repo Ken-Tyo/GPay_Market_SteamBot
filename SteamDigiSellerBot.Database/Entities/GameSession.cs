@@ -45,6 +45,12 @@ namespace SteamDigiSellerBot.Database.Entities
         [ForeignKey("SteamCountryCodeId")]
         public virtual SteamCountryCode SendRegion { get; set; }
 
+
+        public int? ItemSteamCountryCodeId { get; set; }
+
+        [ForeignKey("ItemSteamCountryCodeId")]
+        public virtual SteamCountryCode ItemRegion { get; set; }
+
         public virtual List<GameSessionStatusLog> GameSessionStatusLogs { get; set; }
         public int UserId { get; set; }
 
@@ -70,7 +76,12 @@ namespace SteamDigiSellerBot.Database.Entities
         [Column(TypeName = "json")]
         public List<int> BotSwitchList { get; set; } = new();
 
+        [Column(TypeName = "json")]
+        public List<DateTime> AccountSwitchList { get; set; } = new();
+
         public bool BlockOrder { get; set; }
+
+        public int? Market { get; set; }
 
         public GameSession()
         {
@@ -117,5 +128,7 @@ namespace SteamDigiSellerBot.Database.Entities
         SwitchBot=20,
         OrderConfirmed=21,
         InvitationBlocked=22,
+        GameRequired=23,
+        GiftBan=24
     }
 }

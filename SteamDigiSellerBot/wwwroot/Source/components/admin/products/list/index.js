@@ -21,10 +21,12 @@ import {
   apiCreateItem,
   apiUpdateItemInfoes,
   toggleBulkEditPercentModal,
+  toggleBulkEditPriceBasisModal,
   toggleEditItemModal,
   toggleItemMainInfoModal,
   toggleItemAdditionalInfoModal,
   apiChangeItemBulk,
+  apiChangePriceBasisBulk,
   setSelectedItem,
   setSelectedItems,
   setStateProp,
@@ -33,6 +35,7 @@ import ConfirmDialog from "../../../shared/modalConfirm";
 import EditItemModal from "./modalEdit";
 import EditItemInfoModal from "./modalItemInfoEdit";
 import BulkPercentEdit from "./modalBulkPercentEdit";
+import BulkPriceBasisEdit from "./modalBulkPriceBasisEdit";
 import ToggleSort from "./modalSort/index";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -44,6 +47,7 @@ const products = () => {
     items,
     itemsLoading,
     bulkEditPercentModalIsOpen,
+    bulkEditPriceBasisModalIsOpen,
     editItemModalIsOpen,
     editItemMainInfoModalIsOpen,
     editItemAdditionalInfoModalIsOpen,
@@ -66,6 +70,8 @@ const products = () => {
   const [errParsePriceText, setErrParsePriceText] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [subMenuVisibility, setSubMenuVisibility] = useState(css.subMenuHidden);
+
+  const [lastSelectedId, setLastSelectedId] = useState(-1);
 
   const open = Boolean(anchorEl);
   const massChangeButStyle = {
@@ -127,15 +133,18 @@ const products = () => {
                     return b.steamPercent - a.steamPercent
                 }
             });
-        } else if(type === 'discountPercent'){
-            sorted.sort((a, b) => {
-              const aDiscount = a.discountPercent != null ? a.discountPercent : -Infinity;
-              const bDiscount = b.discountPercent != null ? b.discountPercent : -Infinity;
-              if (sortOrder === "asc") {
-                  return aDiscount - bDiscount;
-              } else {
-                  return bDiscount - aDiscount;
+        } else if(type === 'discountPercent') {
+            const getDiscountValue = (discount) => {
+              if (discount != null && discount > 0) {
+                  return sortOrder === "asc" ? discount : -discount;
               }
+              return Infinity;
+            };
+    
+            sorted.sort((a, b) => {
+              const aDiscount = getDiscountValue(a.discountPercent);
+              const bDiscount = getDiscountValue(b.discountPercent);
+              return aDiscount - bDiscount;
           });
         } else {
             sorted.sort((a, b) => {
@@ -179,6 +188,102 @@ const products = () => {
     active: "",
   };
 
+    // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
+    const getItemsBetweenSelected = (firstId, secondId) => {
+        const startIndex = sortedItems.findIndex(item => item.id === firstId);
+        const endIndex = sortedItems.findIndex(item => item.id === secondId);
+
+        if (startIndex === -1 || endIndex === -1) return [];
+
+        if (startIndex == endIndex) return [sortedItems[startIndex]];
+
+        const sliceStart = Math.min(startIndex, endIndex);
+        const sliceEnd = Math.max(startIndex, endIndex);
+
+        return getSliceOfSortedItems(sliceStart, sliceEnd);
+    };
+
+    //Shift on the unselected
+    const addItemsToSelected = (shiftId) => {
+        let startIndex = -1;
+        let endIndex = -1;
+        let curId = -1;
+        let shiftIndex = sortedItems.findIndex(item => item.id === shiftId);
+
+        if (selectedItems.length == 0) return [sortedItems[shiftIndex]];
+                
+        for (let i = 0; i < sortedItems.length; i++) {
+            curId = sortedItems[i].id;
+            if (selectedItems.includes(curId)) {
+                if (startIndex < 0) startIndex = i;
+                endIndex = i;
+            }
+        }
+        if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+
+        const sliceStart = Math.min(startIndex, endIndex, shiftIndex);
+        const sliceEnd = Math.max(startIndex, endIndex, shiftIndex);
+
+        return getSliceOfSortedItems(sliceStart, sliceEnd);
+    };
+
+    //Shift on the selected
+    const removeItemsFromSelected = (shiftId) => {
+        let startIndex = -1;
+        let endIndex = -1;
+        let curId = -1;
+        let shiftIndex = sortedItems.findIndex(item => item.id === shiftId);
+
+        if (selectedItems.length == 1) return [];
+
+        for (let i = 0; i < sortedItems.length; i++) {
+            curId = sortedItems[i].id;
+            if (selectedItems.includes(curId)) {
+                if (startIndex < 0) startIndex = i;
+                endIndex = i;
+            }
+        }
+
+        if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+        let sliceStart;
+        let sliceEnd;
+
+        //Just to be sure that shiftIndex between start and end
+        if (shiftIndex < startIndex || startIndex > endIndex) return [];
+        if (shiftIndex == startIndex) {
+            sliceStart = startIndex + 1;
+            sliceEnd = endIndex;
+        }
+        else if (shiftIndex == endIndex) {
+            sliceStart = startIndex;
+            sliceEnd = endIndex - 1;
+        }
+        else {
+            // Reduce top or botton of selected
+            if (lastSelectedId < shiftIndex) {
+                sliceStart = startIndex;
+                sliceEnd = shiftIndex - 1;
+            }
+            else {
+                sliceStart = shiftIndex + 1;
+                sliceEnd = endIndex;
+            }
+        }
+
+        return getSliceOfSortedItems(sliceStart, sliceEnd);
+    };
+
+    const getSliceOfSortedItems = (sliceStart, sliceEnd) => {
+        let arrNew;
+
+        if (sliceEnd >= (sortedItems.length - 1))
+            arrNew = sortedItems.slice(sliceStart).map(item => item.id);
+        else
+            arrNew = sortedItems.slice(sliceStart, sliceEnd + 1).map(item => item.id);
+
+        return arrNew; 
+    }
+
   const getBtnMassDescriptionBlock = (lines) => {
     return <div className={css.massDescriptionText}>{lines.map(line => (<div>{line}</div>))}</div>;
   };
@@ -202,7 +307,7 @@ const products = () => {
   }
 
   return (
-    <div className={css.wrapper}>
+      <div className={css.wrapper} >
       <List
         headers={Object.values(headers)}
         data={[...sortedItems]}
@@ -267,17 +372,38 @@ const products = () => {
                 <div className={css.cell}>
                   <div className={css.listItemCheckbox}>
                     <CheckBox
-                      onClick={(val) => {
-                        if (val) {
-                          let newArr = [...selectedItems];
-                          newArr.push(i.id);
-                          setSelectedItems(newArr);
-                        } else {
-                          let newArr = selectedItems.filter((id) => id != i.id);
-                          setSelectedItems(newArr);
+                        onCheckedChange={(val, shiftPressed) => {
+                        let arrNew;
+                        if (shiftPressed) {
+                            if (val) {
+                                // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
+                                if (lastSelectedId > 0) {
+                                    arrNew = getItemsBetweenSelected(lastSelectedId, i.id);
+                                    setLastSelectedId(-1);
+                                }
+                                else {  //Add new portion  (2-nd shift selects new)
+                                    arrNew = addItemsToSelected(i.id);
+                                }
+                            }
+                            else { // Remove portion  (2-nd shift unselects old)
+                                arrNew = removeItemsFromSelected(i.id);
+                            }
                         }
-                      }}
-                      value={selectedItems.indexOf(i.id) !== -1}
+                        else { 
+                            let newLastId = -1;
+                            if (val) {
+                                arrNew = [...selectedItems, i.id];
+                                newLastId = i.id;
+                            } else {
+                                arrNew =  selectedItems.filter((id) => id != i.id);
+                                if (arrNew.length == 1) newLastId = newArr[0];
+                            }
+                            setLastSelectedId(newLastId);
+                        }
+                        setSelectedItems(arrNew);
+                     }
+                     }
+                      value= {selectedItems.indexOf(i.id) !== -1}
                     />
                   </div>
                 </div>
@@ -501,7 +627,7 @@ const products = () => {
               }}
             />
 
-            <div className={css.subMenu + ' ' + subMenuVisibility}>
+            <div className={css.subMenu + ' ' + css.massDescriptionBlockSubMenu + ' ' + subMenuVisibility}>
               <div className={css.subMenuItem} onClick={() => {
                 toggleItemMainInfoModal(true);
                 toggleMassDescriptionSubMenu();
@@ -513,16 +639,25 @@ const products = () => {
               }
               }>Доп. информация</div>
             </div>
-          </div>
-          <div className={css.btnWrapper}>
-            <Button
-              text={"Удалить все"}
-              style={massChangeButStyle}
-              onClick={() => {
-                setOpenMassDelConfirm(true);
-              }}
-            />
-          </div>
+            </div>
+            <div className={css.btnWrapper}>
+                <Button
+                    text={"Смена ценовой основы"}
+                    style={massChangeButStyle}
+                    onClick={() => {
+                        toggleBulkEditPriceBasisModal(true);
+                    }}
+                />
+            </div>
+            <div className={css.btnWrapper}>
+                <Button
+                    text={"Удалить все"}
+                    style={massChangeButStyle}
+                    onClick={() => {
+                        setOpenMassDelConfirm(true);
+                    }}
+                />
+            </div>
         </div>
       </div>
 
@@ -624,7 +759,17 @@ const products = () => {
           apiChangeItemBulk(val, increaseDecreaseOperator.id, increaseDecreaseVal, selectedItems);
         }}
       />
-
+      <BulkPriceBasisEdit
+          isOpen={bulkEditPriceBasisModalIsOpen}
+          onCancel={() => {
+              toggleBulkEditPriceBasisModal(false);
+          }}
+          onSave={(val) => {
+              toggleBulkEditPriceBasisModal(false);
+              apiChangePriceBasisBulk(val, selectedItems);
+          }}
+          selectedCount={selectedItems.length}
+      />
       <Popover
         id={`mouse-over-popover`}
         sx={{

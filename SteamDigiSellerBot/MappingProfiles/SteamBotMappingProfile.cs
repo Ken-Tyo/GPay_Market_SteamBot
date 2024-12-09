@@ -14,13 +14,9 @@ namespace SteamDigiSellerBot.MappingProfiles
         public SteamBotMappingProfile()
         {
             CreateMap<AddSteamBotViewModel, Bot>()
-                //.ForMember(x => x.MaFileStr, x => x.MapFrom(x => x.MaFile.ReadAsStringAsync().Result))
-                //.ForMember(x => x.ProxyStr, x => x.MapFrom(x => x.Proxy))
                 .AfterMap<SteamBotMappingAction>(); ;
 
             CreateMap<EditBotRequest, Bot>()
-                //.ForMember(x => x.MaFileStr, x => x.MapFrom(x => x.MaFile.ReadAsStringAsync().Result))
-                //.ForMember(x => x.ProxyStr, x => x.MapFrom(x => x.Proxy))
                 .AfterMap<EditBotRequestMappingAction>();
         }
     }
@@ -29,7 +25,6 @@ namespace SteamDigiSellerBot.MappingProfiles
     {
         public void Process(AddSteamBotViewModel source, Bot destination, ResolutionContext context)
         {
-            //destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
             var maFileStr = source.MaFile.ReadAsStringAsync().Result;
@@ -41,7 +36,6 @@ namespace SteamDigiSellerBot.MappingProfiles
     {
         public void Process(EditBotRequest source, Bot destination, ResolutionContext context)
         {
-            //destination.ProxyStrC = source.Proxy;
             destination.ProxyStr = CryptographyUtilityService.Encrypt(source.Proxy);
 
             Console.WriteLine($"BotEncrytpZone {nameof(EditBotRequestMappingAction)} {destination.UserName} {source.Proxy}");

@@ -33496,28 +33496,19 @@ var apiResetSteamAcc = /*#__PURE__*/function () {
     return _ref12.apply(this, arguments);
   };
 }();
-
-// export const resetProfileUrl = () => {
-//   const { gameSession } = state.get();
-
-//   gameSession.statusId = 12;
-//   gameSession.steamProfileUrl = null;
-
-//   setStateProp('gameSession', gameSession);
-// };
-
-var apiConfirmSending = /*#__PURE__*/function () {
-  var _ref13 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee13(uniquecode) {
-    var res, gameSession;
+var apiResetBot = /*#__PURE__*/function () {
+  var _ref13 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee13() {
+    var _state$get5, gameSession, autoInvitationTimeOut, res, _gameSession2;
     return state_regeneratorRuntime().wrap(function _callee13$(_context13) {
       while (1) switch (_context13.prev = _context13.next) {
         case 0:
-          setStateProp('checkCodeLoading', true);
+          _state$get5 = state.get(), gameSession = _state$get5.gameSession, autoInvitationTimeOut = _state$get5.autoInvitationTimeOut; //clearTimeout(autoInvitationTimeOut);
+          //setStateProp('autoInvitationTimeOut', null);
           _context13.next = 3;
-          return fetch("/gamesession/confirmsending", {
+          return fetch("/gamesession/resetBot", {
             method: 'POST',
             body: mapToFormData({
-              uniquecode: uniquecode
+              uniquecode: gameSession.uniqueCode
             })
           });
         case 3:
@@ -33529,27 +33520,37 @@ var apiConfirmSending = /*#__PURE__*/function () {
           _context13.next = 7;
           return res.json();
         case 7:
-          gameSession = _context13.sent;
-          setStateProp('gameSession', gameSession);
+          _gameSession2 = _context13.sent;
+          setStateProp('gameSession', _gameSession2);
         case 9:
         case "end":
           return _context13.stop();
       }
     }, _callee13);
   }));
-  return function apiConfirmSending(_x13) {
+  return function apiResetBot() {
     return _ref13.apply(this, arguments);
   };
 }();
-var apiCheckFriend = /*#__PURE__*/function () {
+
+// export const resetProfileUrl = () => {
+//   const { gameSession } = state.get();
+
+//   gameSession.statusId = 12;
+//   gameSession.steamProfileUrl = null;
+
+//   setStateProp('gameSession', gameSession);
+// };
+
+var apiConfirmSending = /*#__PURE__*/function () {
   var _ref14 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee14(uniquecode) {
-    var res;
+    var res, gameSession;
     return state_regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
           setStateProp('checkCodeLoading', true);
           _context14.next = 3;
-          return fetch("/gamesession/checkfrined", {
+          return fetch("/gamesession/confirmsending", {
             method: 'POST',
             body: mapToFormData({
               uniquecode: uniquecode
@@ -33557,14 +33558,49 @@ var apiCheckFriend = /*#__PURE__*/function () {
           });
         case 3:
           res = _context14.sent;
-        case 4:
+          if (!res.ok) {
+            _context14.next = 9;
+            break;
+          }
+          _context14.next = 7;
+          return res.json();
+        case 7:
+          gameSession = _context14.sent;
+          setStateProp('gameSession', gameSession);
+        case 9:
         case "end":
           return _context14.stop();
       }
     }, _callee14);
   }));
-  return function apiCheckFriend(_x14) {
+  return function apiConfirmSending(_x13) {
     return _ref14.apply(this, arguments);
+  };
+}();
+var apiCheckFriend = /*#__PURE__*/function () {
+  var _ref15 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee15(uniquecode) {
+    var res;
+    return state_regeneratorRuntime().wrap(function _callee15$(_context15) {
+      while (1) switch (_context15.prev = _context15.next) {
+        case 0:
+          setStateProp('checkCodeLoading', true);
+          _context15.next = 3;
+          return fetch("/gamesession/checkfrined", {
+            method: 'POST',
+            body: mapToFormData({
+              uniquecode: uniquecode
+            })
+          });
+        case 3:
+          res = _context15.sent;
+        case 4:
+        case "end":
+          return _context15.stop();
+      }
+    }, _callee15);
+  }));
+  return function apiCheckFriend(_x14) {
+    return _ref15.apply(this, arguments);
   };
 }();
 // EXTERNAL MODULE: ./node_modules/void-elements/index.js
@@ -45216,14 +45252,16 @@ var OrderState = function OrderState() {
     tGameInQueue = _useTranslation9.t;
   var _useTranslation10 = useTranslation_useTranslation('regionError'),
     tRegionError = _useTranslation10.t;
-  var _useTranslation11 = useTranslation_useTranslation('error'),
-    tError = _useTranslation11.t;
-  var _useTranslation12 = useTranslation_useTranslation('orderClosed'),
-    tOrderClosed = _useTranslation12.t;
-  var _useTranslation13 = useTranslation_useTranslation('common'),
-    tCommon = _useTranslation13.t;
-  var _useTranslation14 = useTranslation_useTranslation('tempInviteBan'),
-    tTempInviteBan = _useTranslation14.t;
+  var _useTranslation11 = useTranslation_useTranslation('gameRequired'),
+    tGameRequiredError = _useTranslation11.t;
+  var _useTranslation12 = useTranslation_useTranslation('error'),
+    tError = _useTranslation12.t;
+  var _useTranslation13 = useTranslation_useTranslation('orderClosed'),
+    tOrderClosed = _useTranslation13.t;
+  var _useTranslation14 = useTranslation_useTranslation('common'),
+    tCommon = _useTranslation14.t;
+  var _useTranslation15 = useTranslation_useTranslation('tempInviteBan'),
+    tTempInviteBan = _useTranslation15.t;
   var navigate = dist_useNavigate();
   var recaptchaRef = /*#__PURE__*/react.createRef();
   var isDlc = gameSession === null || gameSession === void 0 ? void 0 : gameSession.isDlc;
@@ -45244,6 +45282,7 @@ var OrderState = function OrderState() {
   var showInQueue = gameSession && gameSession.statusId === 19;
   var showGameSended = gameSession && (gameSession.statusId === 1 || gameSession.statusId === 2);
   var showRegionError = gameSession && gameSession.statusId === 5;
+  var showGameRequiredError = gameSession && gameSession.statusId === 23;
   var showOrderClosed = gameSession && gameSession.statusId === 15;
   var showError = gameSession && (gameSession.statusId === 17 || gameSession.statusId === 7);
   var showWaiting = gameSession && (gameSession.statusId === 20 || gameSession.statusId === 21);
@@ -45252,6 +45291,35 @@ var OrderState = function OrderState() {
     searchParams = _useSearchParams2[0],
     setSearchParams = _useSearchParams2[1];
   var uniquecode = searchParams.get('uniquecode') || '';
+  var _useState = (0,react.useState)(true),
+    _useState2 = orderState_slicedToArray(_useState, 2),
+    isResendBlocked = _useState2[0],
+    setIsResendBlocked = _useState2[1]; // Заблокирована кнопка
+  var _useState3 = (0,react.useState)(60),
+    _useState4 = orderState_slicedToArray(_useState3, 2),
+    secondsRemaining = _useState4[0],
+    setSecondsRemaining = _useState4[1]; // Остаток времени
+
+  (0,react.useEffect)(function () {
+    if (isResendBlocked) {
+      // Запускаем интервал для обратного отсчёта
+      var interval = setInterval(function () {
+        setSecondsRemaining(function (prev) {
+          if (prev <= 1) {
+            clearInterval(interval); // Очищаем интервал при достижении 0
+            setIsResendBlocked(false); // Разблокируем кнопку
+            return 0;
+          }
+          return prev - 1; // Уменьшаем количество оставшихся секунд
+        });
+      }, 1000);
+
+      // Очищаем интервал при размонтировании компонента
+      return function () {
+        return clearInterval(interval);
+      };
+    }
+  }, [isResendBlocked]);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: orderState_styles.wrapper,
     children: [checkCodeLoadingModal && uniquecode !== '' && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
@@ -45411,11 +45479,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '1.5em'
+                marginRight: '1.5em',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsx)(Dlc, {
             isDlc: isDlc
@@ -45462,11 +45533,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '1.5em'
+                marginRight: '1.5em',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               style: {
                 display: 'flex',
@@ -45526,11 +45600,14 @@ var OrderState = function OrderState() {
               backgroundColor: '#FFFFFF',
               color: '#8615BC',
               border: '1px solid #571676',
-              marginRight: '1.5em'
+              marginRight: '1.5em',
+              opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+              pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
             },
             onClick: function onClick() {
               apiResetSteamAcc();
-            }
+            },
+            disabled: gameSession.cantSwitchAccount
           }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             style: {
               display: 'flex',
@@ -45570,11 +45647,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tInvitationRefused('iSentInvitation'),
                 className: orderState_styles.but,
@@ -45593,7 +45673,9 @@ var OrderState = function OrderState() {
                 style: {
                   width: '377px'
                 },
-                onClick: function onClick() {}
+                onClick: function onClick() {
+                  apiResetBot();
+                }
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactSellerWrapper,
@@ -45636,11 +45718,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               })
             }), gameSession.isAnotherBotExists && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.line1,
@@ -45653,7 +45738,9 @@ var OrderState = function OrderState() {
                 style: {
                   width: '377px'
                 },
-                onClick: function onClick() {}
+                onClick: function onClick() {
+                  apiResetBot();
+                }
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactSellerWrapper,
@@ -45695,11 +45782,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), gameSession.canResendGame && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tGameExists('repeatSendGame'),
                 className: orderState_styles.but,
@@ -45850,11 +45940,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 className: orderState_styles.contactSellerWrapper,
                 children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
@@ -45890,11 +45983,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
                 style: {
                   display: 'flex',
@@ -45942,11 +46038,14 @@ var OrderState = function OrderState() {
                 backgroundColor: '#FFFFFF',
                 color: '#8615BC',
                 border: '1px solid #571676',
-                marginRight: '1.5em'
+                marginRight: '1.5em',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
               },
               onClick: function onClick() {
                 apiResetSteamAcc();
-              }
+              },
+              disabled: gameSession.cantSwitchAccount
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactBut,
               children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
@@ -45954,6 +46053,76 @@ var OrderState = function OrderState() {
               })
             })]
           })
+        })]
+      })
+    }), showGameRequiredError && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
+      children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: orderState_styles.regionError,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.title,
+          children: tGameRequiredError('error')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          style: {
+            marginBottom: '2rem'
+          },
+          children: tGameRequiredError('info_row1')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          style: {
+            marginBottom: '1.5rem'
+          },
+          children: tGameRequiredError('info_row2')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          style: {
+            marginBottom: '1rem'
+          },
+          children: tGameRequiredError('info_row3')
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: orderState_styles.text,
+          children: tGameRequiredError('info_row4')
+        }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+          className: orderState_styles.accButtons,
+          children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+            className: orderState_styles.line1,
+            children: [!gameSession.blockOrder && gameSession.canResendGame && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tGameRequiredError('repeatSendGame') + (isResendBlocked && secondsRemaining > 0 ? ' (' + secondsRemaining + ')' : ''),
+              className: orderState_styles.but,
+              style: {
+                marginRight: '1.5em',
+                opacity: isResendBlocked ? '0.7' : '1',
+                pointerEvents: isResendBlocked ? 'none' : 'auto'
+              },
+              onClick: function onClick() {
+                setIsResendBlocked(true);
+                apiCheckFriend(gameSession.uniqueCode);
+              },
+              disabled: isResendBlocked
+            }), !gameSession.blockOrder && /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
+              text: tOrderState('changeAccountBut'),
+              style: {
+                backgroundColor: '#FFFFFF',
+                color: '#8615BC',
+                border: '1px solid #571676',
+                marginLeft: '25px',
+                opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
+              },
+              onClick: function onClick() {
+                apiResetSteamAcc();
+              },
+              disabled: gameSession.cantSwitchAccount
+            })]
+          }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            className: orderState_styles.contactSellerWrapper,
+            style: {
+              marginTop: '20px'
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(ContactTheSeller, {
+              digisellerId: gameSession.digisellerId
+            })
+          })]
         })]
       })
     }), showOrderClosed && /*#__PURE__*/(0,jsx_runtime.jsx)(Area, {
@@ -45997,11 +46166,14 @@ var OrderState = function OrderState() {
                   backgroundColor: '#FFFFFF',
                   color: '#8615BC',
                   border: '1px solid #571676',
-                  marginRight: '1.5em'
+                  marginRight: '1.5em',
+                  opacity: gameSession.cantSwitchAccount ? '0.7' : '1',
+                  pointerEvents: gameSession.cantSwitchAccount ? 'none' : 'auto'
                 },
                 onClick: function onClick() {
                   apiResetSteamAcc();
-                }
+                },
+                disabled: gameSession.cantSwitchAccount
               }), /*#__PURE__*/(0,jsx_runtime.jsx)(home_button, {
                 text: tTempInviteBan('iSentInvitation'),
                 className: orderState_styles.but,
@@ -46020,7 +46192,9 @@ var OrderState = function OrderState() {
                 style: {
                   width: '377px'
                 },
-                onClick: function onClick() {}
+                onClick: function onClick() {
+                  apiResetBot();
+                }
               })
             }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: orderState_styles.contactSellerWrapper,
@@ -46042,8 +46216,8 @@ var OrderState = function OrderState() {
 };
 var ContactTheSeller = function ContactTheSeller(_ref3) {
   var digisellerId = _ref3.digisellerId;
-  var _useTranslation15 = useTranslation_useTranslation('activationTimeExpires'),
-    tActTimeExpires = _useTranslation15.t;
+  var _useTranslation16 = useTranslation_useTranslation('activationTimeExpires'),
+    tActTimeExpires = _useTranslation16.t;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: orderState_styles.contactWrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -46059,8 +46233,8 @@ var ContactTheSeller = function ContactTheSeller(_ref3) {
   });
 };
 var CheckEditionVersion = function CheckEditionVersion() {
-  var _useTranslation16 = useTranslation_useTranslation('gameSended'),
-    tGameSended = _useTranslation16.t;
+  var _useTranslation17 = useTranslation_useTranslation('gameSended'),
+    tGameSended = _useTranslation17.t;
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: orderState_styles.checkEditionVersionWrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -46102,8 +46276,8 @@ var Area = function Area(_ref4) {
 };
 var Dlc = function Dlc(_ref5) {
   var isDlc = _ref5.isDlc;
-  var _useTranslation17 = useTranslation_useTranslation('dlc'),
-    tDlc = _useTranslation17.t;
+  var _useTranslation18 = useTranslation_useTranslation('dlc'),
+    tDlc = _useTranslation18.t;
   if (!isDlc) return null;
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: orderState_styles.dlcWrapper,
@@ -46120,12 +46294,12 @@ var Dlc = function Dlc(_ref5) {
 };
 var Timer = function Timer(_ref6) {
   var endTime = _ref6.endTime;
-  var _useState = (0,react.useState)(null),
-    _useState2 = orderState_slicedToArray(_useState, 2),
-    timer = _useState2[0],
-    setTimer = _useState2[1];
-  var _useTranslation18 = useTranslation_useTranslation('timer'),
-    tTimer = _useTranslation18.t;
+  var _useState5 = (0,react.useState)(null),
+    _useState6 = orderState_slicedToArray(_useState5, 2),
+    timer = _useState6[0],
+    setTimer = _useState6[1];
+  var _useTranslation19 = useTranslation_useTranslation('timer'),
+    tTimer = _useTranslation19.t;
   (0,react.useEffect)(function () {
     var t = setInterval(function () {
       var now = new Date();
@@ -46533,16 +46707,21 @@ function footer_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+
 var Footer = function Footer() {
   var _useTranslation = useTranslation_useTranslation(),
     i18n = _useTranslation.i18n;
   var _useCookies = useCookies(),
-    _useCookies2 = footer_slicedToArray(_useCookies, 2),
+    _useCookies2 = footer_slicedToArray(_useCookies, 3),
     cookies = _useCookies2[0],
-    setCookie = _useCookies2[1];
+    setCookie = _useCookies2[1],
+    removeCookie = _useCookies2[2];
   var location = react_ipgeolocation();
   var _useTranslation2 = useTranslation_useTranslation('footer'),
     tFooter = _useTranslation2.t;
+  var _state$use = state === null || state === void 0 ? void 0 : state.use(),
+    gameSession = _state$use.gameSession;
   if (!cookies.ln) {
     var lang = location.country === 'RU' ? 'ru' : 'en';
     setCookie('ln', lang, {
@@ -46554,9 +46733,22 @@ var Footer = function Footer() {
     if (i18n.language !== cookies.ln) i18n.changeLanguage(cookies.ln);
   }
   var currLang = i18n.language;
+  (0,react.useEffect)(function () {
+    if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) === 1271) {
+      setCookie('ggtghide', 'true', {
+        path: '/',
+        maxAge: 24 * 60 * 60
+      });
+    } else if ((gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) > 0 && cookies.ggtghide) {
+      removeCookie('ggtghide', {
+        path: '/'
+      });
+    }
+  }, [gameSession === null || gameSession === void 0 ? void 0 : gameSession.market, cookies.ggtghide, setCookie]);
+  var tgHideCoockie = cookies.ggtghide === 'true';
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: footer_styles.footer,
-    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("a", {
+    children: [!tgHideCoockie && (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) != 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("a", {
       href: "https://t.me/GPay_Market",
       target: "_blank",
       className: footer_styles.telegram,
@@ -46564,7 +46756,7 @@ var Footer = function Footer() {
         src: telegram_namespaceObject,
         alt: "telegram"
       })
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)(textSwitch, {
+    }), (tgHideCoockie || (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) == 1271) && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}), /*#__PURE__*/(0,jsx_runtime.jsx)(textSwitch, {
       defaultValue: currLang === 'en',
       options: ['Ru', 'Eng'],
       onChange: function onChange(val) {
@@ -46572,7 +46764,7 @@ var Footer = function Footer() {
         i18n.changeLanguage(lan);
         setCookie('ln', i18n.language);
       }
-    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    }), !tgHideCoockie && (gameSession === null || gameSession === void 0 ? void 0 : gameSession.market) != 1271 && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
       className: footer_styles.tg_hint,
       children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
         children: [tFooter('giveaways'), /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
@@ -49159,9 +49351,9 @@ var i18next_loadLanguages = instance.loadLanguages;
 
 
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/public/locales/en/translation.json
-const translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"bought","for":"for"},"checkCode":{"title":"Enter a unique order code","inputPlaceholder":"Enter a unique code","inputAcceptBut":"Сonfirm","errors":{"1":"","2":"Incorrect order code entered. Check the code again.","3":"Confirm that you are not a robot.","4":"Error, invalid captcha."}},"orderState":{"title":"Order state","steamUrlInfo1":"1. You can enter a quick invite link or a friend code to your Steam account, in which case the deal will go faster. You can find it in the Steam tabs: \\"Friends\\" > \\"Add as Friend\\"","steamUrlInfo2":"2. You can enter a link to your Steam profile, for this you need to open your profile, right-click on the free field in the profile, then click \\"copy link address\\" in the drop-down list","inputPlaceholder":"Link entered","inputAcceptBut":"Сonfirm","linkIncorrectErr":"Invalid profile link entered. Check again.","yourSteamName":"Your Steam nickname","thisMyAccBut":"This is my account","changeAccountBut":"Change account","requestSent":"Friend request sent","requestSentInfo":"You have been sent a request to add friends on Steam. You need to accept our bot with the nickname {{botName}} as a friend. Then the purchased item will be sent to you.","requestInProcessing":"Your order is being processed"},"dlc":{"info":"This product is an addition to the main game. Without the presence of the main game, you will not be able to activate the DLC"},"timer":{"title":"Time to activate","expInfoTooltip":"After this time, the order will be impossible to receive. Either an additional payment will be required, or any conditions of the order will change, perhaps now this product is on sale."},"activationTimeExpires":{"error":"Error","message":"Unfortunately, you did not manage to get the game before the end of discounts (sales) for this game and your order became inactive. Please contact the seller to resolve this issue.","contactTheSeller":"Contact the seller"},"invitationRefused":{"error":"Error","youRefused":"You have rejected the application of our bot!","info":"You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.","iSentInvitation":"I sent a friend request","tryWithBot":"Repeat request from another bot"},"tempInviteBan":{"error":"Error","youRefused":"This bot can not send you invites anymore!","info":"You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.","iSentInvitation":"I sent a friend request","tryWithBot":"Repeat request from another bot"},"invitationRefusedWithRemoteBot":{"info":"You need to either request a new request from another bot, or you can provide a new link to the account where your order needs to be delivered."},"gameExists":{"error":"Error","info":"You already have this game/add-on on your Steam account. Specify another account that does not contain this product. If you have a free (temporary) version of the game, delete it {{- link}} and try again!","repeatSendGame":"Retry","hereClick":"here (clickable)"},"gameSendInProgress":{"title":"The game is sent","info1":"The game is being sent, please wait...","info2":"The procedure usually takes about 3 minutes..."},"gameSended":{"title":"A good buy","info":"Thank you for shopping in our store! We would love to hear from you, please contact us again!","homeBut":"Home","feedbackBut":"Leave feedback","checkEditionVersion":"Check edition version"},"gameInQueue":{"queue":"Queue","info1":"At the moment, all bots of this heading are occupied. Your turn: ","info2":"Approximate waiting time: ","info3":"You can contact the seller to clarify the possibility of speeding up the waiting time..."},"regionError":{"error":"Error","info":"The region of the recipient of the game is different from the one purchased. It is impossible to deliver a game to a region where the game is more expensive than the cost of the selected region. Please specify another account with the correct region, or contact us to resolve the issue!"},"orderClosed":{"closed":"Order closed","message":"Unfortunately, this order was closed by the seller. Contact for details about this"},"error":{"info":"There was an unexpected tech. error. Please contact the seller"},"common":{"order":"Order"},"footer":{"giveaways":"Game giveaways here!","giveaways_sign":"Subscribe!"}}');
+const translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"bought","for":"for"},"checkCode":{"title":"Enter a unique order code","inputPlaceholder":"Enter a unique code","inputAcceptBut":"Сonfirm","errors":{"1":"","2":"Incorrect order code entered. Check the code again.","3":"Confirm that you are not a robot.","4":"Error, invalid captcha."}},"orderState":{"title":"Order state","steamUrlInfo1":"1. You can enter a quick invite link or a friend code to your Steam account, in which case the deal will go faster. You can find it in the Steam tabs: \\"Friends\\" > \\"Add as Friend\\"","steamUrlInfo2":"2. You can enter a link to your Steam profile, for this you need to open your profile, right-click on the free field in the profile, then click \\"copy link address\\" in the drop-down list","inputPlaceholder":"Link entered","inputAcceptBut":"Сonfirm","linkIncorrectErr":"Invalid profile link entered. Check again.","yourSteamName":"Your Steam nickname","thisMyAccBut":"This is my account","changeAccountBut":"Change account","requestSent":"Friend request sent","requestSentInfo":"You have been sent a request to add friends on Steam. You need to accept our bot with the nickname {{botName}} as a friend. Then the purchased item will be sent to you.","requestInProcessing":"Your order is being processed"},"dlc":{"info":"This product is an addition to the main game. Without the presence of the main game, you will not be able to activate the DLC"},"timer":{"title":"Time to activate","expInfoTooltip":"After this time, the order will be impossible to receive. Either an additional payment will be required, or any conditions of the order will change, perhaps now this product is on sale."},"activationTimeExpires":{"error":"Error","message":"Unfortunately, you did not manage to get the game before the end of discounts (sales) for this game and your order became inactive. Please contact the seller to resolve this issue.","contactTheSeller":"Contact the seller"},"invitationRefused":{"error":"Error","youRefused":"You have rejected the application of our bot!","info":"You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.","iSentInvitation":"I sent a friend request","tryWithBot":"Repeat request from another bot"},"tempInviteBan":{"error":"Error","youRefused":"This bot can not send you invites anymore!","info":"You can specify a different profile, try to send a request with our system from another bot, or add the {{- botName}} bot yourself.","iSentInvitation":"I sent a friend request","tryWithBot":"Repeat request from another bot"},"invitationRefusedWithRemoteBot":{"info":"You need to either request a new request from another bot, or you can provide a new link to the account where your order needs to be delivered."},"gameExists":{"error":"Error","info":"You already have this game/add-on on your Steam account. Specify another account that does not contain this product. If you have a free (temporary) version of the game, delete it {{- link}} and try again!","repeatSendGame":"Retry","hereClick":"here (clickable)"},"gameSendInProgress":{"title":"The game is sent","info1":"The game is being sent, please wait...","info2":"The procedure usually takes about 3 minutes..."},"gameSended":{"title":"A good buy","info":"Thank you for shopping in our store! We would love to hear from you, please contact us again!","homeBut":"Home","feedbackBut":"Leave feedback","checkEditionVersion":"Check edition version"},"gameInQueue":{"queue":"Queue","info1":"At the moment, all bots of this heading are occupied. Your turn: ","info2":"Approximate waiting time: ","info3":"You can contact the seller to clarify the possibility of speeding up the waiting time..."},"regionError":{"error":"Error","info":"The region of the recipient of the game is different from the one purchased. It is impossible to deliver a game to a region where the game is more expensive than the cost of the selected region. Please specify another account with the correct region, or contact us to resolve the issue!"},"gameRequired":{"error":"No game on account","info_row1":"Could not send the add-on to your Steam account because you do not have the main version of the game. Buy the main game and try again, or specify the correct account where the game is present to activate the add-on!","info_row2":"If this is an error:","info_row3":"Check that your game is NOT private and everyone on the account can see it - try again after some time","info_row4":"If after some time this does not help - contact the seller for instructions","repeatSendGame":"Repeat"},"orderClosed":{"closed":"Order closed","message":"Unfortunately, this order was closed by the seller. Contact for details about this"},"error":{"info":"There was an unexpected tech. error. Please contact the seller"},"common":{"order":"Order"},"footer":{"giveaways":"Game giveaways here!","giveaways_sign":"Subscribe!"}}');
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/public/locales/ru/translation.json
-const ru_translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"купил","for":"за"},"checkCode":{"title":"Введите уникальный код заказа","inputPlaceholder":"Введите уникальный код","inputAcceptBut":"Подтвердить","errors":{"1":"","2":"Введён не коректный код заказа. Проверьте код ещё раз.","3":"Подтвердите что вы не робот.","4":"Ошибка, неверная капча."}},"orderState":{"title":"Состояние заказа","steamUrlInfo1":"1. Вы можете ввести ссылку быстрого приглашения, либо код друга на ваш Steam аккаунт, в таком случае — сделка пройдёт быстрее. Найти её можно во вкладках Steam: «Друзья» > «Добавить в друзья»","steamUrlInfo2":"2. Вы можете ввести ссылку на ваш Steam профиль, для этого необходимо открыть ваш профиль, нажать ПКМ по свободному полю в профиле, дальше нажать «скопировать адрес ссылки» в выпавшем списке","inputPlaceholder":"Введённая ссылка","inputAcceptBut":"Подтвердить","linkIncorrectErr":"Введена некоректная ссылка профиля. Проверьте ещё раз.","yourSteamName":"Ваш Steam никнейм","thisMyAccBut":"Это мой аккунт","changeAccountBut":"Сменить аккаунт","requestSent":"Оправлена заявка в друзья","requestSentInfo":"Вам отправлен запрос на добавление друзья в Steam. Вам необходимо принять нашего бота с никнеймом {{- botName}} в друзья. Далее вам отправят купленный товар.","requestInProcessing":"Ваш заказ обрабатывается"},"dlc":{"info":"Данный товар является дополнением к основной игре. Без наличия основной игры Вы не сможете активировать DLC"},"timer":{"title":"Время на активацию","expInfoTooltip":"По истечению данного времени — заказ будет получить невозможно. Либо потребуется доплата, либо изменятся какие-либо условия заказа, возможно сейчас данный товар находится на распродаже."},"activationTimeExpires":{"error":"Ошибка","message":"К сожалению, вы не успели получить игру до окончания скидок (распродажи) на данную игру и ваш заказ стал неактивным. Пожалуйста, свяжитесь с продавцом для решения данной проблемы.","contactTheSeller":"Связаться с продавцом"},"invitationRefused":{"error":"Ошибка","youRefused":"Вы отклонили заявку нашего бота!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"tempInviteBan":{"error":"Ошибка","youRefused":"Этот бот больше не может присылать Вам заявки!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"invitationRefusedWithRemoteBot":{"info":"Вам нужно либо запросить новую заявку от другого бота, либо вы можете по новой указать ссылку на аккаунт, куда необходимо доставить Ваш заказ."},"gameExists":{"error":"Ошибка","info":"На Вашем Steam аккаунте уже есть эта игра/дополнение. Укажите другой аккаунт, который не содержит данного продукта. Если у Вас бесплатная (временная) версия игры - удалите ее {{- link}} и попробуйте снова!","repeatSendGame":"Повторить попытку","hereClick":"тут (кликабельно)"},"gameSendInProgress":{"title":"Отправляется игра","info1":"Происходит отправка игры, пожалуйста ожидайте...","info2":"Обычно процедура занимает около 3-ех минут..."},"gameSended":{"title":"Удачная покупка","info":"Спасибо за покупку товара в нашем магазине! Будем рады Вашему отзыву, обращайтесь ещё!","homeBut":"Главная","feedbackBut":"Оставить отзыв","checkEditionVersion":"Проверить версию издания"},"gameInQueue":{"queue":"Очередь","info1":"В данный момент все боты данной товарной позиции - заняты. Ваша очередь: ","info2":"Примерное время ожидания: ","info3":"Вы можете связаться с продавцом для уточнения возможности ускорения ожидания..."},"regionError":{"error":"Ошибка","info":"Регион получателя игры отличается от купленного. Доставить игру в регион, где игра дороже стоимости выбранного региона — невозможно. Пожалуйста, укажите другой аккаунт с верным регионом, либо свяжитесь с нами за решением проблемы!"},"orderClosed":{"closed":"Заказ закрыт","message":"К сожалению, данный заказ был закрыт продавцом. Свяжитесь для получения подробностей об этом"},"error":{"info":"Произошла непредвиденная тех. ошибка. Пожалуйста, свяжитесь с продавцом"},"common":{"order":"Заказ"},"footer":{"giveaways":"У нас тут раздачи игр!","giveaways_sign":"Подпишись!"}}');
+const ru_translation_namespaceObject = /*#__PURE__*/JSON.parse('{"lastOrders":{"bought":"купил","for":"за"},"checkCode":{"title":"Введите уникальный код заказа","inputPlaceholder":"Введите уникальный код","inputAcceptBut":"Подтвердить","errors":{"1":"","2":"Введён не коректный код заказа. Проверьте код ещё раз.","3":"Подтвердите что вы не робот.","4":"Ошибка, неверная капча."}},"orderState":{"title":"Состояние заказа","steamUrlInfo1":"1. Вы можете ввести ссылку быстрого приглашения, либо код друга на ваш Steam аккаунт, в таком случае — сделка пройдёт быстрее. Найти её можно во вкладках Steam: «Друзья» > «Добавить в друзья»","steamUrlInfo2":"2. Вы можете ввести ссылку на ваш Steam профиль, для этого необходимо открыть ваш профиль, нажать ПКМ по свободному полю в профиле, дальше нажать «скопировать адрес ссылки» в выпавшем списке","inputPlaceholder":"Введённая ссылка","inputAcceptBut":"Подтвердить","linkIncorrectErr":"Введена некоректная ссылка профиля. Проверьте ещё раз.","yourSteamName":"Ваш Steam никнейм","thisMyAccBut":"Это мой аккаунт","changeAccountBut":"Сменить аккаунт","requestSent":"Оправлена заявка в друзья","requestSentInfo":"Вам отправлен запрос на добавление друзья в Steam. Вам необходимо принять нашего бота с никнеймом {{- botName}} в друзья. Далее вам отправят купленный товар.","requestInProcessing":"Ваш заказ обрабатывается"},"dlc":{"info":"Данный товар является дополнением к основной игре. Без наличия основной игры Вы не сможете активировать DLC"},"timer":{"title":"Время на активацию","expInfoTooltip":"По истечению данного времени — заказ будет получить невозможно. Либо потребуется доплата, либо изменятся какие-либо условия заказа, возможно сейчас данный товар находится на распродаже."},"activationTimeExpires":{"error":"Ошибка","message":"К сожалению, вы не успели получить игру до окончания скидок (распродажи) на данную игру и ваш заказ стал неактивным. Пожалуйста, свяжитесь с продавцом для решения данной проблемы.","contactTheSeller":"Связаться с продавцом"},"invitationRefused":{"error":"Ошибка","youRefused":"Вы отклонили заявку нашего бота!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"tempInviteBan":{"error":"Ошибка","youRefused":"Этот бот больше не может присылать Вам заявки!","info":"Вы можете указать другой профиль, попробовать отправить заявку нашей системой с другого бота, либо добавить бота {{- botName}} самостоятельно.","iSentInvitation":"Я отправил заявку","tryWithBot":"Повторить заявку с другого бота"},"invitationRefusedWithRemoteBot":{"info":"Вам нужно либо запросить новую заявку от другого бота, либо вы можете по новой указать ссылку на аккаунт, куда необходимо доставить Ваш заказ."},"gameExists":{"error":"Ошибка","info":"На Вашем Steam аккаунте уже есть эта игра/дополнение. Укажите другой аккаунт, который не содержит данного продукта. Если у Вас бесплатная (временная) версия игры - удалите ее {{- link}} и попробуйте снова!","repeatSendGame":"Повторить попытку","hereClick":"тут (кликабельно)"},"gameSendInProgress":{"title":"Отправляется игра","info1":"Происходит отправка игры, пожалуйста ожидайте...","info2":"Обычно процедура занимает около 3-ех минут..."},"gameSended":{"title":"Удачная покупка","info":"Спасибо за покупку товара в нашем магазине! Будем рады Вашему отзыву, обращайтесь ещё!","homeBut":"Главная","feedbackBut":"Оставить отзыв","checkEditionVersion":"Проверить версию издания"},"gameInQueue":{"queue":"Очередь","info1":"В данный момент все боты данной товарной позиции - заняты. Ваша очередь: ","info2":"Примерное время ожидания: ","info3":"Вы можете связаться с продавцом для уточнения возможности ускорения ожидания..."},"regionError":{"error":"Ошибка","info":"Регион получателя игры отличается от купленного. Доставить игру в регион, где игра дороже стоимости выбранного региона — невозможно. Пожалуйста, укажите другой аккаунт с верным регионом, либо свяжитесь с нами за решением проблемы!"},"gameRequired":{"error":"Нет игры","info_row1":"Не удалось отправить дополнение на Ваш Steam аккаунт, поскольку у Вас отсутствует основная версия игры. Купите основную игру и пробуйте снова, либо укажите верный аккаунт, где присутствует игра для активации дополнения!","info_row2":"Если это ошибка:","info_row3":"Проверьте, что игра у вас НЕ приватная и ее видят все на аккаунте - попробуйте снова повторить через какое-то время","info_row4":"Если через время это не помогает - обратитесь к продавцу за инструкциями","repeatSendGame":"Повторить"},"orderClosed":{"closed":"Заказ закрыт","message":"К сожалению, данный заказ был закрыт продавцом. Свяжитесь для получения подробностей об этом"},"error":{"info":"Произошла непредвиденная тех. ошибка. Пожалуйста, свяжитесь с продавцом"},"common":{"order":"Заказ"},"footer":{"giveaways":"У нас тут раздачи игр!","giveaways_sign":"Подпишись!"}}');
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/home/i18n.js
 function i18n_typeof(o) { "@babel/helpers - typeof"; return i18n_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, i18n_typeof(o); }
 function i18n_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }

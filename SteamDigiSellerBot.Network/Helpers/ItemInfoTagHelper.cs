@@ -11,27 +11,23 @@ namespace SteamDigiSellerBot.Network.Helpers
 {
     internal static class ItemInfoTagHelper
     {
-        private const string TypeTagCode = "%type%";
-        private const string PromoTagCode = "%promo%";
         private const int GGSelId = 2;  // TODO: Пока не реализованы все площадки, хардкодим ИД Digiseller
-
-        private static List<Action<StringBuilder, string, Item, IReadOnlyList<TagTypeReplacement>>> replaceTypeActions =
-            new List<Action<StringBuilder, string, Item, IReadOnlyList<TagTypeReplacement>>>()
-        {
-            { replaceTypeTag },
-        };
-
-        private static List<Action<StringBuilder, string, IReadOnlyList<TagPromoReplacement>>> replacePromoActions =
-            new List<Action<StringBuilder, string, IReadOnlyList<TagPromoReplacement>>>()
-        {
-            { replacePromoTag },
-        };
 
         internal static bool ContainsTags(this IReadOnlyList<LocaleValuePair> source)
         {
             foreach (var item in source ?? Enumerable.Empty<LocaleValuePair>())
             {
-                if (item.Value.Contains(TypeTagCode))
+                if (item.Value.Contains(TagsConstants.Codes.Type))
+                {
+                    return true;
+                }
+
+                if (item.Value.Contains(TagsConstants.Codes.Promo))
+                {
+                    return true;
+                }
+
+                if (item.Value.Contains(TagsConstants.Codes.InfoApps))
                 {
                     return true;
                 }
@@ -44,7 +40,9 @@ namespace SteamDigiSellerBot.Network.Helpers
             this IReadOnlyList<LocaleValuePair> source,
             Item item,
             IReadOnlyList<TagTypeReplacement> tagTypeReplacements,
-            IReadOnlyList<TagPromoReplacement> tagPromoReplacements)
+            IReadOnlyList<TagPromoReplacement> tagPromoReplacements,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements)
         {
             var result = new List<LocaleValuePair>();
 
@@ -53,15 +51,11 @@ namespace SteamDigiSellerBot.Network.Helpers
 
                 var stringBuilder = new StringBuilder(sourceItem.Value);
 
-                foreach (var replaceTypeAction in replaceTypeActions)
-                {
-                    replaceTypeAction(stringBuilder, sourceItem.Locale, item, tagTypeReplacements);
-                }
+                ReplaceTypeTag(stringBuilder, sourceItem.Locale, item, tagTypeReplacements);
+                ReplacePromoTag(stringBuilder, sourceItem.Locale, tagPromoReplacements);
+                ReplaceInfoAppsTag(stringBuilder, sourceItem.Locale, tagInfoAppsReplacements);
+                ReplaceInfoDlcTag(stringBuilder, sourceItem.Locale, tagInfoDlcReplacements);
 
-                foreach (var replacePromoAction in replacePromoActions)
-                {
-                    replacePromoAction(stringBuilder, sourceItem.Locale, tagPromoReplacements);
-                }
 
                 result.Add(new LocaleValuePair(sourceItem.Locale, stringBuilder.ToString()));
             }
@@ -69,7 +63,7 @@ namespace SteamDigiSellerBot.Network.Helpers
             return result;
         }
 
-        private static void replaceTypeTag(
+        private static void ReplaceTypeTag(
             StringBuilder source,
             string locale,
             Item item,
@@ -80,10 +74,10 @@ namespace SteamDigiSellerBot.Network.Helpers
                 var tagTypeReplacementDlc = tagTypeReplacements.SingleOrDefault(x => x.IsDlc);
                 if (tagTypeReplacementDlc != null)
                 {
-                    var tagTypeReplacementDlcValue = tagTypeReplacementDlc.TagTypeReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
+                    var tagTypeReplacementDlcValue = tagTypeReplacementDlc.ReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
                     if (tagTypeReplacementDlcValue != null)
                     {
-                        source.Replace(TypeTagCode, tagTypeReplacementDlcValue.Value);
+                        source.Replace(TagsConstants.Codes.Type, tagTypeReplacementDlcValue.Value);
                     }
                 }
             }
@@ -91,15 +85,15 @@ namespace SteamDigiSellerBot.Network.Helpers
             var tagTypeReplacementNotDlc = tagTypeReplacements.SingleOrDefault(x => !x.IsDlc);
             if (tagTypeReplacementNotDlc != null)
             {
-                var tagTypeReplacementNotDlcValue = tagTypeReplacementNotDlc.TagTypeReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
+                var tagTypeReplacementNotDlcValue = tagTypeReplacementNotDlc.ReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
                 if (tagTypeReplacementNotDlcValue != null)
                 {
-                    source.Replace(TypeTagCode, tagTypeReplacementNotDlcValue.Value);
+                    source.Replace(TagsConstants.Codes.Type, tagTypeReplacementNotDlcValue.Value);
                 }
             }
         }
 
-        private static void replacePromoTag(
+        private static void ReplacePromoTag(
             StringBuilder source,
             string locale,
             IReadOnlyList<TagPromoReplacement> tagPromoReplacements)
@@ -107,10 +101,40 @@ namespace SteamDigiSellerBot.Network.Helpers
             var tagPromoReplacement = tagPromoReplacements.SingleOrDefault(x => x.MarketPlaceId == GGSelId);
             if (tagPromoReplacement != null)
             {
-                var tagPromoReplacementValue = tagPromoReplacement.TagPromoReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
+                var tagPromoReplacementValue = tagPromoReplacement.ReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
                 if (tagPromoReplacementValue != null)
                 {
-                    source.Replace(PromoTagCode, tagPromoReplacementValue.Value);
+                    source.Replace(TagsConstants.Codes.Promo, tagPromoReplacementValue.Value);
+                }
+            }
+        }
+
+        private static void ReplaceInfoAppsTag(
+            StringBuilder source,
+            string locale,
+            IReadOnlyList<TagInfoAppsReplacement> tagInfoAppsReplacements)
+        {
+            foreach(var tagInfoAppsReplacement in tagInfoAppsReplacements ?? Array.Empty<TagInfoAppsReplacement>())
+            {
+                var tagInfoAppsReplacementValue = tagInfoAppsReplacement.ReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
+                if (tagInfoAppsReplacementValue != null)
+                {
+                    source.Replace(TagsConstants.Codes.InfoApps, tagInfoAppsReplacementValue.Value);
+                }
+            }            
+        }
+
+        private static void ReplaceInfoDlcTag(
+            StringBuilder source,
+            string locale,
+            IReadOnlyList<TagInfoDlcReplacement> tagInfoDlcReplacements)
+        {
+            foreach (var tagInfoAppsReplacement in tagInfoDlcReplacements ?? Array.Empty<TagInfoDlcReplacement>())
+            {
+                var tagInfoDlcReplacementValue = tagInfoAppsReplacement.ReplacementValues.SingleOrDefault(x => x.LanguageCode == locale);
+                if (tagInfoDlcReplacementValue != null)
+                {
+                    source.Replace(TagsConstants.Codes.InfoDLC, tagInfoDlcReplacementValue.Value);
                 }
             }
         }

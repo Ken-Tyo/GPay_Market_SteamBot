@@ -163,6 +163,7 @@ namespace SteamDigiSellerBot.Tests
                 userDBRepository: null,
                 digiSellerNetworkService: dns.Object,
                 gameSessionStatusLogRepository: null,
+                giftBanService: null,
                 logger: loggerMock.Object,
                 configuration: configMock.Object/*,
                 itemRepository: itemRepositoryMock.Object*/);
@@ -373,19 +374,24 @@ namespace SteamDigiSellerBot.Tests
             botSender = new Bot
             {
                 Id = 31,
-                UserName = "pannna",
+                UserName = "evosky123",
                 IsON = true,
-                Region = "JP",
-                SteamCurrencyId = 8,//RUB
+                Region = null,
+                SteamCurrencyId = null,//RUB
                 SendedGiftsSum = 0,
                 MaxSendedGiftsSum = 10000,
                 VacGames = new List<Bot.VacGame>(),
                 State = Database.Enums.BotState.active,
-                Password = "wr+NCEEAMHEKF5Rr;YA4VQozPc8JqB/9y;16wYVqtTHJHIjoD/nECvRA==",
-                ProxyStr = "hKdq0CYYLKXZye22K3Pb0KUnWBWdfofcO2uxDVjBKXYF963OdGM=;4HssdI9R31Zw5qO0;HG+JfpMKKRzYVXDzUuFf0g==",
-                MaFileStr = "RwD0wTTOYjp64gU5HSvIWYy1NpJn58IgeIKen2SJEu0z1kqrHafsQ/3RP8X0CBhDzGAr9GEJL6SXUWb8hgLEsu+m2f8p3Gt+soT0emB86cr964IPWWDd8KPrrczJoDI4/KOuqwZE4uBG6QXNAcfCc0U8ny/gtEyz6/dxJf9Zfy+mHqrEoIcZVCDK24zf7S3rVEGDap3SPsCfekfu90DWdgliKxeZ+DZ/mpgQgw8AiqzHTXKbEoO4vlDQpt/FineVKTTcrRPrJ/SYXwys5savDUTr/X9w6NEjLGMIjOmXVLELe/wkrUvu5+nt10/DNXBUxbZQsqFOUYhBnkUIewkgP7g84HqUvdgqdw7kzquLoWG/KndAiHTvV+tC+P0kOBluVh+qiijTdArnCC9ThNyNsrJiE1p9a5aPMNZYy4/WfS/SHCMNXwgrZjnVtp+WoQe6bpCaL91SlyRfrCHSNPWQkav+FXJjB5R5ZnIdrY1LKAApzENlWvndMOxDPKad4BKlm8ze7CRDy3RnxpNlHzkTEzmKC2fVZ8WVikT3XG7Go0yEZdufvL3sBxinDctfhecgG3wJNKK+tE/ZhlMeC2dVeuv3Fve0vI3mkqLazQQvjaJWcTmAKHrEfUyJ81NQ1TUuI4wVxhqpJoYUR61GUO9PSF8Zavu4i1MQNQvQYweoXEqR4wGwFz7UzUENtPimRwCps+Wz1t2zbV8qsgb0Ad4GyE1J7fBgZlI0NAUte201QBqy/8IcxSz2KyaR3KzQc5ux/KvYxrHpmJKi5HS9DFI//OZ+sn/VWdFILqh3cqO1PmpLR8Dv0sYKHygVJ40vCaDvsyfrECoqJczn8aizI/xhnTj67yfVm8c5VB4=;o8/cWCbNqPxC1RIb;4cTI6xs5U0vBmB4Aa61ZBQ==",
-                SteamCookiesStr = "giLBpX455QoXXHqRbUb+Wo4kkN8ZoX36l8ZVjVjPjk2bPkYrR8oWvbEuZKqEHhXXM7O+1Lq4Ch0TniIxn+LLsp+Yk7iyMA8bT1ijUxvfD9Imp59TmRKf6/zi1PlxZZ+c+wD3CiHdLUP6tKVloOuJcVNTgA7fokNnEI1pKEIO5PGv64PULAUkeyfgCYulvtt516u/rQEDj6FBQA039rRFre+V4ruRxg4gyLOpg1PG0PSUYHlQUxGdOSGpfMXS70kmOjohd78yqOpNU5msqxEZIi+BtdywUZ48jYL/vBTXGxGGh5aGPNZF058JpU2xkyNrT19JN/E4BLuhKqDpa6//zhJgZcOpjPHcYpJI0s2LX05oA7NxbjgavBhCl+xJ5P+fSPJPyhdW19XBh24MmTEOs5I5RLAxriUoSMhwBd89kvM0kvwQKVjwqZRj38ciwf1M/X82dCZPC84lhtcDpJ6M/PEL+SIowWuD3xDR5HMqRTJbR3eehB/tRSnt1zstIXnq4rscoQl8HOnSBpkh1ZxV5KKbPI806PIdzbRoC607V9lRKK3l6UtabKFspbewq4tY+/H4Ifpy2gGqs6CwiSSctCaxSiGEK0vP+cfc4nPr08DSyMUy5cQxEOlkBLpcWRTToP8C81w7DD3MwmFemp4xAKPLq+HtRIrlaiNKoWZmVO0Bc4+cCasNXxAok6dwxGEEzePiMjFQMU7ye4WjsuRHkxNYPjuE8oxxRoIIWGzL82xSFerOIwWjB3unhynNtQ9pT7enYglucdPw3shWqnPD9Imb3csSCUySq2z8BnnaG7ZAGOd4fGMRQUYIAzY3+G1rCKyh;RvukMGpN46y83KU5;bLPPKQISL3Xa+/gr6I2W7g=="
+                //Password = "D0zp4oCYSQuCt8qA;MgfrJlROZYw7fOTf;I73lDQM9PdUJvkyJnXP12A==",
+                //ProxyStr = "8VxNSQpoOzwhKSnqp2/WuULR4TgeIeDe5ZyLzU/uoFR7s7w=;oGVpQ6a+HDMrNHyX;+Nj1RXNrdE64DRXUmW2IpQ==",
+                //MaFileStr = "rsEw6pgVjv1LvaEwFhP1P6Mx29gorEdoqqWgGS/NtQS9C0CNcYPymM1+o4LHfnkzJzNiFmZajzINNdBZSC9gA8x5/LGukwiwafK+H66lFXa/sjZHlO54njzizrG9uTfNlRG0wDQZZ2AFR97R02T8+JWJzJjkV7n2D11zdeNBqpPYpxrAJ68xOuAv+G94/PZ+X2UsoUmn9O4qNmSLOsdR/Qo52gFERVmNU+BBlB5eU9nKSRZIgs72eF25CmcJvYkXq/p4cL92ODMBywcjnoVXOhraa3lptYFiWvNFMDeWVlF197SmN2UfXkzl41BAX8M3jZeSEKTbLScx5H9tnv2S1QJphe9SfDf/E/XRUnfI6vOCgGrMbbW+6myHuNLjsx2GYL+VvuszM1kzi9Tr00gg0RG98bf7/b1gs6aiAseR6G1i9SCn+MLqof1LOwtgoWfv4SsAIXFqBiTQU+nc/ICFXmXD6ZCJGtIwnmzPAWawKxiuv45ihFMCxMv4tJmT1lpw35R0dvKl+ZFULBFHrJScSx3Q1oXg+L+Vq4IMkmvNjS9KB3VemWMGqXeklU5LwQIg7L1DKdhANhc1ACP3nwF4KmNulEW4SlzwZGdUgH59nfxMYAVBucmSnlcUZh9xaX7qfL2nEGGORBotlj09edEg/BlEUQa6AMdVxOS66MdTHY8YOcyrFANOA/BJnkx7cvMHRhTpvq/2Aj8auuuNLO6+tIJ7UA6+LBaVF5gvNdNB/2h7HCyXtyGcyDao2inLlRS2CkwisLtHznlBRnOVQ+TGHJLfrGAYWK2JYfETKj/C55alrxsAzXBadtxh1n2S+gFTvTWVse53XEoOE53mBMSkX4mA4lPoiqpqQRRWi5LI5nDA8WxIH8twuPfk0dBdX1jPbBpyH/pYWgSDX61p1MpMsnxKvsUTFMv25CijRiM+Gccu1qVrsnQkk2DjJ7coAb2XWPpia8LZi9l0reb5lkykibWlXruScPJ6lJ6Mw/3jgue/7GcSlcs6wVZlkPLktg80zX1fOLyMk4ctbD3FB/WBY4B4eUtrnnazwKRWZr59GgFYanfiUUziSDGAlcJC1/rJxFYZDAz9/F3oDYftfJBi7iMArApMO0B4ceI3wJ68711vPnVqQhGEBa/NY0Ldlp/IgNWkMDTZKdstcscRKvyMIHzfnnHw3DwGglxTVRhkz6ztmByn6rz4Cl+HUrUhbGYAjr/6Z1vmy8bDZOiWNbgaJ6Y3OiQ5kFAUD8rVPHtflVzntu1KX7ZpRXWY5J3orl88yIDZU7AfgnB128uYch0YvEhB2HdOr/kT4u6Wgk/KjRtCcF6BslXRSE/iAGnEBGm0Ibkq+vEI5Um/4CyX0XtdWtpsfBmpqchX3FVRFsqBx4W0IrI4KU9tD+6FCMtWwJLoWM4jCr3sHBrh5UyVV9+jpOaBpllv+BS/xVrblslrHU1+cvhqrraZ5jI2wKxg/HP7s6tct0w1T16h1OjbpA0nmsUJae5RthOHr6StqSftoIV7Xx53NZrj+YvSzYCiD40qz/nDt5DuRHfgD9uOls6s1glI6YbZh4dtXo1rEIRUM8xfuJLw2y/KdXto0EjShImgpNjiMA39meLz98BuxzdA1b/1S5TJFnB4JOmld0t7aLWKZcOx/WIqHYEwim9vES8P6DwH/GiK9T8Fw35wI2FqF9wa3YH8Vm2eguBnAW6YBk+witCPcCUWx3R91wYCs6SG8cxm/T32vGcIvIxHwWolQmeQ2X5DL7x5L7kIAS0iLaLjZ+Ue6ew0JR2GlX/iHhrAmNwf95jWOKOOc8YsbNBK1rWDZmGVBDctsfcjToejBHxvhOIfMZTnH6+1o3QN5TtueRGO3xfGOfXCphrRWK3o3E8fQoFY+uFDsp/0K4OO5CKVIbnnMJOcw95QyOXn7HeysjdG6T1lYoyNKO0S+5chjlfaWVLEdLwtSCR23kwsqaHvEg/kezGgb3DZOreqL5kYDLiElh9xDE+QlxK1BzcNOq7zvuzjVtNHeDpp/UlV1s4ZfAcDKkHvrS+pS7miACFJuJVEpmGDlzQemuXF1drk9pl3o2S0ZkhmY91JKqzVa6MpsilKU/s+9pPIZw==;3IpVEHa9v0j20v2z;x3MU2x7xm2XJLV2xcfbNtQ==",
+                //SteamCookiesStr = "dNoHmBP97TMwGpXXTNr3+Ea4PuGempepXGfqPeyrnJgI5+b8JMYTVhgmz5kiaCEuJ8l54vR9Q0MMEQISq9seBthOwEZdPtSbmwLqH1cOEZzOHbTfWlphfJuS0gAch/01cxSkWexINPimELQV37uFhL7/CFY167OV/rHd4hgViHvSdbMn8k3MrKGLKdCPV1EXtWZw4ug1RJJGapc0JjFOPX2iOuJVacTTMIk5N4/2GnQHyPRgYn8i7dyznk4MV+exvgv6gvKiu+yjo5D8qMsZNpEBr2iTh2ILtCDZP//3dF1lZeq/ygu4VAkIMWOvGoK2CbOpn/By/yjdOPw1Z7Wh6HBSGCtCvtXJA1bN6xyERHvSHcmDrfV6XhMMT59ynQg6a+0MejqfmSq1XKClJ1NFvoqXzB0unZ4R/kNMgPVpp5Y9RBIogOUqGWeiY/0ORoz2LM6zuk0FClYfqEeVol5UtgWYZeC0oXu8R2W4/+UC8uIqN/54lUpU+LJLAo9k0PX83K0N+Yu4HbBDwFpIAYQVNOt1tPOmlI7bqi1qL0VlgvKYTPm3cuDBC8weM/hzpjp6HpDgiNKG7CHqUIqKoYHQkQzDTmfC0KZaFOq2VmNfHdJgJpFzF3zx4m8hW0psZVEnOnIL/6jWbG6+pUcMXXtX4nwLHm522rMgTolFxtMRtncRIT5r1/BGKvkcqg2nlzRsjHXsFgG3w+T7DQkH+Vic86h/w74H8+gN96CKY1I2TgpOZGgvOmnbaSi1C5xois+t1AnB5hlgGWyl8m2Rz8xxskkzDHyY0XQn0+x94C9nVZqlJn+aXXFbzzJNW8HmMyBaVBfl;2tfmf2zioadB9E4c;F4rXi4Kjq6UacNQSbPSrUQ=="
+                Password = CryptographyUtilityService.Encrypt("Asti1337228@!@!@11"),
+                ProxyStr = CryptographyUtilityService.Encrypt("176.53.135.150:64916:AwJyXm9A:hcnnkmGv"),
+                MaFileStr = CryptographyUtilityService.Encrypt("{\"error_sch\":0,\"shared_secret\":\"XtBjYK+6mqAjQxFuhg2pQhNLOn4=\",\"serial_number\":\"16238705925487546843\",\"revocation_code\":\"R43072\",\"uri\":\"otpauth://totp/Steam:evosky123?secret=L3IGGYFPXKNKAI2DCFXIMDNJIIJUWOT6&issuer=Steam\",\"server_time\":1728908259,\"account_name\":\"evosky123\",\"token_gid\":\"38ca53345033deff\",\"identity_secret\":\"IN/w2QxqpQEia++hsS4cT3U9gYg=\",\"secret_1\":\"WPYAyuNB8dHn8OjXE0S90tb0nms=\",\"status\":1,\"device_id\":\"android:f5e4cbfc-888b-44d0-bd29-bdc900aa0fa7\",\"fully_enrolled\":true,\"Session\":{\"proxy\":\"\",\"proxy_type\":0,\"SessionID\":\"c847535f0a7ccf7331153eaa\",\"steamRememberLogin\":null,\"SteamLoginSecure\":\"76561198328932763%7C%7CeyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTAyN18yNTMzNDUzOF85RjI5QyIsICJzdWIiOiAiNzY1NjExOTgzMjg5MzI3NjMiLCAiYXVkIjogWyAid2ViOmNvbW11bml0eSIgXSwgImV4cCI6IDE3Mjg5OTQ5MDMsICJuYmYiOiAxNzIwMjY4MjUyLCAiaWF0IjogMTcyODkwODI1MiwgImp0aSI6ICIxMDIzXzI1MzM0NTMxX0MwNEU0IiwgIm9hdCI6IDE3Mjg5MDgyNTIsICJydF9leHAiOiAxNzQ2OTEzODg0LCAicGVyIjogMCwgImlwX3N1YmplY3QiOiAiMTk1LjIwOC45NS4xODEiLCAiaXBfY29uZmlybWVyIjogIjE5NS4yMDguOTUuMTgxIiB9.teBXFBnB3xxRCKHW-FQ4_NiS7I8PxpqR1F5rrvqOXkDR3KyBaabtUtwFfvSX79MDR_Ro6WkiPxROKzbGbv2JAQ\",\"WebCookie\":null,\"OAuthToken\":\"eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInI6MTAyN18yNTMzNDUzOF85RjI5QyIsICJzdWIiOiAiNzY1NjExOTgzMjg5MzI3NjMiLCAiYXVkIjogWyAid2ViIiBdLCAiZXhwIjogMTcyODk5NTI1NywgIm5iZiI6IDE3MjAyNjgyNTIsICJpYXQiOiAxNzI4OTA4MjUyLCAianRpIjogIjEwMjNfMjUzMzQ1MzFfQzA0MUYiLCAib2F0IjogMTcyODkwODI1MiwgInJ0X2V4cCI6IDE3NDY5MTM4ODQsICJwZXIiOiAwLCAiaXBfc3ViamVjdCI6ICIxOTUuMjA4Ljk1LjE4MSIsICJpcF9jb25maXJtZXIiOiAiMTk1LjIwOC45NS4xODEiIH0.jUYV1kUR8ks7wZwt-Y-MBnaY-uJq-vUrwEZ_TX8rPtcg-gbdc5NiUB5Hrb0kVLE693QRPvjqtGPOE5v8uCoXBw\",\"SteamID\":76561198328932763}}"),
+
             };
+            DebugLog.Enabled = true;
             var sb = new SuperBot(botSender);
 
             var (appId, subId) = ("252490", "244390");
@@ -430,6 +436,11 @@ namespace SteamDigiSellerBot.Tests
                 {
                     Id = 5, Value = 100.87M, Code = "RUB", CountryCode = "RU", Name = "Рубли", Position = 1, SteamId = 5,
                     SteamSymbol = "руб."
+                },
+                new Currency()
+                {
+                    Id = 3, Value = 7.26M, Code = "CNY", CountryCode = "CN", Name = "Юани", Position = 1, SteamId = 23,
+                    SteamSymbol = "¥"
                 },
             },
             LastUpdateDateTime = DateTime.UtcNow
@@ -529,7 +540,7 @@ namespace SteamDigiSellerBot.Tests
             {
                 context = new()
                 {
-                    country_code = "UA",
+                    country_code = "CN",
                     
                 },
                 data_request = new StoreBrowseItemDataRequest()
@@ -543,7 +554,7 @@ namespace SteamDigiSellerBot.Tests
             };
             r.ids.Add(new StoreItemID()
             {
-                appid = 2555420,
+                appid = 2694490,
 
             });
             try

@@ -46,6 +46,7 @@ export const state = entity({
   itemsMode: iMode[1],
   itemsLoading: true,
   bulkEditPercentModalIsOpen: false,
+  bulkEditPriceBasisModalIsOpen: false,
   changeItemBulkResponse: { loading: false, loadingItemInfo: false },
   digisellerEditModalIsOpen: false,
   changePasswordModalIsOpen: false,
@@ -112,7 +113,6 @@ export const initBotsPage = async () => {
   console.log("params", params);
   let botId = Number(params.id || 0);
   if (botId) {
-    const { bots } = state.get();
     let bot = bots.find((b) => b.id === botId);
     //console.log(botId, bots, bot);
     if (bot) {
@@ -464,6 +464,25 @@ export const apiBotSetIsOn = async (id, isOn) => {
   //await apiFetchBots();
 };
 
+export const apiBotSetIsReserve = async (id, isreserve) => {
+  let res = await fetch(`/bots/setisreserve`, {
+    method: "PUT",
+    body: mapToFormData({
+      botId: id,
+      isReserve: isreserve,
+    }),
+  });
+  if (res.ok) {
+    state.set((value) => {
+      return {
+        ...value,
+        bots: value.bots.map((bot) =>
+          bot.id === id ? { ...bot, isReserve: isreserve } : bot)
+      };
+    });
+  }
+};
+
 export const apiSaveBotRegionSettings = async (item) => {
   setStateProp("saveBotRegionSetResponse", {
     loading: true,
@@ -557,12 +576,21 @@ export const setItemInfoTemplates = (itemInfoTemplates) => {
 };
 
 export const toggleBulkEditPercentModal = (isOpen) => {
-  state.set((value) => {
+    state.set((value) => {
     return {
       ...value,
       bulkEditPercentModalIsOpen: isOpen,
     };
   });
+};
+
+export const toggleBulkEditPriceBasisModal = (isOpen) => {
+    state.set((value) => {
+        return {
+            ...value,
+            bulkEditPriceBasisModalIsOpen: isOpen,
+        };
+    });
 };
 
 export const toggleItemMainInfoModal = (isOpen) => {
@@ -741,12 +769,27 @@ export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, 
       SteamPercent,
       IncreaseDecreaseOperator,
       IncreaseDecreasePercent,
-      Ids,
+      Ids
     }),
   });
   setStateProp("changeItemBulkResponse", { loading: false });
   await apiFetchItems();
 };
+
+export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
+    setItemsLoading(true);
+    setStateProp("changeItemBulkResponse", { loading: true });
+    let res = await fetch(`/items/bulk/pricebasis`, {
+        method: "POST",
+        body: mapToFormData({
+            SteamCurrencyId,
+            Ids
+        }),
+    });
+    setStateProp("changeItemBulkResponse", { loading: false });
+    await apiFetchItems();
+};
+
 
 export const apiChangeDigisellerData = async (data) => {
   let res = await fetch(`/user/edit/digiseller`, {
@@ -809,6 +852,7 @@ export const apiGetCurrencies = async () => {
       code: c.code,
       steamId: c.steamId,
       steamSymbol: c.steamSymbol,
+      steamValue: c.value
     };
   });
 
@@ -1113,6 +1157,66 @@ export const apiTagPromoReplacementValues = async (data) => {
   }
 
   let res = await fetch(`/tagpromoreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagInfoAppsReplacementValues = async () => {
+  let res = await fetch(`/taginfoappsreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagInfoAppsReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/taginfoappsreplacementvalue`, options);
+  if (res.ok) {
+    return true;
+  }
+
+  return false;
+};
+
+export const apiFetchTagInfoDlcReplacementValues = async () => {
+  let res = await fetch(`/taginfodlcreplacementvalue`);
+
+  if (res.ok) {
+    const json = await res.json();
+    return json;
+  }
+
+  return null;
+};
+
+export const apiTagInfoDlcReplacementValues = async (data) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Content-Length", JSON.stringify(data).length);
+
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data)
+  }
+
+  let res = await fetch(`/taginfodlcreplacementvalue`, options);
   if (res.ok) {
     return true;
   }

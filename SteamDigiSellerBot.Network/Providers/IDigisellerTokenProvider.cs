@@ -9,7 +9,12 @@ using xNet;
 
 namespace SteamDigiSellerBot.Network.Providers
 {
-    public sealed class DigisellerTokenProvider
+    public interface IDigisellerTokenProvider
+    {
+        Task<string> GetDigisellerTokenAsync(string aspNetUserId, CancellationToken cancellationToken = default);
+    }
+
+    public sealed class DigisellerTokenProvider: IDigisellerTokenProvider
     {
         private const string ApplicationJsonContentType = "application/json";
 

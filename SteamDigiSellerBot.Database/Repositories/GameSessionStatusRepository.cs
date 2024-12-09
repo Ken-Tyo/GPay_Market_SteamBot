@@ -51,7 +51,9 @@ namespace SteamDigiSellerBot.Database.Repositories
             new GameSessionStatus{ StatusId = 19, Name = "Очередь", Color = "#DDE11C" },
             new GameSessionStatus{ StatusId = 20, Name = "Смена бота", Color = "#DDE11C" },
             new GameSessionStatus{ StatusId = 21, Name = "Профиль подтвержден", Color = "#DDE11C", Description = "Ожидается выбора бота и отправки заявки в друзья" },
-            new GameSessionStatus{ StatusId = 22, Name = "Временный инвайт бан", Color = "#D3AE29" }
+            new GameSessionStatus{ StatusId = 22, Name = "Временный инвайт бан", Color = "#D3AE29" },
+            new GameSessionStatus{ StatusId = 23, Name = "Ошибка (Нет игры)", Color = "#E13F29" },
+            new GameSessionStatus{ StatusId = 24, Name = "Лимит бота", Color = "#E13F29"}
         };
 
         private async Task<List<GameSessionStatus>> InitGameSessionStatuses()

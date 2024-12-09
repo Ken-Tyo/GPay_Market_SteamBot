@@ -258,6 +258,16 @@ namespace SteamDigiSellerBot.Services.Implementation
                             var ur = UpdateStage(gsId, GameSessionStage.Done).GetAwaiter().GetResult();
 
                         }
+
+                        if (!sf.BlockOrder)
+                        {
+                            if (GSSCommon.SendGameGSQ.BanOnAdd.Contains(gsId))
+                                GSSCommon.SendGameGSQ.BanOnAdd.Remove(gsId);
+                            if (GSSCommon.AddToFriendGSQ.BanOnAdd.Contains(gsId))
+                                GSSCommon.AddToFriendGSQ.BanOnAdd.Remove(gsId);
+                            if (GSSCommon.CheckFriendGSQ.BanOnAdd.Contains(gsId))
+                                GSSCommon.CheckFriendGSQ.BanOnAdd.Remove(gsId);
+                        }
                     }
                     else if (res is Sended)
                     {

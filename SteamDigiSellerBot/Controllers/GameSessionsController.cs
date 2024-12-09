@@ -82,7 +82,7 @@ namespace SteamDigiSellerBot.Controllers
             this.db = db;
         }
 
-        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/list"), ValidationActionFilter]
+        [Authorize, HttpPost, Route("gamesessions/list"), ValidationActionFilter]
         public async Task<IActionResult> List(GameSessionFilter filter)
         {
             var (gameSessions, total) = await _gameSessionRepository.Filter(
@@ -112,7 +112,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(new { list = mapped, total = total });
         }
 
-        [Authorize (Roles = "Admin"), HttpGet, Route("gamesessions/{id}"), ValidationActionFilter]
+        [Authorize, HttpGet, Route("gamesessions/{id}"), ValidationActionFilter]
         public async Task<IActionResult> GetGameSession(int id)
         {
             var gameSessions = await _gameSessionRepository.GetByIdAsync(db, id);
@@ -134,7 +134,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok(await _gameSessionStatusRepository.GetGameSessionStatuses());
         }
 
-        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/setstatus")]
+        [Authorize, HttpPost, Route("gamesessions/setstatus")]
         public async Task<IActionResult> SetGameSessionStatus(SetGameSesStatusRequest req)
         {
             GameSession gs = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
@@ -162,7 +162,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/reset")]
+        [Authorize, HttpPost, Route("gamesessions/reset")]
         public async Task<IActionResult> ResetGameSession(ResetGameSessionRequest req)
         {
             GameSession gs = await _gameSessionRepository.GetForReset(db, req.GameSessionId);
@@ -200,6 +200,7 @@ namespace SteamDigiSellerBot.Controllers
 
             gs.Bot = null;
             gs.BotSwitchList = new();
+            gs.AccountSwitchList = new();
             gs.SteamProfileUrl = null;
             gs.StatusId = GameSessionStatusEnum.ProfileNoSet;//Не указан профиль
             gs.SteamContactValue = null;
@@ -215,7 +216,7 @@ namespace SteamDigiSellerBot.Controllers
             {
                 InsertDate = DateTimeOffset.UtcNow,
                 StatusId = gs.StatusId,
-                Value = new ValueJson { message = "Сброс заказа" }
+                Value = new ValueJson { message = GameSessionService.ResetString }
             });
 
             await _gameSessionRepository.EditAsync(db,gs);
@@ -224,7 +225,9 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [Authorize (Roles = "Admin"), HttpPost, Route("gamesessions/comment")]
+
+
+        [Authorize, HttpPost, Route("gamesessions/comment")]
         public async Task<IActionResult> Comment(AddCommentGameSessionRequest req)
         {
             GameSession gameSession = await _gameSessionRepository.GetByIdAsync(db, req.GameSessionId);
@@ -237,7 +240,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
-        [Authorize (Roles = "Admin"), HttpPost, Route("gamesession"), ValidationActionFilter]
+        [Authorize, HttpPost, Route("gamesession"), ValidationActionFilter]
         public async Task<IActionResult> Gamesession(CreateGameSessionRequest req)
         {
             var item = (await _itemRepository
@@ -331,6 +334,10 @@ namespace SteamDigiSellerBot.Controllers
             if (!_gameSessionManager.ConfirmProfile(gs.Id))
                 return BadRequest();
 
+            if (!(gs.Stage is GameSessionStage.New or GameSessionStage.WaitConfirmation))
+                return BadRequest();
+
+
             gs.Stage = GameSessionStage.AddToFriend;
             gs.StatusId = GameSessionStatusEnum.OrderConfirmed;
             gs.AutoSendInvitationTime = null;
@@ -367,6 +374,29 @@ namespace SteamDigiSellerBot.Controllers
             }
 
             var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
+            if (gsi.CantSwitchAccount)
+            {
+                ModelState.AddModelError("", "Превышено количество смены аккаунтов в час. Ожидайте или обратитесь в поддержку.");
+                return this.CreateBadRequest();
+            }
+             
+            return Ok(gsi);
+        }
+
+        [HttpPost, Route("gamesession/resetbot"), ValidationActionFilter]
+        public async Task<IActionResult> ResetBot(ResetProfileUrlReq req)
+        {
+            if (!ModelState.IsValid)
+                return this.CreateBadRequest();
+
+            var gs = await _gameSessionService.ChangeBot(db, req.Uniquecode);
+            if (gs == null)
+            {
+                ModelState.AddModelError("", "такой заказ не найден");
+                return this.CreateBadRequest();
+            }
+
+            var gsi = _mapper.Map<GameSession, GameSessionInfo>(gs);
 
             return Ok(gsi);
         }
@@ -386,13 +416,14 @@ namespace SteamDigiSellerBot.Controllers
 
             if (gs.StatusId != GameSessionStatusEnum.RequestReject && 
                 gs.StatusId != GameSessionStatusEnum.GameIsExists &&
-                gs.StatusId != GameSessionStatusEnum.InvitationBlocked)
+                gs.StatusId != GameSessionStatusEnum.InvitationBlocked &&
+                gs.StatusId != GameSessionStatusEnum.GameRequired)
             {
                 ModelState.AddModelError("", "не корректный статус заказа");
                 return this.CreateBadRequest();
             }
 
-            if (gs.StatusId == GameSessionStatusEnum.GameIsExists)
+            if (gs.StatusId is GameSessionStatusEnum.GameIsExists or GameSessionStatusEnum.GameRequired)
             {
                 gs.GameExistsRepeatSendCount++;
             }
@@ -401,7 +432,7 @@ namespace SteamDigiSellerBot.Controllers
             gs.Stage = GameSessionStage.CheckFriend;
             await _gameSessionRepository.EditAsync(db, gs);
             _gameSessionManager.CheckFriend(gs.Id);
-
+            await _wsNotifSender.GameSessionChangedAsync(gs.UniqueCode);
             return Ok();
         }
     }

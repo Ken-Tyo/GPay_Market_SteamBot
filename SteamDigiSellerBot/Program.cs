@@ -55,7 +55,7 @@ namespace SteamDigiSellerBot
                    restrictedToMinimumLevel: LogEventLevel.Error)
                 .WriteTo.Logger(lc => lc
                     .Filter
-                    .ByIncludingOnly(Matching.FromSource<UpdateItemsInfoService>())
+                    .ByIncludingOnly(Matching.FromSource<IUpdateItemsInfoService>())
                     .WriteTo
                     .File(
                        System.IO.Path.Combine("Logs", "update_item_descriptions.txt"),

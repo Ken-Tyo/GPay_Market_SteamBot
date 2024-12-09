@@ -17,8 +17,15 @@
     <ProjectReference Include="..\SteamDigiSellerBot.Database\SteamDigiSellerBot.Database.csproj" />
     <ProjectReference Include="..\SteamDigiSellerBot.Network\SteamDigiSellerBot.Network.csproj" />
     <ProjectReference Include="..\SteamDigiSellerBot.Utilities\SteamDigiSellerBot.Utilities.csproj" />
+    <ProjectReference Include="..\SteamDigiSellerBot.Protos\SteamDigiSellerBot.Protos.csproj" >
+	    <Aliases>OverrideProto</Aliases>
+    </ProjectReference>
   </ItemGroup>
-
+	<ItemGroup>
+		<Reference Include="SteamKit2">
+			<HintPath>..\SteamKit2.dll</HintPath>
+		</Reference>
+	</ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>SteamDigiSellerBot.Tests</_Parameter1>

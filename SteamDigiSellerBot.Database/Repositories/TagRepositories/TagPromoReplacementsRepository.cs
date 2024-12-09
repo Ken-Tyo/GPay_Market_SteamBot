@@ -79,7 +79,7 @@ namespace SteamDigiSellerBot.Database.Repositories.TagRepositories
         public async Task<IReadOnlyList<TagPromoReplacement>> GetAsync(string userId, CancellationToken cancellationToken) =>
             await _databaseContext
                 .TagPromoReplacements
-                .Include(x => x.TagPromoReplacementValues)
+                .Include(x => x.ReplacementValues)
                 .ToListAsync(cancellationToken);
     }
 }

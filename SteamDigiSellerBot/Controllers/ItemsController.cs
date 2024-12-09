@@ -44,6 +44,7 @@ namespace SteamDigiSellerBot.Controllers
         private readonly DatabaseContext db;
         private readonly IGameRepository _gameRepository;
         private readonly IItemBulkUpdateService _itemBulkUpdateService;
+        private readonly IPriceBasisBulkUpdateService _priceBasisBulkUpdateService;
 
         public ItemsController(
             IItemRepository itemRepository, 
@@ -55,7 +56,8 @@ namespace SteamDigiSellerBot.Controllers
             ILogger<ItemsController> logger,
             IDigiSellerNetworkService digiSellerNetwork,
             DatabaseContext db,
-            IItemBulkUpdateService itemBulkUpdateService, 
+            IItemBulkUpdateService itemBulkUpdateService,
+            IPriceBasisBulkUpdateService priceBasisBulkUpdateService,
             IGameRepository gameRepository)
         {
             _itemRepository = itemRepository;
@@ -70,6 +72,7 @@ namespace SteamDigiSellerBot.Controllers
             this.db = db;
 
             _itemBulkUpdateService = itemBulkUpdateService ?? throw new ArgumentNullException(nameof(itemBulkUpdateService));
+            _priceBasisBulkUpdateService = priceBasisBulkUpdateService ?? throw new ArgumentNullException(nameof(priceBasisBulkUpdateService));
             _gameRepository = gameRepository;
 
             _logger = logger;
@@ -306,6 +309,17 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok();
         }
+
+        [HttpPost, Route("items/bulk/pricebasis"), ValidationActionFilter]
+        public async Task<IActionResult> BulkPriceBasisAction(BulkPriceBasisRequest  request, CancellationToken cancellationToken)
+        {
+            User user = await _userManager.GetUserAsync(User);
+            await _priceBasisBulkUpdateService.UpdateAsync(
+                new PriceBasisBulkUpdateCommand(request.SteamCurrencyId, request.Ids, user), 
+                cancellationToken);
+            return Ok();
+        }
+
 
         [HttpGet, Route("items/bulk/reupdate"), ValidationActionFilter]
         public async Task<IActionResult> BulkReupdateAction()
