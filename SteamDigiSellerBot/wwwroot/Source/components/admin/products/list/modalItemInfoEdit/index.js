@@ -14,7 +14,7 @@ import {
   apiFetchTagPromoReplacementValues,
   apiGetUpdateItemInfoJobStatistics
 } from '../../../../../containers/admin/state';
-import ModalTagsView from './ModalTagsView'
+import ModalTagsView from './modalTagsView'
 import Textarea from '../../../../shared/textarea'
 
 const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplates }) => {
