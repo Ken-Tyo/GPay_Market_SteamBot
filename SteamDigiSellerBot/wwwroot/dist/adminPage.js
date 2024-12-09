@@ -26607,9 +26607,6 @@ var listCheckBox = function listCheckBox(_ref) {
   }, [value]);
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
-    style: {
-      userSelect: 'none'
-    },
     onClick: function onClick(event) {
       var newVal = !checked;
       setChecked(newVal);
@@ -26818,7 +26815,7 @@ var SwitchBtn = function SwitchBtn(_ref) {
 /* harmony default export */ const shared_switch = (SwitchBtn);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const list_styles = ({"wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","loader":"styles__loader--qLq6S","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","massDescriptionText":"styles__massDescriptionText--nZkry","subMenu":"styles__subMenu--BvgsJ","subMenuItem":"styles__subMenuItem--lEV1I","subMenuVisible":"styles__subMenuVisible--aZuZk","subMenuHidden":"styles__subMenuHidden--LODMB","errPopover":"styles__errPopover--lUtCS"});
+/* harmony default export */ const list_styles = ({"wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","loader":"styles__loader--qLq6S","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","massDescriptionText":"styles__massDescriptionText--nZkry","subMenu":"styles__subMenu--BvgsJ","subMenuItem":"styles__subMenuItem--lEV1I","massDescriptionBlockSubMenu":"styles__massDescriptionBlockSubMenu--HKP7Y","subMenuVisible":"styles__subMenuVisible--aZuZk","subMenuHidden":"styles__subMenuHidden--LODMB","errPopover":"styles__errPopover--lUtCS"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/trash.svg
 const trash_namespaceObject = __webpack_require__.p + "a4c9a89c8403eb3d97c3.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pen.svg
@@ -46382,9 +46379,6 @@ var products = function products() {
   };
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
-    style: {
-      userSelect: 'none'
-    },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
       data: _toConsumableArray(sortedItems),
@@ -46713,7 +46707,7 @@ var products = function products() {
               toggleMassDescriptionSubMenu();
             }
           }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: list_styles.subMenu + ' ' + subMenuVisibility,
+            className: list_styles.subMenu + ' ' + list_styles.massDescriptionBlockSubMenu + ' ' + subMenuVisibility,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: list_styles.subMenuItem,
               onClick: function onClick() {
