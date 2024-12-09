@@ -34,6 +34,7 @@ namespace SteamDigiSellerBot.Database.Contexts
 
         public DbSet<GameSessionStatus> GameSessionStatuses { get; set; }
         public DbSet<UserDB> DbUsers { get; set; }
+        public DbSet<Seller> Sellers { get; set; }
         public DbSet<SteamCountryCode> SteamCountryCodes { get; set; }
         //public DbSet<BotTransaction> BotTransactions { get; set; }
         public DbSet<BotRegionSetting> BotRegionSettings { get; set; }
@@ -63,11 +64,12 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<TagInfoDlcReplacementValue> TagInfoDlcReplacementValues { get; set; }
         #endregion
 
-
+    
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
         {
             Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
