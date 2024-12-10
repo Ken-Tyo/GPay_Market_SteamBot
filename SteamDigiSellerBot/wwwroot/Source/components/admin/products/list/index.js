@@ -306,8 +306,39 @@ const products = () => {
     return "Подгружаем товары";
   }
 
+  // Listen mouse if (Shift-click) then avoid user-select: add(css.disableSelect) otherwise - allow
+  useEffect(() => {
+      const selectableArea = document.getElementById('productList');
+
+      if (selectableArea) {
+            let mtimer;
+            selectableArea.addEventListener('mousedown', (event) => {
+                if (event.shiftKey || event.detail > 1) {
+                    selectableArea.classList.add(css.disableSelect);
+                } else {
+                    // Init timer, after 500 ms (long click) - enable to select 
+                    const isDisableSelect = selectableArea.classList.contains(css.disableSelect);
+                    if (isDisableSelect) {
+                        mtimer = setTimeout(() => {
+                            selectableArea.classList.remove(css.disableSelect);
+                        }, 500);
+                    }
+                }
+            });
+            // mouseup, mouseleave - reset timer and enable to select
+            selectableArea.addEventListener('mouseup', () => {
+                clearTimeout(mtimer);
+                selectableArea.classList.remove(css.disableSelect);
+            });
+            selectableArea.addEventListener('mouseleave', () => {
+                clearTimeout(mtimer);
+                selectableArea.classList.remove(css.disableSelect);
+            });
+        }
+    }, []); 
+
   return (
-      <div className={css.wrapper} >
+      <div className={css.wrapper}  id = "productList" >
       <List
         headers={Object.values(headers)}
         data={[...sortedItems]}
@@ -396,7 +427,7 @@ const products = () => {
                                 newLastId = i.id;
                             } else {
                                 arrNew =  selectedItems.filter((id) => id != i.id);
-                                if (arrNew.length == 1) newLastId = newArr[0];
+                                if (arrNew.length == 1) newLastId = arrNew[0];
                             }
                             setLastSelectedId(newLastId);
                         }
