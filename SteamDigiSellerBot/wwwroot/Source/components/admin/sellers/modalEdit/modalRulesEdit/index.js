@@ -41,7 +41,7 @@ const ModalRulesEdit = ({
         width={62}
         height={28}
         className={css.percentValue}
-        symbolStyle={{ padding: '0 5px 0 0', minWidth: 'auto', fontSize: '14px' }} />)
+        symbolStyle={{ padding: '0 10px 0 0', minWidth: 'auto', fontSize: '14px' }} />)
     }
 
     return null;
@@ -58,7 +58,7 @@ const ModalRulesEdit = ({
           <Switch
             value={value}
             onChange={(val) => handleSwitch(key, val)}
-            style={{ transform: 'scale(0.75)', marginLeft: '8px' }}
+            style={{ transform: 'scale(0.75)' }}
           />
         </div>
       </div>

@@ -63870,9 +63870,15 @@ var bots_bots = function bots() {
   });
 };
 /* harmony default export */ const admin_bots = (bots_bots);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/sellers/modalEdit/switch/colors.js
+var Colors = {
+  ORANGE: 'orange',
+  GREEN: 'green'
+};
+/* harmony default export */ const colors = (Colors);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/sellers/modalEdit/switch/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalEdit_switch_styles = ({"wrapper":"styles__wrapper--VpWrE","track":"styles__track--pKDm0","thumb":"styles__thumb--u44Cn","checked":"styles__checked--RpQD7","awaition":"styles__awaition--MTyz9"});
+/* harmony default export */ const modalEdit_switch_styles = ({"wrapper":"styles__wrapper--VpWrE","track":"styles__track--pKDm0","thumb":"styles__thumb--u44Cn","checked":"styles__checked--RpQD7","green":"styles__green--Kj376","orange":"styles__orange--jxsL0","awaition":"styles__awaition--MTyz9"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/sellers/modalEdit/switch/index.js
 function modalEdit_switch_typeof(o) { "@babel/helpers - typeof"; return modalEdit_switch_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalEdit_switch_typeof(o); }
 function modalEdit_switch_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -63889,11 +63895,13 @@ function modalEdit_switch_arrayWithHoles(arr) { if (Array.isArray(arr)) return a
 
 
 
+
 var switch_SwitchBtn = function SwitchBtn(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
     style = _ref.style,
-    lastSaveTime = _ref.lastSaveTime;
+    lastSaveTime = _ref.lastSaveTime,
+    color = _ref.color;
   var _React$useState = react.useState(value),
     _React$useState2 = modalEdit_switch_slicedToArray(_React$useState, 2),
     checked = _React$useState2[0],
@@ -63932,6 +63940,12 @@ var switch_SwitchBtn = function SwitchBtn(_ref) {
     }; // Cleanup interval on component unmount
   }, [lastSaveTime]); // Depend on lastSaveTime and value
 
+  var getColorClass = function getColorClass(color) {
+    if (color === colors.ORANGE) {
+      return modalEdit_switch_styles.orange;
+    }
+    return modalEdit_switch_styles.green;
+  };
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: modalEdit_switch_styles.wrapper,
     style: modalEdit_switch_objectSpread({}, style),
@@ -63939,13 +63953,13 @@ var switch_SwitchBtn = function SwitchBtn(_ref) {
       className: modalEdit_switch_styles.awaition,
       children: timer > 9 ? "0:".concat(timer) : "0:0".concat(timer)
     }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: modalEdit_switch_styles.track + ' ' + (checked ? modalEdit_switch_styles.checked : ''),
+      className: modalEdit_switch_styles.track + ' ' + (checked ? modalEdit_switch_styles.checked : '') + ' ' + getColorClass(color),
       onClick: function onClick() {
         if (onChange) onChange(!checked);
         setChecked(!checked);
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: modalEdit_switch_styles.thumb + ' ' + (checked ? modalEdit_switch_styles.checked : '')
+        className: modalEdit_switch_styles.thumb + ' ' + (checked ? modalEdit_switch_styles.checked : '') + ' ' + getColorClass(color)
       })
     })
   });
@@ -64238,7 +64252,7 @@ var ModalRulesEdit = function ModalRulesEdit(_ref) {
         height: 28,
         className: modalRulesEdit_styles.percentValue,
         symbolStyle: {
-          padding: '0 5px 0 0',
+          padding: '0 10px 0 0',
           minWidth: 'auto',
           fontSize: '14px'
         }
@@ -64260,8 +64274,7 @@ var ModalRulesEdit = function ModalRulesEdit(_ref) {
             return handleSwitch(key, val);
           },
           style: {
-            transform: 'scale(0.75)',
-            marginLeft: '8px'
+            transform: 'scale(0.75)'
           }
         })]
       })]
@@ -64415,6 +64428,7 @@ function sellers_modalEdit_unsupportedIterableToArray(o, minLen) { if (!o) retur
 function sellers_modalEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function sellers_modalEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function sellers_modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -64625,7 +64639,8 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
             style: {
               transform: 'scale(0.75)',
               margin: '0 auto'
-            }
+            },
+            color: colors.ORANGE
           })
         })]
       });
@@ -64887,7 +64902,7 @@ var SellersList = function SellersList(user) {
     if (item.blocked) {
       return sellers_list_styles.blocked;
     }
-    if (item.rentDays < 5) {
+    if (item.rentDays < 5 && item.rentDays != undefined && item.rentDays != null) {
       return sellers_list_styles.expired;
     }
     return sellers_list_styles.active;
@@ -64896,7 +64911,7 @@ var SellersList = function SellersList(user) {
     if (item.blocked) {
       return '• заблокирован';
     }
-    if (item.rentDays < 5) {
+    if (item.rentDays < 5 && item.rentDays != undefined && item.rentDays != null) {
       return '• кончилась аренда';
     }
     return '• активен';
@@ -65908,6 +65923,8 @@ const robot_namespaceObject = __webpack_require__.p + "d6bbd981ed2bd9d2db67.svg"
 const cart_namespaceObject = __webpack_require__.p + "3c68476424236c8d82e2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/settings.svg
 const settings_namespaceObject = __webpack_require__.p + "63b1b618af954e7db694.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/sellers.svg
+const icons_sellers_namespaceObject = __webpack_require__.p + "e11bf8562558318caaeb.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowLeft.svg
 const arrowLeft_namespaceObject = __webpack_require__.p + "96780ec48f6c1b85e039.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowRight.svg
@@ -67392,6 +67409,7 @@ function leftMenu_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var leftMenu = function leftMenu() {
   var _state$use = state.use(),
     digisellerEditModalIsOpen = _state$use.digisellerEditModalIsOpen,
@@ -67453,7 +67471,7 @@ var leftMenu = function leftMenu() {
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
         className: leftMenu_styles.menuSection,
-        height: 333,
+        height: 277,
         width: 254,
         children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: leftMenu_styles.menuList,
@@ -67758,7 +67776,7 @@ var getMenuArrData = function getMenuArrData(setIsEditSellerModalOpen) {
     }
   }, {
     name: 'Пользователи',
-    icon: cart_namespaceObject,
+    icon: icons_sellers_namespaceObject,
     subMenu: [{
       name: 'Продавцы',
       url: '/admin/sellers'

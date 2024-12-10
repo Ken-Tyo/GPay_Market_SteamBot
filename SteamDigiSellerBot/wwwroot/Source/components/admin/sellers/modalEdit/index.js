@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '../../../shared/button';
 import ModalBase from '../../../shared/modalBase';
 import Switch from './switch';
+import Colors from './switch/colors'
 import ModalRulesEdit from './modalRulesEdit'
 import TextBox from './textbox';
 import TextSwitch from './textSwitch';
@@ -141,6 +142,7 @@ const ModalEdit = ({
             value={item.blocked}
             onChange={(val) => item.blocked = !item.blocked}
             style={{ transform: 'scale(0.75)', margin: '0 auto' }}
+            color={Colors.ORANGE}
           />
         </div>
       </div>

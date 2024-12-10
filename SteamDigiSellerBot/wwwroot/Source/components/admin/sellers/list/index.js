@@ -79,7 +79,7 @@ const SellersList = (user) => {
       return css.blocked 
     }
 
-    if (item.rentDays < 5) {
+    if (item.rentDays < 5 && item.rentDays != undefined && item.rentDays != null) {
       return css.expired
     }
 
@@ -91,7 +91,7 @@ const SellersList = (user) => {
       return '• заблокирован'
     }
 
-    if (item.rentDays < 5) {
+    if (item.rentDays < 5 && item.rentDays != undefined && item.rentDays != null) {
       return '• кончилась аренда'
     }
 
