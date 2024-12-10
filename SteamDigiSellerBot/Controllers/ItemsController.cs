@@ -278,17 +278,18 @@ namespace SteamDigiSellerBot.Controllers
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map(model, item);
+                editedItem.InSetPriceProcess = DateTime.UtcNow.AddSeconds(30);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
-                await _itemNetworkService.SetPrices(
+                _itemNetworkService.SetPrices(
                     item.AppId,
                     new List<Item>() { item },
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
 
-                return Ok();
+                return Ok(editedItem.InSetPriceProcess);
             }
 
             return BadRequest();

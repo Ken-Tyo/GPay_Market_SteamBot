@@ -9,6 +9,7 @@ namespace SteamDigiSellerBot.Models.Items
     {
         public int Id { get; set; }
 
+        public bool InSetPriceProcess { get; set; }
         public DateTime AddedDateTime { get; set; }
         public decimal CurrentSteamPrice { get; set; }
         public decimal CurrentSteamPriceRub { get; set; }

@@ -10,6 +10,8 @@ namespace SteamDigiSellerBot.Database.Entities
     public class Item : Game
     {
         public bool Active { get; set; }
+
+        public DateTime? InSetPriceProcess { get; set; }
         public bool IsDeleted { get; set; }
 
         public decimal CurrentDigiSellerPrice { get; set; }

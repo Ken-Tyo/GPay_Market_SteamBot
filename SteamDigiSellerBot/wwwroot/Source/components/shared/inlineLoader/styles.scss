@@ -7,38 +7,54 @@ body {
   margin: 0;
 }
 
+
 .loaderContainer {
-  width: 1255px;
-  height: 10px;
+  min-width: 100px;
+
+  min-height: 1em;
   background-color: #555;
   border-radius: 5px;
-  overflow: hidden;
-  position: relative;
+  align-self:center;
+  min-height: 0.1em;
 }
 
+// .loaderBar {
+//   width: 100%;
+//   height: 100%;
+//   background-color: #BB75DC;
+//   border-radius: 5px;
+//   animation: load 2s infinite;
+
+//   min-height: 1em;
+// }
+
+// @keyframes load {
+//   0% {
+//     opacity: 0;
+//     transform: translateX(0%);
+//   }
+//   70% {
+//     opacity: 1;
+//     transform: translateX(70%);
+//   }
+//   100% {
+//     opacity: 0;
+//     transform: translateX(100%);
+//   }
+// }
+
+
+/* HTML: <div class="loader"></div> */
 .loaderBar {
-  width: 20%;
-  height: 100%;
-  background-color: #BB75DC;
-  border-radius: 5px;
-  animation: load 2s infinite;
+  min-width: 100px;
+  width: 80%;
+  height: 0.3em;
+  background: 
+    linear-gradient(#BB75DC 0 0) left -40px top 0/40px 20px,
+    linear-gradient(#555 0 0) center/100% 50%; 
+  background-repeat: no-repeat;
+  animation: l5 1s infinite linear;
 }
-
-@keyframes load {
-  0% {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-  30% {
-    opacity: 1;
-    transform: translateX(300px);
-  }
-  55% {
-    opacity: 0.8;
-    transform: translateX(600px);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(1200px);
-  }
+@keyframes l5 {
+  100% {background-position: right -40px top 0,center}
 }

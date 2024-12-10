@@ -1,5 +1,8 @@
 @import '/wwwroot/Source/containers/admin/library';
-
+.loader{
+    width: 100%;
+    height: 100%;
+}
 .wrapper {
     //margin-top: 30px;
     height: 100%;
@@ -27,7 +30,7 @@
         .game {
             color: $white-3;
             width: 120px;
-
+            min-height: 2em;
             .dlc {
                 color: #D836E7;
             }

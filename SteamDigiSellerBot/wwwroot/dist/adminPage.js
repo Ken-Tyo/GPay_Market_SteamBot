@@ -26607,9 +26607,6 @@ var listCheckBox = function listCheckBox(_ref) {
   }, [value]);
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: styles.wrapper,
-    style: {
-      userSelect: 'none'
-    },
     onClick: function onClick(event) {
       var newVal = !checked;
       setChecked(newVal);
@@ -26818,7 +26815,7 @@ var SwitchBtn = function SwitchBtn(_ref) {
 /* harmony default export */ const shared_switch = (SwitchBtn);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const list_styles = ({"wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","loader":"styles__loader--qLq6S","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","massDescriptionText":"styles__massDescriptionText--nZkry","subMenu":"styles__subMenu--BvgsJ","subMenuItem":"styles__subMenuItem--lEV1I","subMenuVisible":"styles__subMenuVisible--aZuZk","subMenuHidden":"styles__subMenuHidden--LODMB","errPopover":"styles__errPopover--lUtCS"});
+/* harmony default export */ const list_styles = ({"loader":"styles__loader--qLq6S","wrapper":"styles__wrapper--heg3M","active":"styles__active--M9SE8","cell":"styles__cell--WYUBh","listItemCheckbox":"styles__listItemCheckbox--Zd5fo","game":"styles__game--yttSW","dlc":"styles__dlc--rwWrk","product":"styles__product--iED_R","price":"styles__price--MAK2K","items":"styles__items--mXv3n","priceParseErr":"styles__priceParseErr--P6QTj","errMes":"styles__errMes--q3A3M","errState":"styles__errState--vz4hI","lastSendedRegion":"styles__lastSendedRegion--jEBFE","discount":"styles__discount--g5j0n","badge":"styles__badge--sJ817","text":"styles__text--TWmmy","date":"styles__date--pHTmz","buttons":"styles__buttons--u9lGx","btnWrapper":"styles__btnWrapper--cKrm7","dump":"styles__dump--cDcqq","massChangeMenu":"styles__massChangeMenu--ccRdw","title":"styles__title--jGaUM","actions":"styles__actions--ZJL3J","massDescriptionText":"styles__massDescriptionText--nZkry","subMenu":"styles__subMenu--BvgsJ","subMenuItem":"styles__subMenuItem--lEV1I","subMenuVisible":"styles__subMenuVisible--aZuZk","subMenuHidden":"styles__subMenuHidden--LODMB","errPopover":"styles__errPopover--lUtCS"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/trash.svg
 const trash_namespaceObject = __webpack_require__.p + "a4c9a89c8403eb3d97c3.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/pen.svg
@@ -27031,6 +27028,12 @@ var common_itemsMode = {
 };
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/admin/state.js
 function state_typeof(o) { "@babel/helpers - typeof"; return state_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, state_typeof(o); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || state_unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function state_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return state_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return state_arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return state_arrayLikeToArray(arr); }
+function state_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function state_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ state_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == state_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(state_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function state_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function state_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? state_ownKeys(Object(t), !0).forEach(function (r) { state_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : state_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
@@ -27080,6 +27083,7 @@ var state = es_entity({
   selectedItems: [],
   exchageRates: [],
   currencies: [],
+  productFilterCurrencies: [],
   steamRegions: [],
   digiPriceSetType: [{
     id: 1,
@@ -27337,7 +27341,7 @@ var apiFetchItems = /*#__PURE__*/function () {
               IsFilterOn: false
             };
           } else {
-            currencies = state.get().currencies.map(function (c) {
+            currencies = state.get().productFilterCurrencies.map(function (c) {
               return {
                 id: c.steamId,
                 name: c.code
@@ -28672,7 +28676,7 @@ var apiUpdateExchangeDataManual = /*#__PURE__*/function () {
 }();
 var apiGetCurrencies = /*#__PURE__*/function () {
   var _ref50 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee50() {
-    var currencies, res, data;
+    var currencies, res, data, productFilterCurrencies;
     return state_regeneratorRuntime().wrap(function _callee50$(_context50) {
       while (1) switch (_context50.prev = _context50.next) {
         case 0:
@@ -28699,12 +28703,24 @@ var apiGetCurrencies = /*#__PURE__*/function () {
               steamValue: c.value
             };
           });
+          productFilterCurrencies = [{
+            code: "Base",
+            steamId: -1,
+            steamSymbol: "Base"
+          }];
+          productFilterCurrencies = _toConsumableArray(currencies);
+          productFilterCurrencies.unshift({
+            code: "Base",
+            steamId: -1,
+            steamSymbol: "Base"
+          });
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
-              currencies: currencies
+              currencies: currencies,
+              productFilterCurrencies: productFilterCurrencies
             });
           });
-        case 11:
+        case 14:
         case "end":
           return _context50.stop();
       }
@@ -46039,21 +46055,43 @@ var list = function list(_ref) {
   });
 };
 /* harmony default export */ const shared_list = (list);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/inlineLoader/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const inlineLoader_styles = ({"loaderContainer":"styles__loaderContainer--XX4Vf","loaderBar":"styles__loaderBar--hBF3D","l5":"styles__l5--aKVtw"});
+// EXTERNAL MODULE: ./node_modules/classnames/index.js
+var node_modules_classnames = __webpack_require__(6942);
+var classnames_default = /*#__PURE__*/__webpack_require__.n(node_modules_classnames);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/inlineLoader/index.js
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure " + obj); }
+
+
+
+var InlineLoader = function InlineLoader(_ref) {
+  _objectDestructuringEmpty(_ref);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+    className: inlineLoader_styles.loaderContainer,
+    children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+      className: inlineLoader_styles.loaderBar
+    })
+  });
+};
+/* harmony default export */ const inlineLoader = (InlineLoader);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/index.js
 function list_typeof(o) { "@babel/helpers - typeof"; return list_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, list_typeof(o); }
 function list_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ list_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == list_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(list_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function list_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { list_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || list_unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return list_arrayLikeToArray(arr); }
+function list_toConsumableArray(arr) { return list_arrayWithoutHoles(arr) || list_iterableToArray(arr) || list_unsupportedIterableToArray(arr) || list_nonIterableSpread(); }
+function list_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function list_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function list_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return list_arrayLikeToArray(arr); }
 function list_slicedToArray(arr, i) { return list_arrayWithHoles(arr) || list_iterableToArrayLimit(arr, i) || list_unsupportedIterableToArray(arr, i) || list_nonIterableRest(); }
 function list_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function list_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return list_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return list_arrayLikeToArray(o, minLen); }
 function list_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function list_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function list_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -46096,7 +46134,7 @@ var products = function products() {
     productsFilter = _state$use.productsFilter,
     changeItemBulkResponse = _state$use.changeItemBulkResponse,
     itemInfoTemplates = _state$use.itemInfoTemplates;
-  var _useState = (0,react.useState)(_toConsumableArray(items)),
+  var _useState = (0,react.useState)(list_toConsumableArray(items)),
     _useState2 = list_slicedToArray(_useState, 2),
     sortedItems = _useState2[0],
     setSortedItems = _useState2[1];
@@ -46142,7 +46180,7 @@ var products = function products() {
     currencyDict[c.steamId] = c;
   });
   var handleSort = function handleSort(type) {
-    var sorted = _toConsumableArray(items);
+    var sorted = list_toConsumableArray(items);
     if (type === "price") {
       sorted.sort(function (a, b) {
         if (sortOrder === "asc") {
@@ -46165,7 +46203,7 @@ var products = function products() {
           return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
         }
       });
-    } else if (type === 'percent') {
+    } else if (type === "percent") {
       sorted.sort(function (a, b) {
         if (sortOrder === "asc") {
           if (a.isFixedPrice && b.isFixedPrice) {
@@ -46187,7 +46225,7 @@ var products = function products() {
           return b.steamPercent - a.steamPercent;
         }
       });
-    } else if (type === 'discountPercent') {
+    } else if (type === "discountPercent") {
       var getDiscountValue = function getDiscountValue(discount) {
         if (discount != null && discount > 0) {
           return sortOrder === "asc" ? discount : -discount;
@@ -46204,12 +46242,11 @@ var products = function products() {
         return a.id - b.id;
       });
     }
-    ;
     setSortedItems(sorted);
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
   (0,react.useEffect)(function () {
-    handleSort('id');
+    handleSort("id");
   }, [items]);
   var headers = {
     checkbox: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
@@ -46383,11 +46420,11 @@ var products = function products() {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: list_styles.wrapper,
     style: {
-      userSelect: 'none'
+      userSelect: "none"
     },
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
       headers: Object.values(headers),
-      data: _toConsumableArray(sortedItems),
+      data: list_toConsumableArray(sortedItems),
       isLoading: itemsLoading,
       loadingText: getLoadingText,
       itemRenderer: function itemRenderer(i) {
@@ -46420,249 +46457,324 @@ var products = function products() {
           return (i.currentDigiSellerPrice * 100 / i.currentSteamPriceRub).toFixed(0);
         };
         var additionalInfo = i.isFixedPrice ? "".concat(getDiffPriceInPercent(), "%") : "".concat(i.steamPercent, "% ").concat(i.addPrice, " rub");
-        return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
-          className: activeRow,
-          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
+        var rowRenderer = function rowRenderer() {
+          return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
+            className: activeRow,
+            style: {
+              width: "100%"
+            },
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("td", {
               children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                className: list_styles.listItemCheckbox,
-                children: /*#__PURE__*/(0,jsx_runtime.jsx)(list_listCheckBox, {
-                  onCheckedChange: function onCheckedChange(val, shiftPressed) {
-                    var arrNew;
-                    if (shiftPressed) {
-                      if (val) {
-                        // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
-                        if (lastSelectedId > 0) {
-                          arrNew = getItemsBetweenSelected(lastSelectedId, i.id);
-                          setLastSelectedId(-1);
-                        } else {
-                          //Add new portion  (2-nd shift selects new)
-                          arrNew = addItemsToSelected(i.id);
-                        }
-                      } else {
-                        // Remove portion  (2-nd shift unselects old)
-                        arrNew = removeItemsFromSelected(i.id);
-                      }
-                    } else {
-                      var newLastId = -1;
-                      if (val) {
-                        arrNew = [].concat(_toConsumableArray(selectedItems), [i.id]);
-                        newLastId = i.id;
-                      } else {
-                        arrNew = selectedItems.filter(function (id) {
-                          return id != i.id;
-                        });
-                        if (arrNew.length == 1) newLastId = newArr[0];
-                      }
-                      setLastSelectedId(newLastId);
-                    }
-                    setSelectedItems(arrNew);
-                  },
-                  value: selectedItems.indexOf(i.id) !== -1
-                })
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                className: list_styles.game,
-                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  children: i.appId
-                }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                  children: ["(", i.subId, ")", " ", i.isDlc && /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
-                    className: list_styles.dlc,
-                    children: "DLC"
-                  })]
-                })]
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              style: {
-                justifyContent: "start"
-              },
-              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                className: list_styles.product,
-                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
-                    style: i.name === "Error" ? {
-                      color: "#A12C2C"
-                    } : {},
-                    children: i.name
-                  })
-                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  children: i.digiSellerIds && i.digiSellerIds.join(",")
-                })]
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                className: list_styles.price,
-                children: [!i.isPriceParseError && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                  className: list_styles.items,
-                  children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                    style: {
-                      cursor: "pointer"
-                    },
-                    onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee2() {
-                      var item;
-                      return list_regeneratorRuntime().wrap(function _callee2$(_context2) {
-                        while (1) switch (_context2.prev = _context2.next) {
-                          case 0:
-                            _context2.next = 2;
-                            return apiGetItem(i.id);
-                          case 2:
-                            item = _context2.sent;
-                            setSelectedItem(item);
-                            setStateProp("itemsMode", common_itemsMode[2]);
-                          case 5:
-                          case "end":
-                            return _context2.stop();
-                        }
-                      }, _callee2);
-                    })),
-                    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
-                      style: {
-                        color: priceColor
-                      },
-                      children: [i.currentDigiSellerPrice.toFixed(0), " rub"]
-                    }), " ", "|", " ", /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
-                      children: [i.currentSteamPrice, " ", currencyDict[i.steamCurrencyId].steamSymbol]
-                    })]
-                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                    style: {
-                      color: steamPriceColor
-                    },
-                    children: additionalInfo
-                  })]
-                }), i.isPriceParseError && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                  className: list_styles.priceParseErr,
-                  children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                    className: list_styles.errMes,
-                    children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                      children: "\u041E\u0448\u0438\u0431\u043A\u0430"
-                    }), /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, {
-                      "aria-owns": open ? "mouse-over-popover" : undefined,
-                      "aria-haspopup": "true",
-                      onMouseEnter: function onMouseEnter(event) {
-                        setAnchorEl(event.currentTarget);
-                        if (i.currentSteamPriceRub < 0) {
-                          setErrParsePriceText("Возможно проблема связана с парсингом цены и валютой.");
-                          return;
-                        }
-                        i.isBundle ? setErrParsePriceText("Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно") : setErrParsePriceText("Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены");
-                      },
-                      onMouseLeave: function onMouseLeave() {
-                        setAnchorEl(null);
-                      },
-                      children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
-                        src: warning_namespaceObject
-                      })
-                    })]
-                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                    className: list_styles.errState,
-                    children: ["95% - ", /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
-                      style: {
-                        color: "#A12C2C"
-                      },
-                      children: "\u041E\u0428\u0418\u0411\u041A\u0410"
-                    })]
-                  })]
-                })]
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              children: i.lastSendedRegionCode && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                className: list_styles.lastSendedRegion,
-                children: i.lastSendedRegionCode
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              children: i.isDiscount && !discountEndTimeExpired && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                className: list_styles.discount,
-                children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
-                  className: list_styles.badge,
-                  bgcolor: "#A9AC26",
-                  height: 39,
-                  width: 116,
-                  children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                    className: list_styles.text,
-                    children: ["-", i.discountPercent, "%"]
-                  })
-                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  className: list_styles.date,
-                  children: discountEndTime == "∞" ? /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
-                    src: infinity_namespaceObject
-                  }) : discountEndTime
-                })]
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-                className: list_styles.buttons,
-                children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  className: list_styles.btnWrapper,
-                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
-                    icon: pen_namespaceObject,
-                    onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee3() {
-                      return list_regeneratorRuntime().wrap(function _callee3$(_context3) {
-                        while (1) switch (_context3.prev = _context3.next) {
-                          case 0:
-                            _context3.next = 2;
-                            return setSelectedItem(i);
-                          case 2:
-                            toggleEditItemModal(true);
-                          case 3:
-                          case "end":
-                            return _context3.stop();
-                        }
-                      }, _callee3);
-                    }))
-                  })
-                }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  className: list_styles.btnWrapper,
-                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
-                    icon: trash_namespaceObject,
-                    onClick: function onClick() {
-                      setSelectedItem(i);
-                      setOpenDelConfirm(!openDelConfirm);
-                    }
-                  })
-                })]
-              })
-            })
-          }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
-            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-              className: list_styles.cell,
-              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                className: list_styles.buttons,
+                className: list_styles.cell,
                 children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-                  style: {
-                    marginLeft: "30px",
-                    marginRight: "15px"
-                  },
-                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
-                    value: i.active,
-                    onChange: function onChange() {
-                      apiSetItemActiveStatus([i.id]);
-                    }
+                  className: list_styles.listItemCheckbox,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(list_listCheckBox, {
+                    onCheckedChange: function onCheckedChange(val, shiftPressed) {
+                      var arrNew;
+                      if (shiftPressed) {
+                        if (val) {
+                          // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
+                          if (lastSelectedId > 0) {
+                            arrNew = getItemsBetweenSelected(lastSelectedId, i.id);
+                            setLastSelectedId(-1);
+                          } else {
+                            //Add new portion  (2-nd shift selects new)
+                            arrNew = addItemsToSelected(i.id);
+                          }
+                        } else {
+                          // Remove portion  (2-nd shift unselects old)
+                          arrNew = removeItemsFromSelected(i.id);
+                        }
+                      } else {
+                        var newLastId = -1;
+                        if (val) {
+                          arrNew = [].concat(list_toConsumableArray(selectedItems), [i.id]);
+                          newLastId = i.id;
+                        } else {
+                          arrNew = selectedItems.filter(function (id) {
+                            return id != i.id;
+                          });
+                          if (arrNew.length == 1) newLastId = newArr[0];
+                        }
+                        setLastSelectedId(newLastId);
+                      }
+                      setSelectedItems(arrNew);
+                    },
+                    value: selectedItems.indexOf(i.id) !== -1
                   })
                 })
               })
-            })
-          })]
-        }, i.id);
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.game,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: i.appId
+                  }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    children: ["(", i.subId, ")", " ", i.isDlc && /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                      className: list_styles.dlc,
+                      children: "DLC"
+                    })]
+                  })]
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                style: {
+                  justifyContent: "start"
+                },
+                children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.product,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                      style: i.name === "Error" ? {
+                        color: "#A12C2C"
+                      } : {},
+                      children: i.name
+                    })
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    children: i.digiSellerIds && i.digiSellerIds.join(",")
+                  })]
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.price,
+                  children: [!i.isPriceParseError && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    className: list_styles.items,
+                    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      style: {
+                        cursor: "pointer"
+                      },
+                      onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee2() {
+                        var item;
+                        return list_regeneratorRuntime().wrap(function _callee2$(_context2) {
+                          while (1) switch (_context2.prev = _context2.next) {
+                            case 0:
+                              _context2.next = 2;
+                              return apiGetItem(i.id);
+                            case 2:
+                              item = _context2.sent;
+                              setSelectedItem(item);
+                              setStateProp("itemsMode", common_itemsMode[2]);
+                            case 5:
+                            case "end":
+                              return _context2.stop();
+                          }
+                        }, _callee2);
+                      })),
+                      children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                        style: {
+                          color: priceColor
+                        },
+                        children: [i.currentDigiSellerPrice.toFixed(0), " rub"]
+                      }), " ", "|", " ", /*#__PURE__*/(0,jsx_runtime.jsxs)("span", {
+                        children: [i.currentSteamPrice, " ", currencyDict[i.steamCurrencyId].steamSymbol]
+                      })]
+                    }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                      style: {
+                        color: steamPriceColor
+                      },
+                      children: additionalInfo
+                    })]
+                  }), i.isPriceParseError && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                    className: list_styles.priceParseErr,
+                    children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      className: list_styles.errMes,
+                      children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                        children: "\u041E\u0448\u0438\u0431\u043A\u0430"
+                      }), /*#__PURE__*/(0,jsx_runtime.jsx)(Typography_Typography, {
+                        "aria-owns": open ? "mouse-over-popover" : undefined,
+                        "aria-haspopup": "true",
+                        onMouseEnter: function onMouseEnter(event) {
+                          setAnchorEl(event.currentTarget);
+                          if (i.currentSteamPriceRub < 0) {
+                            setErrParsePriceText("Возможно проблема связана с парсингом цены и валютой.");
+                            return;
+                          }
+                          i.isBundle ? setErrParsePriceText("Добавьте хотя-бы одного бота с нужным регионом под парсинг. Без этого собрать цену бандла невозможно") : setErrParsePriceText("Добавьте хотя-бы одного бота с прокси, который НЕ относится к РФ региону для парсинга цены");
+                        },
+                        onMouseLeave: function onMouseLeave() {
+                          setAnchorEl(null);
+                        },
+                        children: /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                          src: warning_namespaceObject
+                        })
+                      })]
+                    }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      className: list_styles.errState,
+                      children: ["95% - ", /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+                        style: {
+                          color: "#A12C2C"
+                        },
+                        children: "\u041E\u0428\u0418\u0411\u041A\u0410"
+                      })]
+                    })]
+                  })]
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: i.lastSendedRegionCode && /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.lastSendedRegion,
+                  children: i.lastSendedRegionCode
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: i.isDiscount && !discountEndTimeExpired && /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.discount,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)(section, {
+                    className: list_styles.badge,
+                    bgcolor: "#A9AC26",
+                    height: 39,
+                    width: 116,
+                    children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                      className: list_styles.text,
+                      children: ["-", i.discountPercent, "%"]
+                    })
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: list_styles.date,
+                    children: discountEndTime == "∞" ? /*#__PURE__*/(0,jsx_runtime.jsx)("img", {
+                      src: infinity_namespaceObject
+                    }) : discountEndTime
+                  })]
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+                  className: list_styles.buttons,
+                  children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: list_styles.btnWrapper,
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                      icon: pen_namespaceObject,
+                      onClick: /*#__PURE__*/list_asyncToGenerator( /*#__PURE__*/list_regeneratorRuntime().mark(function _callee3() {
+                        return list_regeneratorRuntime().wrap(function _callee3$(_context3) {
+                          while (1) switch (_context3.prev = _context3.next) {
+                            case 0:
+                              _context3.next = 2;
+                              return setSelectedItem(i);
+                            case 2:
+                              toggleEditItemModal(true);
+                            case 3:
+                            case "end":
+                              return _context3.stop();
+                          }
+                        }, _callee3);
+                      }))
+                    })
+                  }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    className: list_styles.btnWrapper,
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_iconButton, {
+                      icon: trash_namespaceObject,
+                      onClick: function onClick() {
+                        setSelectedItem(i);
+                        setOpenDelConfirm(!openDelConfirm);
+                      }
+                    })
+                  })]
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.buttons,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                    style: {
+                      marginLeft: "30px",
+                      marginRight: "15px"
+                    },
+                    children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_switch, {
+                      value: i.active,
+                      onChange: function onChange() {
+                        apiSetItemActiveStatus([i.id]);
+                      }
+                    })
+                  })
+                })
+              })
+            })]
+          }, i.id);
+        };
+        var isLoadingRender = function isLoadingRender() {
+          return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
+            className: activeRow,
+            style: {
+              width: "100%"
+            },
+            children: [/*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.listItemCheckbox
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.game
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                style: {
+                  justifyContent: "start"
+                },
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.product
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.price,
+                  children: /*#__PURE__*/(0,jsx_runtime.jsx)(inlineLoader, {})
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.discount
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.buttons
+                })
+              })
+            }), /*#__PURE__*/(0,jsx_runtime.jsx)("td", {
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                className: list_styles.cell,
+                children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  className: list_styles.buttons
+                })
+              })
+            })]
+          }, i.id);
+        };
+        if (i.inSetPriceProcess) {
+          rowRenderer = isLoadingRender;
+        }
+        return rowRenderer();
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: list_styles.massChangeMenu + " " + (selectedItems.length > 0 ? list_styles.active : ""),
@@ -46707,13 +46819,13 @@ var products = function products() {
         }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
           className: list_styles.btnWrapper,
           children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
-            text: getBtnMassDescriptionBlock(['Смена описания/', 'доп. информации']),
+            text: getBtnMassDescriptionBlock(["Смена описания/", "доп. информации"]),
             style: massChangeButStyle,
             onClick: function onClick() {
               toggleMassDescriptionSubMenu();
             }
           }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: list_styles.subMenu + ' ' + subMenuVisibility,
+            className: list_styles.subMenu + " " + subMenuVisibility,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: list_styles.subMenuItem,
               onClick: function onClick() {
@@ -46761,7 +46873,7 @@ var products = function products() {
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit, {
       isOpen: editItemMainInfoModalIsOpen || editItemAdditionalInfoModalIsOpen,
-      viewMode: editItemMainInfoModalIsOpen ? 'main' : editItemAdditionalInfoModalIsOpen ? 'additional' : 'none',
+      viewMode: editItemMainInfoModalIsOpen ? "main" : editItemAdditionalInfoModalIsOpen ? "additional" : "none",
       onCancel: function onCancel() {
         toggleItemMainInfoModal(false);
         toggleItemAdditionalInfoModal(false);
@@ -49490,9 +49602,6 @@ function select_MultipleSelectPlaceholder(_ref4) {
     })]
   });
 }
-// EXTERNAL MODULE: ./node_modules/classnames/index.js
-var node_modules_classnames = __webpack_require__(6942);
-var classnames_default = /*#__PURE__*/__webpack_require__.n(node_modules_classnames);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/index.js
 
 
@@ -55020,7 +55129,7 @@ var ModalFilter = function ModalFilter(_ref) {
       setItem(stateVal);
     }
   }, [value]);
-  var currencies = state.use().currencies.map(function (c) {
+  var currencies = state.use().productFilterCurrencies.map(function (c) {
     return {
       id: c.steamId,
       name: c.code
@@ -61526,10 +61635,10 @@ var ModalStatusHistory = function ModalStatusHistory(_ref) {
 };
 /* harmony default export */ const modalStatusHistory = (ModalStatusHistory);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/orders/list/index.js
-function list_toConsumableArray(arr) { return list_arrayWithoutHoles(arr) || list_iterableToArray(arr) || orders_list_unsupportedIterableToArray(arr) || list_nonIterableSpread(); }
-function list_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function list_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function list_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return orders_list_arrayLikeToArray(arr); }
+function orders_list_toConsumableArray(arr) { return orders_list_arrayWithoutHoles(arr) || orders_list_iterableToArray(arr) || orders_list_unsupportedIterableToArray(arr) || orders_list_nonIterableSpread(); }
+function orders_list_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function orders_list_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function orders_list_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return orders_list_arrayLikeToArray(arr); }
 function orders_list_slicedToArray(arr, i) { return orders_list_arrayWithHoles(arr) || orders_list_iterableToArrayLimit(arr, i) || orders_list_unsupportedIterableToArray(arr, i) || orders_list_nonIterableRest(); }
 function orders_list_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function orders_list_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return orders_list_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return orders_list_arrayLikeToArray(o, minLen); }
@@ -61586,7 +61695,7 @@ var list_products = function products() {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     className: orders_list_styles.wrapper,
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_list, {
-      data: list_toConsumableArray(gameSessions),
+      data: orders_list_toConsumableArray(gameSessions),
       headers: Object.values(headers),
       itemRenderer: function itemRenderer(i) {
         return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
