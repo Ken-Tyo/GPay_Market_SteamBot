@@ -4,6 +4,7 @@ import gamePad from '../../../icons/gamepad.svg';
 import robot from '../../../icons/robot.svg';
 import cart from '../../../icons/cart.svg';
 import settings from '../../../icons/settings.svg';
+import sellers from '../../../icons/sellers.svg';
 import MenuItem from './menuItem';
 import BotStats from './botStats';
 import { Route, RouterProvider, Outlet, Routes } from 'react-router-dom';
@@ -90,7 +91,7 @@ const leftMenu = () => {
                     <div>Pay Panel</div>
                   </div>
                 </Section>
-                <Section className={css.menuSection} height={333} width={254}>
+                <Section className={css.menuSection} height={277} width={254}>
                   <div className={css.menuList}>
                     {menuData.map((i) => {
                       return (
@@ -380,7 +381,7 @@ let getMenuArrData = (setIsEditSellerModalOpen) => {
     },
     {
       name: 'Пользователи',
-      icon: cart,
+      icon: sellers,
       subMenu: [
         {
           name: 'Продавцы',

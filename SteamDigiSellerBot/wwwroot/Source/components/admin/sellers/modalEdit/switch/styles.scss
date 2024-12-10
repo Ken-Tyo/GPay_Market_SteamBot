@@ -20,14 +20,25 @@
             transition-duration: 300ms;
 
             &.checked {
-                background-color: #BE584A;
                 transform: translateX(29px);
                 transition-duration: 300ms;
             }
+
+            &.checked.green {
+                background-color: #AED88D;
+            }
+
+            &.checked.orange {
+                background-color: #BE584A;
+            }
         }
 
-        &.checked {
+        &.checked.orange {
             background-color: #8A44AB;
+        }
+
+        &.checked.green {
+            background-color: #4B9252;
         }
     }
 

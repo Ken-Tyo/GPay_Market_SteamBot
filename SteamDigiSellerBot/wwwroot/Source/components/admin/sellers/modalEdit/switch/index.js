@@ -1,7 +1,8 @@
 import * as React from 'react';
+import Colors from './colors'
 import css from './styles.scss';
 
-const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
+const SwitchBtn = ({ value, onChange, style, lastSaveTime, color }) => {
 
     const [checked, setChecked] = React.useState(value);
     const [timer, setTimer] = React.useState();
@@ -37,6 +38,14 @@ const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, [lastSaveTime]); // Depend on lastSaveTime and value
 
+    const getColorClass = (color) => {
+      if (color === Colors.ORANGE) {
+        return css.orange;
+      }
+
+      return css.green;
+    }
+
 
   return (
       <div className={css.wrapper} style={{ ...style }}>
@@ -44,11 +53,11 @@ const SwitchBtn = ({ value, onChange, style, lastSaveTime }) => {
               <div className={css.awaition}>{timer > 9 ? `0:${timer}` : `0:0${timer}`}</div>
           ) : (
               <div
-                  className={css.track + ' ' + (checked ? css.checked : '')}
+                  className={css.track + ' ' + (checked ? css.checked : '')+ ' ' + getColorClass(color)}
                   onClick={() => {
                     if (onChange) onChange(!checked);
                     setChecked(!checked);}}>
-                <div className={css.thumb + ' ' + (checked ? css.checked : '')}></div>
+                <div className={css.thumb + ' ' + (checked ? css.checked : '') + ' ' + getColorClass(color)}></div>
               </div>
           )}
     </div>

@@ -43150,9 +43150,9 @@ var ModalEdit = function ModalEdit(_ref5) {
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const modalItemInfoEdit_styles = ({"wrapper":"styles__wrapper--jBnWE","textareaWrapper":"styles__textareaWrapper--jyrSH","error":"styles__error--Wg7zh","textareaContent":"styles__textareaContent--ynM1R","templates":"styles__templates--fG8d5","loadTemplate":"styles__loadTemplate--cvFnw","disabled":"styles__disabled--v4WR7","btnCreateTemplate":"styles__btnCreateTemplate--cL14X","actions":"styles__actions--UIzI_","titleButton":"styles__titleButton--RqDkS"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalTypeTagEdit/styles.scss
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalTypeTagEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const ModalTypeTagEdit_styles = ({"tagTypeEditModalContent":"styles__tagTypeEditModalContent--r4GBO","title":"styles__title--usGNp","titleDescription":"styles__titleDescription--UMvQa","tagItemEdit":"styles__tagItemEdit--YDfGH","tagItemEditLang":"styles__tagItemEditLang--JOZye","tagItemEditLangTitle":"styles__tagItemEditLangTitle--LXpkg","tagItemValue":"styles__tagItemValue--_lEvD","tagTypeEditButtons":"styles__tagTypeEditButtons--FgvI9"});
+/* harmony default export */ const modalTypeTagEdit_styles = ({"tagTypeEditModalContent":"styles__tagTypeEditModalContent--Frl0j","title":"styles__title--HFi3T","titleDescription":"styles__titleDescription--tMHOx","tagItemEdit":"styles__tagItemEdit--VS_XX","tagItemEditLang":"styles__tagItemEditLang--YlVKo","tagItemEditLangTitle":"styles__tagItemEditLangTitle--F0H0a","tagItemValue":"styles__tagItemValue--mrb9U","tagTypeEditButtons":"styles__tagTypeEditButtons--lALWa"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textbox/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const shared_textbox_styles = ({"wrapper":"styles__wrapper--H8Xnp"});
@@ -43185,18 +43185,18 @@ var shared_textbox_TextBox = function TextBox(_ref) {
   });
 };
 /* harmony default export */ const shared_textbox = (shared_textbox_TextBox);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalTypeTagEdit/index.js
-function ModalTypeTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalTypeTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalTypeTagEdit_typeof(o); }
-function ModalTypeTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalTypeTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-function ModalTypeTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalTypeTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalTypeTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalTypeTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-function ModalTypeTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function ModalTypeTagEdit_slicedToArray(arr, i) { return ModalTypeTagEdit_arrayWithHoles(arr) || ModalTypeTagEdit_iterableToArrayLimit(arr, i) || ModalTypeTagEdit_unsupportedIterableToArray(arr, i) || ModalTypeTagEdit_nonIterableRest(); }
-function ModalTypeTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function ModalTypeTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalTypeTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalTypeTagEdit_arrayLikeToArray(o, minLen); }
-function ModalTypeTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function ModalTypeTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function ModalTypeTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalTypeTagEdit/index.js
+function modalTypeTagEdit_typeof(o) { "@babel/helpers - typeof"; return modalTypeTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalTypeTagEdit_typeof(o); }
+function modalTypeTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = modalTypeTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function modalTypeTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalTypeTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalTypeTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalTypeTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function modalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function modalTypeTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { modalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { modalTypeTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function modalTypeTagEdit_slicedToArray(arr, i) { return modalTypeTagEdit_arrayWithHoles(arr) || modalTypeTagEdit_iterableToArrayLimit(arr, i) || modalTypeTagEdit_unsupportedIterableToArray(arr, i) || modalTypeTagEdit_nonIterableRest(); }
+function modalTypeTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalTypeTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalTypeTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalTypeTagEdit_arrayLikeToArray(o, minLen); }
+function modalTypeTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalTypeTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalTypeTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -43210,19 +43210,19 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
   if (!isOpen) return;
   var languageCodes = ['ru-RU', 'en-US'];
   var _useState = (0,react.useState)(''),
-    _useState2 = ModalTypeTagEdit_slicedToArray(_useState, 2),
+    _useState2 = modalTypeTagEdit_slicedToArray(_useState, 2),
     tagGameRu = _useState2[0],
     setTagGameRu = _useState2[1];
   var _useState3 = (0,react.useState)(''),
-    _useState4 = ModalTypeTagEdit_slicedToArray(_useState3, 2),
+    _useState4 = modalTypeTagEdit_slicedToArray(_useState3, 2),
     tagGameEn = _useState4[0],
     setTagGameEn = _useState4[1];
   var _useState5 = (0,react.useState)(''),
-    _useState6 = ModalTypeTagEdit_slicedToArray(_useState5, 2),
+    _useState6 = modalTypeTagEdit_slicedToArray(_useState5, 2),
     tagDlcRu = _useState6[0],
     setTagDlcRu = _useState6[1];
   var _useState7 = (0,react.useState)(''),
-    _useState8 = ModalTypeTagEdit_slicedToArray(_useState7, 2),
+    _useState8 = modalTypeTagEdit_slicedToArray(_useState7, 2),
     tagDlcEn = _useState8[0],
     setTagDlcEn = _useState8[1];
   var languageCodesSetters = new Map().set(languageCodes[0], function (isDlc) {
@@ -43235,9 +43235,9 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
     setValue(val);
   };
   var onSave = /*#__PURE__*/function () {
-    var _ref2 = ModalTypeTagEdit_asyncToGenerator( /*#__PURE__*/ModalTypeTagEdit_regeneratorRuntime().mark(function _callee() {
+    var _ref2 = modalTypeTagEdit_asyncToGenerator( /*#__PURE__*/modalTypeTagEdit_regeneratorRuntime().mark(function _callee() {
       var data;
-      return ModalTypeTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+      return modalTypeTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             data = [{
@@ -43278,7 +43278,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
       if (!data || data.length == 0) {
         return;
       }
-      var _iterator = ModalTypeTagEdit_createForOfIteratorHelper(data),
+      var _iterator = modalTypeTagEdit_createForOfIteratorHelper(data),
         _step;
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
@@ -43286,7 +43286,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
           if (!item.tagTypeReplacementValues || item.tagTypeReplacementValues.length == 0) {
             continue;
           }
-          var _iterator2 = ModalTypeTagEdit_createForOfIteratorHelper(item.tagTypeReplacementValues),
+          var _iterator2 = modalTypeTagEdit_createForOfIteratorHelper(item.tagTypeReplacementValues),
             _step2;
           try {
             for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
@@ -43312,23 +43312,23 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
   }, []);
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
-    className: ModalTypeTagEdit_styles.tagTypeEditModalContent,
+    className: modalTypeTagEdit_styles.tagTypeEditModalContent,
     width: '685px',
     height: 'auto',
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalTypeTagEdit_styles.title,
+      className: modalTypeTagEdit_styles.title,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
         children: "\u0422\u0435\u0433\u0438 - %type%"
       })
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalTypeTagEdit_styles.titleDescription,
+      className: modalTypeTagEdit_styles.titleDescription,
       children: "\u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0442\u0438\u043F \u043F\u0440\u043E\u0434\u0443\u043A\u0442\u0430 - \u0418\u0433\u0440\u0430/\u0414\u043E\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435"
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalTypeTagEdit_styles.tagItemEdit,
+      className: modalTypeTagEdit_styles.tagItemEdit,
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        className: modalTypeTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          className: modalTypeTagEdit_styles.tagItemEditLangTitle,
           children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
             width: "33",
             height: "23",
@@ -43349,7 +43349,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
             children: "\u0418\u0433\u0440\u0430"
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalTypeTagEdit_styles.tagItemValue,
+          className: modalTypeTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
             type: 'text',
             defaultValue: tagGameRu,
@@ -43361,9 +43361,9 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        className: modalTypeTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          className: modalTypeTagEdit_styles.tagItemEditLangTitle,
           children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
             width: "32",
             height: "23",
@@ -43417,7 +43417,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
             children: "\u0418\u0433\u0440\u0430"
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalTypeTagEdit_styles.tagItemValue,
+          className: modalTypeTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
             type: 'text',
             defaultValue: tagGameEn,
@@ -43430,11 +43430,11 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
         })]
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalTypeTagEdit_styles.tagItemEdit,
+      className: modalTypeTagEdit_styles.tagItemEdit,
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        className: modalTypeTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          className: modalTypeTagEdit_styles.tagItemEditLangTitle,
           children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
             width: "33",
             height: "23",
@@ -43455,7 +43455,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
             children: "DLC"
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalTypeTagEdit_styles.tagItemValue,
+          className: modalTypeTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
             type: 'text',
             defaultValue: tagDlcRu,
@@ -43467,9 +43467,9 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalTypeTagEdit_styles.tagItemEditLang,
+        className: modalTypeTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalTypeTagEdit_styles.tagItemEditLangTitle,
+          className: modalTypeTagEdit_styles.tagItemEditLangTitle,
           children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
             width: "32",
             height: "23",
@@ -43523,7 +43523,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
             children: "DLC"
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalTypeTagEdit_styles.tagItemValue,
+          className: modalTypeTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("input", {
             type: 'text',
             defaultValue: tagDlcEn,
@@ -43536,7 +43536,7 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
         })]
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalTypeTagEdit_styles.tagTypeEditButtons,
+      className: modalTypeTagEdit_styles.tagTypeEditButtons,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         width: '217px',
         height: 'auto',
@@ -43551,10 +43551,10 @@ var ModalTypeTagEdit = function ModalTypeTagEdit(_ref) {
     })]
   });
 };
-/* harmony default export */ const ModalTagsView_ModalTypeTagEdit = (ModalTypeTagEdit);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalPromoTagEdit/styles.scss
+/* harmony default export */ const modalTypeTagEdit = (ModalTypeTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalPromoTagEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const ModalPromoTagEdit_styles = ({"tagPromoEditModalContent":"styles__tagPromoEditModalContent--xlZGl","title":"styles__title--hFwZq","titleDescription":"styles__titleDescription--kGV5u","tagItemEdit":"styles__tagItemEdit--licj8","tagItemEditLang":"styles__tagItemEditLang--xpw7v","tagItemEditLangTitle":"styles__tagItemEditLangTitle--RNveZ","tagItemEditLangPlatforms":"styles__tagItemEditLangPlatforms--ci0wA","activeTab":"styles__activeTab--hg_2M","tagItemValue":"styles__tagItemValue--WcOhs","tagPromoEditButtons":"styles__tagPromoEditButtons--bPKTS"});
+/* harmony default export */ const modalPromoTagEdit_styles = ({"tagPromoEditModalContent":"styles__tagPromoEditModalContent--H_2AO","title":"styles__title--q_hWB","titleDescription":"styles__titleDescription--ZCL8o","tagItemEdit":"styles__tagItemEdit--wTzxc","tagItemEditLang":"styles__tagItemEditLang--Urz8p","tagItemEditLangTitle":"styles__tagItemEditLangTitle--FpP2Z","tagItemEditLangPlatforms":"styles__tagItemEditLangPlatforms--R_Hpy","activeTab":"styles__activeTab--ylT5j","tagItemValue":"styles__tagItemValue--Xh8Cp","tagPromoEditButtons":"styles__tagPromoEditButtons--FyDUr"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/textarea/styles.scss
 // extracted by mini-css-extract-plugin
 /* harmony default export */ const textarea_styles = ({"wrapper":"styles__wrapper--gUZ9v","inputControl":"styles__inputControl--NWJQk","boxes":"styles__boxes--BQWU_","textarea":"styles__textarea--c283q"});
@@ -43602,18 +43602,18 @@ var Textarea = function Textarea(_ref) {
   });
 };
 /* harmony default export */ const shared_textarea = (Textarea);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalPromoTagEdit/index.js
-function ModalPromoTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalPromoTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalPromoTagEdit_typeof(o); }
-function ModalPromoTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalPromoTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalPromoTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalPromoTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-function ModalPromoTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function ModalPromoTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalPromoTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-function ModalPromoTagEdit_slicedToArray(arr, i) { return ModalPromoTagEdit_arrayWithHoles(arr) || ModalPromoTagEdit_iterableToArrayLimit(arr, i) || ModalPromoTagEdit_unsupportedIterableToArray(arr, i) || ModalPromoTagEdit_nonIterableRest(); }
-function ModalPromoTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function ModalPromoTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalPromoTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalPromoTagEdit_arrayLikeToArray(o, minLen); }
-function ModalPromoTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function ModalPromoTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function ModalPromoTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalPromoTagEdit/index.js
+function modalPromoTagEdit_typeof(o) { "@babel/helpers - typeof"; return modalPromoTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalPromoTagEdit_typeof(o); }
+function modalPromoTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalPromoTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalPromoTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalPromoTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function modalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function modalPromoTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { modalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { modalPromoTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function modalPromoTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = modalPromoTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function modalPromoTagEdit_slicedToArray(arr, i) { return modalPromoTagEdit_arrayWithHoles(arr) || modalPromoTagEdit_iterableToArrayLimit(arr, i) || modalPromoTagEdit_unsupportedIterableToArray(arr, i) || modalPromoTagEdit_nonIterableRest(); }
+function modalPromoTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalPromoTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalPromoTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalPromoTagEdit_arrayLikeToArray(o, minLen); }
+function modalPromoTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalPromoTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalPromoTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -43626,23 +43626,23 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
     onClose = _ref.onClose;
   if (!isOpen) return;
   var _useState = (0,react.useState)([]),
-    _useState2 = ModalPromoTagEdit_slicedToArray(_useState, 2),
+    _useState2 = modalPromoTagEdit_slicedToArray(_useState, 2),
     languages = _useState2[0],
     setLanguages = _useState2[1];
   var _useState3 = (0,react.useState)([]),
-    _useState4 = ModalPromoTagEdit_slicedToArray(_useState3, 2),
+    _useState4 = modalPromoTagEdit_slicedToArray(_useState3, 2),
     marketPlaces = _useState4[0],
     setMarketPlaces = _useState4[1];
   var _useState5 = (0,react.useState)(null),
-    _useState6 = ModalPromoTagEdit_slicedToArray(_useState5, 2),
+    _useState6 = modalPromoTagEdit_slicedToArray(_useState5, 2),
     selectedRuPlatform = _useState6[0],
     setSelectedRuPlatform = _useState6[1];
   var _useState7 = (0,react.useState)(null),
-    _useState8 = ModalPromoTagEdit_slicedToArray(_useState7, 2),
+    _useState8 = modalPromoTagEdit_slicedToArray(_useState7, 2),
     selectedEnPlatform = _useState8[0],
     setSelectedEnPlatform = _useState8[1];
   var _useState9 = (0,react.useState)(new Map()),
-    _useState10 = ModalPromoTagEdit_slicedToArray(_useState9, 2),
+    _useState10 = modalPromoTagEdit_slicedToArray(_useState9, 2),
     values = _useState10[0],
     setValues = _useState10[1];
   var getInitValues = function getInitValues(marketPlaceData, langData) {
@@ -43675,7 +43675,7 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
             return;
           }
           var newMap = new Map(getInitValues(marketPlaceData, langData));
-          var _iterator = ModalPromoTagEdit_createForOfIteratorHelper(data),
+          var _iterator = modalPromoTagEdit_createForOfIteratorHelper(data),
             _step;
           try {
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
@@ -43683,7 +43683,7 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
               if (!item.replacementValues || item.replacementValues.length == 0) {
                 continue;
               }
-              var _iterator2 = ModalPromoTagEdit_createForOfIteratorHelper(item.replacementValues),
+              var _iterator2 = modalPromoTagEdit_createForOfIteratorHelper(item.replacementValues),
                 _step2;
               try {
                 for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
@@ -43716,13 +43716,13 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
     setValues(new Map(values.set("".concat(selectedEnPlatform.id).concat(languages[1]), text)));
   };
   var onSave = /*#__PURE__*/function () {
-    var _ref2 = ModalPromoTagEdit_asyncToGenerator( /*#__PURE__*/ModalPromoTagEdit_regeneratorRuntime().mark(function _callee() {
+    var _ref2 = modalPromoTagEdit_asyncToGenerator( /*#__PURE__*/modalPromoTagEdit_regeneratorRuntime().mark(function _callee() {
       var data, _iterator3, _step3, item, marketPlaceItem, _iterator4, _step4, language;
-      return ModalPromoTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+      return modalPromoTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             data = [];
-            _iterator3 = ModalPromoTagEdit_createForOfIteratorHelper(marketPlaces);
+            _iterator3 = modalPromoTagEdit_createForOfIteratorHelper(marketPlaces);
             try {
               for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
                 item = _step3.value;
@@ -43730,7 +43730,7 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
                   marketPlaceId: item.id,
                   values: []
                 };
-                _iterator4 = ModalPromoTagEdit_createForOfIteratorHelper(languages);
+                _iterator4 = modalPromoTagEdit_createForOfIteratorHelper(languages);
                 try {
                   for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
                     language = _step4.value;
@@ -43776,7 +43776,7 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
   var renderPlatform = function renderPlatform(lang, value) {
     if (lang == languages[0]) {
       return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: (selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id) == value.id ? ModalPromoTagEdit_styles.activeTab : '',
+        className: (selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id) == value.id ? modalPromoTagEdit_styles.activeTab : '',
         onClick: function onClick() {
           return setSelectedRuPlatform(value);
         },
@@ -43784,7 +43784,7 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
       });
     } else if (lang == languages[1]) {
       return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: (selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id) == value.id ? ModalPromoTagEdit_styles.activeTab : '',
+        className: (selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id) == value.id ? modalPromoTagEdit_styles.activeTab : '',
         onClick: function onClick() {
           return setSelectedEnPlatform(value);
         },
@@ -43794,23 +43794,23 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
   };
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
-    className: ModalPromoTagEdit_styles.tagPromoEditModalContent,
+    className: modalPromoTagEdit_styles.tagPromoEditModalContent,
     width: '890px',
     height: 'auto',
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalPromoTagEdit_styles.title,
+      className: modalPromoTagEdit_styles.title,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
         children: "\u0422\u0435\u0433\u0438 - %promo%"
       })
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalPromoTagEdit_styles.titleDescription,
+      className: modalPromoTagEdit_styles.titleDescription,
       children: ["\u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0440\u0435\u043A\u043B\u0430\u043C\u043D\u043E\u0435 \u043F\u0440\u043E\u043C\u043E, \u043C\u043E\u0436\u043D\u043E \u0443\u043A\u0430\u0437\u0430\u0442\u044C", /*#__PURE__*/(0,jsx_runtime.jsx)("br", {}), "\u0442\u043E\u0432\u0430\u0440\u044B \u043F\u0440\u043E\u0434\u0430\u0432\u0446\u0430 \u0434\u043B\u044F \u043F\u0440\u043E\u0434\u0432\u0438\u0436\u0435\u043D\u0438\u044F"]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalPromoTagEdit_styles.tagItemEdit,
+      className: modalPromoTagEdit_styles.tagItemEdit,
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalPromoTagEdit_styles.tagItemEditLang,
+        className: modalPromoTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalPromoTagEdit_styles.tagItemEditLangTitle,
+          className: modalPromoTagEdit_styles.tagItemEditLangTitle,
           children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
               width: "33",
@@ -43832,11 +43832,11 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
               children: "\u0418\u0433\u0440\u0430"
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: ModalPromoTagEdit_styles.tagItemEditLangPlatforms,
+            className: modalPromoTagEdit_styles.tagItemEditLangPlatforms,
             children: renderPlatforms(languages[0])
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalPromoTagEdit_styles.tagItemValue,
+          className: modalPromoTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
             onChange: handleChangeRussianText,
             defaultValue: values ? values.get("".concat(selectedRuPlatform === null || selectedRuPlatform === void 0 ? void 0 : selectedRuPlatform.id).concat(languages[0])) : '',
@@ -43847,9 +43847,9 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalPromoTagEdit_styles.tagItemEditLang,
+        className: modalPromoTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalPromoTagEdit_styles.tagItemEditLangTitle,
+          className: modalPromoTagEdit_styles.tagItemEditLangTitle,
           children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
             children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
               width: "32",
@@ -43904,11 +43904,11 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
               children: "\u0418\u0433\u0440\u0430"
             })]
           }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-            className: ModalPromoTagEdit_styles.tagItemEditLangPlatforms,
+            className: modalPromoTagEdit_styles.tagItemEditLangPlatforms,
             children: renderPlatforms(languages[1])
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalPromoTagEdit_styles.tagItemValue,
+          className: modalPromoTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
             onChange: handleChangeEnglishText,
             defaultValue: values ? values.get("".concat(selectedEnPlatform === null || selectedEnPlatform === void 0 ? void 0 : selectedEnPlatform.id).concat(languages[1])) : '',
@@ -43920,7 +43920,7 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
         })]
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalPromoTagEdit_styles.tagPromoEditButtons,
+      className: modalPromoTagEdit_styles.tagPromoEditButtons,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         width: '217px',
         height: 'auto',
@@ -43935,22 +43935,22 @@ var ModalPromoTagEdit = function ModalPromoTagEdit(_ref) {
     })]
   });
 };
-/* harmony default export */ const ModalTagsView_ModalPromoTagEdit = (ModalPromoTagEdit);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoAppsTagEdit/styles.scss
+/* harmony default export */ const modalPromoTagEdit = (ModalPromoTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalInfoAppsTagEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const ModalInfoAppsTagEdit_styles = ({"tagInfoAppsEditModalContent":"styles__tagInfoAppsEditModalContent--flH6S","title":"styles__title--hASLs","titleDescription":"styles__titleDescription--uOGnv","tagItemEdit":"styles__tagItemEdit--vs48I","tagItemEditLang":"styles__tagItemEditLang--skCVc","tagItemEditLangTitle":"styles__tagItemEditLangTitle--tcHsb","tagItemValue":"styles__tagItemValue--pXo4k","tagInfoAppsEditButtons":"styles__tagInfoAppsEditButtons--hfrFf"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoAppsTagEdit/index.js
-function ModalInfoAppsTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalInfoAppsTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalInfoAppsTagEdit_typeof(o); }
-function ModalInfoAppsTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalInfoAppsTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalInfoAppsTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalInfoAppsTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function ModalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-function ModalInfoAppsTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function ModalInfoAppsTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalInfoAppsTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-function ModalInfoAppsTagEdit_slicedToArray(arr, i) { return ModalInfoAppsTagEdit_arrayWithHoles(arr) || ModalInfoAppsTagEdit_iterableToArrayLimit(arr, i) || ModalInfoAppsTagEdit_unsupportedIterableToArray(arr, i) || ModalInfoAppsTagEdit_nonIterableRest(); }
-function ModalInfoAppsTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function ModalInfoAppsTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalInfoAppsTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalInfoAppsTagEdit_arrayLikeToArray(o, minLen); }
-function ModalInfoAppsTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function ModalInfoAppsTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function ModalInfoAppsTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony default export */ const modalInfoAppsTagEdit_styles = ({"tagInfoAppsEditModalContent":"styles__tagInfoAppsEditModalContent--ZnETL","title":"styles__title--RWcdr","titleDescription":"styles__titleDescription--mbE9j","tagItemEdit":"styles__tagItemEdit--Nw0tK","tagItemEditLang":"styles__tagItemEditLang--VuEMH","tagItemEditLangTitle":"styles__tagItemEditLangTitle--KhFBm","tagItemValue":"styles__tagItemValue--tXK5F","tagInfoAppsEditButtons":"styles__tagInfoAppsEditButtons--NaFfj"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalInfoAppsTagEdit/index.js
+function modalInfoAppsTagEdit_typeof(o) { "@babel/helpers - typeof"; return modalInfoAppsTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalInfoAppsTagEdit_typeof(o); }
+function modalInfoAppsTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalInfoAppsTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalInfoAppsTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalInfoAppsTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function modalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function modalInfoAppsTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { modalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { modalInfoAppsTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function modalInfoAppsTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = modalInfoAppsTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function modalInfoAppsTagEdit_slicedToArray(arr, i) { return modalInfoAppsTagEdit_arrayWithHoles(arr) || modalInfoAppsTagEdit_iterableToArrayLimit(arr, i) || modalInfoAppsTagEdit_unsupportedIterableToArray(arr, i) || modalInfoAppsTagEdit_nonIterableRest(); }
+function modalInfoAppsTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalInfoAppsTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalInfoAppsTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalInfoAppsTagEdit_arrayLikeToArray(o, minLen); }
+function modalInfoAppsTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalInfoAppsTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalInfoAppsTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -43963,19 +43963,19 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
     onClose = _ref.onClose;
   if (!isOpen) return;
   var _useState = (0,react.useState)([]),
-    _useState2 = ModalInfoAppsTagEdit_slicedToArray(_useState, 2),
+    _useState2 = modalInfoAppsTagEdit_slicedToArray(_useState, 2),
     languages = _useState2[0],
     setLanguages = _useState2[1];
   var _useState3 = (0,react.useState)(null),
-    _useState4 = ModalInfoAppsTagEdit_slicedToArray(_useState3, 2),
+    _useState4 = modalInfoAppsTagEdit_slicedToArray(_useState3, 2),
     selectedRuPlatform = _useState4[0],
     setSelectedRuPlatform = _useState4[1];
   var _useState5 = (0,react.useState)(null),
-    _useState6 = ModalInfoAppsTagEdit_slicedToArray(_useState5, 2),
+    _useState6 = modalInfoAppsTagEdit_slicedToArray(_useState5, 2),
     selectedEnPlatform = _useState6[0],
     setSelectedEnPlatform = _useState6[1];
   var _useState7 = (0,react.useState)(new Map()),
-    _useState8 = ModalInfoAppsTagEdit_slicedToArray(_useState7, 2),
+    _useState8 = modalInfoAppsTagEdit_slicedToArray(_useState7, 2),
     values = _useState8[0],
     setValues = _useState8[1];
   (0,react.useEffect)(function () {
@@ -43992,7 +43992,7 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
           return;
         }
         var valuesMap = new Map();
-        var _iterator = ModalInfoAppsTagEdit_createForOfIteratorHelper(data),
+        var _iterator = modalInfoAppsTagEdit_createForOfIteratorHelper(data),
           _step;
         try {
           for (_iterator.s(); !(_step = _iterator.n()).done;) {
@@ -44000,7 +44000,7 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
             if (!item.replacementValues || item.replacementValues.length == 0) {
               continue;
             }
-            var _iterator2 = ModalInfoAppsTagEdit_createForOfIteratorHelper(item.replacementValues),
+            var _iterator2 = modalInfoAppsTagEdit_createForOfIteratorHelper(item.replacementValues),
               _step2;
             try {
               for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
@@ -44032,13 +44032,13 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
     setValues(new Map(values.set("".concat(languages[1]), text)));
   };
   var onSave = /*#__PURE__*/function () {
-    var _ref2 = ModalInfoAppsTagEdit_asyncToGenerator( /*#__PURE__*/ModalInfoAppsTagEdit_regeneratorRuntime().mark(function _callee() {
+    var _ref2 = modalInfoAppsTagEdit_asyncToGenerator( /*#__PURE__*/modalInfoAppsTagEdit_regeneratorRuntime().mark(function _callee() {
       var data, _iterator3, _step3, language;
-      return ModalInfoAppsTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+      return modalInfoAppsTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             data = [];
-            _iterator3 = ModalInfoAppsTagEdit_createForOfIteratorHelper(languages);
+            _iterator3 = modalInfoAppsTagEdit_createForOfIteratorHelper(languages);
             try {
               for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
                 language = _step3.value;
@@ -44070,23 +44070,23 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
   }();
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
-    className: ModalInfoAppsTagEdit_styles.tagInfoAppsEditModalContent,
+    className: modalInfoAppsTagEdit_styles.tagInfoAppsEditModalContent,
     width: '890px',
     height: 'auto',
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalInfoAppsTagEdit_styles.title,
+      className: modalInfoAppsTagEdit_styles.title,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
         children: "\u0422\u0435\u0433\u0438 - %infoApps%"
       })
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalInfoAppsTagEdit_styles.titleDescription,
+      className: modalInfoAppsTagEdit_styles.titleDescription,
       children: "\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u0430 \u0438\u0437\u0434\u0430\u043D\u0438\u044F"
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalInfoAppsTagEdit_styles.tagItemEdit,
+      className: modalInfoAppsTagEdit_styles.tagItemEdit,
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalInfoAppsTagEdit_styles.tagItemEditLang,
+        className: modalInfoAppsTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoAppsTagEdit_styles.tagItemEditLangTitle,
+          className: modalInfoAppsTagEdit_styles.tagItemEditLangTitle,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
               width: "33",
@@ -44107,7 +44107,7 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
             })
           })
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoAppsTagEdit_styles.tagItemValue,
+          className: modalInfoAppsTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
             onChange: handleChangeRussianText,
             defaultValue: values ? values.get("".concat(languages[0])) : '',
@@ -44118,9 +44118,9 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalInfoAppsTagEdit_styles.tagItemEditLang,
+        className: modalInfoAppsTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoAppsTagEdit_styles.tagItemEditLangTitle,
+          className: modalInfoAppsTagEdit_styles.tagItemEditLangTitle,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
               width: "32",
@@ -44174,7 +44174,7 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
             })
           })
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoAppsTagEdit_styles.tagItemValue,
+          className: modalInfoAppsTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
             onChange: handleChangeEnglishText,
             defaultValue: values ? values.get("".concat(languages[1])) : '',
@@ -44186,7 +44186,7 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
         })]
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalInfoAppsTagEdit_styles.tagInfoAppsEditButtons,
+      className: modalInfoAppsTagEdit_styles.tagInfoAppsEditButtons,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         width: '217px',
         height: 'auto',
@@ -44201,22 +44201,22 @@ var ModalInfoAppsTagEdit = function ModalInfoAppsTagEdit(_ref) {
     })]
   });
 };
-/* harmony default export */ const ModalTagsView_ModalInfoAppsTagEdit = (ModalInfoAppsTagEdit);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoDlcTagEdit/styles.scss
+/* harmony default export */ const modalInfoAppsTagEdit = (ModalInfoAppsTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalInfoDlcTagEdit/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const ModalInfoDlcTagEdit_styles = ({"tagInfoDlcEditModalContent":"styles__tagInfoDlcEditModalContent--J0dBF","title":"styles__title--AVagL","titleDescription":"styles__titleDescription--OIQT7","tagItemEdit":"styles__tagItemEdit--CXMYE","tagItemEditLang":"styles__tagItemEditLang--Jrzzv","tagItemEditLangTitle":"styles__tagItemEditLangTitle--TDtnl","tagItemValue":"styles__tagItemValue--Sqv6d","tagInfoDlcEditButtons":"styles__tagInfoDlcEditButtons--cyv1L"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/ModalInfoDlcTagEdit/index.js
-function ModalInfoDlcTagEdit_typeof(o) { "@babel/helpers - typeof"; return ModalInfoDlcTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, ModalInfoDlcTagEdit_typeof(o); }
-function ModalInfoDlcTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ ModalInfoDlcTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == ModalInfoDlcTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(ModalInfoDlcTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function ModalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-function ModalInfoDlcTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { ModalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { ModalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function ModalInfoDlcTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = ModalInfoDlcTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-function ModalInfoDlcTagEdit_slicedToArray(arr, i) { return ModalInfoDlcTagEdit_arrayWithHoles(arr) || ModalInfoDlcTagEdit_iterableToArrayLimit(arr, i) || ModalInfoDlcTagEdit_unsupportedIterableToArray(arr, i) || ModalInfoDlcTagEdit_nonIterableRest(); }
-function ModalInfoDlcTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function ModalInfoDlcTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalInfoDlcTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalInfoDlcTagEdit_arrayLikeToArray(o, minLen); }
-function ModalInfoDlcTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function ModalInfoDlcTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function ModalInfoDlcTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony default export */ const modalInfoDlcTagEdit_styles = ({"tagInfoDlcEditModalContent":"styles__tagInfoDlcEditModalContent--fQk7T","title":"styles__title--kpKks","titleDescription":"styles__titleDescription--N3PI8","tagItemEdit":"styles__tagItemEdit--Xf6RB","tagItemEditLang":"styles__tagItemEditLang--ln6Sj","tagItemEditLangTitle":"styles__tagItemEditLangTitle--LMPus","tagItemValue":"styles__tagItemValue--hWpiv","tagInfoDlcEditButtons":"styles__tagInfoDlcEditButtons--tupFl"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/modalInfoDlcTagEdit/index.js
+function modalInfoDlcTagEdit_typeof(o) { "@babel/helpers - typeof"; return modalInfoDlcTagEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalInfoDlcTagEdit_typeof(o); }
+function modalInfoDlcTagEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalInfoDlcTagEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalInfoDlcTagEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalInfoDlcTagEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function modalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function modalInfoDlcTagEdit_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { modalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { modalInfoDlcTagEdit_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function modalInfoDlcTagEdit_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = modalInfoDlcTagEdit_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function modalInfoDlcTagEdit_slicedToArray(arr, i) { return modalInfoDlcTagEdit_arrayWithHoles(arr) || modalInfoDlcTagEdit_iterableToArrayLimit(arr, i) || modalInfoDlcTagEdit_unsupportedIterableToArray(arr, i) || modalInfoDlcTagEdit_nonIterableRest(); }
+function modalInfoDlcTagEdit_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalInfoDlcTagEdit_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalInfoDlcTagEdit_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalInfoDlcTagEdit_arrayLikeToArray(o, minLen); }
+function modalInfoDlcTagEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalInfoDlcTagEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalInfoDlcTagEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -44229,19 +44229,19 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
     onClose = _ref.onClose;
   if (!isOpen) return;
   var _useState = (0,react.useState)([]),
-    _useState2 = ModalInfoDlcTagEdit_slicedToArray(_useState, 2),
+    _useState2 = modalInfoDlcTagEdit_slicedToArray(_useState, 2),
     languages = _useState2[0],
     setLanguages = _useState2[1];
   var _useState3 = (0,react.useState)(null),
-    _useState4 = ModalInfoDlcTagEdit_slicedToArray(_useState3, 2),
+    _useState4 = modalInfoDlcTagEdit_slicedToArray(_useState3, 2),
     selectedRuPlatform = _useState4[0],
     setSelectedRuPlatform = _useState4[1];
   var _useState5 = (0,react.useState)(null),
-    _useState6 = ModalInfoDlcTagEdit_slicedToArray(_useState5, 2),
+    _useState6 = modalInfoDlcTagEdit_slicedToArray(_useState5, 2),
     selectedEnPlatform = _useState6[0],
     setSelectedEnPlatform = _useState6[1];
   var _useState7 = (0,react.useState)(new Map()),
-    _useState8 = ModalInfoDlcTagEdit_slicedToArray(_useState7, 2),
+    _useState8 = modalInfoDlcTagEdit_slicedToArray(_useState7, 2),
     values = _useState8[0],
     setValues = _useState8[1];
   (0,react.useEffect)(function () {
@@ -44258,7 +44258,7 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
           return;
         }
         var valuesMap = new Map();
-        var _iterator = ModalInfoDlcTagEdit_createForOfIteratorHelper(data),
+        var _iterator = modalInfoDlcTagEdit_createForOfIteratorHelper(data),
           _step;
         try {
           for (_iterator.s(); !(_step = _iterator.n()).done;) {
@@ -44266,7 +44266,7 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
             if (!item.replacementValues || item.replacementValues.length == 0) {
               continue;
             }
-            var _iterator2 = ModalInfoDlcTagEdit_createForOfIteratorHelper(item.replacementValues),
+            var _iterator2 = modalInfoDlcTagEdit_createForOfIteratorHelper(item.replacementValues),
               _step2;
             try {
               for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
@@ -44298,13 +44298,13 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
     setValues(new Map(values.set("".concat(languages[1]), text)));
   };
   var onSave = /*#__PURE__*/function () {
-    var _ref2 = ModalInfoDlcTagEdit_asyncToGenerator( /*#__PURE__*/ModalInfoDlcTagEdit_regeneratorRuntime().mark(function _callee() {
+    var _ref2 = modalInfoDlcTagEdit_asyncToGenerator( /*#__PURE__*/modalInfoDlcTagEdit_regeneratorRuntime().mark(function _callee() {
       var data, _iterator3, _step3, language;
-      return ModalInfoDlcTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
+      return modalInfoDlcTagEdit_regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             data = [];
-            _iterator3 = ModalInfoDlcTagEdit_createForOfIteratorHelper(languages);
+            _iterator3 = modalInfoDlcTagEdit_createForOfIteratorHelper(languages);
             try {
               for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
                 language = _step3.value;
@@ -44336,23 +44336,23 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
   }();
   return /*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
     isOpen: isOpen,
-    className: ModalInfoDlcTagEdit_styles.tagInfoDlcEditModalContent,
+    className: modalInfoDlcTagEdit_styles.tagInfoDlcEditModalContent,
     width: '890px',
     height: 'auto',
     children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalInfoDlcTagEdit_styles.title,
+      className: modalInfoDlcTagEdit_styles.title,
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
         children: "\u0422\u0435\u0433\u0438 - %infoDLC%"
       })
     }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: ModalInfoDlcTagEdit_styles.titleDescription,
+      className: modalInfoDlcTagEdit_styles.titleDescription,
       children: "\u041F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u0438\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u0430 \u0438\u0437\u0434\u0430\u043D\u0438\u044F"
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalInfoDlcTagEdit_styles.tagItemEdit,
+      className: modalInfoDlcTagEdit_styles.tagItemEdit,
       children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalInfoDlcTagEdit_styles.tagItemEditLang,
+        className: modalInfoDlcTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoDlcTagEdit_styles.tagItemEditLangTitle,
+          className: modalInfoDlcTagEdit_styles.tagItemEditLangTitle,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
               width: "33",
@@ -44373,7 +44373,7 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
             })
           })
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoDlcTagEdit_styles.tagItemValue,
+          className: modalInfoDlcTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
             onChange: handleChangeRussianText,
             defaultValue: values ? values.get("".concat(languages[0])) : '',
@@ -44384,9 +44384,9 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
           })
         })]
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalInfoDlcTagEdit_styles.tagItemEditLang,
+        className: modalInfoDlcTagEdit_styles.tagItemEditLang,
         children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoDlcTagEdit_styles.tagItemEditLangTitle,
+          className: modalInfoDlcTagEdit_styles.tagItemEditLangTitle,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
             children: /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
               width: "32",
@@ -44440,7 +44440,7 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
             })
           })
         }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-          className: ModalInfoDlcTagEdit_styles.tagItemValue,
+          className: modalInfoDlcTagEdit_styles.tagItemValue,
           children: /*#__PURE__*/(0,jsx_runtime.jsx)(shared_textarea, {
             onChange: handleChangeEnglishText,
             defaultValue: values ? values.get("".concat(languages[1])) : '',
@@ -44452,7 +44452,7 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
         })]
       })]
     }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-      className: ModalInfoDlcTagEdit_styles.tagInfoDlcEditButtons,
+      className: modalInfoDlcTagEdit_styles.tagInfoDlcEditButtons,
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         width: '217px',
         height: 'auto',
@@ -44467,17 +44467,17 @@ var ModalInfoDlcTagEdit = function ModalInfoDlcTagEdit(_ref) {
     })]
   });
 };
-/* harmony default export */ const ModalTagsView_ModalInfoDlcTagEdit = (ModalInfoDlcTagEdit);
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/styles.scss
+/* harmony default export */ const modalInfoDlcTagEdit = (ModalInfoDlcTagEdit);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const ModalTagsView_styles = ({"tagsViewModalContent":"styles__tagsViewModalContent--MItAf","title":"styles__title--wOjwr","tagButtons":"styles__tagButtons--gCyRC","tagButtonsRow":"styles__tagButtonsRow--HJNTS","closeTagViewButton":"styles__closeTagViewButton--b53oI"});
-;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/ModalTagsView/index.js
-function ModalTagsView_slicedToArray(arr, i) { return ModalTagsView_arrayWithHoles(arr) || ModalTagsView_iterableToArrayLimit(arr, i) || ModalTagsView_unsupportedIterableToArray(arr, i) || ModalTagsView_nonIterableRest(); }
-function ModalTagsView_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function ModalTagsView_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return ModalTagsView_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return ModalTagsView_arrayLikeToArray(o, minLen); }
-function ModalTagsView_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function ModalTagsView_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function ModalTagsView_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony default export */ const modalTagsView_styles = ({"tagsViewModalContent":"styles__tagsViewModalContent--tlNS5","title":"styles__title--Uj5jy","tagButtons":"styles__tagButtons--cRwEl","tagButtonsRow":"styles__tagButtonsRow--tA86W","closeTagViewButton":"styles__closeTagViewButton--nXZzC"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/modalTagsView/index.js
+function modalTagsView_slicedToArray(arr, i) { return modalTagsView_arrayWithHoles(arr) || modalTagsView_iterableToArrayLimit(arr, i) || modalTagsView_unsupportedIterableToArray(arr, i) || modalTagsView_nonIterableRest(); }
+function modalTagsView_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function modalTagsView_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return modalTagsView_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return modalTagsView_arrayLikeToArray(o, minLen); }
+function modalTagsView_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function modalTagsView_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function modalTagsView_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -44492,24 +44492,24 @@ var ModalTagsView = function ModalTagsView(_ref) {
     onClose = _ref.onClose;
   if (!isOpen) return;
   var _useState = (0,react.useState)(false),
-    _useState2 = ModalTagsView_slicedToArray(_useState, 2),
+    _useState2 = modalTagsView_slicedToArray(_useState, 2),
     showTagTypeEditModal = _useState2[0],
     setShowTagTypeEditModal = _useState2[1];
   var _useState3 = (0,react.useState)(false),
-    _useState4 = ModalTagsView_slicedToArray(_useState3, 2),
+    _useState4 = modalTagsView_slicedToArray(_useState3, 2),
     showTagPromoEditModal = _useState4[0],
     setShowTagPromoEditModal = _useState4[1];
   var _useState5 = (0,react.useState)(false),
-    _useState6 = ModalTagsView_slicedToArray(_useState5, 2),
+    _useState6 = modalTagsView_slicedToArray(_useState5, 2),
     showTagInfoAppsEditModal = _useState6[0],
     setShowTagInfoAppsEditModal = _useState6[1];
   var _useState7 = (0,react.useState)(false),
-    _useState8 = ModalTagsView_slicedToArray(_useState7, 2),
+    _useState8 = modalTagsView_slicedToArray(_useState7, 2),
     showTagInfoDlcEditModal = _useState8[0],
     setShowTagInfoDlcEditModal = _useState8[1];
   var renderModals = function renderModals() {
     if (showTagTypeEditModal) {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalTypeTagEdit, {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalTypeTagEdit, {
         isOpen: showTagTypeEditModal,
         onClose: function onClose() {
           return setShowTagTypeEditModal(!showTagTypeEditModal);
@@ -44517,7 +44517,7 @@ var ModalTagsView = function ModalTagsView(_ref) {
       });
     }
     if (showTagPromoEditModal) {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalPromoTagEdit, {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalPromoTagEdit, {
         isOpen: showTagPromoEditModal,
         onClose: function onClose() {
           return setShowTagPromoEditModal(!showTagPromoEditModal);
@@ -44525,7 +44525,7 @@ var ModalTagsView = function ModalTagsView(_ref) {
       });
     }
     if (showTagInfoAppsEditModal) {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalInfoAppsTagEdit, {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalInfoAppsTagEdit, {
         isOpen: showTagInfoAppsEditModal,
         onClose: function onClose() {
           return setShowTagInfoAppsEditModal(!showTagInfoAppsEditModal);
@@ -44533,7 +44533,7 @@ var ModalTagsView = function ModalTagsView(_ref) {
       });
     }
     if (showTagInfoDlcEditModal) {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(ModalTagsView_ModalInfoDlcTagEdit, {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalInfoDlcTagEdit, {
         isOpen: showTagInfoDlcEditModal,
         onClose: function onClose() {
           return setShowTagInfoDlcEditModal(!showTagInfoDlcEditModal);
@@ -44544,18 +44544,18 @@ var ModalTagsView = function ModalTagsView(_ref) {
   return /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
     children: [/*#__PURE__*/(0,jsx_runtime.jsxs)(ModalBase, {
       isOpen: isOpen,
-      className: ModalTagsView_styles.tagsViewModalContent,
+      className: modalTagsView_styles.tagsViewModalContent,
       width: '730px',
       height: 'auto',
       children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: ModalTagsView_styles.title,
+        className: modalTagsView_styles.title,
         children: /*#__PURE__*/(0,jsx_runtime.jsx)("h1", {
           children: "\u0422\u0435\u0433\u0438 \u0448\u0430\u0431\u043B\u043E\u043D\u043E\u0432"
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-        className: ModalTagsView_styles.tagButtons,
+        className: modalTagsView_styles.tagButtons,
         children: [/*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalTagsView_styles.tagButtonsRow,
+          className: modalTagsView_styles.tagButtonsRow,
           children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
             onClick: function onClick() {
               return setShowTagTypeEditModal(true);
@@ -44572,7 +44572,7 @@ var ModalTagsView = function ModalTagsView(_ref) {
             height: '70px'
           })]
         }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-          className: ModalTagsView_styles.tagButtonsRow,
+          className: modalTagsView_styles.tagButtonsRow,
           children: [/*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
             onClick: function onClick() {
               return setShowTagInfoAppsEditModal(true);
@@ -44592,14 +44592,14 @@ var ModalTagsView = function ModalTagsView(_ref) {
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
         width: 'auto',
         height: 'auto',
-        className: ModalTagsView_styles.closeTagViewButton,
+        className: modalTagsView_styles.closeTagViewButton,
         onClick: onClose,
         children: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
       })]
     }), renderModals()]
   });
 };
-/* harmony default export */ const modalItemInfoEdit_ModalTagsView = (ModalTagsView);
+/* harmony default export */ const modalTagsView = (ModalTagsView);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/products/list/modalItemInfoEdit/index.js
 function modalItemInfoEdit_typeof(o) { "@babel/helpers - typeof"; return modalItemInfoEdit_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalItemInfoEdit_typeof(o); }
 function modalItemInfoEdit_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ modalItemInfoEdit_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == modalItemInfoEdit_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(modalItemInfoEdit_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
@@ -44793,7 +44793,7 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
   };
   var renderModals = function renderModals() {
     if (showTagsModal) {
-      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalItemInfoEdit_ModalTagsView, {
+      return /*#__PURE__*/(0,jsx_runtime.jsx)(modalTagsView, {
         isOpen: showTagsModal,
         onClose: function onClose() {
           return setShowTagsModal(!showTagsModal);
@@ -63748,9 +63748,15 @@ var bots_bots = function bots() {
   });
 };
 /* harmony default export */ const admin_bots = (bots_bots);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/sellers/modalEdit/switch/colors.js
+var Colors = {
+  ORANGE: 'orange',
+  GREEN: 'green'
+};
+/* harmony default export */ const colors = (Colors);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/sellers/modalEdit/switch/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const modalEdit_switch_styles = ({"wrapper":"styles__wrapper--VpWrE","track":"styles__track--pKDm0","thumb":"styles__thumb--u44Cn","checked":"styles__checked--RpQD7","awaition":"styles__awaition--MTyz9"});
+/* harmony default export */ const modalEdit_switch_styles = ({"wrapper":"styles__wrapper--VpWrE","track":"styles__track--pKDm0","thumb":"styles__thumb--u44Cn","checked":"styles__checked--RpQD7","green":"styles__green--Kj376","orange":"styles__orange--jxsL0","awaition":"styles__awaition--MTyz9"});
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/admin/sellers/modalEdit/switch/index.js
 function modalEdit_switch_typeof(o) { "@babel/helpers - typeof"; return modalEdit_switch_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, modalEdit_switch_typeof(o); }
 function modalEdit_switch_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -63767,11 +63773,13 @@ function modalEdit_switch_arrayWithHoles(arr) { if (Array.isArray(arr)) return a
 
 
 
+
 var switch_SwitchBtn = function SwitchBtn(_ref) {
   var value = _ref.value,
     onChange = _ref.onChange,
     style = _ref.style,
-    lastSaveTime = _ref.lastSaveTime;
+    lastSaveTime = _ref.lastSaveTime,
+    color = _ref.color;
   var _React$useState = react.useState(value),
     _React$useState2 = modalEdit_switch_slicedToArray(_React$useState, 2),
     checked = _React$useState2[0],
@@ -63810,6 +63818,12 @@ var switch_SwitchBtn = function SwitchBtn(_ref) {
     }; // Cleanup interval on component unmount
   }, [lastSaveTime]); // Depend on lastSaveTime and value
 
+  var getColorClass = function getColorClass(color) {
+    if (color === colors.ORANGE) {
+      return modalEdit_switch_styles.orange;
+    }
+    return modalEdit_switch_styles.green;
+  };
   return /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
     className: modalEdit_switch_styles.wrapper,
     style: modalEdit_switch_objectSpread({}, style),
@@ -63817,13 +63831,13 @@ var switch_SwitchBtn = function SwitchBtn(_ref) {
       className: modalEdit_switch_styles.awaition,
       children: timer > 9 ? "0:".concat(timer) : "0:0".concat(timer)
     }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-      className: modalEdit_switch_styles.track + ' ' + (checked ? modalEdit_switch_styles.checked : ''),
+      className: modalEdit_switch_styles.track + ' ' + (checked ? modalEdit_switch_styles.checked : '') + ' ' + getColorClass(color),
       onClick: function onClick() {
         if (onChange) onChange(!checked);
         setChecked(!checked);
       },
       children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
-        className: modalEdit_switch_styles.thumb + ' ' + (checked ? modalEdit_switch_styles.checked : '')
+        className: modalEdit_switch_styles.thumb + ' ' + (checked ? modalEdit_switch_styles.checked : '') + ' ' + getColorClass(color)
       })
     })
   });
@@ -64116,7 +64130,7 @@ var ModalRulesEdit = function ModalRulesEdit(_ref) {
         height: 28,
         className: modalRulesEdit_styles.percentValue,
         symbolStyle: {
-          padding: '0 5px 0 0',
+          padding: '0 10px 0 0',
           minWidth: 'auto',
           fontSize: '14px'
         }
@@ -64138,8 +64152,7 @@ var ModalRulesEdit = function ModalRulesEdit(_ref) {
             return handleSwitch(key, val);
           },
           style: {
-            transform: 'scale(0.75)',
-            marginLeft: '8px'
+            transform: 'scale(0.75)'
           }
         })]
       })]
@@ -64293,6 +64306,7 @@ function sellers_modalEdit_unsupportedIterableToArray(o, minLen) { if (!o) retur
 function sellers_modalEdit_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function sellers_modalEdit_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function sellers_modalEdit_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -64503,7 +64517,8 @@ var modalEdit_ModalEdit = function ModalEdit(_ref2) {
             style: {
               transform: 'scale(0.75)',
               margin: '0 auto'
-            }
+            },
+            color: colors.ORANGE
           })
         })]
       });
@@ -64765,7 +64780,7 @@ var SellersList = function SellersList(user) {
     if (item.blocked) {
       return sellers_list_styles.blocked;
     }
-    if (item.rentDays < 5) {
+    if (item.rentDays < 5 && item.rentDays != undefined && item.rentDays != null) {
       return sellers_list_styles.expired;
     }
     return sellers_list_styles.active;
@@ -64774,7 +64789,7 @@ var SellersList = function SellersList(user) {
     if (item.blocked) {
       return '• заблокирован';
     }
-    if (item.rentDays < 5) {
+    if (item.rentDays < 5 && item.rentDays != undefined && item.rentDays != null) {
       return '• кончилась аренда';
     }
     return '• активен';
@@ -65786,6 +65801,8 @@ const robot_namespaceObject = __webpack_require__.p + "d6bbd981ed2bd9d2db67.svg"
 const cart_namespaceObject = __webpack_require__.p + "3c68476424236c8d82e2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/settings.svg
 const settings_namespaceObject = __webpack_require__.p + "63b1b618af954e7db694.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/sellers.svg
+const icons_sellers_namespaceObject = __webpack_require__.p + "e11bf8562558318caaeb.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowLeft.svg
 const arrowLeft_namespaceObject = __webpack_require__.p + "96780ec48f6c1b85e039.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowRight.svg
@@ -67271,6 +67288,7 @@ function leftMenu_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var leftMenu = function leftMenu() {
   var _state$use = state.use(),
     digisellerEditModalIsOpen = _state$use.digisellerEditModalIsOpen,
@@ -67332,7 +67350,7 @@ var leftMenu = function leftMenu() {
         })
       }), /*#__PURE__*/(0,jsx_runtime.jsx)(section, {
         className: leftMenu_styles.menuSection,
-        height: 333,
+        height: 277,
         width: 254,
         children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
           className: leftMenu_styles.menuList,
@@ -67637,7 +67655,7 @@ var getMenuArrData = function getMenuArrData(setIsEditSellerModalOpen) {
     }
   }, {
     name: 'Пользователи',
-    icon: cart_namespaceObject,
+    icon: icons_sellers_namespaceObject,
     subMenu: [{
       name: 'Продавцы',
       url: '/admin/sellers'

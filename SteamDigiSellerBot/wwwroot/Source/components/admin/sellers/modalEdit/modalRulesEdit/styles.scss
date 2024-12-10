@@ -5,7 +5,8 @@ $percent-back: #512068;
     color: $white-3;
     font-size: 16px;
     line-height: 16px;
-    overflow-y: auto;
+    overflow-y: hidden;
+    user-select: none;
 
     h2.title {
         font-size: 28px;
@@ -23,10 +24,23 @@ $percent-back: #512068;
     }
 
     .switchWrapper {
-        padding: 0 95px 0 85px;
-        margin-top: -8px;
-        max-height: 530px;
+        margin: 0 62px 0 85px;
+        max-height: 550px;
         overflow-y: scroll;
+        padding-right: 38px;
+        padding-top: 28px;
+
+        &::-webkit-scrollbar {
+            width: 14px;
+            height: 155px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border: 6px solid transparent;
+            background-clip: padding-box;
+            border-radius: 9999px;
+            background-color: #9E5BB6
+        }
 
         .switchContent {
             display: flex;
@@ -43,14 +57,25 @@ $percent-back: #512068;
                     border-radius: 15px;
                     font-size: 14px;
                     background-color: $percent-back;
-                    padding-left: 10px;
+                    padding: 0 0 0 10px;
                 }
             }
         }
     }
 
+    .switchWrapper > div:first-child {
+        margin-top: 20px;
+    }
+
     &::-webkit-scrollbar {
-        width: 0px;
+        width: 14px
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border: 6px solid transparent;
+        background-clip: padding-box;
+        border-radius: 9999px;
+        background-color: #83409b
     }
 
     .formItem {
