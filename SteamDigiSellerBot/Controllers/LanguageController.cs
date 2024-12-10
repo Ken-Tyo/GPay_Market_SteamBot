@@ -9,7 +9,7 @@ using System;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class LanguageController : Controller
     {
         private readonly LanguageProvider _languageProvider;

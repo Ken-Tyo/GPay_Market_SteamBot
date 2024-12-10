@@ -66,6 +66,7 @@ namespace SteamDigiSellerBot
             services.AddTransient<IUpdateItemInfoStatRepository, UpdateItemInfoStatRepository>();
             services.AddTransient<TagTypeReplacementsRepository>();
             services.AddTransient<TagPromoReplacementsRepository>();
+            services.AddTransient<ISellerRepository, SellerRepository>();
             services.AddTransient<TagInfoAppsReplacementsRepository>();
             services.AddTransient<TagInfoDlcReplacementsRepository>();
             services.AddTransient<MarketPlaceProvider>();
@@ -75,18 +76,16 @@ namespace SteamDigiSellerBot
             services.AddTransient<IPriceBasisBulkUpdateService, PriceBasisBulkUpdateService>();
             services.AddTransient<TagTypeReplacementService>();
             services.AddTransient<TagPromoReplacementService>();
+            services.AddTransient<ISellersService, SellersService>();
             services.AddTransient<TagInfoAppsReplacementService>();
             services.AddTransient<TagInfoDlcReplacementService>();
-
             services.AddSingleton<ISteamNetworkService, SteamNetworkService>();
             services.AddSingleton<IDigiSellerNetworkService, DigiSellerNetworkService>();
             services.AddSingleton<IItemNetworkService, ItemNetworkService>();
             services.AddSingleton<ICurrencyDataService, CurrencyDataService>();
             services.AddSingleton<IDigisellerTokenProvider, DigisellerTokenProvider>();
             services.AddSingleton<IUpdateItemsInfoService, UpdateItemsInfoService>();
-
             services.AddTransient(provider => new GameAppsRepository(Configuration.GetConnectionString(DatabaseExtension.ConnectionName)));
-
             services.AddSingleton<IGameSessionService, GameSessionService>();
 
 #if !DEBUG
@@ -105,7 +104,6 @@ namespace SteamDigiSellerBot
                 e.AddConsole();
                 e.AddDebug();
                 });
-
             services.AddAutoMapper(typeof(Startup), typeof(AddOrUpdateTagTypeReplacementsCommandMappingProfile));
             services.AddAutoMapper(typeof(Startup), typeof(AddOrUpdateTagInfoAppsReplacementsCommandMappingProfile));
 
@@ -141,6 +139,7 @@ namespace SteamDigiSellerBot
             app.UseRouting();
 
             app.UseAuthentication();
+            app.EnsureRolesCreated();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

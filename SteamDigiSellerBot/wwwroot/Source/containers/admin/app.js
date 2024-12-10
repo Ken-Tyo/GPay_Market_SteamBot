@@ -3,6 +3,7 @@
 import Products from '../../components/admin/products';
 import Orders from '../../components/admin/orders';
 import Bots from '../../components/admin/bots';
+import Sellers from '../../components/admin/sellers'
 import Proxy from '../../components/admin/proxies';
 import LeftMenu from '../../components/admin/leftMenu';
 import {
@@ -75,6 +76,10 @@ let router = createBrowserRouter(
           return true;
         }}
         element={<Orders />}
+      />
+      <Route
+        path="sellers"
+        element={<Sellers />}
       />
       <Route
         path="proxy"

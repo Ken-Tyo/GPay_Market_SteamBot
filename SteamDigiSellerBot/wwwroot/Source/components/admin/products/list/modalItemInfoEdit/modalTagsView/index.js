@@ -1,10 +1,10 @@
 ﻿import React, { useState, useEffect } from 'react';
 import Button from '../../../../../shared/button';
 import ModalBase from '../../../../../shared/modalBase';
-import ModalTypeTagEdit from './ModalTypeTagEdit'
-import ModalPromoTagEdit from './ModalPromoTagEdit'
-import ModalInfoAppsTagEdit from './ModalInfoAppsTagEdit'
-import ModalInfoDlcTagEdit from './ModalInfoDlcTagEdit'
+import ModalTypeTagEdit from './modalTypeTagEdit'
+import ModalPromoTagEdit from './modalPromoTagEdit'
+import ModalInfoAppsTagEdit from './modalInfoAppsTagEdit'
+import ModalInfoDlcTagEdit from './modalInfoDlcTagEdit'
 import css from './styles.scss';
 
 const ModalTagsView = ({ isOpen, onClose }) => {

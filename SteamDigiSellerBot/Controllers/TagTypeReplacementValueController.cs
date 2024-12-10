@@ -14,7 +14,7 @@ using SteamDigiSellerBot.Services.Implementation.TagServices.Models;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class TagTypeReplacementValueController : Controller
     {
         private readonly UserManager<User> _userManager;

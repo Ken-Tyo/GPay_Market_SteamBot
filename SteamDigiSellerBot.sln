@@ -19,9 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamDigiSellerBot.Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamDigiSellerBot.Tests", "SteamDigiSellerBot.Tests\SteamDigiSellerBot.Tests.csproj", "{B0F47981-7C9E-4366-A4CB-2D823ECFF879}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamKit2", "SteamKit2\SteamKit2\SteamKit2\SteamKit2.csproj", "{4B2B0365-DE37-4B65-B614-3E4E7C05147D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamDigiSellerBot.Protos", "SteamDigiSellerBot.Protos\SteamDigiSellerBot.Protos.csproj", "{914F4BBE-7C27-4DD2-A8FA-2E9E99C9FAAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamDigiSellerBot.Protos", "SteamDigiSellerBot.Protos\SteamDigiSellerBot.Protos.csproj", "{8465C879-F979-4BAA-856C-602E46DA41BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,14 +59,10 @@ Global
 		{B0F47981-7C9E-4366-A4CB-2D823ECFF879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0F47981-7C9E-4366-A4CB-2D823ECFF879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0F47981-7C9E-4366-A4CB-2D823ECFF879}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B2B0365-DE37-4B65-B614-3E4E7C05147D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B2B0365-DE37-4B65-B614-3E4E7C05147D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B2B0365-DE37-4B65-B614-3E4E7C05147D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B2B0365-DE37-4B65-B614-3E4E7C05147D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{914F4BBE-7C27-4DD2-A8FA-2E9E99C9FAAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{914F4BBE-7C27-4DD2-A8FA-2E9E99C9FAAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{914F4BBE-7C27-4DD2-A8FA-2E9E99C9FAAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{914F4BBE-7C27-4DD2-A8FA-2E9E99C9FAAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8465C879-F979-4BAA-856C-602E46DA41BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8465C879-F979-4BAA-856C-602E46DA41BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8465C879-F979-4BAA-856C-602E46DA41BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8465C879-F979-4BAA-856C-602E46DA41BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

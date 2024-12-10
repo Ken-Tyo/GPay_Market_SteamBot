@@ -44,7 +44,6 @@ const ModalEdit = ({
   onSave,
   response,
   resetResponse,
-  isReserve,
 }) => {
   const initialValue = {
     id: null,
@@ -120,7 +119,7 @@ const ModalEdit = ({
                   name={'Запасной бот:'} 
                   onChange={(val) => {
                      apiBotSetIsReserve(item.id, val);
-                     handleChange('isReserve');
+                     handleChange('isReserve')(val);
                   }}
                   value={item.isReserve}
                 />
