@@ -25,6 +25,14 @@
         .doubleControl {
             display: flex;
         }
+
+        .calculatingPrice {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: end;
+            font-size: 14px;
+            margin: 10px;
+        }
     }
 }
 
