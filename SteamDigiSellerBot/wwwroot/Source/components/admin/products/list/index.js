@@ -307,7 +307,7 @@ const products = () => {
   }
 
   return (
-      <div className={css.wrapper} style={{ userSelect: 'none' }}>
+      <div className={css.wrapper} >
       <List
         headers={Object.values(headers)}
         data={[...sortedItems]}
@@ -627,7 +627,7 @@ const products = () => {
               }}
             />
 
-            <div className={css.subMenu + ' ' + subMenuVisibility}>
+            <div className={css.subMenu + ' ' + css.massDescriptionBlockSubMenu + ' ' + subMenuVisibility}>
               <div className={css.subMenuItem} onClick={() => {
                 toggleItemMainInfoModal(true);
                 toggleMassDescriptionSubMenu();

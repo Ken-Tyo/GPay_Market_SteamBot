@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class TagPromoReplacementValueController : Controller
     {
         private readonly UserManager<User> _userManager;

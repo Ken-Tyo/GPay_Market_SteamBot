@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class GamePriceController: Controller
     {
         //private readonly IItemRepository _itemRepository;

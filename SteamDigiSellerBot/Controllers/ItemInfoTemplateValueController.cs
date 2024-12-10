@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public sealed class ItemInfoTemplateValueController : Controller
     {
         private readonly IItemInfoTemplateValueRepository _itemInfoTemplateValueRepository;
