@@ -764,7 +764,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 if (pre_botId != null)
                     result = result.OrderByDescending(x => x.Id == pre_botId).ToList();
                 _logger.LogInformation(
-                    $"GS ID {gs.Id} after filter by criteration - {JsonConvert.SerializeObject(result.Select(b => new { id = b.Id, name = b.UserName }))}");
+                    $"GS ID {gs.Id} after filter by random criteration - {JsonConvert.SerializeObject(result.Select(b => new { id = b.Id, name = b.UserName }))}");
                 var selected = result.FirstOrDefault();
 
                 if (pre_botId == null)
@@ -1691,7 +1691,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                 await _gameSessionRepository.EditAsync(db, gs);
                 return (SendGameStatus.otherError, GameReadyToSendStatus.botSwitch); //readyState
             }
-            _logger.LogWarning($"GS ID {gs.Id} проверка очереди бота");
+            _logger.LogWarning($"GS ID {gs.Id} проверка очереди бота {sbot.Bot.UserName}");
             DateTime timeIn= DateTime.UtcNow;
             if (sbot.BusyState.WaitOne())
             {
