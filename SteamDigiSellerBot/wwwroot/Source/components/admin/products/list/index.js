@@ -337,37 +337,39 @@ const products = () => {
 
   // Listen mouse if (Shift-click) then avoid user-select: add(css.disableSelect) otherwise - allow
   useEffect(() => {
-      const selectableArea = document.getElementById('productList');
+    const selectableArea = document.getElementById("productList");
 
-      if (selectableArea) {
-            let mtimer;
-            selectableArea.addEventListener('mousedown', (event) => {
-                if (event.shiftKey || event.detail > 1) {
-                    selectableArea.classList.add(css.disableSelect);
-                } else {
-                    // Init timer, after 500 ms (long click) - enable to select 
-                    const isDisableSelect = selectableArea.classList.contains(css.disableSelect);
-                    if (isDisableSelect) {
-                        mtimer = setTimeout(() => {
-                            selectableArea.classList.remove(css.disableSelect);
-                        }, 500);
-                    }
-                }
-            });
-            // mouseup, mouseleave - reset timer and enable to select
-            selectableArea.addEventListener('mouseup', () => {
-                clearTimeout(mtimer);
-                selectableArea.classList.remove(css.disableSelect);
-            });
-            selectableArea.addEventListener('mouseleave', () => {
-                clearTimeout(mtimer);
-                selectableArea.classList.remove(css.disableSelect);
-            });
+    if (selectableArea) {
+      let mtimer;
+      selectableArea.addEventListener("mousedown", (event) => {
+        if (event.shiftKey || event.detail > 1) {
+          selectableArea.classList.add(css.disableSelect);
+        } else {
+          // Init timer, after 500 ms (long click) - enable to select
+          const isDisableSelect = selectableArea.classList.contains(
+            css.disableSelect
+          );
+          if (isDisableSelect) {
+            mtimer = setTimeout(() => {
+              selectableArea.classList.remove(css.disableSelect);
+            }, 500);
+          }
         }
-    }, []); 
+      });
+      // mouseup, mouseleave - reset timer and enable to select
+      selectableArea.addEventListener("mouseup", () => {
+        clearTimeout(mtimer);
+        selectableArea.classList.remove(css.disableSelect);
+      });
+      selectableArea.addEventListener("mouseleave", () => {
+        clearTimeout(mtimer);
+        selectableArea.classList.remove(css.disableSelect);
+      });
+    }
+  }, []);
 
   return (
-      <div className={css.wrapper}  id = "productList" >
+    <div className={css.wrapper} id="productList">
       <List
         headers={Object.values(headers)}
         data={[...sortedItems]}
@@ -425,6 +427,7 @@ const products = () => {
           let additionalInfo = i.isFixedPrice
             ? `${getDiffPriceInPercent()}%`
             : `${i.steamPercent}% ${i.addPrice} rub`;
+          console.log(i);
           let rowRenderer = () => (
             <tr key={i.id} className={activeRow} style={{ width: "100%" }}>
               <td>
@@ -434,30 +437,32 @@ const products = () => {
                       onCheckedChange={(val, shiftPressed) => {
                         let arrNew;
                         if (shiftPressed) {
-                            if (val) {
-                                // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
-                                if (lastSelectedId > 0) {
-                                    arrNew = getItemsBetweenSelected(lastSelectedId, i.id);
-                                    setLastSelectedId(-1);
-                                }
-                                else {  //Add new portion  (2-nd shift selects new)
-                                    arrNew = addItemsToSelected(i.id);
-                                }
-                            }
-                            else { // Remove portion  (2-nd shift unselects old)
-                                arrNew = removeItemsFromSelected(i.id);
-                            }
-                        }
-                        else { 
-                            let newLastId = -1;
-                            if (val) {
-                                arrNew = [...selectedItems, i.id];
-                                newLastId = i.id;
+                          if (val) {
+                            // Shift-mouse click after selected: Select all items betweeen the current row and the last selected
+                            if (lastSelectedId > 0) {
+                              arrNew = getItemsBetweenSelected(
+                                lastSelectedId,
+                                i.id
+                              );
+                              setLastSelectedId(-1);
                             } else {
-                                arrNew =  selectedItems.filter((id) => id != i.id);
-                                if (arrNew.length == 1) newLastId = arrNew[0];
+                              //Add new portion  (2-nd shift selects new)
+                              arrNew = addItemsToSelected(i.id);
                             }
-                            setLastSelectedId(newLastId);
+                          } else {
+                            // Remove portion  (2-nd shift unselects old)
+                            arrNew = removeItemsFromSelected(i.id);
+                          }
+                        } else {
+                          let newLastId = -1;
+                          if (val) {
+                            arrNew = [...selectedItems, i.id];
+                            newLastId = i.id;
+                          } else {
+                            arrNew = selectedItems.filter((id) => id != i.id);
+                            if (arrNew.length == 1) newLastId = arrNew[0];
+                          }
+                          setLastSelectedId(newLastId);
                         }
                         setSelectedItems(arrNew);
                       }}
@@ -488,7 +493,7 @@ const products = () => {
                         {i.name}
                       </span>
                     </div>
-                    <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
+                      <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
                   </div>
                 </div>
               </td>
@@ -738,17 +743,33 @@ const products = () => {
               }}
             />
 
-            <div className={css.subMenu + ' ' + css.massDescriptionBlockSubMenu + ' ' + subMenuVisibility}>
-              <div className={css.subMenuItem} onClick={() => {
-                toggleItemMainInfoModal(true);
-                toggleMassDescriptionSubMenu();
+            <div
+              className={
+                css.subMenu +
+                " " +
+                css.massDescriptionBlockSubMenu +
+                " " +
+                subMenuVisibility
               }
-              }>Основная информация</div>
-              <div className={css.subMenuItem} onClick={() => {
-                toggleItemAdditionalInfoModal(true);
-                toggleMassDescriptionSubMenu();
-              }
-              }>Доп. информация</div>
+            >
+              <div
+                className={css.subMenuItem}
+                onClick={() => {
+                  toggleItemMainInfoModal(true);
+                  toggleMassDescriptionSubMenu();
+                }}
+              >
+                Основная информация
+              </div>
+              <div
+                className={css.subMenuItem}
+                onClick={() => {
+                  toggleItemAdditionalInfoModal(true);
+                  toggleMassDescriptionSubMenu();
+                }}
+              >
+                Доп. информация
+              </div>
             </div>
           </div>
           <div className={css.btnWrapper}>

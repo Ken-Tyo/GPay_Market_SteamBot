@@ -17,6 +17,7 @@ namespace SteamDigiSellerBot.Models.Items
         public List<IdName> steamCurrencyId { get; set; }
 
         public List<IdName> gameRegionsCurrency { get; set; }
+        public List<SteamCreatorIdName> publishers { get; set; }
 
         public int? hierarchyParams_targetSteamCurrencyId { get; set; }
 
@@ -38,5 +39,9 @@ namespace SteamDigiSellerBot.Models.Items
         public int Id { get; set; }
         public string Name { get; set; }
     }
-
+    public class SteamCreatorIdName
+    {
+        public uint Id { get; set; }
+        public string Name { get; set; }
+    }
 }
