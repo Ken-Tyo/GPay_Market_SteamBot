@@ -29,7 +29,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class ItemsController : Controller
     {
         private readonly IItemRepository _itemRepository;

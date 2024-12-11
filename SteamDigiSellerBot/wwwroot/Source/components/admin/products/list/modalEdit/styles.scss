@@ -5,12 +5,19 @@
     font-size: 16px;
     line-height: 16px;
     padding: 48px 78px 0 78px;
-
     overflow-y: auto;
     height: 619px;
 
     &::-webkit-scrollbar {
-        width: 0px;
+        width: 14px;
+        height: 155px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border: 6px solid transparent;
+        background-clip: padding-box;
+        border-radius: 9999px;
+        background-color: #9E5BB6
     }
 
     .formItem {
@@ -24,6 +31,14 @@
 
         .doubleControl {
             display: flex;
+        }
+
+        .calculatingPrice {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: end;
+            font-size: 14px;
+            margin: 10px;
         }
     }
 }

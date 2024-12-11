@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import Section from '../section';
 import gamePad from '../../../icons/gamepad.svg';
 import robot from '../../../icons/robot.svg';
 import cart from '../../../icons/cart.svg';
 import settings from '../../../icons/settings.svg';
+import sellers from '../../../icons/sellers.svg';
 import MenuItem from './menuItem';
 import BotStats from './botStats';
 import { Route, RouterProvider, Outlet, Routes } from 'react-router-dom';
@@ -13,6 +14,7 @@ import ModalExchangeRates from './modalExchangeRates';
 import EditBotModal from '../bots/modalEdit';
 import OrderCreationInfoModal from '../orders/modalShowInfoList';
 import EditOrderModal from '../orders/modalEdit';
+import EditSellerModal from '../sellers/modalEdit';
 import Paggination from '../../shared/paggination';
 import {
   apiSetItemActiveStatus,
@@ -28,6 +30,7 @@ import {
   toggleExchangeRatesModal,
   toggleEditBotModal,
   toggleEditOrderModal,
+  toggleEditSellerModal,
   toggleFilterOrdersModal,
   toggleFilterProductsModal,
   toggleOrderCreationInfoModal,
@@ -48,6 +51,7 @@ const leftMenu = () => {
     bots,
     editBotModalIsOpen,
     editOrderModalIsOpen,
+    editSellerModalIsOpen,
     orderCreationInfoIsOpen,
     selectedBot,
     editBotResponse,
@@ -67,9 +71,11 @@ const leftMenu = () => {
       ? Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0)) + 1
       : Number((gameSessionsTotal / gameSessionsFilter.size).toFixed(0));
 
-  const [menuData, setMenuDate] = useState(menuArrData);
+  const [isEditSellerModalOpen, setIsEditSellerModalOpen] = useState(false);
+  const [menuData, setMenuDate] = useState(getMenuArrData(setIsEditSellerModalOpen));
   const [confirmMassActiveChangeIsOpen, setConfirmMassActiveChangeIsOpen] =
     useState(false);
+
   return (
       <>
           <button className={`${css.toggleButton} ${!showMenu ? css.closed : ''}`} onClick={toggleMenu}>
@@ -85,7 +91,7 @@ const leftMenu = () => {
                     <div>Pay Panel</div>
                   </div>
                 </Section>
-                <Section className={css.menuSection} height={266} width={254}>
+                <Section className={css.menuSection} height={277} width={254}>
                   <div className={css.menuList}>
                     {menuData.map((i) => {
                       return (
@@ -230,6 +236,11 @@ const leftMenu = () => {
                     }}
                 />
 
+                <EditSellerModal
+                  isOpen={isEditSellerModalOpen}
+                  onClose={() => setIsEditSellerModalOpen(false)}
+                />
+
                 <OrderCreationInfoModal
                     isOpen={orderCreationInfoIsOpen}
                     title={"Список заказов"}
@@ -317,92 +328,113 @@ const leftMenu = () => {
 
 export default leftMenu;
 
-let menuArrData = [
-  {
-    name: 'Товар',
-    icon: gamePad,
-    subMenu: [
-      {
-        name: 'Digiseller',
-        url: '/admin/products',
-      },
-      {
-        name: 'Магазин',
-        url: '/',
-      },
-    ],
-  },
-  {
-    name: 'Боты',
-    icon: robot,
-    subMenu: [
-      {
-        name: 'Список',
-        url: '/admin/bots',
-      },
-      {
-        name: 'Добавить',
-        action: () => {
-          toggleEditBotModal(true);
+let getMenuArrData = (setIsEditSellerModalOpen) => {
+  return [
+    {
+      name: 'Товар',
+      icon: gamePad,
+      subMenu: [
+        {
+          name: 'Digiseller',
+          url: '/admin/products',
         },
-      },
-    ],
-  },
-  {
-    name: 'Заказы',
-    icon: cart,
-    subMenu: [
-      {
-        name: 'Список',
-        url: '/admin/orders',
-      },
-      {
-        name: 'Создать',
-        action: () => {
-          toggleEditOrderModal(true);
+        {
+          name: 'Магазин',
+          url: '/',
         },
-      },
-    ],
-    subMenuStyle: {
-      top: -55,
+      ],
     },
-  },
-  {
-    name: 'Настройки',
-    icon: settings,
-    subMenu: [
-      {
-        name: 'Прокси',
-        url: '/admin/proxy',
-      },
-      {
-        name: 'Сменить пароль',
-        action: () => {
-          toggleChangePasswordModal(true);
+    {
+      name: 'Боты',
+      icon: robot,
+      subMenu: [
+        {
+          name: 'Список',
+          url: '/admin/bots',
         },
-      },
-      {
-        name: 'Сменить api ключ',
-        action: () => {
-          toggleDigisellerEditModal(true);
+        {
+          name: 'Добавить',
+          action: () => {
+            toggleEditBotModal(true);
+          },
         },
-      },
-      {
-        name: 'Общие настройки',
-        url: '/',
-      },
-      {
-        name: 'Курсы валют',
-        action: () => {
-          toggleExchangeRatesModal(true);
-        },
-      },
-    ],
-    subMenuStyle: {
-      zIndex: 4,
-      top: -174,
-      width: 198,
-      right: -198,
+      ],
     },
-  },
-];
+    {
+      name: 'Заказы',
+      icon: cart,
+      subMenu: [
+        {
+          name: 'Список',
+          url: '/admin/orders',
+        },
+        {
+          name: 'Создать',
+          action: () => {
+            toggleEditOrderModal(true);
+          },
+        },
+      ],
+      subMenuStyle: {
+        top: -55,
+      },
+    },
+    {
+      name: 'Пользователи',
+      icon: sellers,
+      subMenu: [
+        {
+          name: 'Продавцы',
+          url: '/admin/sellers',
+        },
+        {
+          name: 'Создать',
+          action: () => {
+            setIsEditSellerModalOpen(true);
+          },
+        },
+      ],
+      subMenuStyle: {
+        top: -55,
+      },
+    },
+    {
+      name: 'Настройки',
+      icon: settings,
+      subMenu: [
+        {
+          name: 'Прокси',
+          url: '/admin/proxy',
+        },
+        {
+          name: 'Сменить пароль',
+          action: () => {
+            toggleChangePasswordModal(true);
+          },
+        },
+        {
+          name: 'Сменить api ключ',
+          action: () => {
+            toggleDigisellerEditModal(true);
+          },
+        },
+        {
+          name: 'Общие настройки',
+          url: '/',
+        },
+        {
+          name: 'Курсы валют',
+          action: () => {
+            toggleExchangeRatesModal(true);
+          },
+        },
+      ],
+      subMenuStyle: {
+        zIndex: 4,
+        top: -174,
+        width: 198,
+        right: -198,
+      },
+    },
+  ];
+}

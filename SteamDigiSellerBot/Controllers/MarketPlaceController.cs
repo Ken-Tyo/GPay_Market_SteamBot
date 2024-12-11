@@ -16,7 +16,7 @@ using SteamDigiSellerBot.Database.Providers;
 namespace SteamDigiSellerBot.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class MarketPlaceController : Controller
     {
         private readonly MarketPlaceProvider _marketPlaceProvider;

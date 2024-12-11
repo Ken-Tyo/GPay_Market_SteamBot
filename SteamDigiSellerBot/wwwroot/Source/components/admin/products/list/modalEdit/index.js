@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '../../../../shared/button';
 import DialogActions from '@mui/material/DialogActions';
 import ModalBase from '../../../../shared/modalBase';
@@ -8,6 +8,7 @@ import TextSwitch from './textSwitch';
 import Select from './select';
 import css from './styles.scss';
 import { state } from '../../../../../containers/admin/state';
+import CircularLoader from '../../../../shared/circularLoader';
 
 const FromItemText = ({ name, onChange, hint, value, cymbol }) => {
   return (
@@ -83,8 +84,15 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
     isFixedPrice: false,
     isAutoActivation: true,
     steamCountryCodeId: 28,
+    currentSteamPriceRub: 0,
+    addPrice: 0,
+    steamPercent: 0,
   };
   const [item, setItem] = useState(initial);
+
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [finalPrice, setFinalPrice] = useState(null);
+  const calculationTimer = useRef(null);
 
   const { digiPriceSetType } = state.use();
 
@@ -118,6 +126,36 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
       name: c.name,
     };
   });
+
+  useEffect(() => {
+    if (calculationTimer.current) {
+      clearTimeout(calculationTimer.current);
+    }
+
+    if (['steamPercent', 'addPrice'].some(key => key in item)) {
+      setIsCalculating(true);
+      setFinalPrice(null);
+
+      calculationTimer.current = setTimeout(() => {
+        const { isFixedPrice, steamPercent, currentSteamPriceRub, addPrice } = item;
+        if(isFixedPrice){
+          return;
+        }
+        const percent = parseFloat(steamPercent) || 0;
+        const additional = parseFloat(addPrice) || 0;
+        const currentPriceRub = parseFloat(currentSteamPriceRub) || 0;
+        const computedPrice = currentPriceRub * (percent / 100) + additional;
+        setIsCalculating(false);
+        setFinalPrice(computedPrice.toFixed(2));
+      }, 2000);
+    }
+
+    return () => {
+      if (calculationTimer.current) {
+        clearTimeout(calculationTimer.current);
+      }
+    };
+  }, [item.steamPercent, item.addPrice, item.isFixedPrice, item.currentSteamPriceRub]);
 
   const handleChange = (prop) => (val) => {
     if (prop === 'steamCurrencyId') {
@@ -176,32 +214,48 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
           value={item.digiSellerIds}
         />
 
-        <div className={css.formItem}>
+      <div className={css.formItem}>
           <div className={css.name}>
             {!item.isFixedPrice ? 'Процент от Steam:' : 'Цена Digiseller'}
           </div>
-          <div className={css.doubleControl}>
-            {!item.isFixedPrice && (
-              <TextBox
-                onChange={handleChange('steamPercent')}
-                defaultValue={item.steamPercent}
-                width={157}
+          <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+            <div className={css.doubleControl}>
+              {!item.isFixedPrice && (
+                <TextBox
+                  onChange={handleChange('steamPercent')}
+                  defaultValue={item.steamPercent}
+                  width={157}
+                />
+              )}
+              {item.isFixedPrice && (
+                <TextBox
+                  onChange={handleChange('fixedDigiSellerPrice')}
+                  defaultValue={item.fixedDigiSellerPrice}
+                  width={157}
+                />
+              )}
+              <Select
+                options={digiPriceSetType}
+                defaultValue={isFixedPriceVal}
+                onChange={handleChange('isFixedPrice')}
+                width={69}
+                height={75}
               />
-            )}
-            {item.isFixedPrice && (
-              <TextBox
-                onChange={handleChange('fixedDigiSellerPrice')}
-                defaultValue={item.fixedDigiSellerPrice}
-                width={157}
-              />
-            )}
-            <Select
-              options={digiPriceSetType}
-              defaultValue={isFixedPriceVal}
-              onChange={handleChange('isFixedPrice')}
-              width={69}
-              height={75}
-            />
+            </div>
+            <div>
+              {!item.isFixedPrice && (
+                  <div className={css.calculatingPrice}>
+                    {isCalculating ? (
+                      <div>
+                        <CircularLoader height={14} width={14} color="#D836E7" />
+                      </div>
+                    ) : finalPrice !== null ? (
+                      <div>~<span style={{color:"#D836E7"}}>{finalPrice}</span> rub</div>
+                    ) : null}
+                  </div>
+                )
+              }
+            </div>
           </div>
         </div>
         {!item.isFixedPrice && (
