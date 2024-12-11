@@ -91,6 +91,7 @@ namespace SteamDigiSellerBot.Controllers
                     productsFilter.SteamCountryCodeId,
                     productsFilter?.steamCurrencyId?.Select(e => e.Id).ToList(),
                     productsFilter?.gameRegionsCurrency?.Select(e => e.Id).ToList(),
+                    productsFilter?.publishers?.Select(e => e.Id).ToList(),
                     productsFilter.DigiSellerIds,
                     productsFilter.hierarchyParams_targetSteamCurrencyId,
                     productsFilter.hierarchyParams_baseSteamCurrencyId,
