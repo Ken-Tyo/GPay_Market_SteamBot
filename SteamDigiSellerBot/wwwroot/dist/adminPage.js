@@ -28079,33 +28079,35 @@ var apiSaveBotRegionSettings = /*#__PURE__*/function () {
 }();
 var apiChangeItem = /*#__PURE__*/function () {
   var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(item) {
-    var res;
+    var res, newData;
     return state_regeneratorRuntime().wrap(function _callee29$(_context29) {
       while (1) switch (_context29.prev = _context29.next) {
         case 0:
-          setItemsLoading(true);
+          //setItemsLoading(true);
           toggleEditItemModal(false);
-          _context29.next = 4;
+          _context29.next = 3;
           return fetch("/items/edit/".concat(item.id), {
             method: "POST",
             body: mapToFormData(item)
           });
-        case 4:
+        case 3:
           res = _context29.sent;
-          if (!res.ok) {
-            _context29.next = 10;
-            break;
+          if (res.ok) {
+            //await apiFetchItems();
+            newData = state.get().items;
+            newData.find(function (e) {
+              return e.id === item.id;
+            }).inSetPriceProcess = true;
+            state.set(function (value) {
+              return state_objectSpread(state_objectSpread({}, value), {}, {
+                items: _toConsumableArray(newData)
+              });
+            });
+          } else {
+            toggleEditItemModal(true);
           }
-          _context29.next = 8;
-          return apiFetchItems();
-        case 8:
-          _context29.next = 11;
-          break;
-        case 10:
-          toggleEditItemModal(true);
-        case 11:
-          setItemsLoading(false);
-        case 12:
+          //setItemsLoading(false);
+        case 5:
         case "end":
           return _context29.stop();
       }
@@ -46057,7 +46059,7 @@ var list = function list(_ref) {
 /* harmony default export */ const shared_list = (list);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/inlineLoader/styles.scss
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const inlineLoader_styles = ({"loaderContainer":"styles__loaderContainer--XX4Vf","loaderBar":"styles__loaderBar--hBF3D","l5":"styles__l5--aKVtw"});
+/* harmony default export */ const inlineLoader_styles = ({"loaderContainer":"styles__loaderContainer--XX4Vf","loaderBar":"styles__loaderBar--hBF3D","load":"styles__load--CGovE","l5":"styles__l5--aKVtw"});
 // EXTERNAL MODULE: ./node_modules/classnames/index.js
 var node_modules_classnames = __webpack_require__(6942);
 var classnames_default = /*#__PURE__*/__webpack_require__.n(node_modules_classnames);

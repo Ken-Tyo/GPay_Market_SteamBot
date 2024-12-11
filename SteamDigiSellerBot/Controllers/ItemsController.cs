@@ -257,8 +257,8 @@ namespace SteamDigiSellerBot.Controllers
                     throw new Exception("Данный товар уже добавлен. Отредактируйте его.");
                 }
 
-                await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
-
+                _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+                //await Task.Delay(1000);
                 return Ok();
             }
 
@@ -278,7 +278,7 @@ namespace SteamDigiSellerBot.Controllers
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map(model, item);
-                editedItem.InSetPriceProcess = DateTime.UtcNow.AddSeconds(30);
+                editedItem.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
@@ -288,7 +288,7 @@ namespace SteamDigiSellerBot.Controllers
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
-
+                //await Task.Delay(1000);
                 return Ok(editedItem.InSetPriceProcess);
             }
 

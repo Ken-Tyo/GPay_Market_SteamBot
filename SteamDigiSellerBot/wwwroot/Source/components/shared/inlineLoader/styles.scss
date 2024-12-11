@@ -47,14 +47,32 @@ body {
 /* HTML: <div class="loader"></div> */
 .loaderBar {
   min-width: 100px;
-  width: 80%;
   height: 0.3em;
   background: 
     linear-gradient(#BB75DC 0 0) left -40px top 0/40px 20px,
     linear-gradient(#555 0 0) center/100% 50%; 
   background-repeat: no-repeat;
-  animation: l5 1s infinite linear;
+  animation: load 2s infinite;
 }
 @keyframes l5 {
   100% {background-position: right -40px top 0,center}
+}
+
+@keyframes load {
+  0% {
+    opacity: 0;
+    background-position: left 0% top 0,center;
+  }
+  30% {
+    opacity: 1;
+    background-position: left 25% top 0,center;
+  }
+  55% {
+    opacity: 0.8;
+    background-position: left 50% top 0,center;
+  }
+  100% {
+    opacity: 0.2;
+    background-position: left 100% top 0,center;
+  }
 }
