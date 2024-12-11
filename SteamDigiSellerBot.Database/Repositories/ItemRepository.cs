@@ -30,6 +30,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
+            IEnumerable<uint> gamePublisherId,
             string digiSellerId,
             int? hierarchyParams_targetSteamCurrencyId,
             int? hierarchyParams_baseSteamCurrencyId,
@@ -76,6 +77,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
+            IEnumerable<uint> gamePublisherId,
             string digiSellerId,
             int? hierarchyParams_targetSteamCurrencyId,
             int? hierarchyParams_baseSteamCurrencyId,
@@ -103,7 +105,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 productName = productName.ToLower();
             }
-            
+
+            HashSet<uint> gamePublisherHashSet = null;
+            if (gamePublisherId != null && gamePublisherId.Count() > 0)
+            {
+                gamePublisherHashSet = new HashSet<uint>(gamePublisherId);
+            }
 
             //HashSet<string> digiSellerIds = null;
             //if (digiSellerId != null)
@@ -133,6 +140,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .Include(i => i.GamePrices)
                 .Include(i => i.Region)
                 .Include(i => i.LastSendedRegion)
+                .Include(i => i.GamePublishers)
                 .Where(i => !i.IsDeleted)
                 .OrderBy(x => x.AddedDateTime)
                 .ThenBy(x => x.AppId)
@@ -141,6 +149,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.ToLower().Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
                     && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
+                    && (gamePublisherHashSet == null || item.GamePublishers.Any(e => gamePublisherHashSet.Contains(e.GamePublisherId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId));
                     
 
