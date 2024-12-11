@@ -26527,6 +26527,7 @@ __webpack_require__.d(state_namespaceObject, {
   rE: () => (apiFetchTagTypeReplacementValues),
   QE: () => (apiGetCurrencies),
   oq: () => (apiGetItem),
+  am: () => (apiGetPublishers),
   wL: () => (apiGetSteamRegions),
   nt: () => (apiGetUpdateItemInfoJobStatistics),
   bh: () => (apiLoadNewProxy),
@@ -27085,6 +27086,7 @@ var state = es_entity({
   currencies: [],
   productFilterCurrencies: [],
   steamRegions: [],
+  publishers: [],
   digiPriceSetType: [{
     id: 1,
     name: "%"
@@ -27332,7 +27334,7 @@ var isNullOrEmpty = function isNullOrEmpty(target) {
 };
 var apiFetchItems = /*#__PURE__*/function () {
   var _ref6 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee6(filter) {
-    var filterDTO, requestData, currencies, regions, regionVal, res;
+    var filterDTO, requestData, currencies, regions, steamPublishers, regionVal, res;
     return state_regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
@@ -27358,6 +27360,12 @@ var apiFetchItems = /*#__PURE__*/function () {
                 name: c.name
               };
             });
+            steamPublishers = state.get().publishers.map(function (c) {
+              return {
+                id: c.id,
+                name: c.name
+              };
+            });
             regionVal = (regions.find(function (c) {
               return c.name === filterDTO.steamCountryCodeId;
             }) || {}).id;
@@ -27370,6 +27378,9 @@ var apiFetchItems = /*#__PURE__*/function () {
               filterDTO.hierarchyParams_targetSteamCurrencyId = currencies.find(function (c) {
                 return c.name === filterDTO.hierarchyParams_targetSteamCurrencyId;
               }).id;
+            }
+            if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
+              filterDTO.publishers = steamPublishers;
             }
             if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
               filterDTO.steamCountryCodeId = regionVal;
@@ -28815,46 +28826,52 @@ var apiGetSteamRegions = /*#__PURE__*/function () {
     return _ref53.apply(this, arguments);
   };
 }();
-var apiSetGameSessionStatus = /*#__PURE__*/function () {
-  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54(gSesId, statusId) {
-    var _state$get2, gameSessionsFilter, res;
+var apiGetPublishers = /*#__PURE__*/function () {
+  var _ref54 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee54() {
+    var publishers, res, data;
     return state_regeneratorRuntime().wrap(function _callee54$(_context54) {
       while (1) switch (_context54.prev = _context54.next) {
         case 0:
-          _state$get2 = state.get(), gameSessionsFilter = _state$get2.gameSessionsFilter;
-          _context54.next = 3;
-          return fetch("/gamesessions/setstatus", {
-            method: "POST",
-            body: mapToFormData({
-              gameSessionId: gSesId,
-              statusId: statusId
-            })
-          });
+          publishers = state.get().publishers;
+          if (!(publishers && publishers.length > 0)) {
+            _context54.next = 3;
+            break;
+          }
+          return _context54.abrupt("return");
         case 3:
-          res = _context54.sent;
-          apiFetchGameSessions(gameSessionsFilter);
+          _context54.next = 5;
+          return fetch("/game/publishers");
         case 5:
+          res = _context54.sent;
+          _context54.next = 8;
+          return res.json();
+        case 8:
+          data = _context54.sent;
+          publishers = data;
+          setStateProp("publishers", publishers);
+        case 11:
         case "end":
           return _context54.stop();
       }
     }, _callee54);
   }));
-  return function apiSetGameSessionStatus(_x55, _x56) {
+  return function apiGetPublishers() {
     return _ref54.apply(this, arguments);
   };
 }();
-var apiResetGameSession = /*#__PURE__*/function () {
-  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(gSesId) {
-    var _state$get3, gameSessionsFilter, res;
+var apiSetGameSessionStatus = /*#__PURE__*/function () {
+  var _ref55 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee55(gSesId, statusId) {
+    var _state$get2, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee55$(_context55) {
       while (1) switch (_context55.prev = _context55.next) {
         case 0:
-          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
+          _state$get2 = state.get(), gameSessionsFilter = _state$get2.gameSessionsFilter;
           _context55.next = 3;
-          return fetch("/gamesessions/reset", {
+          return fetch("/gamesessions/setstatus", {
             method: "POST",
             body: mapToFormData({
-              gameSessionId: gSesId
+              gameSessionId: gSesId,
+              statusId: statusId
             })
           });
         case 3:
@@ -28866,19 +28883,46 @@ var apiResetGameSession = /*#__PURE__*/function () {
       }
     }, _callee55);
   }));
-  return function apiResetGameSession(_x57) {
+  return function apiSetGameSessionStatus(_x55, _x56) {
     return _ref55.apply(this, arguments);
   };
 }();
-var apiAddCommentGameSession = /*#__PURE__*/function () {
-  var _ref56 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(gSesId, comment) {
-    var _state$get4, gameSessionsFilter, res;
+var apiResetGameSession = /*#__PURE__*/function () {
+  var _ref56 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee56(gSesId) {
+    var _state$get3, gameSessionsFilter, res;
     return state_regeneratorRuntime().wrap(function _callee56$(_context56) {
       while (1) switch (_context56.prev = _context56.next) {
         case 0:
+          _state$get3 = state.get(), gameSessionsFilter = _state$get3.gameSessionsFilter;
+          _context56.next = 3;
+          return fetch("/gamesessions/reset", {
+            method: "POST",
+            body: mapToFormData({
+              gameSessionId: gSesId
+            })
+          });
+        case 3:
+          res = _context56.sent;
+          apiFetchGameSessions(gameSessionsFilter);
+        case 5:
+        case "end":
+          return _context56.stop();
+      }
+    }, _callee56);
+  }));
+  return function apiResetGameSession(_x57) {
+    return _ref56.apply(this, arguments);
+  };
+}();
+var apiAddCommentGameSession = /*#__PURE__*/function () {
+  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(gSesId, comment) {
+    var _state$get4, gameSessionsFilter, res;
+    return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
+      while (1) switch (_context57.prev = _context57.next) {
+        case 0:
           _state$get4 = state.get(), gameSessionsFilter = _state$get4.gameSessionsFilter;
           toggleAddGameSesCommentModal(false);
-          _context56.next = 4;
+          _context57.next = 4;
           return fetch("/gamesessions/comment", {
             method: "POST",
             body: mapToFormData({
@@ -28887,117 +28931,117 @@ var apiAddCommentGameSession = /*#__PURE__*/function () {
             })
           });
         case 4:
-          res = _context56.sent;
+          res = _context57.sent;
           apiFetchGameSessions(gameSessionsFilter);
-        case 6:
-        case "end":
-          return _context56.stop();
-      }
-    }, _callee56);
-  }));
-  return function apiAddCommentGameSession(_x58, _x59) {
-    return _ref56.apply(this, arguments);
-  };
-}();
-var updateGameSessionsFilter = /*#__PURE__*/function () {
-  var _ref57 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee57(newData) {
-    var _state$get5, gameSessionsFilter, newFilter;
-    return state_regeneratorRuntime().wrap(function _callee57$(_context57) {
-      while (1) switch (_context57.prev = _context57.next) {
-        case 0:
-          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log("new f", newFilter);
-          setStateProp("gameSessionsFilter", newFilter);
-          _context57.next = 6;
-          return apiFetchGameSessions(newFilter);
         case 6:
         case "end":
           return _context57.stop();
       }
     }, _callee57);
   }));
-  return function updateGameSessionsFilter(_x60) {
+  return function apiAddCommentGameSession(_x58, _x59) {
     return _ref57.apply(this, arguments);
   };
 }();
-var updateProductsFilter = /*#__PURE__*/function () {
+var updateGameSessionsFilter = /*#__PURE__*/function () {
   var _ref58 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee58(newData) {
-    var _state$get6, productsFilter, newFilter;
+    var _state$get5, gameSessionsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee58$(_context58) {
       while (1) switch (_context58.prev = _context58.next) {
         case 0:
-          _state$get6 = state.get(), productsFilter = _state$get6.productsFilter;
-          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
           console.log("new f", newFilter);
-          setStateProp("productsFilter", newFilter);
+          setStateProp("gameSessionsFilter", newFilter);
           _context58.next = 6;
-          return apiFetchItems(newFilter);
+          return apiFetchGameSessions(newFilter);
         case 6:
         case "end":
           return _context58.stop();
       }
     }, _callee58);
   }));
-  return function updateProductsFilter(_x61) {
+  return function updateGameSessionsFilter(_x60) {
     return _ref58.apply(this, arguments);
   };
 }();
-var apiAddGameSession = /*#__PURE__*/function () {
-  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(data) {
-    var res, errors, _state$get7, gameSessionsFilter, newUniqueCodes;
+var updateProductsFilter = /*#__PURE__*/function () {
+  var _ref59 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee59(newData) {
+    var _state$get6, productsFilter, newFilter;
     return state_regeneratorRuntime().wrap(function _callee59$(_context59) {
       while (1) switch (_context59.prev = _context59.next) {
+        case 0:
+          _state$get6 = state.get(), productsFilter = _state$get6.productsFilter;
+          newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
+          console.log("new f", newFilter);
+          setStateProp("productsFilter", newFilter);
+          _context59.next = 6;
+          return apiFetchItems(newFilter);
+        case 6:
+        case "end":
+          return _context59.stop();
+      }
+    }, _callee59);
+  }));
+  return function updateProductsFilter(_x61) {
+    return _ref59.apply(this, arguments);
+  };
+}();
+var apiAddGameSession = /*#__PURE__*/function () {
+  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(data) {
+    var res, errors, _state$get7, gameSessionsFilter, newUniqueCodes;
+    return state_regeneratorRuntime().wrap(function _callee60$(_context60) {
+      while (1) switch (_context60.prev = _context60.next) {
         case 0:
           setStateProp("editOrderResponse", {
             loading: true,
             errors: []
           });
-          _context59.next = 3;
+          _context60.next = 3;
           return fetch("/gamesession", {
             method: "POST",
             body: mapToFormData(data)
           });
         case 3:
-          res = _context59.sent;
+          res = _context60.sent;
           errors = [];
           if (!res.ok) {
-            _context59.next = 12;
+            _context60.next = 12;
             break;
           }
           _state$get7 = state.get(), gameSessionsFilter = _state$get7.gameSessionsFilter;
-          _context59.next = 9;
+          _context60.next = 9;
           return apiFetchGameSessions(gameSessionsFilter);
         case 9:
           toggleEditOrderModal(false);
-          _context59.next = 19;
+          _context60.next = 19;
           break;
         case 12:
           if (!(res.status === 500)) {
-            _context59.next = 16;
+            _context60.next = 16;
             break;
           }
           errors.push("Произошла непредвиденная ошибка, проверьте консоль.");
-          _context59.next = 19;
+          _context60.next = 19;
           break;
         case 16:
-          _context59.next = 18;
+          _context60.next = 18;
           return res.json();
         case 18:
-          errors = _context59.sent.errors;
+          errors = _context60.sent.errors;
         case 19:
           setStateProp("editOrderResponse", {
             loading: false,
             errors: errors
           });
           if (!res.ok) {
-            _context59.next = 27;
+            _context60.next = 27;
             break;
           }
-          _context59.next = 23;
+          _context60.next = 23;
           return res.json();
         case 23:
-          newUniqueCodes = _context59.sent;
+          newUniqueCodes = _context60.sent;
           console.log(newUniqueCodes);
           state.set(function (value) {
             return state_objectSpread(state_objectSpread({}, value), {}, {
@@ -29007,84 +29051,84 @@ var apiAddGameSession = /*#__PURE__*/function () {
           toggleOrderCreationInfoModal(true);
         case 27:
         case "end":
-          return _context59.stop();
-      }
-    }, _callee59);
-  }));
-  return function apiAddGameSession(_x62) {
-    return _ref59.apply(this, arguments);
-  };
-}();
-var apiFetchItemInfoTemplates = /*#__PURE__*/function () {
-  var _ref60 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee60(userId) {
-    var result, json;
-    return state_regeneratorRuntime().wrap(function _callee60$(_context60) {
-      while (1) switch (_context60.prev = _context60.next) {
-        case 0:
-          setItemInfoTemplatesLoading(true);
-          _context60.next = 3;
-          return fetch("/iteminfotemplate?userId=".concat(userId));
-        case 3:
-          result = _context60.sent;
-          if (!result.ok) {
-            _context60.next = 9;
-            break;
-          }
-          _context60.next = 7;
-          return result.json();
-        case 7:
-          json = _context60.sent;
-          setItemInfoTemplates(json);
-        case 9:
-          setItemInfoTemplatesLoading(false);
-        case 10:
-        case "end":
           return _context60.stop();
       }
     }, _callee60);
   }));
-  return function apiFetchItemInfoTemplates(_x63) {
+  return function apiAddGameSession(_x62) {
     return _ref60.apply(this, arguments);
   };
 }();
-var apiFetchItemInfoTemplateValues = /*#__PURE__*/function () {
-  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(itemInfoTemplateId) {
-    var result;
+var apiFetchItemInfoTemplates = /*#__PURE__*/function () {
+  var _ref61 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee61(userId) {
+    var result, json;
     return state_regeneratorRuntime().wrap(function _callee61$(_context61) {
       while (1) switch (_context61.prev = _context61.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           _context61.next = 3;
-          return fetch("/iteminfotemplatevalue/".concat(itemInfoTemplateId));
+          return fetch("/iteminfotemplate?userId=".concat(userId));
         case 3:
           result = _context61.sent;
           if (!result.ok) {
             _context61.next = 9;
             break;
           }
-          setItemInfoTemplatesLoading(false);
-          _context61.next = 8;
+          _context61.next = 7;
           return result.json();
-        case 8:
-          return _context61.abrupt("return", _context61.sent);
+        case 7:
+          json = _context61.sent;
+          setItemInfoTemplates(json);
         case 9:
           setItemInfoTemplatesLoading(false);
-          return _context61.abrupt("return", null);
-        case 11:
+        case 10:
         case "end":
           return _context61.stop();
       }
     }, _callee61);
   }));
-  return function apiFetchItemInfoTemplateValues(_x64) {
+  return function apiFetchItemInfoTemplates(_x63) {
     return _ref61.apply(this, arguments);
   };
 }();
-var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
-  var _ref62 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee62(itemInfoTemplateValues) {
-    var headers, options, res;
+var apiFetchItemInfoTemplateValues = /*#__PURE__*/function () {
+  var _ref62 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee62(itemInfoTemplateId) {
+    var result;
     return state_regeneratorRuntime().wrap(function _callee62$(_context62) {
       while (1) switch (_context62.prev = _context62.next) {
+        case 0:
+          setItemInfoTemplatesLoading(true);
+          _context62.next = 3;
+          return fetch("/iteminfotemplatevalue/".concat(itemInfoTemplateId));
+        case 3:
+          result = _context62.sent;
+          if (!result.ok) {
+            _context62.next = 9;
+            break;
+          }
+          setItemInfoTemplatesLoading(false);
+          _context62.next = 8;
+          return result.json();
+        case 8:
+          return _context62.abrupt("return", _context62.sent);
+        case 9:
+          setItemInfoTemplatesLoading(false);
+          return _context62.abrupt("return", null);
+        case 11:
+        case "end":
+          return _context62.stop();
+      }
+    }, _callee62);
+  }));
+  return function apiFetchItemInfoTemplateValues(_x64) {
+    return _ref62.apply(this, arguments);
+  };
+}();
+var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
+  var _ref63 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee63(itemInfoTemplateValues) {
+    var headers, options, res;
+    return state_regeneratorRuntime().wrap(function _callee63$(_context63) {
+      while (1) switch (_context63.prev = _context63.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           headers = new Headers();
@@ -29095,65 +29139,65 @@ var apiCreateItemInfoTemplate = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(itemInfoTemplateValues)
           };
-          _context62.next = 7;
+          _context63.next = 7;
           return fetch("/iteminfotemplate", options);
         case 7:
-          res = _context62.sent;
+          res = _context63.sent;
           if (!res.ok) {
-            _context62.next = 11;
+            _context63.next = 11;
             break;
           }
-          _context62.next = 11;
+          _context63.next = 11;
           return apiFetchItemInfoTemplates(0);
         case 11:
           setItemInfoTemplatesLoading(false);
         case 12:
         case "end":
-          return _context62.stop();
+          return _context63.stop();
       }
-    }, _callee62);
+    }, _callee63);
   }));
   return function apiCreateItemInfoTemplate(_x65) {
-    return _ref62.apply(this, arguments);
+    return _ref63.apply(this, arguments);
   };
 }();
 var apiDeleteItemInfoTemplate = /*#__PURE__*/function () {
-  var _ref63 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee63(itemInfoTemplateId) {
+  var _ref64 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee64(itemInfoTemplateId) {
     var options, res;
-    return state_regeneratorRuntime().wrap(function _callee63$(_context63) {
-      while (1) switch (_context63.prev = _context63.next) {
+    return state_regeneratorRuntime().wrap(function _callee64$(_context64) {
+      while (1) switch (_context64.prev = _context64.next) {
         case 0:
           setItemInfoTemplatesLoading(true);
           options = {
             method: "DELETE"
           };
-          _context63.next = 4;
+          _context64.next = 4;
           return fetch("/iteminfotemplate/".concat(itemInfoTemplateId), options);
         case 4:
-          res = _context63.sent;
+          res = _context64.sent;
           if (!res.ok) {
-            _context63.next = 8;
+            _context64.next = 8;
             break;
           }
-          _context63.next = 8;
+          _context64.next = 8;
           return apiFetchItemInfoTemplates(0);
         case 8:
           setItemInfoTemplatesLoading(false);
         case 9:
         case "end":
-          return _context63.stop();
+          return _context64.stop();
       }
-    }, _callee63);
+    }, _callee64);
   }));
   return function apiDeleteItemInfoTemplate(_x66) {
-    return _ref63.apply(this, arguments);
+    return _ref64.apply(this, arguments);
   };
 }();
 var apiUpdateItemInfoes = /*#__PURE__*/function () {
-  var _ref64 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee64(itemInfoesValues) {
+  var _ref65 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee65(itemInfoesValues) {
     var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee64$(_context64) {
-      while (1) switch (_context64.prev = _context64.next) {
+    return state_regeneratorRuntime().wrap(function _callee65$(_context65) {
+      while (1) switch (_context65.prev = _context65.next) {
         case 0:
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
@@ -29161,7 +29205,7 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
           setStateProp("changeItemBulkResponse", {
             loadingItemInfo: true
           });
-          _context64.prev = 4;
+          _context65.prev = 4;
           headers = new Headers();
           headers.append("Content-Type", "application/json");
           headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
@@ -29170,38 +29214,38 @@ var apiUpdateItemInfoes = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(itemInfoesValues)
           };
-          _context64.next = 11;
+          _context65.next = 11;
           return fetch("/iteminfo", options);
         case 11:
-          res = _context64.sent;
+          res = _context65.sent;
           if (!res.ok) {
-            _context64.next = 15;
+            _context65.next = 15;
             break;
           }
-          _context64.next = 15;
+          _context65.next = 15;
           return apiFetchItems();
         case 15:
-          _context64.prev = 15;
+          _context65.prev = 15;
           setStateProp("changeItemBulkResponse", {
             loadingItemInfo: false
           });
           setItemsLoading(false);
-          return _context64.finish(15);
+          return _context65.finish(15);
         case 19:
         case "end":
-          return _context64.stop();
+          return _context65.stop();
       }
-    }, _callee64, null, [[4,, 15, 19]]);
+    }, _callee65, null, [[4,, 15, 19]]);
   }));
   return function apiUpdateItemInfoes(_x67) {
-    return _ref64.apply(this, arguments);
+    return _ref65.apply(this, arguments);
   };
 }();
 var apiTagTypeReplacementValues = /*#__PURE__*/function () {
-  var _ref65 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee65(data) {
+  var _ref66 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee66(data) {
     var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee65$(_context65) {
-      while (1) switch (_context65.prev = _context65.next) {
+    return state_regeneratorRuntime().wrap(function _callee66$(_context66) {
+      while (1) switch (_context66.prev = _context66.next) {
         case 0:
           headers = new Headers();
           headers.append("Content-Type", "application/json");
@@ -29211,66 +29255,35 @@ var apiTagTypeReplacementValues = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(data)
           };
-          _context65.next = 6;
+          _context66.next = 6;
           return fetch("/tagtypereplacementvalue", options);
         case 6:
-          res = _context65.sent;
-          if (!res.ok) {
-            _context65.next = 9;
-            break;
-          }
-          return _context65.abrupt("return", true);
-        case 9:
-          return _context65.abrupt("return", false);
-        case 10:
-        case "end":
-          return _context65.stop();
-      }
-    }, _callee65);
-  }));
-  return function apiTagTypeReplacementValues(_x68) {
-    return _ref65.apply(this, arguments);
-  };
-}();
-var apiFetchTagTypeReplacementValues = /*#__PURE__*/function () {
-  var _ref66 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee66() {
-    var res, json;
-    return state_regeneratorRuntime().wrap(function _callee66$(_context66) {
-      while (1) switch (_context66.prev = _context66.next) {
-        case 0:
-          _context66.next = 2;
-          return fetch("/tagtypereplacementvalue");
-        case 2:
           res = _context66.sent;
           if (!res.ok) {
-            _context66.next = 8;
+            _context66.next = 9;
             break;
           }
-          _context66.next = 6;
-          return res.json();
-        case 6:
-          json = _context66.sent;
-          return _context66.abrupt("return", json);
-        case 8:
-          return _context66.abrupt("return", null);
+          return _context66.abrupt("return", true);
         case 9:
+          return _context66.abrupt("return", false);
+        case 10:
         case "end":
           return _context66.stop();
       }
     }, _callee66);
   }));
-  return function apiFetchTagTypeReplacementValues() {
+  return function apiTagTypeReplacementValues(_x68) {
     return _ref66.apply(this, arguments);
   };
 }();
-var apiFetchMarketPlaces = /*#__PURE__*/function () {
+var apiFetchTagTypeReplacementValues = /*#__PURE__*/function () {
   var _ref67 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee67() {
     var res, json;
     return state_regeneratorRuntime().wrap(function _callee67$(_context67) {
       while (1) switch (_context67.prev = _context67.next) {
         case 0:
           _context67.next = 2;
-          return fetch("/marketplace");
+          return fetch("/tagtypereplacementvalue");
         case 2:
           res = _context67.sent;
           if (!res.ok) {
@@ -29290,18 +29303,18 @@ var apiFetchMarketPlaces = /*#__PURE__*/function () {
       }
     }, _callee67);
   }));
-  return function apiFetchMarketPlaces() {
+  return function apiFetchTagTypeReplacementValues() {
     return _ref67.apply(this, arguments);
   };
 }();
-var apiFetchLanguages = /*#__PURE__*/function () {
+var apiFetchMarketPlaces = /*#__PURE__*/function () {
   var _ref68 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee68() {
     var res, json;
     return state_regeneratorRuntime().wrap(function _callee68$(_context68) {
       while (1) switch (_context68.prev = _context68.next) {
         case 0:
           _context68.next = 2;
-          return fetch("/language");
+          return fetch("/marketplace");
         case 2:
           res = _context68.sent;
           if (!res.ok) {
@@ -29321,18 +29334,18 @@ var apiFetchLanguages = /*#__PURE__*/function () {
       }
     }, _callee68);
   }));
-  return function apiFetchLanguages() {
+  return function apiFetchMarketPlaces() {
     return _ref68.apply(this, arguments);
   };
 }();
-var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
+var apiFetchLanguages = /*#__PURE__*/function () {
   var _ref69 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee69() {
     var res, json;
     return state_regeneratorRuntime().wrap(function _callee69$(_context69) {
       while (1) switch (_context69.prev = _context69.next) {
         case 0:
           _context69.next = 2;
-          return fetch("/tagpromoreplacementvalue");
+          return fetch("/language");
         case 2:
           res = _context69.sent;
           if (!res.ok) {
@@ -29352,147 +29365,112 @@ var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
       }
     }, _callee69);
   }));
-  return function apiFetchTagPromoReplacementValues() {
+  return function apiFetchLanguages() {
     return _ref69.apply(this, arguments);
   };
 }();
-var apiTagPromoReplacementValues = /*#__PURE__*/function () {
-  var _ref70 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee70(data) {
-    var headers, options, res;
+var apiFetchTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref70 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee70() {
+    var res, json;
     return state_regeneratorRuntime().wrap(function _callee70$(_context70) {
       while (1) switch (_context70.prev = _context70.next) {
         case 0:
-          headers = new Headers();
-          headers.append("Content-Type", "application/json");
-          headers.append("Content-Length", JSON.stringify(data).length);
-          options = {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(data)
-          };
-          _context70.next = 6;
-          return fetch("/tagpromoreplacementvalue", options);
-        case 6:
+          _context70.next = 2;
+          return fetch("/tagpromoreplacementvalue");
+        case 2:
           res = _context70.sent;
           if (!res.ok) {
-            _context70.next = 9;
+            _context70.next = 8;
             break;
           }
-          return _context70.abrupt("return", true);
+          _context70.next = 6;
+          return res.json();
+        case 6:
+          json = _context70.sent;
+          return _context70.abrupt("return", json);
+        case 8:
+          return _context70.abrupt("return", null);
         case 9:
-          return _context70.abrupt("return", false);
-        case 10:
         case "end":
           return _context70.stop();
       }
     }, _callee70);
   }));
-  return function apiTagPromoReplacementValues(_x69) {
+  return function apiFetchTagPromoReplacementValues() {
     return _ref70.apply(this, arguments);
   };
 }();
-var apiFetchTagInfoAppsReplacementValues = /*#__PURE__*/function () {
-  var _ref71 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee71() {
-    var res, json;
+var apiTagPromoReplacementValues = /*#__PURE__*/function () {
+  var _ref71 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee71(data) {
+    var headers, options, res;
     return state_regeneratorRuntime().wrap(function _callee71$(_context71) {
       while (1) switch (_context71.prev = _context71.next) {
         case 0:
-          _context71.next = 2;
-          return fetch("/taginfoappsreplacementvalue");
-        case 2:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context71.next = 6;
+          return fetch("/tagpromoreplacementvalue", options);
+        case 6:
           res = _context71.sent;
           if (!res.ok) {
-            _context71.next = 8;
+            _context71.next = 9;
             break;
           }
-          _context71.next = 6;
-          return res.json();
-        case 6:
-          json = _context71.sent;
-          return _context71.abrupt("return", json);
-        case 8:
-          return _context71.abrupt("return", null);
+          return _context71.abrupt("return", true);
         case 9:
+          return _context71.abrupt("return", false);
+        case 10:
         case "end":
           return _context71.stop();
       }
     }, _callee71);
   }));
-  return function apiFetchTagInfoAppsReplacementValues() {
+  return function apiTagPromoReplacementValues(_x69) {
     return _ref71.apply(this, arguments);
   };
 }();
-var apiTagInfoAppsReplacementValues = /*#__PURE__*/function () {
-  var _ref72 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee72(data) {
-    var headers, options, res;
+var apiFetchTagInfoAppsReplacementValues = /*#__PURE__*/function () {
+  var _ref72 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee72() {
+    var res, json;
     return state_regeneratorRuntime().wrap(function _callee72$(_context72) {
       while (1) switch (_context72.prev = _context72.next) {
         case 0:
-          headers = new Headers();
-          headers.append("Content-Type", "application/json");
-          headers.append("Content-Length", JSON.stringify(data).length);
-          options = {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(data)
-          };
-          _context72.next = 6;
-          return fetch("/taginfoappsreplacementvalue", options);
-        case 6:
+          _context72.next = 2;
+          return fetch("/taginfoappsreplacementvalue");
+        case 2:
           res = _context72.sent;
           if (!res.ok) {
-            _context72.next = 9;
+            _context72.next = 8;
             break;
           }
-          return _context72.abrupt("return", true);
+          _context72.next = 6;
+          return res.json();
+        case 6:
+          json = _context72.sent;
+          return _context72.abrupt("return", json);
+        case 8:
+          return _context72.abrupt("return", null);
         case 9:
-          return _context72.abrupt("return", false);
-        case 10:
         case "end":
           return _context72.stop();
       }
     }, _callee72);
   }));
-  return function apiTagInfoAppsReplacementValues(_x70) {
+  return function apiFetchTagInfoAppsReplacementValues() {
     return _ref72.apply(this, arguments);
   };
 }();
-var apiFetchTagInfoDlcReplacementValues = /*#__PURE__*/function () {
-  var _ref73 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee73() {
-    var res, json;
+var apiTagInfoAppsReplacementValues = /*#__PURE__*/function () {
+  var _ref73 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee73(data) {
+    var headers, options, res;
     return state_regeneratorRuntime().wrap(function _callee73$(_context73) {
       while (1) switch (_context73.prev = _context73.next) {
-        case 0:
-          _context73.next = 2;
-          return fetch("/taginfodlcreplacementvalue");
-        case 2:
-          res = _context73.sent;
-          if (!res.ok) {
-            _context73.next = 8;
-            break;
-          }
-          _context73.next = 6;
-          return res.json();
-        case 6:
-          json = _context73.sent;
-          return _context73.abrupt("return", json);
-        case 8:
-          return _context73.abrupt("return", null);
-        case 9:
-        case "end":
-          return _context73.stop();
-      }
-    }, _callee73);
-  }));
-  return function apiFetchTagInfoDlcReplacementValues() {
-    return _ref73.apply(this, arguments);
-  };
-}();
-var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
-  var _ref74 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee74(data) {
-    var headers, options, res;
-    return state_regeneratorRuntime().wrap(function _callee74$(_context74) {
-      while (1) switch (_context74.prev = _context74.next) {
         case 0:
           headers = new Headers();
           headers.append("Content-Type", "application/json");
@@ -29502,32 +29480,98 @@ var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
             headers: headers,
             body: JSON.stringify(data)
           };
-          _context74.next = 6;
-          return fetch("/taginfodlcreplacementvalue", options);
+          _context73.next = 6;
+          return fetch("/taginfoappsreplacementvalue", options);
         case 6:
-          res = _context74.sent;
+          res = _context73.sent;
           if (!res.ok) {
-            _context74.next = 9;
+            _context73.next = 9;
             break;
           }
-          return _context74.abrupt("return", true);
+          return _context73.abrupt("return", true);
         case 9:
-          return _context74.abrupt("return", false);
+          return _context73.abrupt("return", false);
         case 10:
+        case "end":
+          return _context73.stop();
+      }
+    }, _callee73);
+  }));
+  return function apiTagInfoAppsReplacementValues(_x70) {
+    return _ref73.apply(this, arguments);
+  };
+}();
+var apiFetchTagInfoDlcReplacementValues = /*#__PURE__*/function () {
+  var _ref74 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee74() {
+    var res, json;
+    return state_regeneratorRuntime().wrap(function _callee74$(_context74) {
+      while (1) switch (_context74.prev = _context74.next) {
+        case 0:
+          _context74.next = 2;
+          return fetch("/taginfodlcreplacementvalue");
+        case 2:
+          res = _context74.sent;
+          if (!res.ok) {
+            _context74.next = 8;
+            break;
+          }
+          _context74.next = 6;
+          return res.json();
+        case 6:
+          json = _context74.sent;
+          return _context74.abrupt("return", json);
+        case 8:
+          return _context74.abrupt("return", null);
+        case 9:
         case "end":
           return _context74.stop();
       }
     }, _callee74);
   }));
-  return function apiTagInfoDlcReplacementValues(_x71) {
+  return function apiFetchTagInfoDlcReplacementValues() {
     return _ref74.apply(this, arguments);
   };
 }();
-var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
-  var _ref75 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee75() {
-    var headers, options, res, json;
+var apiTagInfoDlcReplacementValues = /*#__PURE__*/function () {
+  var _ref75 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee75(data) {
+    var headers, options, res;
     return state_regeneratorRuntime().wrap(function _callee75$(_context75) {
       while (1) switch (_context75.prev = _context75.next) {
+        case 0:
+          headers = new Headers();
+          headers.append("Content-Type", "application/json");
+          headers.append("Content-Length", JSON.stringify(data).length);
+          options = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
+          };
+          _context75.next = 6;
+          return fetch("/taginfodlcreplacementvalue", options);
+        case 6:
+          res = _context75.sent;
+          if (!res.ok) {
+            _context75.next = 9;
+            break;
+          }
+          return _context75.abrupt("return", true);
+        case 9:
+          return _context75.abrupt("return", false);
+        case 10:
+        case "end":
+          return _context75.stop();
+      }
+    }, _callee75);
+  }));
+  return function apiTagInfoDlcReplacementValues(_x71) {
+    return _ref75.apply(this, arguments);
+  };
+}();
+var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
+  var _ref76 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee76() {
+    var headers, options, res, json;
+    return state_regeneratorRuntime().wrap(function _callee76$(_context76) {
+      while (1) switch (_context76.prev = _context76.next) {
         case 0:
           headers = new Headers();
           headers.append("Content-Type", "application/json");
@@ -29535,29 +29579,29 @@ var apiGetUpdateItemInfoJobStatistics = /*#__PURE__*/function () {
             method: "GET",
             headers: headers
           };
-          _context75.next = 5;
+          _context76.next = 5;
           return fetch("/iteminfo/jobstatistics", options);
         case 5:
-          res = _context75.sent;
+          res = _context76.sent;
           if (!res.ok) {
-            _context75.next = 11;
+            _context76.next = 11;
             break;
           }
-          _context75.next = 9;
+          _context76.next = 9;
           return res.json();
         case 9:
-          json = _context75.sent;
-          return _context75.abrupt("return", json);
+          json = _context76.sent;
+          return _context76.abrupt("return", json);
         case 11:
-          return _context75.abrupt("return", null);
+          return _context76.abrupt("return", null);
         case 12:
         case "end":
-          return _context75.stop();
+          return _context76.stop();
       }
-    }, _callee75);
+    }, _callee76);
   }));
   return function apiGetUpdateItemInfoJobStatistics() {
-    return _ref75.apply(this, arguments);
+    return _ref76.apply(this, arguments);
   };
 }();
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
@@ -55108,6 +55152,1252 @@ var MultipleSelectCheckmarks = function MultipleSelectCheckmarks(_ref5) {
   });
 };
 /* harmony default export */ const checkmarksSelect = (MultipleSelectCheckmarks);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormLabel/formLabelClasses.js
+
+
+function getFormLabelUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiFormLabel', slot);
+}
+const formLabelClasses = generateUtilityClasses('MuiFormLabel', ['root', 'colorSecondary', 'focused', 'disabled', 'error', 'filled', 'required', 'asterisk']);
+/* harmony default export */ const FormLabel_formLabelClasses = (formLabelClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormLabel/FormLabel.js
+
+
+const FormLabel_excluded = ["children", "className", "color", "component", "disabled", "error", "filled", "focused", "required"];
+
+
+
+
+
+
+
+
+
+
+
+const FormLabel_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    color,
+    focused,
+    disabled,
+    error,
+    filled,
+    required
+  } = ownerState;
+  const slots = {
+    root: ['root', `color${utils_capitalize(color)}`, disabled && 'disabled', error && 'error', filled && 'filled', focused && 'focused', required && 'required'],
+    asterisk: ['asterisk', error && 'error']
+  };
+  return composeClasses(slots, getFormLabelUtilityClasses, classes);
+};
+const FormLabelRoot = styles_styled('label', {
+  name: 'MuiFormLabel',
+  slot: 'Root',
+  overridesResolver: ({
+    ownerState
+  }, styles) => {
+    return extends_extends({}, styles.root, ownerState.color === 'secondary' && styles.colorSecondary, ownerState.filled && styles.filled);
+  }
+})(({
+  theme,
+  ownerState
+}) => extends_extends({
+  color: (theme.vars || theme).palette.text.secondary
+}, theme.typography.body1, {
+  lineHeight: '1.4375em',
+  padding: 0,
+  position: 'relative',
+  [`&.${FormLabel_formLabelClasses.focused}`]: {
+    color: (theme.vars || theme).palette[ownerState.color].main
+  },
+  [`&.${FormLabel_formLabelClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.text.disabled
+  },
+  [`&.${FormLabel_formLabelClasses.error}`]: {
+    color: (theme.vars || theme).palette.error.main
+  }
+}));
+const AsteriskComponent = styles_styled('span', {
+  name: 'MuiFormLabel',
+  slot: 'Asterisk',
+  overridesResolver: (props, styles) => styles.asterisk
+})(({
+  theme
+}) => ({
+  [`&.${FormLabel_formLabelClasses.error}`]: {
+    color: (theme.vars || theme).palette.error.main
+  }
+}));
+const FormLabel = /*#__PURE__*/react.forwardRef(function FormLabel(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiFormLabel'
+  });
+  const {
+      children,
+      className,
+      component = 'label'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, FormLabel_excluded);
+  const muiFormControl = useFormControl();
+  const fcs = formControlState({
+    props,
+    muiFormControl,
+    states: ['color', 'required', 'focused', 'disabled', 'error', 'filled']
+  });
+  const ownerState = extends_extends({}, props, {
+    color: fcs.color || 'primary',
+    component,
+    disabled: fcs.disabled,
+    error: fcs.error,
+    filled: fcs.filled,
+    focused: fcs.focused,
+    required: fcs.required
+  });
+  const classes = FormLabel_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(FormLabelRoot, extends_extends({
+    as: component,
+    ownerState: ownerState,
+    className: clsx_m(classes.root, className),
+    ref: ref
+  }, other, {
+    children: [children, fcs.required && /*#__PURE__*/(0,jsx_runtime.jsxs)(AsteriskComponent, {
+      ownerState: ownerState,
+      "aria-hidden": true,
+      className: classes.asterisk,
+      children: ["\u2009", '*']
+    })]
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const FormLabel_FormLabel = (FormLabel);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/InputLabel/inputLabelClasses.js
+
+
+function getInputLabelUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiInputLabel', slot);
+}
+const inputLabelClasses = generateUtilityClasses('MuiInputLabel', ['root', 'focused', 'disabled', 'error', 'required', 'asterisk', 'formControl', 'sizeSmall', 'shrink', 'animated', 'standard', 'filled', 'outlined']);
+/* harmony default export */ const InputLabel_inputLabelClasses = ((/* unused pure expression or super */ null && (inputLabelClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/InputLabel/InputLabel.js
+
+
+const InputLabel_excluded = ["disableAnimation", "margin", "shrink", "variant", "className"];
+
+
+
+
+
+
+
+
+
+
+
+const InputLabel_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    formControl,
+    size,
+    shrink,
+    disableAnimation,
+    variant,
+    required
+  } = ownerState;
+  const slots = {
+    root: ['root', formControl && 'formControl', !disableAnimation && 'animated', shrink && 'shrink', size === 'small' && 'sizeSmall', variant],
+    asterisk: [required && 'asterisk']
+  };
+  const composedClasses = composeClasses(slots, getInputLabelUtilityClasses, classes);
+  return extends_extends({}, classes, composedClasses);
+};
+const InputLabelRoot = styles_styled(FormLabel_FormLabel, {
+  shouldForwardProp: prop => rootShouldForwardProp(prop) || prop === 'classes',
+  name: 'MuiInputLabel',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${FormLabel_formLabelClasses.asterisk}`]: styles.asterisk
+    }, styles.root, ownerState.formControl && styles.formControl, ownerState.size === 'small' && styles.sizeSmall, ownerState.shrink && styles.shrink, !ownerState.disableAnimation && styles.animated, styles[ownerState.variant]];
+  }
+})(({
+  theme,
+  ownerState
+}) => extends_extends({
+  display: 'block',
+  transformOrigin: 'top left',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '100%'
+}, ownerState.formControl && {
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  // slight alteration to spec spacing to match visual spec result
+  transform: 'translate(0, 20px) scale(1)'
+}, ownerState.size === 'small' && {
+  // Compensation for the `Input.inputSizeSmall` style.
+  transform: 'translate(0, 17px) scale(1)'
+}, ownerState.shrink && {
+  transform: 'translate(0, -1.5px) scale(0.75)',
+  transformOrigin: 'top left',
+  maxWidth: '133%'
+}, !ownerState.disableAnimation && {
+  transition: theme.transitions.create(['color', 'transform', 'max-width'], {
+    duration: theme.transitions.duration.shorter,
+    easing: theme.transitions.easing.easeOut
+  })
+}, ownerState.variant === 'filled' && extends_extends({
+  // Chrome's autofill feature gives the input field a yellow background.
+  // Since the input field is behind the label in the HTML tree,
+  // the input field is drawn last and hides the label with an opaque background color.
+  // zIndex: 1 will raise the label above opaque background-colors of input.
+  zIndex: 1,
+  pointerEvents: 'none',
+  transform: 'translate(12px, 16px) scale(1)',
+  maxWidth: 'calc(100% - 24px)'
+}, ownerState.size === 'small' && {
+  transform: 'translate(12px, 13px) scale(1)'
+}, ownerState.shrink && extends_extends({
+  userSelect: 'none',
+  pointerEvents: 'auto',
+  transform: 'translate(12px, 7px) scale(0.75)',
+  maxWidth: 'calc(133% - 24px)'
+}, ownerState.size === 'small' && {
+  transform: 'translate(12px, 4px) scale(0.75)'
+})), ownerState.variant === 'outlined' && extends_extends({
+  // see comment above on filled.zIndex
+  zIndex: 1,
+  pointerEvents: 'none',
+  transform: 'translate(14px, 16px) scale(1)',
+  maxWidth: 'calc(100% - 24px)'
+}, ownerState.size === 'small' && {
+  transform: 'translate(14px, 9px) scale(1)'
+}, ownerState.shrink && {
+  userSelect: 'none',
+  pointerEvents: 'auto',
+  // Theoretically, we should have (8+5)*2/0.75 = 34px
+  // but it feels a better when it bleeds a bit on the left, so 32px.
+  maxWidth: 'calc(133% - 32px)',
+  transform: 'translate(14px, -9px) scale(0.75)'
+})));
+const InputLabel = /*#__PURE__*/react.forwardRef(function InputLabel(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    name: 'MuiInputLabel',
+    props: inProps
+  });
+  const {
+      disableAnimation = false,
+      shrink: shrinkProp,
+      className
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, InputLabel_excluded);
+  const muiFormControl = useFormControl();
+  let shrink = shrinkProp;
+  if (typeof shrink === 'undefined' && muiFormControl) {
+    shrink = muiFormControl.filled || muiFormControl.focused || muiFormControl.adornedStart;
+  }
+  const fcs = formControlState({
+    props,
+    muiFormControl,
+    states: ['size', 'variant', 'required']
+  });
+  const ownerState = extends_extends({}, props, {
+    disableAnimation,
+    formControl: muiFormControl,
+    shrink,
+    size: fcs.size,
+    variant: fcs.variant,
+    required: fcs.required
+  });
+  const classes = InputLabel_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(InputLabelRoot, extends_extends({
+    "data-shrink": shrink,
+    ownerState: ownerState,
+    ref: ref,
+    className: clsx_m(classes.root, className)
+  }, other, {
+    classes: classes
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const InputLabel_InputLabel = (InputLabel);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormHelperText/formHelperTextClasses.js
+
+
+function getFormHelperTextUtilityClasses(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiFormHelperText', slot);
+}
+const formHelperTextClasses = generateUtilityClasses('MuiFormHelperText', ['root', 'error', 'disabled', 'sizeSmall', 'sizeMedium', 'contained', 'focused', 'filled', 'required']);
+/* harmony default export */ const FormHelperText_formHelperTextClasses = (formHelperTextClasses);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/FormHelperText/FormHelperText.js
+
+
+var FormHelperText_span;
+const FormHelperText_excluded = ["children", "className", "component", "disabled", "error", "filled", "focused", "margin", "required", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+const FormHelperText_useUtilityClasses = ownerState => {
+  const {
+    classes,
+    contained,
+    size,
+    disabled,
+    error,
+    filled,
+    focused,
+    required
+  } = ownerState;
+  const slots = {
+    root: ['root', disabled && 'disabled', error && 'error', size && `size${utils_capitalize(size)}`, contained && 'contained', focused && 'focused', filled && 'filled', required && 'required']
+  };
+  return composeClasses(slots, getFormHelperTextUtilityClasses, classes);
+};
+const FormHelperTextRoot = styles_styled('p', {
+  name: 'MuiFormHelperText',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const {
+      ownerState
+    } = props;
+    return [styles.root, ownerState.size && styles[`size${utils_capitalize(ownerState.size)}`], ownerState.contained && styles.contained, ownerState.filled && styles.filled];
+  }
+})(({
+  theme,
+  ownerState
+}) => extends_extends({
+  color: (theme.vars || theme).palette.text.secondary
+}, theme.typography.caption, {
+  textAlign: 'left',
+  marginTop: 3,
+  marginRight: 0,
+  marginBottom: 0,
+  marginLeft: 0,
+  [`&.${FormHelperText_formHelperTextClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.text.disabled
+  },
+  [`&.${FormHelperText_formHelperTextClasses.error}`]: {
+    color: (theme.vars || theme).palette.error.main
+  }
+}, ownerState.size === 'small' && {
+  marginTop: 4
+}, ownerState.contained && {
+  marginLeft: 14,
+  marginRight: 14
+}));
+const FormHelperText = /*#__PURE__*/react.forwardRef(function FormHelperText(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiFormHelperText'
+  });
+  const {
+      children,
+      className,
+      component = 'p'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, FormHelperText_excluded);
+  const muiFormControl = useFormControl();
+  const fcs = formControlState({
+    props,
+    muiFormControl,
+    states: ['variant', 'size', 'disabled', 'error', 'filled', 'focused', 'required']
+  });
+  const ownerState = extends_extends({}, props, {
+    component,
+    contained: fcs.variant === 'filled' || fcs.variant === 'outlined',
+    variant: fcs.variant,
+    size: fcs.size,
+    disabled: fcs.disabled,
+    error: fcs.error,
+    filled: fcs.filled,
+    focused: fcs.focused,
+    required: fcs.required
+  });
+  const classes = FormHelperText_useUtilityClasses(ownerState);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(FormHelperTextRoot, extends_extends({
+    as: component,
+    ownerState: ownerState,
+    className: clsx_m(classes.root, className),
+    ref: ref
+  }, other, {
+    children: children === ' ' ? // notranslate needed while Google Translate will not fix zero-width space issue
+    FormHelperText_span || (FormHelperText_span = /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+      className: "notranslate",
+      children: "\u200B"
+    })) : children
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const FormHelperText_FormHelperText = (FormHelperText);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/TextField/textFieldClasses.js
+
+
+function getTextFieldUtilityClass(slot) {
+  return generateUtilityClass_generateUtilityClass('MuiTextField', slot);
+}
+const textFieldClasses = generateUtilityClasses('MuiTextField', ['root']);
+/* harmony default export */ const TextField_textFieldClasses = ((/* unused pure expression or super */ null && (textFieldClasses)));
+;// CONCATENATED MODULE: ./node_modules/@mui/material/TextField/TextField.js
+
+
+const TextField_excluded = ["autoComplete", "autoFocus", "children", "className", "color", "defaultValue", "disabled", "error", "FormHelperTextProps", "fullWidth", "helperText", "id", "InputLabelProps", "inputProps", "InputProps", "inputRef", "label", "maxRows", "minRows", "multiline", "name", "onBlur", "onChange", "onFocus", "placeholder", "required", "rows", "select", "SelectProps", "type", "value", "variant"];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const variantComponent = {
+  standard: Input_Input,
+  filled: FilledInput_FilledInput,
+  outlined: OutlinedInput_OutlinedInput
+};
+const TextField_useUtilityClasses = ownerState => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ['root']
+  };
+  return composeClasses(slots, getTextFieldUtilityClass, classes);
+};
+const TextFieldRoot = styles_styled(FormControl_FormControl, {
+  name: 'MuiTextField',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root
+})({});
+
+/**
+ * The `TextField` is a convenience wrapper for the most common cases (80%).
+ * It cannot be all things to all people, otherwise the API would grow out of control.
+ *
+ * ## Advanced Configuration
+ *
+ * It's important to understand that the text field is a simple abstraction
+ * on top of the following components:
+ *
+ * - [FormControl](/material-ui/api/form-control/)
+ * - [InputLabel](/material-ui/api/input-label/)
+ * - [FilledInput](/material-ui/api/filled-input/)
+ * - [OutlinedInput](/material-ui/api/outlined-input/)
+ * - [Input](/material-ui/api/input/)
+ * - [FormHelperText](/material-ui/api/form-helper-text/)
+ *
+ * If you wish to alter the props applied to the `input` element, you can do so as follows:
+ *
+ * ```jsx
+ * const inputProps = {
+ *   step: 300,
+ * };
+ *
+ * return <TextField id="time" type="time" inputProps={inputProps} />;
+ * ```
+ *
+ * For advanced cases, please look at the source of TextField by clicking on the
+ * "Edit this page" button above. Consider either:
+ *
+ * - using the upper case props for passing values directly to the components
+ * - using the underlying components directly as shown in the demos
+ */
+const TextField = /*#__PURE__*/react.forwardRef(function TextField(inProps, ref) {
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiTextField'
+  });
+  const {
+      autoComplete,
+      autoFocus = false,
+      children,
+      className,
+      color = 'primary',
+      defaultValue,
+      disabled = false,
+      error = false,
+      FormHelperTextProps,
+      fullWidth = false,
+      helperText,
+      id: idOverride,
+      InputLabelProps,
+      inputProps,
+      InputProps,
+      inputRef,
+      label,
+      maxRows,
+      minRows,
+      multiline = false,
+      name,
+      onBlur,
+      onChange,
+      onFocus,
+      placeholder,
+      required = false,
+      rows,
+      select = false,
+      SelectProps,
+      type,
+      value,
+      variant = 'outlined'
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, TextField_excluded);
+  const ownerState = extends_extends({}, props, {
+    autoFocus,
+    color,
+    disabled,
+    error,
+    fullWidth,
+    multiline,
+    required,
+    select,
+    variant
+  });
+  const classes = TextField_useUtilityClasses(ownerState);
+  if (false) {}
+  const InputMore = {};
+  if (variant === 'outlined') {
+    if (InputLabelProps && typeof InputLabelProps.shrink !== 'undefined') {
+      InputMore.notched = InputLabelProps.shrink;
+    }
+    InputMore.label = label;
+  }
+  if (select) {
+    // unset defaults from textbox inputs
+    if (!SelectProps || !SelectProps.native) {
+      InputMore.id = undefined;
+    }
+    InputMore['aria-describedby'] = undefined;
+  }
+  const id = useId(idOverride);
+  const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
+  const inputLabelId = label && id ? `${id}-label` : undefined;
+  const InputComponent = variantComponent[variant];
+  const InputElement = /*#__PURE__*/(0,jsx_runtime.jsx)(InputComponent, extends_extends({
+    "aria-describedby": helperTextId,
+    autoComplete: autoComplete,
+    autoFocus: autoFocus,
+    defaultValue: defaultValue,
+    fullWidth: fullWidth,
+    multiline: multiline,
+    name: name,
+    rows: rows,
+    maxRows: maxRows,
+    minRows: minRows,
+    type: type,
+    value: value,
+    id: id,
+    inputRef: inputRef,
+    onBlur: onBlur,
+    onChange: onChange,
+    onFocus: onFocus,
+    placeholder: placeholder,
+    inputProps: inputProps
+  }, InputMore, InputProps));
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(TextFieldRoot, extends_extends({
+    className: clsx_m(classes.root, className),
+    disabled: disabled,
+    error: error,
+    fullWidth: fullWidth,
+    ref: ref,
+    required: required,
+    color: color,
+    variant: variant,
+    ownerState: ownerState
+  }, other, {
+    children: [label != null && label !== '' && /*#__PURE__*/(0,jsx_runtime.jsx)(InputLabel_InputLabel, extends_extends({
+      htmlFor: id,
+      id: inputLabelId
+    }, InputLabelProps, {
+      children: label
+    })), select ? /*#__PURE__*/(0,jsx_runtime.jsx)(material_Select_Select, extends_extends({
+      "aria-describedby": helperTextId,
+      id: id,
+      labelId: inputLabelId,
+      value: value,
+      input: InputElement
+    }, SelectProps, {
+      children: children
+    })) : InputElement, helperText && /*#__PURE__*/(0,jsx_runtime.jsx)(FormHelperText_FormHelperText, extends_extends({
+      id: helperTextId
+    }, FormHelperTextProps, {
+      children: helperText
+    }))]
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const TextField_TextField = (TextField);
+;// CONCATENATED MODULE: ./node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
+
+
+
+
+// TODO: return `EventHandlerName extends `on${infer EventName}` ? Lowercase<EventName> : never` once generatePropTypes runs with TS 4.1
+
+function mapEventPropToEvent(eventProp) {
+  return eventProp.substring(2).toLowerCase();
+}
+function clickedRootScrollbar(event, doc) {
+  return doc.documentElement.clientWidth < event.clientX || doc.documentElement.clientHeight < event.clientY;
+}
+/**
+ * Listen for click events that occur somewhere in the document, outside of the element itself.
+ * For instance, if you need to hide a menu when people click anywhere else on your page.
+ *
+ * Demos:
+ *
+ * - [Click-Away Listener](https://mui.com/base/react-click-away-listener/)
+ *
+ * API:
+ *
+ * - [ClickAwayListener API](https://mui.com/base/react-click-away-listener/components-api/#click-away-listener)
+ */
+function ClickAwayListener(props) {
+  const {
+    children,
+    disableReactTree = false,
+    mouseEvent = 'onClick',
+    onClickAway,
+    touchEvent = 'onTouchEnd'
+  } = props;
+  const movedRef = react.useRef(false);
+  const nodeRef = react.useRef(null);
+  const activatedRef = react.useRef(false);
+  const syntheticEventRef = react.useRef(false);
+  react.useEffect(() => {
+    // Ensure that this component is not "activated" synchronously.
+    // https://github.com/facebook/react/issues/20074
+    setTimeout(() => {
+      activatedRef.current = true;
+    }, 0);
+    return () => {
+      activatedRef.current = false;
+    };
+  }, []);
+  const handleRef = useForkRef(
+  // @ts-expect-error TODO upstream fix
+  children.ref, nodeRef);
+
+  // The handler doesn't take event.defaultPrevented into account:
+  //
+  // event.preventDefault() is meant to stop default behaviors like
+  // clicking a checkbox to check it, hitting a button to submit a form,
+  // and hitting left arrow to move the cursor in a text input etc.
+  // Only special HTML elements have these default behaviors.
+  const handleClickAway = useEventCallback_useEventCallback(event => {
+    // Given developers can stop the propagation of the synthetic event,
+    // we can only be confident with a positive value.
+    const insideReactTree = syntheticEventRef.current;
+    syntheticEventRef.current = false;
+    const doc = ownerDocument(nodeRef.current);
+
+    // 1. IE11 support, which trigger the handleClickAway even after the unbind
+    // 2. The child might render null.
+    // 3. Behave like a blur listener.
+    if (!activatedRef.current || !nodeRef.current || 'clientX' in event && clickedRootScrollbar(event, doc)) {
+      return;
+    }
+
+    // Do not act if user performed touchmove
+    if (movedRef.current) {
+      movedRef.current = false;
+      return;
+    }
+    let insideDOM;
+
+    // If not enough, can use https://github.com/DieterHolvoet/event-propagation-path/blob/master/propagationPath.js
+    if (event.composedPath) {
+      insideDOM = event.composedPath().indexOf(nodeRef.current) > -1;
+    } else {
+      insideDOM = !doc.documentElement.contains(
+      // @ts-expect-error returns `false` as intended when not dispatched from a Node
+      event.target) || nodeRef.current.contains(
+      // @ts-expect-error returns `false` as intended when not dispatched from a Node
+      event.target);
+    }
+    if (!insideDOM && (disableReactTree || !insideReactTree)) {
+      onClickAway(event);
+    }
+  });
+
+  // Keep track of mouse/touch events that bubbled up through the portal.
+  const createHandleSynthetic = handlerName => event => {
+    syntheticEventRef.current = true;
+    const childrenPropsHandler = children.props[handlerName];
+    if (childrenPropsHandler) {
+      childrenPropsHandler(event);
+    }
+  };
+  const childrenProps = {
+    ref: handleRef
+  };
+  if (touchEvent !== false) {
+    childrenProps[touchEvent] = createHandleSynthetic(touchEvent);
+  }
+  react.useEffect(() => {
+    if (touchEvent !== false) {
+      const mappedTouchEvent = mapEventPropToEvent(touchEvent);
+      const doc = ownerDocument(nodeRef.current);
+      const handleTouchMove = () => {
+        movedRef.current = true;
+      };
+      doc.addEventListener(mappedTouchEvent, handleClickAway);
+      doc.addEventListener('touchmove', handleTouchMove);
+      return () => {
+        doc.removeEventListener(mappedTouchEvent, handleClickAway);
+        doc.removeEventListener('touchmove', handleTouchMove);
+      };
+    }
+    return undefined;
+  }, [handleClickAway, touchEvent]);
+  if (mouseEvent !== false) {
+    childrenProps[mouseEvent] = createHandleSynthetic(mouseEvent);
+  }
+  react.useEffect(() => {
+    if (mouseEvent !== false) {
+      const mappedMouseEvent = mapEventPropToEvent(mouseEvent);
+      const doc = ownerDocument(nodeRef.current);
+      doc.addEventListener(mappedMouseEvent, handleClickAway);
+      return () => {
+        doc.removeEventListener(mappedMouseEvent, handleClickAway);
+      };
+    }
+    return undefined;
+  }, [handleClickAway, mouseEvent]);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(react.Fragment, {
+    children: /*#__PURE__*/react.cloneElement(children, childrenProps)
+  });
+}
+ false ? 0 : void 0;
+if (false) {}
+/* harmony default export */ const ClickAwayListener_ClickAwayListener = (ClickAwayListener);
+;// CONCATENATED MODULE: ./node_modules/@mui/material/Popper/Popper.js
+
+
+const Popper_Popper_excluded = ["anchorEl", "component", "components", "componentsProps", "container", "disablePortal", "keepMounted", "modifiers", "open", "placement", "popperOptions", "popperRef", "transition", "slots", "slotProps"];
+
+
+
+
+
+
+
+const PopperRoot = styles_styled(Popper_Popper, {
+  name: 'MuiPopper',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root
+})({});
+
+/**
+ *
+ * Demos:
+ *
+ * - [Autocomplete](https://mui.com/material-ui/react-autocomplete/)
+ * - [Menu](https://mui.com/material-ui/react-menu/)
+ * - [Popper](https://mui.com/material-ui/react-popper/)
+ *
+ * API:
+ *
+ * - [Popper API](https://mui.com/material-ui/api/popper/)
+ */
+const Popper_Popper_Popper = /*#__PURE__*/react.forwardRef(function Popper(inProps, ref) {
+  var _slots$root;
+  const theme = useThemeWithoutDefault();
+  const props = useThemeProps_useThemeProps({
+    props: inProps,
+    name: 'MuiPopper'
+  });
+  const {
+      anchorEl,
+      component,
+      components,
+      componentsProps,
+      container,
+      disablePortal,
+      keepMounted,
+      modifiers,
+      open,
+      placement,
+      popperOptions,
+      popperRef,
+      transition,
+      slots,
+      slotProps
+    } = props,
+    other = _objectWithoutPropertiesLoose(props, Popper_Popper_excluded);
+  const RootComponent = (_slots$root = slots == null ? void 0 : slots.root) != null ? _slots$root : components == null ? void 0 : components.Root;
+  const otherProps = extends_extends({
+    anchorEl,
+    component,
+    container,
+    disablePortal,
+    keepMounted,
+    modifiers,
+    open,
+    placement,
+    popperOptions,
+    popperRef,
+    transition
+  }, other);
+  return /*#__PURE__*/(0,jsx_runtime.jsx)(PopperRoot, extends_extends({
+    direction: theme == null ? void 0 : theme.direction,
+    slots: {
+      root: RootComponent
+    },
+    slotProps: slotProps != null ? slotProps : componentsProps
+  }, otherProps, {
+    ref: ref
+  }));
+});
+ false ? 0 : void 0;
+/* harmony default export */ const material_Popper_Popper = (Popper_Popper_Popper);
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/selectWithSearchingTextField/styles.scss
+// extracted by mini-css-extract-plugin
+/* harmony default export */ const selectWithSearchingTextField_styles = ({"formItem":"styles__formItem--SLdmF","name":"styles__name--NMLsw","doubleControl":"styles__doubleControl--MRjQw","wrapper":"styles__wrapper--SMF5s","inputControl":"styles__inputControl--vJxJJ","inputArea":"styles__inputArea--mm9m0","symbol":"styles__symbol--uq2d8","hint":"styles__hint--WBlOJ","MuiPaper-root":"styles__MuiPaper-root--MCY0l","dropDownListExpandedUp":"styles__dropDownListExpandedUp--yFhjd","dropDownListExpandedDown":"styles__dropDownListExpandedDown--GVajG"});
+;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/formItem/select/selectWithSearchingTextField/index.js
+var selectWithSearchingTextField_templateObject;
+function selectWithSearchingTextField_typeof(o) { "@babel/helpers - typeof"; return selectWithSearchingTextField_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, selectWithSearchingTextField_typeof(o); }
+function selectWithSearchingTextField_toConsumableArray(arr) { return selectWithSearchingTextField_arrayWithoutHoles(arr) || selectWithSearchingTextField_iterableToArray(arr) || selectWithSearchingTextField_unsupportedIterableToArray(arr) || selectWithSearchingTextField_nonIterableSpread(); }
+function selectWithSearchingTextField_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function selectWithSearchingTextField_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function selectWithSearchingTextField_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return selectWithSearchingTextField_arrayLikeToArray(arr); }
+function selectWithSearchingTextField_slicedToArray(arr, i) { return selectWithSearchingTextField_arrayWithHoles(arr) || selectWithSearchingTextField_iterableToArrayLimit(arr, i) || selectWithSearchingTextField_unsupportedIterableToArray(arr, i) || selectWithSearchingTextField_nonIterableRest(); }
+function selectWithSearchingTextField_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function selectWithSearchingTextField_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return selectWithSearchingTextField_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return selectWithSearchingTextField_arrayLikeToArray(o, minLen); }
+function selectWithSearchingTextField_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function selectWithSearchingTextField_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function selectWithSearchingTextField_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function selectWithSearchingTextField_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+function selectWithSearchingTextField_defineProperty(obj, key, value) { key = selectWithSearchingTextField_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function selectWithSearchingTextField_toPropertyKey(t) { var i = selectWithSearchingTextField_toPrimitive(t, "string"); return "symbol" == selectWithSearchingTextField_typeof(i) ? i : i + ""; }
+function selectWithSearchingTextField_toPrimitive(t, r) { if ("object" != selectWithSearchingTextField_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != selectWithSearchingTextField_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+
+
+
+
+var selectWithSearchingTextField_blue = {
+  100: "#DAECFF",
+  200: "#99CCF3",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  900: "#003A75"
+};
+var selectWithSearchingTextField_grey = {
+  50: "#f6f8fa",
+  100: "#eaeef2",
+  200: "#d0d7de",
+  300: "#afb8c1",
+  400: "#8c959f",
+  500: "#6e7781",
+  600: "#57606a",
+  700: "#424a53",
+  800: "#32383f",
+  900: "#24292f"
+};
+var selectWithSearchingTextField_CreateStyledButton = function CreateStyledButton(width, color) {
+  return esm_styled("button")(function (_ref) {
+    var theme = _ref.theme;
+    return "\n    font-family: 'Igra Sans';\n    font-size: 14px;\n    line-height: 14px;\n    box-sizing: border-box;\n    width: 226;\n    height: 51px;\n    border-radius: 15px;\n    text-align: left;\n    background: #512068;\n    color: ".concat(color || "#FFFFFF", ";\n    border: none;\n    transition-property: all;\n    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n    transition-duration: 120ms;\n    &.").concat(Select_selectClasses.focusVisible, " {\n      border-color: ").concat(selectWithSearchingTextField_blue[400], ";\n      outline: 3px solid ").concat(theme.palette.mode === "dark" ? selectWithSearchingTextField_blue[500] : selectWithSearchingTextField_blue[200], ";\n    }\n    ");
+  });
+};
+var selectWithSearchingTextField_CreateStyledListbox = function CreateStyledListbox(width, height) {
+  return esm_styled("ul")(function (_ref2) {
+    var theme = _ref2.theme;
+    return "\n    font-family: 'Igra Sans';\n    font-size: 14px;\n    line-height: 14px;\n    box-sizing: border-box;\n    padding: 6px 6px 6px 6px;\n    margin-top: 10px;\n    margin-left: 0px;\n    width: ".concat(width || 226, "px;\n    height: ").concat(height || 155, "px;\n    border-radius: 15px;\n    overflow: auto;\n    outline: 0px;\n    background: #472159;\n    border: none;\n    color: ").concat(theme.palette.mode === "dark" ? selectWithSearchingTextField_grey[300] : selectWithSearchingTextField_grey[900], ";\n    box-shadow: none;\n  \n    &::-webkit-scrollbar {\n      width: 14px\n    }\n  \n    &::-webkit-scrollbar-thumb {\n        border: 6px solid transparent;\n        background-clip: padding-box;\n        border-radius: 9999px;\n        background-color: #83409b\n    }\n    ");
+  });
+};
+var selectWithSearchingTextField_bara = function bara(width, height) {
+  var _ref3;
+  return _ref3 = {
+    fontFamily: "Igra Sans",
+    fontSize: "14px",
+    lineHeight: "14px",
+    boxSizing: "border-box",
+    padding: "6px",
+    marginTop: "10px",
+    marginLeft: "0px",
+    width: "226px",
+    maxHeight: "155px",
+    borderRadius: "15px",
+    overflow: "auto",
+    outline: "0px",
+    background: "#472159",
+    border: "none",
+    color: "".concat(selectWithSearchingTextField_grey[900]),
+    boxShadow: "none",
+    "&::-webkit-scrollbar": {
+      width: "14px"
+    },
+    "&::-webkit-scrollbar-thumb": {
+      border: "6px solid transparent",
+      backgroundClip: "padding-box",
+      borderRadius: "9999px",
+      backgroundColor: "#83409b"
+    }
+  }, selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(_ref3, "fontFamily", "Igra Sans"), "cursor", "pointer"), "color", "#B3B3B3"), "fontSize", "14px"), "lineHeight", "14px"), "&:last-of-type", {
+    borderBottom: "none"
+  }), "&.".concat(Option_optionClasses.selected), {
+    backgroundColor: "none",
+    color: "#FFFFFF"
+  }), "&.".concat(Option_optionClasses.highlighted), {
+    backgroundcolor: "none",
+    color: "#FFFFFF"
+  }), "&.".concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected), {
+    backgroundColor: "none",
+    color: "#FFFFFF"
+  }), "&.".concat(Option_optionClasses.disabled), {
+    color: selectWithSearchingTextField_grey[400]
+  }), selectWithSearchingTextField_defineProperty(_ref3, "&:hover:not(.".concat(Option_optionClasses.disabled, ")"), {
+    backgroundColor: "none",
+    color: "#FFFFFF"
+  });
+};
+var selectWithSearchingTextField_StyledPopper = esm_styled(Popper_Popper)(selectWithSearchingTextField_templateObject || (selectWithSearchingTextField_templateObject = selectWithSearchingTextField_taggedTemplateLiteral(["\n  z-index: 1400;\n"])));
+var selectWithSearchingTextField_slots = {
+  root: selectWithSearchingTextField_CreateStyledButton(undefined, "#FFFFFF"),
+  listbox: selectWithSearchingTextField_CreateStyledListbox(undefined, undefined),
+  popper: selectWithSearchingTextField_StyledPopper
+};
+var selectWithSearchingTextField_MenuProps = {
+  MenuListProps: {
+    sx: {
+      padding: "0px 0px"
+    }
+  },
+  PaperProps: {
+    sx: selectWithSearchingTextField_bara(undefined, undefined),
+    style: {
+      maxHeight: 155
+    }
+  }
+};
+var SelectWithSearchingTextField = function SelectWithSearchingTextField(_ref4) {
+  var _textFieldRef$current, _textFieldRef$current2;
+  var options = _ref4.options,
+    onChange = _ref4.onChange,
+    value = _ref4.value,
+    placeholder = _ref4.placeholder;
+  var textFieldRef = (0,react.useRef)(null);
+  var searchFieldRef = (0,react.useRef)(null);
+  // const menuItemRef = useRef(null);
+
+  var _useState = (0,react.useState)(null),
+    _useState2 = selectWithSearchingTextField_slicedToArray(_useState, 2),
+    anchorEl = _useState2[0],
+    setAnchorEl = _useState2[1];
+  var _useState3 = (0,react.useState)(false),
+    _useState4 = selectWithSearchingTextField_slicedToArray(_useState3, 2),
+    isOpen = _useState4[0],
+    setIsOpen = _useState4[1];
+  var _useState5 = (0,react.useState)(""),
+    _useState6 = selectWithSearchingTextField_slicedToArray(_useState5, 2),
+    search = _useState6[0],
+    setSearch = _useState6[1];
+  var filteredOptions = options === null || options === void 0 ? void 0 : options.filter(function (option) {
+    var _option$name;
+    if (!search) return true;
+    return (_option$name = option.name) === null || _option$name === void 0 ? void 0 : _option$name.toLowerCase().includes(search.toLowerCase());
+  });
+  var handleOpen = function handleOpen(e) {
+    setAnchorEl(textFieldRef.current);
+    setIsOpen(function (prev) {
+      return !prev;
+    });
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+    }
+  };
+  var handleClose = function handleClose(e) {
+    if (textFieldRef.current && textFieldRef.current.contains(e.target)) {
+      return;
+    }
+    if (textFieldRef.current) {
+      textFieldRef.current.blur();
+    }
+    setIsOpen(false);
+  };
+  var handleSearchChange = function handleSearchChange(e) {
+    setSearch(e.target.value);
+  };
+  var handleSelect = function handleSelect(item) {
+    var isSelected = value.some(function (currentItem) {
+      return currentItem.id === item.id;
+    });
+    var newValue = isSelected ? value.filter(function (i) {
+      return i.id !== item.id;
+    }) : [].concat(selectWithSearchingTextField_toConsumableArray(value), [item]);
+    if (!isSelected && searchFieldRef.current) {
+      searchFieldRef.current.focus();
+    }
+    onChange({
+      target: {
+        value: newValue
+      }
+    });
+    return isSelected;
+  };
+  return /*#__PURE__*/(0,jsx_runtime.jsxs)(FormControl_FormControl, {
+    sx: {
+      m: 1,
+      width: "100%",
+      height: "100% !important",
+      margin: "0px"
+    },
+    children: [/*#__PURE__*/(0,jsx_runtime.jsx)(TextField_TextField, {
+      variant: "standard",
+      sx: {
+        height: "100% !important",
+        cursor: "pointer",
+        "& .MuiTextField-select.MuiInputBase-input ": {
+          minHeight: "1em",
+          maxWidth: "90%"
+        },
+        "& .MuiInputBase-input": {
+          cursor: "pointer"
+        },
+        "& .MuiTextField-root": {
+          height: "100% !important"
+        },
+        "& .MuiTextField-select.MuiInputBase-input span": {
+          marginLeft: "12px"
+        },
+        "& .MuiInputBase-root.MuiInput-root ": {
+          paddingRight: "9px",
+          height: "100% !important",
+          cursor: "pointer"
+        },
+        ".MuiTextField-nativeInput": {
+          height: "0px",
+          minHeight: "0px",
+          padding: "0px !important",
+          margin: "0px !important",
+          border: "0px !important"
+        },
+        "& .MuiSvgIcon-root": {
+          color: "rgb(255, 255, 255)",
+          margin: "0 9px 0 0"
+        }
+      },
+      ref: textFieldRef,
+      value: value.map(function (item) {
+        return item.name;
+      }).join(", "),
+      renderValue: function renderValue(selected) {
+        return /*#__PURE__*/(0,jsx_runtime.jsx)("span", {
+          children: selected.map(function (e) {
+            return e.name;
+          }).join(", ")
+        });
+      },
+      onChange: onChange,
+      onClick: handleOpen,
+      placeholder: placeholder,
+      InputProps: {
+        disableUnderline: true,
+        endAdornment: isOpen ? /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          "class": selectWithSearchingTextField_styles.dropDownListExpandedUp
+        }) : /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          "class": selectWithSearchingTextField_styles.dropDownListExpandedDown
+        }),
+        readOnly: true
+      },
+      slots: selectWithSearchingTextField_slots,
+      slotsProps: selectWithSearchingTextField_slots,
+      MenuProps: selectWithSearchingTextField_MenuProps,
+      inputProps: {
+        sx: {
+          "&:focus": {
+            backgroundColor: "transparent"
+          }
+        }
+      }
+    }), isOpen && /*#__PURE__*/(0,jsx_runtime.jsx)(ClickAwayListener_ClickAwayListener, {
+      onClickAway: handleClose,
+      children: /*#__PURE__*/(0,jsx_runtime.jsx)(material_Popper_Popper, {
+        open: isOpen,
+        anchorEl: textFieldRef.current,
+        placement: "bottom-start",
+        disablePortal: false,
+        transition: false,
+        container: (_textFieldRef$current = textFieldRef.current) === null || _textFieldRef$current === void 0 ? void 0 : _textFieldRef$current.parentElement,
+        modifiers: [{
+          name: "preventOverflow",
+          options: {
+            boundary: "viewport"
+          }
+        }, {
+          name: "offset",
+          options: {
+            offset: [0, 8]
+          }
+        }, {
+          name: "flip",
+          options: {
+            fallbackPlacements: ["bottom-start", "top-start"]
+          }
+        }],
+        sx: {
+          position: "fixed !important",
+          zIndex: "1400",
+          margin: "3px 0 3px !important",
+          "& .MuiPaper-root": {
+            backgroundColor: "#512068"
+          }
+        },
+        children: /*#__PURE__*/(0,jsx_runtime.jsxs)(Paper_Paper, {
+          style: {
+            width: anchorEl ? anchorEl.offsetWidth : 'auto',
+            maxHeight: 300,
+            overflowY: "auto",
+            padding: "0px 0px 3px 0"
+          },
+          sx: {/*
+               "& .MuiPaper-root::-webkit-scrollbar": {
+               width: "14px",
+               },
+               "& .MuiPaper-root::-webkit-scrollbar-thumb": {
+               border: "6px solid transparent",
+               backgroundClip: "padding-box",
+               borderRadius: "9999px",
+               backgroundColor: "rgb(131, 64, 155)"
+               }*/
+          },
+          children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            style: {
+              position: "sticky",
+              top: 0,
+              background: "#83409b",
+              zIndex: 1500,
+              padding: "8px",
+              paddingRight: "15px"
+            },
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)(TextField_TextField, {
+              variant: "outlined",
+              placeholder: "\u041F\u043E\u0438\u0441\u043A \u0438\u0437\u0434\u0430\u0442\u0435\u043B\u044F...",
+              fullWidth: true,
+              inputRef: searchFieldRef,
+              value: search,
+              onChange: handleSearchChange,
+              container: (_textFieldRef$current2 = textFieldRef.current) === null || _textFieldRef$current2 === void 0 ? void 0 : _textFieldRef$current2.parentElement,
+              sx: {
+                padding: "5px",
+                width: "100%",
+                height: "40px",
+                backgroundColor: "#83409b",
+                borderRadius: "34px",
+                "& .MuiInputBase-root": {
+                  height: "100%"
+                },
+                "& .MuiOutlinedInput-input": {
+                  borderRadius: "34px !important",
+                  cursor: "text !important"
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderRadius: "34px !important",
+                  borderColor: "rgba(0, 0, 0, 0.0)"
+                }
+              }
+            })
+          }), filteredOptions === null || filteredOptions === void 0 ? void 0 : filteredOptions.map(function (item) {
+            var _textFieldRef$current3;
+            return /*#__PURE__*/(0,jsx_runtime.jsxs)(MenuItem_MenuItem, {
+              value: item,
+              dense: true,
+              sx: {
+                padding: "3px 0",
+                "&.Mui-selected span ": {
+                  color: "rgb(255, 255, 255)"
+                }
+              },
+              container: (_textFieldRef$current3 = textFieldRef.current) === null || _textFieldRef$current3 === void 0 ? void 0 : _textFieldRef$current3.parentElement,
+              onClick: function onClick() {
+                return handleSelect(item);
+              }
+              // ref={menuItemRef}
+              ,
+              children: [/*#__PURE__*/(0,jsx_runtime.jsx)(ListItemText_ListItemText, {
+                sx: {
+                  paddingLeft: "15px",
+                  "& div": selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty(selectWithSearchingTextField_defineProperty({}, "&.".concat(Option_optionClasses.selected), {
+                    backgroundColor: "none",
+                    color: "#FFFFFF"
+                  }), "&.".concat(Option_optionClasses.highlighted), {
+                    backgroundcolor: "none",
+                    color: "#FFFFFF"
+                  }), "&.".concat(Option_optionClasses.highlighted, ".").concat(Option_optionClasses.selected), {
+                    backgroundColor: "none",
+                    color: "#FFFFFF"
+                  }), "&.".concat(Option_optionClasses.disabled), {
+                    color: selectWithSearchingTextField_grey[400]
+                  }), "&:hover:not(.".concat(Option_optionClasses.disabled, ")"), {
+                    backgroundColor: "none",
+                    color: "#FFFFFF"
+                  })
+                },
+                style: {
+                  color: item.color || "#B3B3B3"
+                },
+                primary: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  children: item.name
+                })
+              }), /*#__PURE__*/(0,jsx_runtime.jsx)(material_Checkbox_Checkbox, {
+                icon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {}),
+                checkedIcon: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+                  style: {
+                    width: "12px",
+                    height: "12px"
+                  },
+                  className: styles.checked
+                })
+                // anchorEl={menuItemRef}
+                ,
+                className: styles.wrapper,
+                sx: {
+                  margin: "0px 15px",
+                  width: "20px",
+                  height: "20px",
+                  padding: "0px"
+                },
+                checked: value.some(function (elem) {
+                  return elem.id === item.id;
+                })
+              })]
+            }, item.id);
+          })]
+        })
+      })
+    })]
+  });
+};
+/* harmony default export */ const selectWithSearchingTextField = (SelectWithSearchingTextField);
 ;// CONCATENATED MODULE: ./wwwroot/Source/components/shared/checkBox/index.js
 
 
@@ -55222,6 +56512,7 @@ function modalProductsFilter_arrayWithHoles(arr) { if (Array.isArray(arr)) retur
 
 
 
+
 // const ITEM_HEIGHT = 48;
 // const ITEM_PADDING_TOP = 8;
 // const MenuProps = {
@@ -55243,6 +56534,7 @@ var ModalFilter = function ModalFilter(_ref) {
     productName: "",
     steamCurrencyId: [],
     gameRegionsCurrency: [],
+    publishers: [],
     steamCountryCodeId: "",
     digiSellerIds: "",
     thirdPartyPriceValue: null,
@@ -55291,6 +56583,15 @@ var ModalFilter = function ModalFilter(_ref) {
       name: c.name
     };
   });
+  var steamPublishers = state.use().publishers.map(function (c) {
+    return {
+      id: c.id,
+      name: c.name
+    };
+  });
+  var memoSteamPublishers = react.useMemo(function () {
+    return steamPublishers;
+  }, []);
   var memoRegions = react.useMemo(function () {
     return regions;
   }, []);
@@ -55300,7 +56601,7 @@ var ModalFilter = function ModalFilter(_ref) {
       if (val == null) {
         return;
       }
-      if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency") {
+      if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency" || prop === "publishers") {
         if (val != null) {
           //var newVal = val.targer.value;
           //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
@@ -55523,6 +56824,26 @@ var ModalFilter = function ModalFilter(_ref) {
                   width: 69,
                   height: 75
                 })]
+              })
+            })
+          })
+        })]
+      }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
+        className: modalProductsFilter_styles.formItem,
+        children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.name,
+          children: "\u0418\u0437\u0434\u0430\u0442\u0435\u043B\u0438:"
+        }), /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+          className: modalProductsFilter_styles.wrapper,
+          children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+            "class": modalProductsFilter_styles.inputControl,
+            children: /*#__PURE__*/(0,jsx_runtime.jsx)("div", {
+              "class": modalProductsFilter_styles.inputArea,
+              children: /*#__PURE__*/(0,jsx_runtime.jsx)(selectWithSearchingTextField, {
+                options: memoSteamPublishers,
+                value: item.publishers,
+                onChange: handleChange("publishers"),
+                placeholder: ""
               })
             })
           })
@@ -62946,86 +64267,6 @@ var modalRegionSettingsEdit_ModalEdit = function ModalEdit(_ref3) {
   });
 };
 /* harmony default export */ const modalRegionSettingsEdit = (modalRegionSettingsEdit_ModalEdit);
-;// CONCATENATED MODULE: ./node_modules/@mui/material/Popper/Popper.js
-
-
-const Popper_Popper_excluded = ["anchorEl", "component", "components", "componentsProps", "container", "disablePortal", "keepMounted", "modifiers", "open", "placement", "popperOptions", "popperRef", "transition", "slots", "slotProps"];
-
-
-
-
-
-
-
-const PopperRoot = styles_styled(Popper_Popper, {
-  name: 'MuiPopper',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root
-})({});
-
-/**
- *
- * Demos:
- *
- * - [Autocomplete](https://mui.com/material-ui/react-autocomplete/)
- * - [Menu](https://mui.com/material-ui/react-menu/)
- * - [Popper](https://mui.com/material-ui/react-popper/)
- *
- * API:
- *
- * - [Popper API](https://mui.com/material-ui/api/popper/)
- */
-const Popper_Popper_Popper = /*#__PURE__*/react.forwardRef(function Popper(inProps, ref) {
-  var _slots$root;
-  const theme = useThemeWithoutDefault();
-  const props = useThemeProps_useThemeProps({
-    props: inProps,
-    name: 'MuiPopper'
-  });
-  const {
-      anchorEl,
-      component,
-      components,
-      componentsProps,
-      container,
-      disablePortal,
-      keepMounted,
-      modifiers,
-      open,
-      placement,
-      popperOptions,
-      popperRef,
-      transition,
-      slots,
-      slotProps
-    } = props,
-    other = _objectWithoutPropertiesLoose(props, Popper_Popper_excluded);
-  const RootComponent = (_slots$root = slots == null ? void 0 : slots.root) != null ? _slots$root : components == null ? void 0 : components.Root;
-  const otherProps = extends_extends({
-    anchorEl,
-    component,
-    container,
-    disablePortal,
-    keepMounted,
-    modifiers,
-    open,
-    placement,
-    popperOptions,
-    popperRef,
-    transition
-  }, other);
-  return /*#__PURE__*/(0,jsx_runtime.jsx)(PopperRoot, extends_extends({
-    direction: theme == null ? void 0 : theme.direction,
-    slots: {
-      root: RootComponent
-    },
-    slotProps: slotProps != null ? slotProps : componentsProps
-  }, otherProps, {
-    ref: ref
-  }));
-});
- false ? 0 : void 0;
-/* harmony default export */ const material_Popper_Popper = (Popper_Popper_Popper);
 ;// CONCATENATED MODULE: ./node_modules/@mui/material/utils/useId.js
 
 /* harmony default export */ const utils_useId = (useId);
@@ -69420,9 +70661,12 @@ var router = createBrowserRouter(createRoutesFromChildren( /*#__PURE__*/(0,jsx_r
             _context2.next = 2;
             return apiGetCurrencies();
           case 2:
+            _context2.next = 4;
+            return apiGetPublishers();
+          case 4:
             Promise.all([apiFetchItems(), apiGetSteamRegions()]);
             return _context2.abrupt("return", true);
-          case 4:
+          case 6:
           case "end":
             return _context2.stop();
         }
