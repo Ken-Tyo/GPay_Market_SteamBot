@@ -237,6 +237,11 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok(itemView);
         }
+        public class ReTime
+        {
+            public DateTime? InSetPriceProcess { get; set; }
+            public int Id { get; set; }
+        }
 
         [HttpPost, Route("items/add"), ValidationActionFilter]
         public async Task<IActionResult> Item(AddItemRequest model)
@@ -259,9 +264,40 @@ namespace SteamDigiSellerBot.Controllers
                     throw new Exception("Данный товар уже добавлен. Отредактируйте его.");
                 }
 
-                _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+                //await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
                 //await Task.Delay(1000);
-                return Ok();
+                var result = await _itemRepository.GetByAppIdAndSubId(db, item.AppId, item.SubId);
+                var mappedResult = _mapper.Map<ItemViewModel>(result);
+                return Ok(mappedResult);
+            }
+
+            return BadRequest();
+        }
+        public class IdBase
+        {
+            public int Id { get; set; }
+        }
+        [HttpPost, Route("items/setPrice"), ValidationActionFilter]
+        public async Task<IActionResult> SetPrices(IdBase info)
+        {
+
+            if (info != null)
+            {
+                User user = await _userManager.GetUserAsync(User);
+
+                Item item = await _itemRepository.GetByIdAsync(db, info.Id);
+
+                if (item == null) // Проверяется, что существующий товар не найден.
+                {
+                    return BadRequest("Сначала создайте Item items/add");
+                }
+
+                await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+                var result = await _itemRepository.GetByIdAsync(db, info.Id);
+                var mappedResult = _mapper.Map<ItemViewModel>(result);
+                mappedResult.InSetPriceProcess = false;
+                //await Task.Delay(5000);
+                return Ok(mappedResult);
             }
 
             return BadRequest();
@@ -284,14 +320,18 @@ namespace SteamDigiSellerBot.Controllers
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
-                _itemNetworkService.SetPrices(
+                 await _itemNetworkService.SetPrices(
                     item.AppId,
                     new List<Item>() { item },
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
-                //await Task.Delay(1000);
-                return Ok(editedItem.InSetPriceProcess);
+                //await Task.Delay(5000);
+
+                var result = await _itemRepository.GetByIdAsync(db, id);
+                var mappedResult = _mapper.Map<ItemViewModel>(result);
+                mappedResult.InSetPriceProcess = false;
+                return Ok(mappedResult);
             }
 
             return BadRequest();

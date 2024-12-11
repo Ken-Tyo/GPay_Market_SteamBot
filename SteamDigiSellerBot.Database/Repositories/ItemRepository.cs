@@ -23,6 +23,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         Task<List<Item>> ListIncludePricesAsync(Expression<Func<Item, bool>> predicate);
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetByAppIdAndSubId(string appId, string subId);
+        Task<Item> GetByAppIdAndSubId(DatabaseContext db, string appId, string subId);
         Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items);
         Task<(List<Item> result, int count)> Filter(
             string appId,
@@ -464,6 +465,11 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<Item> GetByAppIdAndSubId(string appId, string subId)
         {
             await using var db = dbContextFactory.CreateDbContext();
+            return await GetByAppIdAndSubId(db, appId,subId);
+        }
+        public async Task<Item> GetByAppIdAndSubId(DatabaseContext db, string appId, string subId)
+        {
+            
             return await db.Items.FirstOrDefaultAsync(i => i.AppId == appId && i.SubId == subId && !i.IsDeleted);
         }
     }
