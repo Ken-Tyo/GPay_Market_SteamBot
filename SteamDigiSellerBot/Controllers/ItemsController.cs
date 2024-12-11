@@ -250,7 +250,8 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
-                    await _itemRepository.AddAsync(db, item);
+                    item.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
+                    await _itemRepository.AddAsync(db, item); 
                 }
                 else
                 {
