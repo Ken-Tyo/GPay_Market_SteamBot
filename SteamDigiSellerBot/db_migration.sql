@@ -506,5 +506,5 @@ FROM "Games" gp,
 	 json_array_elements(gp."GameInfo"->'basic_info'->'publishers') pub
 WHERE (pub->>'creator_clan_account_id')::BIGINT IS NOT NULL;
 
-11.12.2024 Забытая колонка?
+11.12.2024 gpay 2-50
 ALTER TABLE "Items" ADD column "InSetPriceProcess" TIMESTAMP null;
