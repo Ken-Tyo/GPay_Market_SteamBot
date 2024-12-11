@@ -28084,35 +28084,62 @@ var apiSaveBotRegionSettings = /*#__PURE__*/function () {
 }();
 var apiChangeItem = /*#__PURE__*/function () {
   var _ref29 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee29(item) {
-    var res, newData;
+    var newData, res;
     return state_regeneratorRuntime().wrap(function _callee29$(_context29) {
       while (1) switch (_context29.prev = _context29.next) {
         case 0:
           //setItemsLoading(true);
           toggleEditItemModal(false);
-          _context29.next = 3;
-          return fetch("/items/edit/".concat(item.id), {
+          newData = state.get().items;
+          newData.find(function (e) {
+            return e.id === item.id;
+          }).InSetPriceProcess = true;
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              items: _toConsumableArray(newData)
+            });
+          });
+          res = fetch("/items/edit/".concat(item.id), {
             method: "POST",
             body: mapToFormData(item)
-          });
-        case 3:
-          res = _context29.sent;
-          if (res.ok) {
-            //await apiFetchItems();
-            newData = state.get().items;
-            newData.find(function (e) {
+          }).then(function (resp) {
+            var newData = state.get().items;
+            var oldItem = newData.find(function (e) {
               return e.id === item.id;
-            }).inSetPriceProcess = true;
+            });
+            oldItem.inSetPriceProcess = false;
+            Object.assign(oldItem, resp.json());
             state.set(function (value) {
               return state_objectSpread(state_objectSpread({}, value), {}, {
                 items: _toConsumableArray(newData)
               });
             });
-          } else {
-            toggleEditItemModal(true);
-          }
+          });
+          newData = state.get().items;
+          newData.find(function (e) {
+            return e.id === item.id;
+          }).inSetPriceProcess = true;
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              items: _toConsumableArray(newData)
+            });
+          });
+          // if (res.ok) {
+          //   //await apiFetchItems();
+          //   // var result = await res.json();
+          //   // var index = newData.findIndex((e) => e.id === item.id);
+          //   // newData[index] = result;
+          //   // state.set((value) => {
+          //   //   return {
+          //   //     ...value,
+          //   //     items: [...newData],
+          //   //   };
+          //   // });
+          // } else {
+          //   toggleEditItemModal(true);
+          // }
           //setItemsLoading(false);
-        case 5:
+        case 8:
         case "end":
           return _context29.stop();
       }
@@ -28124,33 +28151,72 @@ var apiChangeItem = /*#__PURE__*/function () {
 }();
 var apiCreateItem = /*#__PURE__*/function () {
   var _ref30 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee30(item) {
-    var res;
+    var res, newItem, newData, resSetPrice, oldItem;
     return state_regeneratorRuntime().wrap(function _callee30$(_context30) {
       while (1) switch (_context30.prev = _context30.next) {
         case 0:
-          setItemsLoading(true);
+          //setItemsLoading(true);
           toggleEditItemModal(false);
-          _context30.next = 4;
+          _context30.next = 3;
           return fetch("/items/add", {
             method: "POST",
             body: mapToFormData(item)
           });
-        case 4:
+        case 3:
           res = _context30.sent;
           if (!res.ok) {
-            _context30.next = 10;
+            _context30.next = 24;
             break;
           }
-          _context30.next = 8;
-          return apiFetchItems();
-        case 8:
-          _context30.next = 11;
+          _context30.next = 7;
+          return res.json();
+        case 7:
+          newItem = _context30.sent;
+          //await apiFetchItems();
+          newData = state.get().items;
+          newData.inSetPriceProcess = true;
+          newData.push(newItem);
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              items: _toConsumableArray(newData)
+            });
+          });
+          resSetPrice = fetch("/items/setPrice", {
+            method: "POST",
+            body: mapToFormData(newItem)
+          }).then(function (e) {
+            var oldItem = newData.find(function (e) {
+              return e.id === newItem.id;
+            });
+            oldItem.inSetPriceProcess = false;
+            Object.assign(oldItem, e.json());
+            state.set(function (value) {
+              return state_objectSpread(state_objectSpread({}, value), {}, {
+                items: _toConsumableArray(newData)
+              });
+            });
+          });
+          oldItem = newData.find(function (e) {
+            return e.id === item.id;
+          });
+          oldItem.inSetPriceProcess = false;
+          _context30.t0 = Object;
+          _context30.t1 = oldItem;
+          _context30.next = 19;
+          return resSetPrice.json();
+        case 19:
+          _context30.t2 = _context30.sent;
+          _context30.t0.assign.call(_context30.t0, _context30.t1, _context30.t2);
+          state.set(function (value) {
+            return state_objectSpread(state_objectSpread({}, value), {}, {
+              items: _toConsumableArray(newData)
+            });
+          });
+          _context30.next = 25;
           break;
-        case 10:
+        case 24:
           toggleEditItemModal(true);
-        case 11:
-          setItemsLoading(false);
-        case 12:
+        case 25:
         case "end":
           return _context30.stop();
       }
@@ -28907,11 +28973,10 @@ var updateGameSessionsFilter = /*#__PURE__*/function () {
         case 0:
           _state$get5 = state.get(), gameSessionsFilter = _state$get5.gameSessionsFilter;
           newFilter = state_objectSpread(state_objectSpread({}, gameSessionsFilter), newData);
-          console.log("new f", newFilter);
           setStateProp("gameSessionsFilter", newFilter);
-          _context57.next = 6;
+          _context57.next = 5;
           return apiFetchGameSessions(newFilter);
-        case 6:
+        case 5:
         case "end":
           return _context57.stop();
       }
@@ -28929,11 +28994,10 @@ var updateProductsFilter = /*#__PURE__*/function () {
         case 0:
           _state$get6 = state.get(), productsFilter = _state$get6.productsFilter;
           newFilter = state_objectSpread(state_objectSpread({}, productsFilter), newData);
-          console.log("new f", newFilter);
           setStateProp("productsFilter", newFilter);
-          _context58.next = 6;
+          _context58.next = 5;
           return apiFetchItems(newFilter);
-        case 6:
+        case 5:
         case "end":
           return _context58.stop();
       }
@@ -46538,14 +46602,14 @@ var products = function products() {
 
   // Listen mouse if (Shift-click) then avoid user-select: add(css.disableSelect) otherwise - allow
   (0,react.useEffect)(function () {
-    var selectableArea = document.getElementById('productList');
+    var selectableArea = document.getElementById("productList");
     if (selectableArea) {
       var mtimer;
-      selectableArea.addEventListener('mousedown', function (event) {
+      selectableArea.addEventListener("mousedown", function (event) {
         if (event.shiftKey || event.detail > 1) {
           selectableArea.classList.add(list_styles.disableSelect);
         } else {
-          // Init timer, after 500 ms (long click) - enable to select 
+          // Init timer, after 500 ms (long click) - enable to select
           var isDisableSelect = selectableArea.classList.contains(list_styles.disableSelect);
           if (isDisableSelect) {
             mtimer = setTimeout(function () {
@@ -46555,11 +46619,11 @@ var products = function products() {
         }
       });
       // mouseup, mouseleave - reset timer and enable to select
-      selectableArea.addEventListener('mouseup', function () {
+      selectableArea.addEventListener("mouseup", function () {
         clearTimeout(mtimer);
         selectableArea.classList.remove(list_styles.disableSelect);
       });
-      selectableArea.addEventListener('mouseleave', function () {
+      selectableArea.addEventListener("mouseleave", function () {
         clearTimeout(mtimer);
         selectableArea.classList.remove(list_styles.disableSelect);
       });
@@ -46603,6 +46667,7 @@ var products = function products() {
           return (i.currentDigiSellerPrice * 100 / i.currentSteamPriceRub).toFixed(0);
         };
         var additionalInfo = i.isFixedPrice ? "".concat(getDiffPriceInPercent(), "%") : "".concat(i.steamPercent, "% ").concat(i.addPrice, " rub");
+        console.log(i);
         var rowRenderer = function rowRenderer() {
           return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
             className: activeRow,
@@ -46971,7 +47036,7 @@ var products = function products() {
               toggleMassDescriptionSubMenu();
             }
           }), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
-            className: list_styles.subMenu + ' ' + list_styles.massDescriptionBlockSubMenu + ' ' + subMenuVisibility,
+            className: list_styles.subMenu + " " + list_styles.massDescriptionBlockSubMenu + " " + subMenuVisibility,
             children: [/*#__PURE__*/(0,jsx_runtime.jsx)("div", {
               className: list_styles.subMenuItem,
               onClick: function onClick() {
