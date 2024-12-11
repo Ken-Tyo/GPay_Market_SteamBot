@@ -84,9 +84,9 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
     isFixedPrice: false,
     isAutoActivation: true,
     steamCountryCodeId: 28,
-    currentSteamPriceRub: 0,
-    addPrice: 0,
-    steamPercent: 0,
+    currentSteamPriceRub: null,
+    addPrice: null,
+    steamPercent: null,
   };
   const [item, setItem] = useState(initial);
 
@@ -132,22 +132,34 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
       clearTimeout(calculationTimer.current);
     }
 
-    if (['steamPercent', 'addPrice'].some(key => key in item)) {
+    if (item.isFixedPrice) {
+      setFinalPrice(null);
+      setIsCalculating(false);
+      return;
+    }
+
+    const { steamPercent, addPrice, currentSteamPriceRub } = item;
+    const hasValidInput =
+      (!isNaN(parseFloat(currentSteamPriceRub)) && currentSteamPriceRub !== '') &&
+      ((!isNaN(parseFloat(steamPercent)) && steamPercent !== '') ||
+        (!isNaN(parseFloat(addPrice)) && addPrice !== ''));
+
+
+    if (hasValidInput) {
       setIsCalculating(true);
       setFinalPrice(null);
 
       calculationTimer.current = setTimeout(() => {
-        const { isFixedPrice, steamPercent, currentSteamPriceRub, addPrice } = item;
-        if(isFixedPrice){
-          return;
-        }
         const percent = parseFloat(steamPercent) || 0;
         const additional = parseFloat(addPrice) || 0;
         const currentPriceRub = parseFloat(currentSteamPriceRub) || 0;
         const computedPrice = currentPriceRub * (percent / 100) + additional;
+
         setIsCalculating(false);
         setFinalPrice(computedPrice.toFixed(2));
-      }, 2000);
+      }, 1000);
+    } else {
+      setFinalPrice(null);
     }
 
     return () => {
@@ -214,11 +226,11 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
           value={item.digiSellerIds}
         />
 
-      <div className={css.formItem}>
+        <div className={css.formItem}>
           <div className={css.name}>
             {!item.isFixedPrice ? 'Процент от Steam:' : 'Цена Digiseller'}
           </div>
-          <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div className={css.doubleControl}>
               {!item.isFixedPrice && (
                 <TextBox
@@ -244,16 +256,16 @@ const ModalEdit = ({ isOpen, value, onCancel, onSave }) => {
             </div>
             <div>
               {!item.isFixedPrice && (
-                  <div className={css.calculatingPrice}>
-                    {isCalculating ? (
-                      <div>
-                        <CircularLoader height={14} width={14} color="#D836E7" />
-                      </div>
-                    ) : finalPrice !== null ? (
-                      <div>~<span style={{color:"#D836E7"}}>{finalPrice}</span> rub</div>
-                    ) : null}
-                  </div>
-                )
+                <div className={css.calculatingPrice}>
+                  {isCalculating ? (
+                    <div>
+                      <CircularLoader height={14} width={14} color="#D836E7" />
+                    </div>
+                  ) : finalPrice !== null ? (
+                    <div>~<span style={{ color: "#D836E7" }}>{finalPrice}</span> rub</div>
+                  ) : null}
+                </div>
+              )
               }
             </div>
           </div>
