@@ -22,6 +22,7 @@ import {
   apiGetSteamRegions,
   apiFetchGameSessionsWithCurrentFilter,
   apiFetchGameSessStatuses,
+  apiGetPublishers
 } from './state';
 import css from './styles.scss';
 
@@ -51,7 +52,11 @@ let router = createBrowserRouter(
         path="products"
         loader={async () => {
           await apiGetCurrencies();
-          Promise.all([apiFetchItems(), apiGetSteamRegions()]);
+          await apiGetPublishers();
+          Promise.all([
+              apiFetchItems(),
+              apiGetSteamRegions()
+          ]);
           return true;
         }}
         element={<Products />}

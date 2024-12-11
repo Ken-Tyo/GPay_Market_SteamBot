@@ -41,6 +41,7 @@ namespace SteamDigiSellerBot.Database.Contexts
         public DbSet<GameSessionStatusLog> GameSessionStatusLogs { get; set; }
         public DbSet<BotSendGameAttempts> BotSendGameAttempts { get; set; }
         public DbSet<GameSessionItem> GameSessionItems { get; set; }
+        public DbSet<GamePublisher> GamePublishers { get; set; }
 
 
         #region Шаблоны описания и доп. описания
@@ -142,6 +143,9 @@ namespace SteamDigiSellerBot.Database.Contexts
             builder.Entity<TagInfoDlcReplacement>()
                 .HasMany(x => x.ReplacementValues)
                 .WithOne(x => x.TagInfoDlcReplacement);
+
+            builder.Entity<GamePublisher>()
+                .HasKey(x => new { x.GamePublisherId, x.GameId });
 
             builder.Entity<UpdateItemInfoStat>().HasKey(x => x.JobCode);
 

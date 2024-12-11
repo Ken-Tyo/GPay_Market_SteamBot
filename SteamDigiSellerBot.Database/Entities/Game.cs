@@ -45,7 +45,7 @@ namespace SteamDigiSellerBot.Database.Entities
         [JsonIgnore]
         public StoreItem GameInfo { get; set; }
 
-        
+        public virtual List<GamePublisher> GamePublishers { get; set; }
 
         public Game()
         {
