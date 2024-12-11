@@ -36,6 +36,7 @@ export const state = entity({
   currencies: [],
   productFilterCurrencies: [],
   steamRegions: [],
+  publishers: [],
   digiPriceSetType: [
     { id: 1, name: "%" },
     { id: 2, name: "₽" },
@@ -217,6 +218,12 @@ export const apiFetchItems = async (filter) => {
         name: c.name,
       };
     });
+    const steamPublishers = state.get().publishers.map((c) => {
+      return {
+        id: c.id,
+        name: c.name,
+      };
+    });
     const regionVal = (
       regions.find((c) => c.name === filterDTO.steamCountryCodeId) || {}
     ).id;
@@ -231,7 +238,9 @@ export const apiFetchItems = async (filter) => {
         (c) => c.name === filterDTO.hierarchyParams_targetSteamCurrencyId
       ).id;
     }
-
+    if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
+      filterDTO.publishers = steamPublishers;
+    }
     if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
       filterDTO.steamCountryCodeId = regionVal;
     }
@@ -907,6 +916,18 @@ export const apiGetSteamRegions = async () => {
 
   steamRegions = data;
   setStateProp("steamRegions", steamRegions);
+};
+
+export const apiGetPublishers = async () => {
+    let publishers = state.get().publishers;
+    if (publishers && publishers.length > 0)
+        return;
+
+    let res = await fetch(`/game/publishers`);
+    let data = await res.json();
+
+    publishers = data;
+    setStateProp("publishers", publishers);
 };
 
 export const apiSetGameSessionStatus = async (gSesId, statusId) => {

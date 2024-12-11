@@ -18,6 +18,7 @@ import Checkbox from "@mui/material/Checkbox";
 import StyledOption from "../../../../shared/select/styledOption";
 import MultiSelect from "../../../../shared/multiselect/index";
 import MultipleSelectCheckmarks from "../../../../shared/formItem/select/checkmarksSelect";
+import SelectWithSearchingTextField from "../../../../shared/formItem/select/selectWithSearchingTextField";
 
 import classNames from "classnames";
 import FillCheckBox from "../../../../shared/checkBox";
@@ -40,6 +41,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     productName: "",
     steamCurrencyId: [],
     gameRegionsCurrency: [],
+    publishers: [],
     steamCountryCodeId: "",
     digiSellerIds: "",
     thirdPartyPriceValue: null,
@@ -86,14 +88,21 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
       name: c.name,
     };
   });
+  const steamPublishers = state.use().publishers.map((c) => {
+    return {
+        id: c.id,
+        name: c.name,
+    };
+  });
 
+  const memoSteamPublishers = React.useMemo(() => steamPublishers, []);
   const memoRegions = React.useMemo(() => regions, []);
   const digiSellerIdsIsNotValid = new RegExp("[^,\\d]");
   const handleChange = (prop) => (val, newVal) => {
     if (val == null) {
       return;
     }
-    if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency") {
+    if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency" || prop === "publishers") {
       if (val != null) {
         //var newVal = val.targer.value;
         //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
@@ -321,6 +330,21 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
             </div>
           </div>
         </div> */}
+        <div className={css.formItem}>
+            <div className={css.name}>Издатели:</div>
+            <div className={css.wrapper}>
+                <div class={css.inputControl}>
+                    <div class={css.inputArea}>
+                        <SelectWithSearchingTextField
+                            options={memoSteamPublishers}
+                            value={item.publishers}
+                            onChange={handleChange("publishers")}
+                            placeholder={""}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div> 
       </div>
       <div className={css.actions}>
         <Button
