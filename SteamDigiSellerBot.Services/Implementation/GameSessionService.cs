@@ -1,10 +1,9 @@
 ﻿extern alias OverrideProto;
-using AutoMapper;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using OverrideProto::SteamKit2.Internal;
 using SteamDigiSellerBot.Database;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
@@ -19,15 +18,12 @@ using SteamDigiSellerBot.Services.Interfaces;
 using SteamDigiSellerBot.Utilities;
 using SteamDigiSellerBot.Utilities.Models;
 using SteamDigiSellerBot.Utilities.Services;
+using SteamKit2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Net.Http;
 using System.Threading.Tasks;
-using SteamKit2;
-using OverrideProto::SteamKit2.Internal;
-using OverrideProto::SteamKit2.Internal;
 using static SteamDigiSellerBot.Database.Entities.GameSessionStatusLog;
 using static SteamDigiSellerBot.Network.SuperBot;
 using Bot = SteamDigiSellerBot.Database.Entities.Bot;
@@ -589,18 +585,31 @@ namespace SteamDigiSellerBot.Services.Implementation
             var currencies = await _currencyDataService.GetCurrencyDictionary();
             var steamCountries = await _steamCountryCodeRepository.GetByCurrencies();
 
-            IEnumerable<Bot> res = null;
+            IEnumerable<Bot> res = Enumerable.Empty<Bot>();
             string selectedRegion = "";
             {
                 var mainBots = botFilterRes.Where(x => x.IsReserve == false).ToList();
-                (res, selectedRegion) = await MatchBotByPrice(prices, currencies, steamCountries, mainBots, gs);
+
+                _logger.LogInformation(
+                    $"GS ID {gs.Id} matched reserve bots: {mainBots.Count} count" +
+                    $"{string.Join("\n\t", mainBots.Select(x=>  $"{x.Id}  {x.UserName} {x.PersonName}"))} ");
+
+                if(mainBots.Any())
+                    (res, selectedRegion) = await MatchBotByPrice(prices, currencies, steamCountries, mainBots, gs);
+
             }
             if (!res.Any())
             {
                 // поиск по резервным ботам.
 
                 var reserveBots = botFilterRes.Where(x => x.IsReserve == true).ToList();
-                (res, selectedRegion) = await MatchBotByPrice(prices, currencies, steamCountries, reserveBots, gs);
+
+                _logger.LogInformation(
+                    $"GS ID {gs.Id} matched reserve bots: {reserveBots.Count} count" +
+                    $"{string.Join("\n\t", reserveBots.Select(x=>  $"{x.Id}  {x.UserName} {x.PersonName}"))} ");
+
+                if (reserveBots.Any())
+                    (res, selectedRegion) = await MatchBotByPrice(prices, currencies, steamCountries, reserveBots, gs);
             } 
 
             if (botIdFilter != null && botIdFilter.Count > 0)

@@ -71,7 +71,7 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     }
   }, [value]);
 
-  const currencies = state.use().currencies.map((c) => {
+  const currencies = state.use().productFilterCurrencies.map((c) => {
     return {
       id: c.steamId,
       name: c.code,

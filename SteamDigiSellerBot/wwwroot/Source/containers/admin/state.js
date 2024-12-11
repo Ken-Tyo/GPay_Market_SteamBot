@@ -34,6 +34,7 @@ export const state = entity({
   selectedItems: [],
   exchageRates: [],
   currencies: [],
+  productFilterCurrencies: [],
   steamRegions: [],
   digiPriceSetType: [
     { id: 1, name: "%" },
@@ -41,6 +42,7 @@ export const state = entity({
   ],
   editBotResponse: { loading: false, errors: [] },
   editOrderResponse: { loading: false, errors: [] },
+  editSellerResponse: { loading: false, errors: [] },
   saveBotRegionSetResponse: { loading: false, errors: [] },
   itemsMode: iMode[1],
   itemsLoading: true,
@@ -55,6 +57,7 @@ export const state = entity({
   exchangeRatesModalIsOpen: false,
   editItemModalIsOpen: false,
   editOrderModalIsOpen: false,
+  editSellerModalIsOpen: false,
   filterOrdersModalIsOpen: false,
   filterProductsModalIsOpen: false,
   botRegionSetEditModalIsOpen: false,
@@ -202,7 +205,7 @@ export const apiFetchItems = async (filter) => {
   if (filter == null) {
     filterDTO = { IsFilterOn: false };
   } else {
-    const currencies = state.get().currencies.map((c) => {
+    const currencies = state.get().productFilterCurrencies.map((c) => {
       return {
         id: c.steamId,
         name: c.code,
@@ -268,15 +271,15 @@ export const apiSetItemPricePriority = async (gpId) => {
 };
 
 export const sortByPrice = async (items, price) => {
-    return items.sort((a, b) => {
-        if (a[price] < b[price]) {
-            return -1;
-        }
-        if (a[price] > b[price]) {
-            return 1;
-        }
-        return 0;
-    });
+  return items.sort((a, b) => {
+    if (a[price] < b[price]) {
+      return -1;
+    }
+    if (a[price] > b[price]) {
+      return 1;
+    }
+    return 0;
+  });
 };
 
 export const apiFetchGameSessions = async (filter) => {
@@ -475,7 +478,8 @@ export const apiBotSetIsReserve = async (id, isreserve) => {
       return {
         ...value,
         bots: value.bots.map((bot) =>
-          bot.id === id ? { ...bot, isReserve: isreserve } : bot)
+          bot.id === id ? { ...bot, isReserve: isreserve } : bot
+        ),
       };
     });
   }
@@ -513,7 +517,7 @@ export const apiSaveBotRegionSettings = async (item) => {
 };
 
 export const apiChangeItem = async (item) => {
-  setItemsLoading(true);
+  //setItemsLoading(true);
   toggleEditItemModal(false);
 
   let res = await fetch(`/items/edit/${item.id}`, {
@@ -522,11 +526,19 @@ export const apiChangeItem = async (item) => {
   });
 
   if (res.ok) {
-    await apiFetchItems();
+    //await apiFetchItems();
+    var newData = state.get().items;
+    newData.find((e) => e.id === item.id).inSetPriceProcess = true;
+    state.set((value) => {
+      return {
+        ...value,
+        items: [...newData],
+      };
+    });
   } else {
     toggleEditItemModal(true);
   }
-  setItemsLoading(false);
+  //setItemsLoading(false);
 };
 
 export const apiCreateItem = async (item) => {
@@ -574,7 +586,7 @@ export const setItemInfoTemplates = (itemInfoTemplates) => {
 };
 
 export const toggleBulkEditPercentModal = (isOpen) => {
-    state.set((value) => {
+  state.set((value) => {
     return {
       ...value,
       bulkEditPercentModalIsOpen: isOpen,
@@ -583,12 +595,12 @@ export const toggleBulkEditPercentModal = (isOpen) => {
 };
 
 export const toggleBulkEditPriceBasisModal = (isOpen) => {
-    state.set((value) => {
-        return {
-            ...value,
-            bulkEditPriceBasisModalIsOpen: isOpen,
-        };
-    });
+  state.set((value) => {
+    return {
+      ...value,
+      bulkEditPriceBasisModalIsOpen: isOpen,
+    };
+  });
 };
 
 export const toggleItemMainInfoModal = (isOpen) => {
@@ -599,7 +611,7 @@ export const toggleItemMainInfoModal = (isOpen) => {
         editItemMainInfoModalIsOpen: isOpen,
       };
     });
-  })
+  });
 };
 
 export const toggleItemAdditionalInfoModal = (isOpen) => {
@@ -694,6 +706,15 @@ export const toggleEditOrderModal = async (isOpen) => {
   });
 };
 
+export const toggleEditSellerModal = async (isOpen) => {
+  state.set((value) => {
+    return {
+      ...value,
+      editSellerModalIsOpen: isOpen,
+    };
+  });
+};
+
 export const toggleFilterOrdersModal = async (isOpen) => {
   state.set((value) => {
     return {
@@ -739,7 +760,6 @@ export const toggleEditItemAdditionalInfoModal = async (isOpen) => {
   });
 };
 
-
 export const toggleOrderCreationInfoModal = async (isOpen) => {
   state.set((value) => {
     return {
@@ -749,7 +769,12 @@ export const toggleOrderCreationInfoModal = async (isOpen) => {
   });
 };
 
-export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) => {
+export const apiChangeItemBulk = async (
+  SteamPercent,
+  IncreaseDecreaseOperator,
+  IncreaseDecreasePercent,
+  Ids
+) => {
   setItemsLoading(true);
   setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/change`, {
@@ -758,7 +783,7 @@ export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, 
       SteamPercent,
       IncreaseDecreaseOperator,
       IncreaseDecreasePercent,
-      Ids
+      Ids,
     }),
   });
   setStateProp("changeItemBulkResponse", { loading: false });
@@ -766,19 +791,18 @@ export const apiChangeItemBulk = async (SteamPercent, IncreaseDecreaseOperator, 
 };
 
 export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
-    setItemsLoading(true);
-    setStateProp("changeItemBulkResponse", { loading: true });
-    let res = await fetch(`/items/bulk/pricebasis`, {
-        method: "POST",
-        body: mapToFormData({
-            SteamCurrencyId,
-            Ids
-        }),
-    });
-    setStateProp("changeItemBulkResponse", { loading: false });
-    await apiFetchItems();
+  setItemsLoading(true);
+  setStateProp("changeItemBulkResponse", { loading: true });
+  let res = await fetch(`/items/bulk/pricebasis`, {
+    method: "POST",
+    body: mapToFormData({
+      SteamCurrencyId,
+      Ids,
+    }),
+  });
+  setStateProp("changeItemBulkResponse", { loading: false });
+  await apiFetchItems();
 };
-
 
 export const apiChangeDigisellerData = async (data) => {
   let res = await fetch(`/user/edit/digiseller`, {
@@ -841,14 +865,28 @@ export const apiGetCurrencies = async () => {
       code: c.code,
       steamId: c.steamId,
       steamSymbol: c.steamSymbol,
-      steamValue: c.value
+      steamValue: c.value,
     };
+  });
+  let productFilterCurrencies = [
+    {
+      code: "Base",
+      steamId: -1,
+      steamSymbol: "Base",
+    },
+  ];
+  productFilterCurrencies = [...currencies];
+  productFilterCurrencies.unshift({
+    code: "Base",
+    steamId: -1,
+    steamSymbol: "Base",
   });
 
   state.set((value) => {
     return {
       ...value,
       currencies: currencies,
+      productFilterCurrencies: productFilterCurrencies,
     };
   });
 };
@@ -1011,13 +1049,16 @@ export const apiCreateItemInfoTemplate = async (itemInfoTemplateValues) => {
 
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
-  headers.append("Content-Length", JSON.stringify(itemInfoTemplateValues).length);
+  headers.append(
+    "Content-Length",
+    JSON.stringify(itemInfoTemplateValues).length
+  );
 
   const options = {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(itemInfoTemplateValues)
-  }
+    body: JSON.stringify(itemInfoTemplateValues),
+  };
 
   let res = await fetch(`/iteminfotemplate`, options);
 
@@ -1032,8 +1073,8 @@ export const apiDeleteItemInfoTemplate = async (itemInfoTemplateId) => {
   setItemInfoTemplatesLoading(true);
 
   const options = {
-    method: "DELETE"
-  }
+    method: "DELETE",
+  };
 
   let res = await fetch(`/iteminfotemplate/${itemInfoTemplateId}`, options);
 
@@ -1057,15 +1098,14 @@ export const apiUpdateItemInfoes = async (itemInfoesValues) => {
     const options = {
       method: "PATCH",
       headers: headers,
-      body: JSON.stringify(itemInfoesValues)
-    }
+      body: JSON.stringify(itemInfoesValues),
+    };
 
     let res = await fetch(`/iteminfo`, options);
     if (res.ok) {
       await apiFetchItems();
     }
-  }
-  finally {
+  } finally {
     setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
     setItemsLoading(false);
   }
@@ -1079,8 +1119,8 @@ export const apiTagTypeReplacementValues = async (data) => {
   const options = {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(data)
-  }
+    body: JSON.stringify(data),
+  };
 
   let res = await fetch(`/tagtypereplacementvalue`, options);
   if (res.ok) {
@@ -1142,8 +1182,8 @@ export const apiTagPromoReplacementValues = async (data) => {
   const options = {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(data)
-  }
+    body: JSON.stringify(data),
+  };
 
   let res = await fetch(`/tagpromoreplacementvalue`, options);
   if (res.ok) {
@@ -1172,8 +1212,8 @@ export const apiTagInfoAppsReplacementValues = async (data) => {
   const options = {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(data)
-  }
+    body: JSON.stringify(data),
+  };
 
   let res = await fetch(`/taginfoappsreplacementvalue`, options);
   if (res.ok) {
@@ -1202,8 +1242,8 @@ export const apiTagInfoDlcReplacementValues = async (data) => {
   const options = {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(data)
-  }
+    body: JSON.stringify(data),
+  };
 
   let res = await fetch(`/taginfodlcreplacementvalue`, options);
   if (res.ok) {
@@ -1219,8 +1259,8 @@ export const apiGetUpdateItemInfoJobStatistics = async () => {
 
   const options = {
     method: "GET",
-    headers: headers
-  }
+    headers: headers,
+  };
 
   let res = await fetch(`/iteminfo/jobstatistics`, options);
 

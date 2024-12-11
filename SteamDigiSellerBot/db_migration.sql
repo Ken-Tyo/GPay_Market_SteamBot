@@ -377,6 +377,9 @@ ALTER TABLE "AspNetUsers" ADD "DigisellerApiKeyC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerIDC" text NULL;
 ALTER TABLE "Users" ADD "DigisellerApiKeyC" text NULL;
 
+19.11.2024
+ALTER TABLE public."Bots" ADD COLUMN "IsReserve" BOOL DEFAULT false
+
 19.11 
 ALTER TABLE "GameSessions" add "DigiSellerDealPriceUsd" numeric null;
 
@@ -491,6 +494,3 @@ ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
 ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
 ALTER TABLE "Users" drop column "DigisellerIDC";
 ALTER TABLE "Users" drop column "DigisellerApiKeyC";
-
-19.11.2024
-ALTER TABLE public."Bots" ADD COLUMN "IsReserve" BOOL DEFAULT false

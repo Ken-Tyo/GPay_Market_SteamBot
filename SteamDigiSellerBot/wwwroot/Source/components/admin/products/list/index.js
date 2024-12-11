@@ -42,6 +42,7 @@ import Typography from "@mui/material/Typography";
 import List from "../../../shared/list";
 import { itemsMode } from "../../../../containers/admin/common";
 import { CircularProgress } from "@mui/material";
+import InlineLoader from "../../../shared/inlineLoader";
 const products = () => {
   const {
     items,
@@ -86,79 +87,102 @@ const products = () => {
     currencyDict[c.steamId] = c;
   });
 
-    const handleSort = (type) => {
-        let sorted = [...items];
+  const handleSort = (type) => {
+    let sorted = [...items];
 
-        if (type === "price") {
-            sorted.sort((a, b) => {
-                if (sortOrder === "asc") {
-                    if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
-                        return a.fixedDigiSellerPrice - b.fixedDigiSellerPrice;
-                    } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
-                        return 1;
-                    } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
-                        return -1;
-                    }
-                    return a.currentDigiSellerPrice - b.currentDigiSellerPrice;
-                } else {
-                    if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice !== null) {
-                        return b.fixedDigiSellerPrice - a.fixedDigiSellerPrice;
-                    } else if (a.fixedDigiSellerPrice !== null && b.fixedDigiSellerPrice === null) {
-                        return -1;
-                    } else if (a.fixedDigiSellerPrice === null && b.fixedDigiSellerPrice !== null) {
-                        return 1;
-                    }
-                    return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
-                }
-            });
-        } else if (type === 'percent') {
-            sorted.sort((a, b) => {
-                if (sortOrder === "asc") {
-                    if (a.isFixedPrice && b.isFixedPrice) {
-                        return a.currentDigiSellerPrice / a.currentSteamPriceRub - b.currentDigiSellerPrice / b.currentSteamPriceRub;
-                    } else if (a.isFixedPrice && !b.isFixedPrice) {
-                        return 1;
-                    } else if (!a.isFixedPrice && b.isFixedPrice) {
-                        return -1;
-                    }
-                    return a.steamPercent - b.steamPercent
-                } else {
-                    if (a.isFixedPrice && b.isFixedPrice) {
-                        return b.currentDigiSellerPrice / b.currentSteamPriceRub - a.currentDigiSellerPrice / a.currentSteamPriceRub;
-                    } else if (a.isFixedPrice && !b.isFixedPrice) {
-                        return -1;
-                    } else if (!a.isFixedPrice && b.isFixedPrice) {
-                        return 1;
-                    }
-                    return b.steamPercent - a.steamPercent
-                }
-            });
-        } else if(type === 'discountPercent') {
-            const getDiscountValue = (discount) => {
-              if (discount != null && discount > 0) {
-                  return sortOrder === "asc" ? discount : -discount;
-              }
-              return Infinity;
-            };
-    
-            sorted.sort((a, b) => {
-              const aDiscount = getDiscountValue(a.discountPercent);
-              const bDiscount = getDiscountValue(b.discountPercent);
-              return aDiscount - bDiscount;
-          });
+    if (type === "price") {
+      sorted.sort((a, b) => {
+        if (sortOrder === "asc") {
+          if (
+            a.fixedDigiSellerPrice !== null &&
+            b.fixedDigiSellerPrice !== null
+          ) {
+            return a.fixedDigiSellerPrice - b.fixedDigiSellerPrice;
+          } else if (
+            a.fixedDigiSellerPrice !== null &&
+            b.fixedDigiSellerPrice === null
+          ) {
+            return 1;
+          } else if (
+            a.fixedDigiSellerPrice === null &&
+            b.fixedDigiSellerPrice !== null
+          ) {
+            return -1;
+          }
+          return a.currentDigiSellerPrice - b.currentDigiSellerPrice;
         } else {
-            sorted.sort((a, b) => {
-                return a.id - b.id;
-            });
-          };
-        setSortedItems(sorted);
-        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    };
+          if (
+            a.fixedDigiSellerPrice !== null &&
+            b.fixedDigiSellerPrice !== null
+          ) {
+            return b.fixedDigiSellerPrice - a.fixedDigiSellerPrice;
+          } else if (
+            a.fixedDigiSellerPrice !== null &&
+            b.fixedDigiSellerPrice === null
+          ) {
+            return -1;
+          } else if (
+            a.fixedDigiSellerPrice === null &&
+            b.fixedDigiSellerPrice !== null
+          ) {
+            return 1;
+          }
+          return b.currentDigiSellerPrice - a.currentDigiSellerPrice;
+        }
+      });
+    } else if (type === "percent") {
+      sorted.sort((a, b) => {
+        if (sortOrder === "asc") {
+          if (a.isFixedPrice && b.isFixedPrice) {
+            return (
+              a.currentDigiSellerPrice / a.currentSteamPriceRub -
+              b.currentDigiSellerPrice / b.currentSteamPriceRub
+            );
+          } else if (a.isFixedPrice && !b.isFixedPrice) {
+            return 1;
+          } else if (!a.isFixedPrice && b.isFixedPrice) {
+            return -1;
+          }
+          return a.steamPercent - b.steamPercent;
+        } else {
+          if (a.isFixedPrice && b.isFixedPrice) {
+            return (
+              b.currentDigiSellerPrice / b.currentSteamPriceRub -
+              a.currentDigiSellerPrice / a.currentSteamPriceRub
+            );
+          } else if (a.isFixedPrice && !b.isFixedPrice) {
+            return -1;
+          } else if (!a.isFixedPrice && b.isFixedPrice) {
+            return 1;
+          }
+          return b.steamPercent - a.steamPercent;
+        }
+      });
+    } else if (type === "discountPercent") {
+      const getDiscountValue = (discount) => {
+        if (discount != null && discount > 0) {
+          return sortOrder === "asc" ? discount : -discount;
+        }
+        return Infinity;
+      };
 
-    useEffect(() => {
-        handleSort('id');
-        }, [items]);
+      sorted.sort((a, b) => {
+        const aDiscount = getDiscountValue(a.discountPercent);
+        const bDiscount = getDiscountValue(b.discountPercent);
+        return aDiscount - bDiscount;
+      });
+    } else {
+      sorted.sort((a, b) => {
+        return a.id - b.id;
+      });
+    }
+    setSortedItems(sorted);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
 
+  useEffect(() => {
+    handleSort("id");
+  }, [items]);
 
   const headers = {
     checkbox: <div style={{ maxWidth: "86px", minWidth: "86px" }}></div>,
@@ -177,10 +201,10 @@ const products = () => {
       </div>
     ),
     price: (
-        <div style={{ display: "flex", alignItems: "center" }}>
-            <div>Цена</div>
-            <ToggleSort orderSort={sortOrder} onSort={handleSort} />
-        </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div>Цена</div>
+        <ToggleSort orderSort={sortOrder} onSort={handleSort} />
+      </div>
     ),
     lastRegion: "",
     discount: "",
@@ -188,104 +212,109 @@ const products = () => {
     active: "",
   };
 
-    // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
-    const getItemsBetweenSelected = (firstId, secondId) => {
-        const startIndex = sortedItems.findIndex(item => item.id === firstId);
-        const endIndex = sortedItems.findIndex(item => item.id === secondId);
+  // Get subarray of Ids of the sortedItems of elements between selected items with id-s: firstId, secondId
+  const getItemsBetweenSelected = (firstId, secondId) => {
+    const startIndex = sortedItems.findIndex((item) => item.id === firstId);
+    const endIndex = sortedItems.findIndex((item) => item.id === secondId);
 
-        if (startIndex === -1 || endIndex === -1) return [];
+    if (startIndex === -1 || endIndex === -1) return [];
 
-        if (startIndex == endIndex) return [sortedItems[startIndex]];
+    if (startIndex == endIndex) return [sortedItems[startIndex]];
 
-        const sliceStart = Math.min(startIndex, endIndex);
-        const sliceEnd = Math.max(startIndex, endIndex);
+    const sliceStart = Math.min(startIndex, endIndex);
+    const sliceEnd = Math.max(startIndex, endIndex);
 
-        return getSliceOfSortedItems(sliceStart, sliceEnd);
-    };
+    return getSliceOfSortedItems(sliceStart, sliceEnd);
+  };
 
-    //Shift on the unselected
-    const addItemsToSelected = (shiftId) => {
-        let startIndex = -1;
-        let endIndex = -1;
-        let curId = -1;
-        let shiftIndex = sortedItems.findIndex(item => item.id === shiftId);
+  //Shift on the unselected
+  const addItemsToSelected = (shiftId) => {
+    let startIndex = -1;
+    let endIndex = -1;
+    let curId = -1;
+    let shiftIndex = sortedItems.findIndex((item) => item.id === shiftId);
 
-        if (selectedItems.length == 0) return [sortedItems[shiftIndex]];
-                
-        for (let i = 0; i < sortedItems.length; i++) {
-            curId = sortedItems[i].id;
-            if (selectedItems.includes(curId)) {
-                if (startIndex < 0) startIndex = i;
-                endIndex = i;
-            }
-        }
-        if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+    if (selectedItems.length == 0) return [sortedItems[shiftIndex]];
 
-        const sliceStart = Math.min(startIndex, endIndex, shiftIndex);
-        const sliceEnd = Math.max(startIndex, endIndex, shiftIndex);
+    for (let i = 0; i < sortedItems.length; i++) {
+      curId = sortedItems[i].id;
+      if (selectedItems.includes(curId)) {
+        if (startIndex < 0) startIndex = i;
+        endIndex = i;
+      }
+    }
+    if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
 
-        return getSliceOfSortedItems(sliceStart, sliceEnd);
-    };
+    const sliceStart = Math.min(startIndex, endIndex, shiftIndex);
+    const sliceEnd = Math.max(startIndex, endIndex, shiftIndex);
 
-    //Shift on the selected
-    const removeItemsFromSelected = (shiftId) => {
-        let startIndex = -1;
-        let endIndex = -1;
-        let curId = -1;
-        let shiftIndex = sortedItems.findIndex(item => item.id === shiftId);
+    return getSliceOfSortedItems(sliceStart, sliceEnd);
+  };
 
-        if (selectedItems.length == 1) return [];
+  //Shift on the selected
+  const removeItemsFromSelected = (shiftId) => {
+    let startIndex = -1;
+    let endIndex = -1;
+    let curId = -1;
+    let shiftIndex = sortedItems.findIndex((item) => item.id === shiftId);
 
-        for (let i = 0; i < sortedItems.length; i++) {
-            curId = sortedItems[i].id;
-            if (selectedItems.includes(curId)) {
-                if (startIndex < 0) startIndex = i;
-                endIndex = i;
-            }
-        }
+    if (selectedItems.length == 1) return [];
 
-        if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
-        let sliceStart;
-        let sliceEnd;
-
-        //Just to be sure that shiftIndex between start and end
-        if (shiftIndex < startIndex || startIndex > endIndex) return [];
-        if (shiftIndex == startIndex) {
-            sliceStart = startIndex + 1;
-            sliceEnd = endIndex;
-        }
-        else if (shiftIndex == endIndex) {
-            sliceStart = startIndex;
-            sliceEnd = endIndex - 1;
-        }
-        else {
-            // Reduce top or botton of selected
-            if (lastSelectedId < shiftIndex) {
-                sliceStart = startIndex;
-                sliceEnd = shiftIndex - 1;
-            }
-            else {
-                sliceStart = shiftIndex + 1;
-                sliceEnd = endIndex;
-            }
-        }
-
-        return getSliceOfSortedItems(sliceStart, sliceEnd);
-    };
-
-    const getSliceOfSortedItems = (sliceStart, sliceEnd) => {
-        let arrNew;
-
-        if (sliceEnd >= (sortedItems.length - 1))
-            arrNew = sortedItems.slice(sliceStart).map(item => item.id);
-        else
-            arrNew = sortedItems.slice(sliceStart, sliceEnd + 1).map(item => item.id);
-
-        return arrNew; 
+    for (let i = 0; i < sortedItems.length; i++) {
+      curId = sortedItems[i].id;
+      if (selectedItems.includes(curId)) {
+        if (startIndex < 0) startIndex = i;
+        endIndex = i;
+      }
     }
 
+    if (startIndex < 0 || endIndex < 0 || shiftIndex < 0) return [];
+    let sliceStart;
+    let sliceEnd;
+
+    //Just to be sure that shiftIndex between start and end
+    if (shiftIndex < startIndex || startIndex > endIndex) return [];
+    if (shiftIndex == startIndex) {
+      sliceStart = startIndex + 1;
+      sliceEnd = endIndex;
+    } else if (shiftIndex == endIndex) {
+      sliceStart = startIndex;
+      sliceEnd = endIndex - 1;
+    } else {
+      // Reduce top or botton of selected
+      if (lastSelectedId < shiftIndex) {
+        sliceStart = startIndex;
+        sliceEnd = shiftIndex - 1;
+      } else {
+        sliceStart = shiftIndex + 1;
+        sliceEnd = endIndex;
+      }
+    }
+
+    return getSliceOfSortedItems(sliceStart, sliceEnd);
+  };
+
+  const getSliceOfSortedItems = (sliceStart, sliceEnd) => {
+    let arrNew;
+
+    if (sliceEnd >= sortedItems.length - 1)
+      arrNew = sortedItems.slice(sliceStart).map((item) => item.id);
+    else
+      arrNew = sortedItems
+        .slice(sliceStart, sliceEnd + 1)
+        .map((item) => item.id);
+
+    return arrNew;
+  };
+
   const getBtnMassDescriptionBlock = (lines) => {
-    return <div className={css.massDescriptionText}>{lines.map(line => (<div>{line}</div>))}</div>;
+    return (
+      <div className={css.massDescriptionText}>
+        {lines.map((line) => (
+          <div>{line}</div>
+        ))}
+      </div>
+    );
   };
 
   const toggleMassDescriptionSubMenu = () => {
@@ -294,7 +323,7 @@ const products = () => {
     } else {
       setSubMenuVisibility(css.subMenuVisible);
     }
-  }
+  };
 
   const getLoadingText = () => {
     if (changeItemBulkResponse.loading) {
@@ -304,10 +333,41 @@ const products = () => {
       return "Происходит обновление описаний товаров";
     }
     return "Подгружаем товары";
-  }
+  };
+
+  // Listen mouse if (Shift-click) then avoid user-select: add(css.disableSelect) otherwise - allow
+  useEffect(() => {
+      const selectableArea = document.getElementById('productList');
+
+      if (selectableArea) {
+            let mtimer;
+            selectableArea.addEventListener('mousedown', (event) => {
+                if (event.shiftKey || event.detail > 1) {
+                    selectableArea.classList.add(css.disableSelect);
+                } else {
+                    // Init timer, after 500 ms (long click) - enable to select 
+                    const isDisableSelect = selectableArea.classList.contains(css.disableSelect);
+                    if (isDisableSelect) {
+                        mtimer = setTimeout(() => {
+                            selectableArea.classList.remove(css.disableSelect);
+                        }, 500);
+                    }
+                }
+            });
+            // mouseup, mouseleave - reset timer and enable to select
+            selectableArea.addEventListener('mouseup', () => {
+                clearTimeout(mtimer);
+                selectableArea.classList.remove(css.disableSelect);
+            });
+            selectableArea.addEventListener('mouseleave', () => {
+                clearTimeout(mtimer);
+                selectableArea.classList.remove(css.disableSelect);
+            });
+        }
+    }, []); 
 
   return (
-      <div className={css.wrapper} style={{ userSelect: 'none' }}>
+      <div className={css.wrapper}  id = "productList" >
       <List
         headers={Object.values(headers)}
         data={[...sortedItems]}
@@ -365,14 +425,13 @@ const products = () => {
           let additionalInfo = i.isFixedPrice
             ? `${getDiffPriceInPercent()}%`
             : `${i.steamPercent}% ${i.addPrice} rub`;
-
-          return (
-            <tr key={i.id} className={activeRow}>
+          let rowRenderer = () => (
+            <tr key={i.id} className={activeRow} style={{ width: "100%" }}>
               <td>
                 <div className={css.cell}>
                   <div className={css.listItemCheckbox}>
                     <CheckBox
-                        onCheckedChange={(val, shiftPressed) => {
+                      onCheckedChange={(val, shiftPressed) => {
                         let arrNew;
                         if (shiftPressed) {
                             if (val) {
@@ -396,14 +455,13 @@ const products = () => {
                                 newLastId = i.id;
                             } else {
                                 arrNew =  selectedItems.filter((id) => id != i.id);
-                                if (arrNew.length == 1) newLastId = newArr[0];
+                                if (arrNew.length == 1) newLastId = arrNew[0];
                             }
                             setLastSelectedId(newLastId);
                         }
                         setSelectedItems(arrNew);
-                     }
-                     }
-                      value= {selectedItems.indexOf(i.id) !== -1}
+                      }}
+                      value={selectedItems.indexOf(i.id) !== -1}
                     />
                   </div>
                 </div>
@@ -571,6 +629,56 @@ const products = () => {
               </td>
             </tr>
           );
+
+          let isLoadingRender = () => (
+            <tr key={i.id} className={activeRow} style={{ width: "100%" }}>
+              <td>
+                <div className={css.cell}>
+                  <div className={css.listItemCheckbox}></div>
+                </div>
+              </td>
+              <td>
+                <div className={css.cell}>
+                  <div className={css.game}></div>
+                </div>
+              </td>
+              <td>
+                <div className={css.cell} style={{ justifyContent: "start" }}>
+                  <div className={css.product}></div>
+                </div>
+              </td>
+              <td>
+                <div className={css.cell}>
+                  <div className={css.price}>
+                    <InlineLoader />
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div className={css.cell}></div>
+              </td>
+              <td>
+                <div className={css.cell}>
+                  <div className={css.discount}></div>
+                </div>
+              </td>
+              <td>
+                <div className={css.cell}>
+                  <div className={css.buttons}></div>
+                </div>
+              </td>
+              <td>
+                <div className={css.cell}>
+                  <div className={css.buttons}></div>
+                </div>
+              </td>
+            </tr>
+          );
+
+          if (i.inSetPriceProcess) {
+            rowRenderer = isLoadingRender;
+          }
+          return rowRenderer();
         }}
       />
 
@@ -620,14 +728,17 @@ const products = () => {
           </div>
           <div className={css.btnWrapper}>
             <Button
-              text={getBtnMassDescriptionBlock(['Смена описания/', 'доп. информации'])}
+              text={getBtnMassDescriptionBlock([
+                "Смена описания/",
+                "доп. информации",
+              ])}
               style={massChangeButStyle}
               onClick={() => {
                 toggleMassDescriptionSubMenu();
               }}
             />
 
-            <div className={css.subMenu + ' ' + subMenuVisibility}>
+            <div className={css.subMenu + ' ' + css.massDescriptionBlockSubMenu + ' ' + subMenuVisibility}>
               <div className={css.subMenuItem} onClick={() => {
                 toggleItemMainInfoModal(true);
                 toggleMassDescriptionSubMenu();
@@ -639,25 +750,25 @@ const products = () => {
               }
               }>Доп. информация</div>
             </div>
-            </div>
-            <div className={css.btnWrapper}>
-                <Button
-                    text={"Смена ценовой основы"}
-                    style={massChangeButStyle}
-                    onClick={() => {
-                        toggleBulkEditPriceBasisModal(true);
-                    }}
-                />
-            </div>
-            <div className={css.btnWrapper}>
-                <Button
-                    text={"Удалить все"}
-                    style={massChangeButStyle}
-                    onClick={() => {
-                        setOpenMassDelConfirm(true);
-                    }}
-                />
-            </div>
+          </div>
+          <div className={css.btnWrapper}>
+            <Button
+              text={"Смена ценовой основы"}
+              style={massChangeButStyle}
+              onClick={() => {
+                toggleBulkEditPriceBasisModal(true);
+              }}
+            />
+          </div>
+          <div className={css.btnWrapper}>
+            <Button
+              text={"Удалить все"}
+              style={massChangeButStyle}
+              onClick={() => {
+                setOpenMassDelConfirm(true);
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -673,16 +784,24 @@ const products = () => {
         }}
       />
       <EditItemInfoModal
-        isOpen={editItemMainInfoModalIsOpen || editItemAdditionalInfoModalIsOpen}
-        viewMode={editItemMainInfoModalIsOpen ? 'main' : (editItemAdditionalInfoModalIsOpen ? 'additional' : 'none')}
+        isOpen={
+          editItemMainInfoModalIsOpen || editItemAdditionalInfoModalIsOpen
+        }
+        viewMode={
+          editItemMainInfoModalIsOpen
+            ? "main"
+            : editItemAdditionalInfoModalIsOpen
+            ? "additional"
+            : "none"
+        }
         onCancel={() => {
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
         }}
         onSave={(russianText, englishText) => {
           var goods = items
-            .filter(i => selectedItems.includes(i.id))
-            .map(x => {
+            .filter((i) => selectedItems.includes(i.id))
+            .map((x) => {
               return {
                 digiSellerIds: x.digiSellerIds,
                 itemId: x.id,
@@ -690,28 +809,38 @@ const products = () => {
             });
 
           var updateItemInfoesCommands = {
-            description: editItemMainInfoModalIsOpen ? [{
-              locale: "ru-RU",
-              value: russianText
-            }, {
-              locale: "en-US",
-              value: englishText
-            }] : [],
-            add_info: !editItemMainInfoModalIsOpen ? [{
-              locale: "ru-RU",
-              value: russianText
-            }, {
-              locale: "en-US",
-              value: englishText
-            }] : [],
-            goods: goods
-          }
+            description: editItemMainInfoModalIsOpen
+              ? [
+                  {
+                    locale: "ru-RU",
+                    value: russianText,
+                  },
+                  {
+                    locale: "en-US",
+                    value: englishText,
+                  },
+                ]
+              : [],
+            add_info: !editItemMainInfoModalIsOpen
+              ? [
+                  {
+                    locale: "ru-RU",
+                    value: russianText,
+                  },
+                  {
+                    locale: "en-US",
+                    value: englishText,
+                  },
+                ]
+              : [],
+            goods: goods,
+          };
 
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
           apiUpdateItemInfoes(updateItemInfoesCommands);
         }}
-        itemInfoTemplates={ itemInfoTemplates }
+        itemInfoTemplates={itemInfoTemplates}
       />
       <ConfirmDialog
         title={"Подтвердите удаление"}
@@ -756,19 +885,24 @@ const products = () => {
         }}
         onSave={(val, increaseDecreaseOperator, increaseDecreaseVal) => {
           toggleBulkEditPercentModal(false);
-          apiChangeItemBulk(val, increaseDecreaseOperator.id, increaseDecreaseVal, selectedItems);
+          apiChangeItemBulk(
+            val,
+            increaseDecreaseOperator.id,
+            increaseDecreaseVal,
+            selectedItems
+          );
         }}
       />
       <BulkPriceBasisEdit
-          isOpen={bulkEditPriceBasisModalIsOpen}
-          onCancel={() => {
-              toggleBulkEditPriceBasisModal(false);
-          }}
-          onSave={(val) => {
-              toggleBulkEditPriceBasisModal(false);
-              apiChangePriceBasisBulk(val, selectedItems);
-          }}
-          selectedCount={selectedItems.length}
+        isOpen={bulkEditPriceBasisModalIsOpen}
+        onCancel={() => {
+          toggleBulkEditPriceBasisModal(false);
+        }}
+        onSave={(val) => {
+          toggleBulkEditPriceBasisModal(false);
+          apiChangePriceBasisBulk(val, selectedItems);
+        }}
+        selectedCount={selectedItems.length}
       />
       <Popover
         id={`mouse-over-popover`}

@@ -1,0 +1,58 @@
+@import '../../../../../containers/admin/_library.scss';
+
+.wrapper {
+    .track {
+        position: relative;
+        width: 65px;
+        height: 29px;
+        border-radius: 34px;
+        background-color: $purple-2;
+        cursor: pointer;
+
+        .thumb {
+            position: absolute;
+            left: 8px;
+            top: 4.5px;
+            width: 21px;
+            height: 20px;
+            border-radius: 34px;
+            background-color: #722F92;
+            transition-duration: 300ms;
+
+            &.checked {
+                transform: translateX(29px);
+                transition-duration: 300ms;
+            }
+
+            &.checked.green {
+                background-color: #AED88D;
+            }
+
+            &.checked.orange {
+                background-color: #BE584A;
+            }
+        }
+
+        &.checked.orange {
+            background-color: #8A44AB;
+        }
+
+        &.checked.green {
+            background-color: #4B9252;
+        }
+    }
+
+    .awaition {
+        position: relative;
+        width: 65px;
+        height: 29px;
+        border-radius: 34px;
+        background-color: #ab3768;
+        cursor: default;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #fff;
+        display: flex;
+    }
+}

@@ -29,7 +29,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class ItemsController : Controller
     {
         private readonly IItemRepository _itemRepository;
@@ -250,15 +250,16 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
-                    await _itemRepository.AddAsync(db, item);
+                    item.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
+                    await _itemRepository.AddAsync(db, item); 
                 }
                 else
                 {
                     throw new Exception("Данный товар уже добавлен. Отредактируйте его.");
                 }
 
-                await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
-
+                _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+                //await Task.Delay(1000);
                 return Ok();
             }
 
@@ -278,17 +279,18 @@ namespace SteamDigiSellerBot.Controllers
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map(model, item);
+                editedItem.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
-                await _itemNetworkService.SetPrices(
+                _itemNetworkService.SetPrices(
                     item.AppId,
                     new List<Item>() { item },
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
-
-                return Ok();
+                //await Task.Delay(1000);
+                return Ok(editedItem.InSetPriceProcess);
             }
 
             return BadRequest();

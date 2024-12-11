@@ -12,7 +12,7 @@ using static SteamDigiSellerBot.Network.SuperBot;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class ExchangeRatesController : Controller
     {
         private readonly ICurrencyDataService _currencyDataService;

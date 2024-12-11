@@ -13,7 +13,10 @@ namespace SteamDigiSellerBot.Database.Entities
     [Table("Users")]
     public class UserDB: BaseEntity
     {
-        public virtual User AspNetUser { get; set; }
+        [ForeignKey("AspNetUserId")]
+        public virtual User AspNetUser { get; set; }        
+        public virtual string AspNetUserId { get; set; }
+
         public string DigisellerToken { get; set; }
         public DateTimeOffset? DigisellerTokenExp { get; set; }
         public string DigisellerID { get; set; }

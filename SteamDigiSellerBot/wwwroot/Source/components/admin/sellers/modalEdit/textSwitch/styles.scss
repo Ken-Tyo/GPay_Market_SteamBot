@@ -1,0 +1,39 @@
+@import '/wwwroot/Source/containers/admin/library';
+
+.wrapper {
+    position: relative;
+
+    .track {
+        width: 226px;
+        height: 51px;
+        border-radius: 15px;
+        background-color: #512068;
+        cursor: pointer;
+
+        .thumb {
+            width: 117px;
+            height: 51px;
+            border-radius: 15px;
+            background-color: #A348CE;
+            transition-duration: 500ms;
+
+
+            &.checked {
+                transform: translateX(109px);
+                transition-duration: 400ms;
+            }
+        }
+
+        .options {
+            position: absolute;
+            z-index: 1;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+            height: 51px;
+            width: 226px;
+        }
+    }
+}

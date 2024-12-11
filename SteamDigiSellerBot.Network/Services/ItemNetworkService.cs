@@ -409,6 +409,8 @@ ORDER BY g.""AppId""";
             Dictionary<int, decimal> prices = null,
             bool manualUpdate=true)
         {
+            List<Item> dbItems = new List<Item>();
+
             try
             {
                 await using var db = _contextFactory.CreateDbContext();
@@ -421,7 +423,7 @@ ORDER BY g.""AppId""";
                 // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
                 while (requestLocker)
                     await Task.Delay(25);
-                List<Item> dbItems;
+                
                 try
                 {
                     dbItems = await db.Items.Include(i => i.GamePrices)
@@ -563,6 +565,8 @@ ORDER BY g.""AppId""";
                         item.Name = digiItem?.Product?.Name ?? "Error";
                         db.Entry(item).State = EntityState.Modified;
                     }
+
+                    item.InSetPriceProcess = null;
                     // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
                     if (db.ChangeTracker.HasChanges())
                     {
@@ -590,6 +594,7 @@ ORDER BY g.""AppId""";
                 _logger.LogError(ex, $"Ошибка получения цен, appId:{appId} Items:{items.Aggregate((a,b)=> a+","+b)} ");
                 return new();
             }
+
         }
 
         List<int> ListItemsId(List<string> ids, ILogger logger)

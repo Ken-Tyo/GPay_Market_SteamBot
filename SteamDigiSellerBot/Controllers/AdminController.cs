@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SteamDigiSellerBot.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly SignInManager<User> _signInManager;
