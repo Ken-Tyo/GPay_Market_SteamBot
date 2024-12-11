@@ -26492,86 +26492,6 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 
-// NAMESPACE OBJECT: ./wwwroot/Source/containers/admin/state.js
-var state_namespaceObject = {};
-__webpack_require__.r(state_namespaceObject);
-__webpack_require__.d(state_namespaceObject, {
-  Fj: () => (apiAddCommentGameSession),
-  aU: () => (apiAddGameSession),
-  he: () => (apiBotSetIsOn),
-  OY: () => (apiBotSetIsReserve),
-  To: () => (apiBulkDeleteItem),
-  tr: () => (apiChangeDigisellerData),
-  CG: () => (apiChangeItem),
-  sD: () => (apiChangeItemBulk),
-  aF: () => (apiChangePriceBasisBulk),
-  VI: () => (apiChangeUserPassword),
-  MZ: () => (apiCreateItem),
-  w_: () => (apiCreateItemInfoTemplate),
-  Zu: () => (apiDeleteBot),
-  vI: () => (apiDeleteItem),
-  D$: () => (apiDeleteItemInfoTemplate),
-  kB: () => (apiDeleteProxy),
-  z2: () => (apiDeleteProxyAll),
-  cz: () => (apiEditBot),
-  fu: () => (apiFetchGameSessStatuses),
-  ZW: () => (apiFetchGameSessionsWithCurrentFilter),
-  av: () => (apiFetchItemInfoTemplateValues),
-  PK: () => (apiFetchItems),
-  iI: () => (apiFetchLanguages),
-  BI: () => (apiFetchMarketPlaces),
-  hz: () => (apiFetchProxies),
-  nK: () => (apiFetchTagInfoAppsReplacementValues),
-  Qo: () => (apiFetchTagInfoDlcReplacementValues),
-  K0: () => (apiFetchTagPromoReplacementValues),
-  rE: () => (apiFetchTagTypeReplacementValues),
-  QE: () => (apiGetCurrencies),
-  oq: () => (apiGetItem),
-  am: () => (apiGetPublishers),
-  wL: () => (apiGetSteamRegions),
-  nt: () => (apiGetUpdateItemInfoJobStatistics),
-  bh: () => (apiLoadNewProxy),
-  aS: () => (apiResetGameSession),
-  wE: () => (apiSaveBotRegionSettings),
-  T2: () => (apiSetGameSessionStatus),
-  ib: () => (apiSetItemActiveStatus),
-  zD: () => (apiTagInfoAppsReplacementValues),
-  C: () => (apiTagInfoDlcReplacementValues),
-  iH: () => (apiTagPromoReplacementValues),
-  xW: () => (apiTagTypeReplacementValues),
-  DP: () => (apiUpdateExchangeDataManual),
-  $H: () => (apiUpdateItemInfoes),
-  My: () => (initAdmin),
-  mB: () => (initBotsPage),
-  Zq: () => (setItemPrice),
-  rv: () => (setItemPricePriority),
-  xN: () => (setSelectedBot),
-  tS: () => (setSelectedItem),
-  gU: () => (setSelectedItems),
-  Zo: () => (setStateProp),
-  wk: () => (state),
-  R8: () => (toggleAddGameSesCommentModal),
-  vV: () => (toggleBotDetailsModal),
-  f4: () => (toggleBulkEditPercentModal),
-  DN: () => (toggleBulkEditPriceBasisModal),
-  J0: () => (toggleChangePasswordModal),
-  wA: () => (toggleDigisellerEditModal),
-  $s: () => (toggleEditBotModal),
-  fi: () => (toggleEditBotRegionSetModal),
-  x7: () => (toggleEditItemModal),
-  Mr: () => (toggleEditOrderModal),
-  gH: () => (toggleExchangeRatesModal),
-  PU: () => (toggleFilterOrdersModal),
-  kn: () => (toggleFilterProductsModal),
-  wl: () => (toggleItemAdditionalInfoModal),
-  _y: () => (toggleItemMainInfoModal),
-  yS: () => (toggleLoadProxiesModal),
-  hf: () => (toggleOrderCreationInfoModal),
-  lD: () => (toggleViewStatusHistoryModal),
-  F0: () => (updateGameSessionsFilter),
-  oO: () => (updateProductsFilter)
-});
-
 // EXTERNAL MODULE: ./node_modules/react/index.js
 var react = __webpack_require__(6540);
 var react_namespaceObject = /*#__PURE__*/__webpack_require__.t(react, 2);
@@ -44945,7 +44865,6 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
           onClick: function onClick() {
             onLoadTemplate(val);
           },
-          isDisabled: state_namespaceObject.itemInfoTemplatesLoading,
           innerTextMargin: '0 16px 0 0'
         }), /*#__PURE__*/(0,jsx_runtime.jsxs)("svg", {
           width: "15",
@@ -44982,7 +44901,6 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
       onClick: function onClick() {
         onCreateTemplate();
       },
-      isDisabled: state_namespaceObject.itemInfoTemplatesLoading,
       className: modalItemInfoEdit_styles.btnCreateTemplate
     });
   };
@@ -45176,8 +45094,7 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
               onSave(russianText, englishText);
               setRussianText('');
               setEnglishText('');
-            },
-            isDisabled: state_namespaceObject.itemInfoTemplatesLoading
+            }
           }), /*#__PURE__*/(0,jsx_runtime.jsx)(shared_button, {
             text: 'Назад',
             onClick: /*#__PURE__*/modalItemInfoEdit_asyncToGenerator( /*#__PURE__*/modalItemInfoEdit_regeneratorRuntime().mark(function _callee() {
@@ -45199,8 +45116,7 @@ var ModalItemInfoEdit = function ModalItemInfoEdit(_ref) {
             style: {
               backgroundColor: '#9A7AA9',
               marginLeft: '0px'
-            },
-            isDisabled: state_namespaceObject.itemInfoTemplatesLoading
+            }
           })]
         })]
       })
