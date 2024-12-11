@@ -507,4 +507,4 @@ FROM "Games" gp,
 WHERE (pub->>'creator_clan_account_id')::BIGINT IS NOT NULL;
 
 11.12.2024 Забытая колонка?
-ALTER TABLE "Items" ADD column "InSetPriceProcess" int null;
+ALTER TABLE "Items" ADD column "InSetPriceProcess" TIMESTAMP null;
