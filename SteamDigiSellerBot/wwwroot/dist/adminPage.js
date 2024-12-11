@@ -66037,6 +66037,8 @@ const robot_namespaceObject = __webpack_require__.p + "d6bbd981ed2bd9d2db67.svg"
 const cart_namespaceObject = __webpack_require__.p + "3c68476424236c8d82e2.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/settings.svg
 const settings_namespaceObject = __webpack_require__.p + "63b1b618af954e7db694.svg";
+;// CONCATENATED MODULE: ./wwwroot/Source/icons/sellers.svg
+const icons_sellers_namespaceObject = __webpack_require__.p + "e11bf8562558318caaeb.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowLeft.svg
 const arrowLeft_namespaceObject = __webpack_require__.p + "96780ec48f6c1b85e039.svg";
 ;// CONCATENATED MODULE: ./wwwroot/Source/icons/arrowRight.svg
@@ -67505,7 +67507,6 @@ function leftMenu_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-//import sellers from '../../../icons/sellers.svg';
 
 
 
@@ -67889,7 +67890,7 @@ var getMenuArrData = function getMenuArrData(setIsEditSellerModalOpen) {
     }
   }, {
     name: "Пользователи",
-    icon: robot_namespaceObject,
+    icon: icons_sellers_namespaceObject,
     subMenu: [{
       name: "Продавцы",
       url: "/admin/sellers"
