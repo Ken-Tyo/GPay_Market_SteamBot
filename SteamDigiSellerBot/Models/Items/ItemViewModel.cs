@@ -56,6 +56,7 @@ namespace SteamDigiSellerBot.Models.Items
         public decimal PriceRubRaw { get; set; }
         public bool IsManualSet { get; set; }
         public bool IsPriority { get; set; }
+        public int Priority { get; set; }
         public int FailUsingCount { get; set; }
         public bool IsNotBotExists { get; set; }
     }

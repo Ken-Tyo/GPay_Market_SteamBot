@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Controllers
                         PriceRub = $"{rubPrices[gp.Id].ToString("0.##")} {currencies[5].SteamSymbol}",
                         PriceRubRaw = rubPrices[gp.Id],
                         IsManualSet = gp.IsManualSet,
-                        IsPriority = gp.IsPriority,
+                        Priority = gp.Priority,
                         FailUsingCount = gp.FailUsingCount,
                         IsNotBotExists = bots.Count == 0
                     });

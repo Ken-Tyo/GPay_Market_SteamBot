@@ -377,7 +377,7 @@ namespace SteamDigiSellerBot.Services.Implementation
 
             var maxFailUsingCount = 3;
             var priorityPrices = item.GamePrices
-                .Where(gp => gp.IsPriority && gp.FailUsingCount < maxFailUsingCount)
+                .Where(gp => gp.Priority == (int)GamePricePriority.MainAndAdditionalBots && gp.FailUsingCount < maxFailUsingCount)
                 .ToList();
 
             var basePrice = item.GetPrice();
@@ -481,7 +481,7 @@ namespace SteamDigiSellerBot.Services.Implementation
         {
             var maxFailUsingCount = 3;
             var priorityPrices = item.GamePrices
-                .Where(gp => gp.IsPriority && gp.FailUsingCount < maxFailUsingCount);
+                .Where(gp => gp.Priority == (int)GamePricePriority.MainAndAdditionalBots && gp.FailUsingCount < maxFailUsingCount);
 
             //если выбрано 2 или более приортетных цен
             if (priorityPrices.Count() > 1)
