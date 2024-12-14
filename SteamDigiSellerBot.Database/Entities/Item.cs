@@ -97,5 +97,10 @@ namespace SteamDigiSellerBot.Database.Entities
         {
             Active = true;
         }
+
+        public void SetDefaultInSetPriceProcess()
+        {
+            InSetPriceProcess = DateTime.UtcNow.AddMinutes(3);
+        }
     }
 }

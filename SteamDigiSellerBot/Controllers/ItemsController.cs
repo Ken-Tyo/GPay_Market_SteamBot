@@ -237,11 +237,7 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok(itemView);
         }
-        public class ReTime
-        {
-            public DateTime? InSetPriceProcess { get; set; }
-            public int Id { get; set; }
-        }
+
 
         [HttpPost, Route("items/add"), ValidationActionFilter]
         public async Task<IActionResult> Item(AddItemRequest model)
@@ -256,7 +252,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
-                    item.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
+                    item.SetDefaultInSetPriceProcess();
                     await _itemRepository.AddAsync(db, item); 
                 }
                 else
@@ -341,7 +337,7 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> BulkChangeAction(BulkActionRequest request, CancellationToken cancellationToken)
         {
             User user = await _userManager.GetUserAsync(User);
-            await _itemBulkUpdateService.UpdateAsync(
+            _itemBulkUpdateService.UpdateAsync(
                 new ItemBulkUpdateCommand(
                     request.SteamPercent,
                     request.IncreaseDecreaseOperator,
@@ -350,7 +346,7 @@ namespace SteamDigiSellerBot.Controllers
                     user),
                 cancellationToken);
 
-            return Ok();
+            return Ok(request.Ids);
         }
 
         [HttpPost, Route("items/bulk/pricebasis"), ValidationActionFilter]

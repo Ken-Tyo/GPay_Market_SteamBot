@@ -561,7 +561,6 @@ export const apiChangeItem = async (item) => {
       items: [...newData],
     };
   });
-
 };
 
 export const apiCreateItem = async (item) => {
@@ -827,15 +826,37 @@ export const toggleOrderCreationInfoModal = async (isOpen) => {
     };
   });
 };
+const setItemsBulkToLoading = (Ids) => {
+  var newData = state.get().items;
+  var includesCounter = 0;
+  const idsCount = Ids.length;
 
+  for (var item of newData) {
+    if (Ids.includes(item.id)) {
+      item.inSetPriceProcess = true;
+      includesCounter++;
+    }
+
+    if (includesCounter >= idsCount) {
+      break;
+    }
+  }
+
+  state.set((value) => {
+    return {
+      ...value,
+      items: newData,
+    };
+  });
+};
 export const apiChangeItemBulk = async (
   SteamPercent,
   IncreaseDecreaseOperator,
   IncreaseDecreasePercent,
   Ids
 ) => {
-  setItemsLoading(true);
-  setStateProp("changeItemBulkResponse", { loading: true });
+  //setItemsLoading(true);
+  //setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/change`, {
     method: "POST",
     body: mapToFormData({
@@ -845,13 +866,15 @@ export const apiChangeItemBulk = async (
       Ids,
     }),
   });
-  setStateProp("changeItemBulkResponse", { loading: false });
-  await apiFetchItems();
+
+  setItemsBulkToLoading(Ids);
+  //setStateProp("changeItemBulkResponse", { loading: false });
+  //await apiFetchItems();
 };
 
 export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
-  setItemsLoading(true);
-  setStateProp("changeItemBulkResponse", { loading: true });
+  //setItemsLoading(true);
+  //setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/pricebasis`, {
     method: "POST",
     body: mapToFormData({
@@ -859,8 +882,9 @@ export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
       Ids,
     }),
   });
-  setStateProp("changeItemBulkResponse", { loading: false });
-  await apiFetchItems();
+  setItemsBulkToLoading(Ids);
+  //setStateProp("changeItemBulkResponse", { loading: false });
+  //await apiFetchItems();
 };
 
 export const apiChangeDigisellerData = async (data) => {
@@ -969,15 +993,14 @@ export const apiGetSteamRegions = async () => {
 };
 
 export const apiGetPublishers = async () => {
-    let publishers = state.get().publishers;
-    if (publishers && publishers.length > 0)
-        return;
+  let publishers = state.get().publishers;
+  if (publishers && publishers.length > 0) return;
 
-    let res = await fetch(`/game/publishers`);
-    let data = await res.json();
+  let res = await fetch(`/game/publishers`);
+  let data = await res.json();
 
-    publishers = data;
-    setStateProp("publishers", publishers);
+  publishers = data;
+  setStateProp("publishers", publishers);
 };
 
 export const apiSetGameSessionStatus = async (gSesId, statusId) => {

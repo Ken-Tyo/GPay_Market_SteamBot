@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,10 +27,10 @@ namespace SteamDigiSellerBot.Database.Repositories
         {
             await using var dbContext = _dbContextFactory.CreateDbContext();
             var gamePublishersHashSet = new HashSet<GamePublisher>();
-            var gamePublishers = await dbContext.GamePublishers
-                .AsNoTracking()
-                .Distinct()
-                .ToListAsync();
+            List<Entities.GamePublisher> gamePublishers = gamePublishers = await dbContext.GamePublishers
+                    .AsNoTracking()
+                    .Distinct()
+                    .ToListAsync();
 
             foreach (var publisher in gamePublishers)
             {
