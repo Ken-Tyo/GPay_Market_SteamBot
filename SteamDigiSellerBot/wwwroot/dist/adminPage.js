@@ -26949,6 +26949,7 @@ var common_itemsMode = {
 };
 ;// CONCATENATED MODULE: ./wwwroot/Source/containers/admin/state.js
 function state_typeof(o) { "@babel/helpers - typeof"; return state_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, state_typeof(o); }
+function state_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = state_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || state_unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function state_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return state_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return state_arrayLikeToArray(o, minLen); }
@@ -28485,17 +28486,41 @@ var toggleOrderCreationInfoModal = /*#__PURE__*/function () {
     return _ref43.apply(this, arguments);
   };
 }();
+var setItemsBulkToLoading = function setItemsBulkToLoading(Ids) {
+  var newData = state.get().items;
+  var includesCounter = 0;
+  var idsCount = Ids.length;
+  var _iterator = state_createForOfIteratorHelper(newData),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var item = _step.value;
+      if (Ids.includes(item.id)) {
+        item.inSetPriceProcess = true;
+        includesCounter++;
+      }
+      if (includesCounter >= idsCount) {
+        break;
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  state.set(function (value) {
+    return state_objectSpread(state_objectSpread({}, value), {}, {
+      items: newData
+    });
+  });
+};
 var apiChangeItemBulk = /*#__PURE__*/function () {
   var _ref44 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee44(SteamPercent, IncreaseDecreaseOperator, IncreaseDecreasePercent, Ids) {
     var res;
     return state_regeneratorRuntime().wrap(function _callee44$(_context44) {
       while (1) switch (_context44.prev = _context44.next) {
         case 0:
-          setItemsLoading(true);
-          setStateProp("changeItemBulkResponse", {
-            loading: true
-          });
-          _context44.next = 4;
+          _context44.next = 2;
           return fetch("/items/bulk/change", {
             method: "POST",
             body: mapToFormData({
@@ -28505,14 +28530,12 @@ var apiChangeItemBulk = /*#__PURE__*/function () {
               Ids: Ids
             })
           });
-        case 4:
+        case 2:
           res = _context44.sent;
-          setStateProp("changeItemBulkResponse", {
-            loading: false
-          });
-          _context44.next = 8;
-          return apiFetchItems();
-        case 8:
+          setItemsBulkToLoading(Ids);
+          //setStateProp("changeItemBulkResponse", { loading: false });
+          //await apiFetchItems();
+        case 4:
         case "end":
           return _context44.stop();
       }
@@ -28528,11 +28551,7 @@ var apiChangePriceBasisBulk = /*#__PURE__*/function () {
     return state_regeneratorRuntime().wrap(function _callee45$(_context45) {
       while (1) switch (_context45.prev = _context45.next) {
         case 0:
-          setItemsLoading(true);
-          setStateProp("changeItemBulkResponse", {
-            loading: true
-          });
-          _context45.next = 4;
+          _context45.next = 2;
           return fetch("/items/bulk/pricebasis", {
             method: "POST",
             body: mapToFormData({
@@ -28540,14 +28559,12 @@ var apiChangePriceBasisBulk = /*#__PURE__*/function () {
               Ids: Ids
             })
           });
-        case 4:
+        case 2:
           res = _context45.sent;
-          setStateProp("changeItemBulkResponse", {
-            loading: false
-          });
-          _context45.next = 8;
-          return apiFetchItems();
-        case 8:
+          setItemsBulkToLoading(Ids);
+          //setStateProp("changeItemBulkResponse", { loading: false });
+          //await apiFetchItems();
+        case 4:
         case "end":
           return _context45.stop();
       }
@@ -46616,7 +46633,6 @@ var products = function products() {
           return (i.currentDigiSellerPrice * 100 / i.currentSteamPriceRub).toFixed(0);
         };
         var additionalInfo = i.isFixedPrice ? "".concat(getDiffPriceInPercent(), "%") : "".concat(i.steamPercent, "% ").concat(i.addPrice, " rub");
-        console.log(i);
         var rowRenderer = function rowRenderer() {
           return /*#__PURE__*/(0,jsx_runtime.jsxs)("tr", {
             className: activeRow,
@@ -56602,8 +56618,8 @@ var ModalFilter = function ModalFilter(_ref) {
       } else if (prop === "thirdPartyPriceType") {
         val = val === "₽";
       }
-      console.log(item);
-      console.log(prop, val);
+      //console.log(item);
+      //console.log(prop, val);
       setItem(modalProductsFilter_objectSpread(modalProductsFilter_objectSpread({}, item), {}, modalProductsFilter_defineProperty({}, prop, val)));
     };
   };
