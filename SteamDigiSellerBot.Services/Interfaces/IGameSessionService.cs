@@ -26,7 +26,7 @@ namespace SteamDigiSellerBot.Services.Interfaces
         (int, GamePrice) GetPriorityPrice(Item item);
         (int, List<GamePrice>) GetSortedPriorityPrices(Item item);
         Task<(BotFilterParams, IEnumerable<Bot>)> GetSuitableBotsFor(
-            GameSession gs, HashSet<int> botIdFilter = null);
+            GameSession gs, HashSet<int> botIdFilter = null, bool offReserverFilter = false);
         Task<GameReadyToSendStatus> CheckReadyToSendGameAndHandle(GameSession gs, bool whriteReadyLog = false);
         Task<Bot> GetFirstBotByItemCriteration(GameSession gs, IEnumerable<Bot> filterRes);
         Task<Bot> GetRandomBotByItemCriteration(GameSession gs, IEnumerable<Bot> botFilterRes, int? pre_botId);

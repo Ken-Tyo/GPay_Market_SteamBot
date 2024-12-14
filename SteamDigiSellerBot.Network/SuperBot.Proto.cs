@@ -290,6 +290,7 @@ namespace SteamDigiSellerBot.Network
                 //добаляем в корзину
                 bool errorRepeat = false;
             cartRepeat:
+            _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} сбор корзины");
                 try
                 {
                     var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
@@ -362,6 +363,7 @@ namespace SteamDigiSellerBot.Network
                     {
                         errorRepeat = true;
                         await Task.Delay(TimeSpan.FromSeconds(15));
+                        goto cartRepeat;
                     }
                 }
 

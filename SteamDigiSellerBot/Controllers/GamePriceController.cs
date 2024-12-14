@@ -57,6 +57,7 @@ namespace SteamDigiSellerBot.Controllers
             return Ok();
         }
 
+        // изменение приоритета в ценовой иерарархии
         [HttpPost, Route("items/price/{gpId}/priority"), ValidationActionFilter]
         public async Task<IActionResult> SetItemPricePriority(int gpId)
         {
@@ -65,7 +66,8 @@ namespace SteamDigiSellerBot.Controllers
             if (gp == null)
                 return NotFound();
 
-            gp.IsPriority = !gp.IsPriority;
+            gp.SetNextPriority();
+
             await _gamePriceRepository.EditAsync(db, gp);
             return Ok();
         }

@@ -517,8 +517,7 @@ ORDER BY g.""AppId""";
                             }
 
                             var priceDown = item.CurrentDigiSellerPrice>0 ? finalPrice / item.CurrentDigiSellerPrice : 1;
-                            if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
-                                priceDown < 0.08M && !(priceDown is >= 0.048M and <= 0.052M))
+                            if (!manualUpdate && item.CurrentDigiSellerPrice != 0 && priceDown <= 0.039M)
                             {
                                 _logger.LogWarning(
                                     $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(priceDown * 100):0.0}%");

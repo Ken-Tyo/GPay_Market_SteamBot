@@ -120,6 +120,18 @@
                                 .currName {
                                     color: #FFFFFF;
                                 }
+
+                                .priority {
+                                    width: 20px;
+                                    height: 20px;
+                                    border-radius: 50%;
+                                    background-color: #BB3EAF;
+                                    bottom: 10px;
+                                    position: relative;
+                                    text-align: center;
+                                    left: 5px;
+                                    color: #fff;
+                                }
                             }
 
                             .priceRow {
