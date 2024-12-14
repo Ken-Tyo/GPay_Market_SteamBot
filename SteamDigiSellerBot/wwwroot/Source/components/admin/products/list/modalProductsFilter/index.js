@@ -90,8 +90,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
   });
   const steamPublishers = state.use().publishers.map((c) => {
     return {
-        id: c.id,
-        name: c.name,
+      id: c.id,
+      name: c.name,
     };
   });
 
@@ -102,7 +102,11 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     if (val == null) {
       return;
     }
-    if (prop === "steamCurrencyId" || prop === "gameRegionsCurrency" || prop === "publishers") {
+    if (
+      prop === "steamCurrencyId" ||
+      prop === "gameRegionsCurrency" ||
+      prop === "publishers"
+    ) {
       if (val != null) {
         //var newVal = val.targer.value;
         //var resultVal = newVal.map(e => currencies.find((c) => c.name === e).id);
@@ -130,8 +134,8 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
     } else if (prop === "thirdPartyPriceType") {
       val = val === "₽";
     }
-    console.log(item);
-    console.log(prop, val);
+    //console.log(item);
+    //console.log(prop, val);
     setItem({ ...item, [prop]: val });
   };
   const isNullOrEmpty = (target) => target != null && target != "";
@@ -331,20 +335,20 @@ const ModalFilter = ({ isOpen, value, onCancel, onSave }) => {
           </div>
         </div> */}
         <div className={css.formItem}>
-            <div className={css.name}>Издатели:</div>
-            <div className={css.wrapper}>
-                <div class={css.inputControl}>
-                    <div class={css.inputArea}>
-                        <SelectWithSearchingTextField
-                            options={memoSteamPublishers}
-                            value={item.publishers}
-                            onChange={handleChange("publishers")}
-                            placeholder={""}
-                        />
-                    </div>
-                </div>
+          <div className={css.name}>Издатели:</div>
+          <div className={css.wrapper}>
+            <div class={css.inputControl}>
+              <div class={css.inputArea}>
+                <SelectWithSearchingTextField
+                  options={memoSteamPublishers}
+                  value={item.publishers}
+                  onChange={handleChange("publishers")}
+                  placeholder={""}
+                />
+              </div>
             </div>
-        </div> 
+          </div>
+        </div>
       </div>
       <div className={css.actions}>
         <Button

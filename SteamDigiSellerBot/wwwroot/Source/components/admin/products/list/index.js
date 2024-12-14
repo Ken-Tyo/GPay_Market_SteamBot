@@ -427,7 +427,7 @@ const products = () => {
           let additionalInfo = i.isFixedPrice
             ? `${getDiffPriceInPercent()}%`
             : `${i.steamPercent}% ${i.addPrice} rub`;
-          console.log(i);
+
           let rowRenderer = () => (
             <tr key={i.id} className={activeRow} style={{ width: "100%" }}>
               <td>
@@ -493,7 +493,7 @@ const products = () => {
                         {i.name}
                       </span>
                     </div>
-                      <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
+                    <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
                   </div>
                 </div>
               </td>

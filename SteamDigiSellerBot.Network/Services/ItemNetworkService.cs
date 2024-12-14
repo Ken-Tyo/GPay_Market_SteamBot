@@ -106,8 +106,32 @@ ORDER BY g.""AppId""";
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
+        /// <summary>
+        /// Подготовка к SetPrice. Уведомление о том, что идет процесс SetPrice
+        /// </summary>
+        private async Task SaveSetPriceStartInfo(DatabaseContext db, List<Item> dbItems)
+        {
+            //db.Items.UpdateRange(dbItems);
+            int i = 0;
+            int commitI = 30;
+            foreach (var item in dbItems)
+            {
+                item.SetDefaultInSetPriceProcess();
+                db.Attach(item);
+                db.Entry(item).Property(e => e.InSetPriceProcess).IsModified = true;
+                i++;
+                if (i % commitI == 0)
+                {
+                    await SaveChangesAsync(db);
+                }
+            }
+            await SaveChangesAsync(db);
+        }
         public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null, bool manualUpdate = true)
         {
+            await using var db = _contextFactory.CreateDbContext();
+            await SaveSetPriceStartInfo(db, items);
+
             var groupedItems =
                 items
                 .GroupBy(x => x.AppId)
@@ -393,8 +417,17 @@ ORDER BY g.""AppId""";
                 }
             }
         }
+        private async Task SaveChangesAsync(DatabaseContext db)
+        {
+            requestLocker = true;
+            await db.SaveChangesAsync();
+            await Task.Delay(50);
+            requestLocker = false;
+        }
+
 
         bool requestLocker = false;
+
         /// <summary>
         /// This method performs a number of operations to set prices for goods and update information in the database.
         /// </summary>
@@ -423,17 +456,21 @@ ORDER BY g.""AppId""";
                 // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
                 while (requestLocker)
                     await Task.Delay(25);
-                
-                try
+
+                async Task PrepareItems()
                 {
                     dbItems = await db.Items.Include(i => i.GamePrices)
                         .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
                 }
+                
+                try
+                {
+                    await PrepareItems();
+                }
                 catch
                 {
                     await Task.Delay(1000);
-                    dbItems = await db.Items.Include(i => i.GamePrices)
-                        .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                    await PrepareItems();
                 }
 
                 var currencyForParse = allCurrencies;
@@ -572,10 +609,7 @@ ORDER BY g.""AppId""";
                     {
                         while (requestLocker)
                             await Task.Delay(100);
-                        requestLocker = true;
-                        await db.SaveChangesAsync();
-                        await Task.Delay(50);
-                        requestLocker = false;
+                        SaveChangesAsync(db);
                     }
                 }
 
