@@ -27693,7 +27693,7 @@ var apiDeleteItem = /*#__PURE__*/function () {
 }();
 var apiBulkDeleteItem = /*#__PURE__*/function () {
   var _ref20 = state_asyncToGenerator( /*#__PURE__*/state_regeneratorRuntime().mark(function _callee20(Ids) {
-    var res;
+    var res, data, result;
     return state_regeneratorRuntime().wrap(function _callee20$(_context20) {
       while (1) switch (_context20.prev = _context20.next) {
         case 0:
@@ -27706,11 +27706,14 @@ var apiBulkDeleteItem = /*#__PURE__*/function () {
           });
         case 2:
           res = _context20.sent;
-          _context20.next = 5;
-          return apiFetchItems();
-        case 5:
+          data = state.get().items;
+          result = data.filter(function (e) {
+            return !Ids.includes(e.id);
+          });
+          setItems(result);
+          //await apiFetchItems();
           return _context20.abrupt("return", res.ok);
-        case 6:
+        case 7:
         case "end":
           return _context20.stop();
       }

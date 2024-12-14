@@ -378,8 +378,12 @@ export const apiBulkDeleteItem = async (Ids) => {
       Ids,
     }),
   });
+  var data = state.get().items;
 
-  await apiFetchItems();
+  var result = data.filter((e) => !Ids.includes(e.id));
+  setItems(result);
+  //await apiFetchItems();
+
   return res.ok;
 };
 
