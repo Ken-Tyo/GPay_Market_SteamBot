@@ -36,6 +36,7 @@ export const state = entity({
   currencies: [],
   productFilterCurrencies: [],
   steamRegions: [],
+  publishers: [],
   digiPriceSetType: [
     { id: 1, name: "%" },
     { id: 2, name: "₽" },
@@ -217,6 +218,12 @@ export const apiFetchItems = async (filter) => {
         name: c.name,
       };
     });
+    const steamPublishers = state.get().publishers.map((c) => {
+      return {
+        id: c.id,
+        name: c.name,
+      };
+    });
     const regionVal = (
       regions.find((c) => c.name === filterDTO.steamCountryCodeId) || {}
     ).id;
@@ -231,7 +238,9 @@ export const apiFetchItems = async (filter) => {
         (c) => c.name === filterDTO.hierarchyParams_targetSteamCurrencyId
       ).id;
     }
-
+    if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
+      filterDTO.publishers = steamPublishers;
+    }
     if (isNullOrEmpty(filterDTO.steamCountryCodeId)) {
       filterDTO.steamCountryCodeId = regionVal;
     }
@@ -519,16 +528,83 @@ export const apiSaveBotRegionSettings = async (item) => {
 export const apiChangeItem = async (item) => {
   //setItemsLoading(true);
   toggleEditItemModal(false);
+  var newData = state.get().items;
+  newData.find((e) => e.id === item.id).InSetPriceProcess = true;
+  state.set((value) => {
+    return {
+      ...value,
+      items: [...newData],
+    };
+  });
 
-  let res = await fetch(`/items/edit/${item.id}`, {
+  let res = fetch(`/items/edit/${item.id}`, {
+    method: "POST",
+    body: mapToFormData(item),
+  }).then((resp) => {
+    var newData = state.get().items;
+    var oldItem = newData.find((e) => e.id === item.id);
+    oldItem.inSetPriceProcess = false;
+    Object.assign(oldItem, resp.json());
+    state.set((value) => {
+      return {
+        ...value,
+        items: [...newData],
+      };
+    });
+  });
+
+  var newData = state.get().items;
+  newData.find((e) => e.id === item.id).inSetPriceProcess = true;
+  state.set((value) => {
+    return {
+      ...value,
+      items: [...newData],
+    };
+  });
+
+};
+
+export const apiCreateItem = async (item) => {
+  //setItemsLoading(true);
+  toggleEditItemModal(false);
+
+  let res = await fetch(`/items/add`, {
     method: "POST",
     body: mapToFormData(item),
   });
 
   if (res.ok) {
+    var newItem = await res.json();
     //await apiFetchItems();
     var newData = state.get().items;
-    newData.find((e) => e.id === item.id).inSetPriceProcess = true;
+    newData.inSetPriceProcess = true;
+    newData.push(newItem);
+
+    state.set((value) => {
+      return {
+        ...value,
+        items: [...newData],
+      };
+    });
+
+    let resSetPrice = fetch(`/items/setPrice`, {
+      method: "POST",
+      body: mapToFormData({ Id: newItem.id }),
+    }).then((e) => {
+      var oldItem = newData.find((e) => e.id === newItem.id);
+      oldItem.inSetPriceProcess = false;
+      Object.assign(oldItem, e.json());
+      state.set((value) => {
+        return {
+          ...value,
+          items: [...newData],
+        };
+      });
+    });
+
+    var oldItem = newData.find((e) => e.id === item.id);
+    oldItem.inSetPriceProcess = false;
+    Object.assign(oldItem, await resSetPrice.json());
     state.set((value) => {
       return {
         ...value,
@@ -539,23 +615,6 @@ export const apiChangeItem = async (item) => {
     toggleEditItemModal(true);
   }
   //setItemsLoading(false);
-};
-
-export const apiCreateItem = async (item) => {
-  setItemsLoading(true);
-  toggleEditItemModal(false);
-
-  let res = await fetch(`/items/add`, {
-    method: "POST",
-    body: mapToFormData(item),
-  });
-
-  if (res.ok) {
-    await apiFetchItems();
-  } else {
-    toggleEditItemModal(true);
-  }
-  setItemsLoading(false);
 };
 
 export const setItemsLoading = (isOn) => {
@@ -909,6 +968,18 @@ export const apiGetSteamRegions = async () => {
   setStateProp("steamRegions", steamRegions);
 };
 
+export const apiGetPublishers = async () => {
+    let publishers = state.get().publishers;
+    if (publishers && publishers.length > 0)
+        return;
+
+    let res = await fetch(`/game/publishers`);
+    let data = await res.json();
+
+    publishers = data;
+    setStateProp("publishers", publishers);
+};
+
 export const apiSetGameSessionStatus = async (gSesId, statusId) => {
   const { gameSessionsFilter } = state.get();
 
@@ -957,7 +1028,6 @@ export const updateGameSessionsFilter = async (newData) => {
     ...gameSessionsFilter,
     ...newData,
   };
-  console.log("new f", newFilter);
 
   setStateProp("gameSessionsFilter", newFilter);
   await apiFetchGameSessions(newFilter);
@@ -969,7 +1039,6 @@ export const updateProductsFilter = async (newData) => {
     ...productsFilter,
     ...newData,
   };
-  console.log("new f", newFilter);
 
   setStateProp("productsFilter", newFilter);
   await apiFetchItems(newFilter);

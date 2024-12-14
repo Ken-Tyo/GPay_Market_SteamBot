@@ -14,7 +14,7 @@ namespace SteamDigiSellerBot.MappingProfiles
         {
             CreateMap<AddItemViewModel, Item>().AfterMap((src, dst) => dst.DigiSellerIds = src.DigiSellerIds.Split(',').ToList());
             CreateMap<Item, AddItemViewModel>().ForMember(x => x.DigiSellerIds, x => x.MapFrom(x => string.Join(",", x.DigiSellerIds)));
-
+            CreateMap<ItemViewModel, Item >();
             CreateMap<AddItemRequest, Item>()
                 .AfterMap((src, dst) => dst.DigiSellerIds = src.DigiSellerIds.Split(',').ToList());
 

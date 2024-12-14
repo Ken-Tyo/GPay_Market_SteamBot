@@ -6,7 +6,6 @@ import Switch from '../../../../shared/switch';
 import css from './styles.scss';
 import {
   state,
-  itemInfoTemplatesLoading,
   apiFetchItemInfoTemplateValues,
   apiCreateItemInfoTemplate,
   apiDeleteItemInfoTemplate,
@@ -121,7 +120,6 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
           onClick={() => {
             onLoadTemplate(val);
           }}
-          isDisabled={itemInfoTemplatesLoading}
           innerTextMargin={'0 16px 0 0'}
         />
         <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => handleDeleteTemplate(val)}>
@@ -146,7 +144,6 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
       onClick={() => {
         onCreateTemplate();
       }}
-      isDisabled={itemInfoTemplatesLoading}
       className={css.btnCreateTemplate}/>);
   }
 
@@ -304,7 +301,6 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
               setRussianText('');
               setEnglishText('');
             }}
-            isDisabled={itemInfoTemplatesLoading}
           />
           <Button
             text={'Назад'}
@@ -317,7 +313,6 @@ const ModalItemInfoEdit = ({ isOpen, onSave, onCancel, viewMode, itemInfoTemplat
             }}
             width={buttonWidth}
             style={{ backgroundColor: '#9A7AA9', marginLeft: '0px' }}
-            isDisabled={itemInfoTemplatesLoading}
           />
         </div>
       </div>

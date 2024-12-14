@@ -23,6 +23,7 @@ namespace SteamDigiSellerBot.Database.Repositories
         Task<List<Item>> ListIncludePricesAsync(Expression<Func<Item, bool>> predicate);
         Task<bool> DeleteItemAsync(Item item);
         Task<Item> GetByAppIdAndSubId(string appId, string subId);
+        Task<Item> GetByAppIdAndSubId(DatabaseContext db, string appId, string subId);
         Task<bool> DeactivateItemAfterErrorAsync(IEnumerable<Item> items);
         Task<(List<Item> result, int count)> Filter(
             string appId,
@@ -30,6 +31,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
+            IEnumerable<uint> gamePublisherId,
             string digiSellerId,
             int? hierarchyParams_targetSteamCurrencyId,
             int? hierarchyParams_baseSteamCurrencyId,
@@ -76,6 +78,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             int? steamCountryCodeId,
             IEnumerable<int> steamCurrencyId,
             IEnumerable<int> gamePricesCurr,
+            IEnumerable<uint> gamePublisherId,
             string digiSellerId,
             int? hierarchyParams_targetSteamCurrencyId,
             int? hierarchyParams_baseSteamCurrencyId,
@@ -103,7 +106,12 @@ namespace SteamDigiSellerBot.Database.Repositories
             {
                 productName = productName.ToLower();
             }
-            
+
+            HashSet<uint> gamePublisherHashSet = null;
+            if (gamePublisherId != null && gamePublisherId.Count() > 0)
+            {
+                gamePublisherHashSet = new HashSet<uint>(gamePublisherId);
+            }
 
             //HashSet<string> digiSellerIds = null;
             //if (digiSellerId != null)
@@ -133,6 +141,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                 .Include(i => i.GamePrices)
                 .Include(i => i.Region)
                 .Include(i => i.LastSendedRegion)
+                .Include(i => i.GamePublishers)
                 .Where(i => !i.IsDeleted)
                 .OrderBy(x => x.AddedDateTime)
                 .ThenBy(x => x.AppId)
@@ -140,7 +149,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                     (string.IsNullOrWhiteSpace(appId) || item.AppId.Contains(appId))
                     && (string.IsNullOrWhiteSpace(productName) || item.Name.ToLower().Contains(productName))
                     && (currHashSet == null || currHashSet.Contains(item.SteamCurrencyId))
-                    && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.IsPriority == true).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
+                    && (gamePricesCurrHashSet == null || item.GamePrices.Where(e => e.Priority == (int)GamePricePriority.MainAndAdditionalBots).Any(e => gamePricesCurrHashSet.Contains(e.SteamCurrencyId)))
+                    && (gamePublisherHashSet == null || item.GamePublishers.Any(e => gamePublisherHashSet.Contains(e.GamePublisherId)))
                     && (!steamCountryCodeId.HasValue || steamCountryCodeId <= 0 || steamCountryCodeId == item.SteamCountryCodeId));
                     
 
@@ -176,7 +186,7 @@ namespace SteamDigiSellerBot.Database.Repositories
             List<Item> finalResult;
             try
             {
-                List<(decimal?, bool)> debugResult = new List<(decimal?, bool)>();
+                List<(decimal?, int)> debugResult = new List<(decimal?, int)>();
                 if (!hierarchyParamsIsValid())
                 {
                     finalResult = await sortedQuery.ToListAsync();
@@ -222,7 +232,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
 
                                 var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
-                                debugResult.Add((diffPrice, baseGamePrice.IsPriority));
+                                debugResult.Add((diffPrice, baseGamePrice.Priority));
                                 if (compareFunc(diffPrice, targetDiff))
                                 {
                                     finalResult.Add(e.Item);
@@ -287,7 +297,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                                 {
                                     Item = e,
                                     targetGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
-                                    baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId && e.IsPriority == false)
+                                    baseGamePrice = e.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_baseSteamCurrencyId
+                                                    && e.Priority == (int)GamePricePriority.SwitchOff)
                                 })
                             .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
                             .ToList();
@@ -316,7 +327,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                                 {
                                     Item = q,
                                     targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId),
-                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId && e.IsPriority == false)
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId
+                                                    && e.Priority == (int)GamePricePriority.SwitchOff)
                                 })
                             .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
                             .ToList();
@@ -375,7 +387,8 @@ namespace SteamDigiSellerBot.Database.Repositories
                                 {
                                     Item = q,
                                     targetGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == hierarchyParams_targetSteamCurrencyId),
-                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId && e.IsPriority == false)
+                                    baseGamePrice = q.GamePrices.FirstOrDefault(e => e.SteamCurrencyId == q.SteamCurrencyId 
+                                                    && e.Priority == (int)GamePricePriority.SwitchOff)
                                 })
                             .Where(e => e.baseGamePrice != null && e.targetGamePrice != null)
                             .ToList();
@@ -455,6 +468,11 @@ namespace SteamDigiSellerBot.Database.Repositories
         public async Task<Item> GetByAppIdAndSubId(string appId, string subId)
         {
             await using var db = dbContextFactory.CreateDbContext();
+            return await GetByAppIdAndSubId(db, appId,subId);
+        }
+        public async Task<Item> GetByAppIdAndSubId(DatabaseContext db, string appId, string subId)
+        {
+            
             return await db.Items.FirstOrDefaultAsync(i => i.AppId == appId && i.SubId == subId && !i.IsDeleted);
         }
     }

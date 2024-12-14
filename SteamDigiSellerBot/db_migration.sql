@@ -494,3 +494,22 @@ ALTER TABLE "AspNetUsers" drop column "DigisellerIDC";
 ALTER TABLE "AspNetUsers" drop column "DigisellerApiKeyC";
 ALTER TABLE "Users" drop column "DigisellerIDC";
 ALTER TABLE "Users" drop column "DigisellerApiKeyC";
+
+11.12.2024 Задача 140
+CREATE VIEW "GamePublishersView" AS
+SELECT 
+	row_number() OVER (PARTITION BY gp."Id", pub->>'creator_clan_account_id' ORDER BY pub->>'creator_clan_account_id') AS "Id",
+	(pub->>'creator_clan_account_id')::BIGINT AS "GamePublisherId", 
+	gp."Id" AS "GameId", 
+	pub->>'name' AS "Name"
+FROM "Games" gp,
+	 json_array_elements(gp."GameInfo"->'basic_info'->'publishers') pub
+WHERE (pub->>'creator_clan_account_id')::BIGINT IS NOT NULL;
+
+11.12.2024 gpay 2-50
+ALTER TABLE "Items" ADD column "InSetPriceProcess" TIMESTAMP null;
+
+12,12.2024 46-иерархия-разработать-зеленый-приоритет-для-регионов-последовательность-работы-запасных-ботов
+alter table "GamePrices" add "Priority" int default 0;
+update "GamePrices" set "Priority" = 2
+where "IsPriority" ='true';
