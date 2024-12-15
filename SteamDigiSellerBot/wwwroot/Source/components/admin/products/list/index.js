@@ -905,6 +905,7 @@ const products = () => {
             increaseDecreaseVal,
             selectedItems
           );
+          setSelectedItems([]);
         }}
       />
       <BulkPriceBasisEdit
@@ -915,6 +916,7 @@ const products = () => {
         onSave={(val) => {
           toggleBulkEditPriceBasisModal(false);
           apiChangePriceBasisBulk(val, selectedItems);
+          setSelectedItems([]);
         }}
         selectedCount={selectedItems.length}
       />

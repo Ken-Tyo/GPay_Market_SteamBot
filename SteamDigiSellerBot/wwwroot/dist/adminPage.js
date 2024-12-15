@@ -47128,6 +47128,7 @@ var products = function products() {
       onSave: function onSave(val, increaseDecreaseOperator, increaseDecreaseVal) {
         toggleBulkEditPercentModal(false);
         apiChangeItemBulk(val, increaseDecreaseOperator.id, increaseDecreaseVal, selectedItems);
+        setSelectedItems([]);
       }
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(modalBulkPriceBasisEdit, {
       isOpen: bulkEditPriceBasisModalIsOpen,
@@ -47137,6 +47138,7 @@ var products = function products() {
       onSave: function onSave(val) {
         toggleBulkEditPriceBasisModal(false);
         apiChangePriceBasisBulk(val, selectedItems);
+        setSelectedItems([]);
       },
       selectedCount: selectedItems.length
     }), /*#__PURE__*/(0,jsx_runtime.jsx)(Popover_Popover, {
