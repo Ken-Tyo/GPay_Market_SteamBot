@@ -8,7 +8,7 @@ import TextBox from './textbox';
 import TextSwitch from './textSwitch';
 import Select from './select';
 import css from './styles.scss';
-import { initial, initPermissions, permissionsGetValueActions, permissionsSetValueActions } from './rules'
+import { initial, initPermissions, paramToName, permissionsGetValueActions, permissionsSetValueActions } from './rules'
 import { state } from '../../../../containers/admin/state';
 
 const FromItemText = ({ name, onChange, hint, value, symbol, className }) => {
@@ -40,9 +40,14 @@ const ModalEdit = ({
   const [isModalRulesEditOpen, setIsModalRulesEditOpen] = useState(false)
   const [errors, setErrors] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [itemForPermissions, setItemForPermissions] = useState({})
 
   useEffect(() => {
     if (!user) {
+      let itemPermissions = {}
+      Object.assign(itemPermissions, item)
+      setItemForPermissions(itemPermissions)
+
       return;
     }
 
@@ -51,6 +56,10 @@ const ModalEdit = ({
     }
 
     setItem(user)
+
+    let itemPermissions = {}
+    Object.assign(itemPermissions, user)
+    setItemForPermissions(itemPermissions)
   }, [])
 
   const handleChange = (prop) => (val) => {
@@ -179,17 +188,19 @@ const ModalEdit = ({
         <>
           <ModalRulesEdit
             isOpen={isModalRulesEditOpen}
-            onClose={(item) => {
-              if (item.rentDays === '-') {
-                item.rentDays = null
+            onClose={(editedItem) => {
+              let current = item
+              for (let keyValuePair of paramToName) {
+                var val = permissionsGetValueActions.get(keyValuePair[0])(editedItem)
+                permissionsSetValueActions.get(keyValuePair[0])(current, val)
               }
 
-              setItem(item)
+              setItem(current)
               setIsModalRulesEditOpen(false)
             }}
-            isLiveEdit={false}
+            isLiveEdit={true}
             title=''
-            item={item}
+            item={itemForPermissions}
             isLoading={true}
           />
 
