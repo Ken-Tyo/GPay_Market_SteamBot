@@ -1997,7 +1997,8 @@ namespace SteamDigiSellerBot.Services.Implementation
                 {
                     InsertDate = DateTimeOffset.UtcNow,
                     StatusId = GameSessionStatusEnum.SwitchBot,
-                    Value = valueJson
+                    Value = valueJson,
+                    GameSessionId = gs.Id
                 };
                 await _gameSessionStatusLogRepository.AddAsync(db, log);
                 return (SendGameStatus.botsAreBusy, GameReadyToSendStatus.botSwitch);
