@@ -69,15 +69,15 @@ const priceHierarchy = () => {
                     <div className={css.level}>
                       <div className={css.prices}>
                         {items.map((i, itemIdx) => {
-                          let dotColor = '#B1A9A9';
+                          let dotColor = '#B1A9A9';//серый
                           let nameColor = '#fff';
-                          if (i.isPriority) {
-                            nameColor = dotColor = '#77C863';
+                          if (i.priority > 0) {
+                            nameColor = dotColor = '#77C863';//зеленый
                             if (i.isNotBotExists) {
-                              nameColor = dotColor = '#C6C93F';
+                              nameColor = dotColor = '#C6C93F';//желтый
                             }
                             if (i.failUsingCount >= 3) {
-                              nameColor = dotColor = '#C82F2F';
+                              nameColor = dotColor = '#C82F2F';//красный
                             }
                           }
 
@@ -105,6 +105,10 @@ const priceHierarchy = () => {
                                   >
                                     {i.currencyName}
                                   </div>
+                                  {i.priority > 0 && <sup
+                                    className={css.priority}>
+                                      {i.priority}
+                                  </sup>}
                                 </div>
                                 <div className={css.priceRow}>
                                   {i.isManualSet && (

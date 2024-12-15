@@ -215,7 +215,7 @@ namespace SteamDigiSellerBot.Controllers
                         PriceRub = $"{rubPrices[gp.Id].ToString("0.##")} {currencies[5].SteamSymbol}",
                         PriceRubRaw = rubPrices[gp.Id],
                         IsManualSet = gp.IsManualSet,
-                        IsPriority = gp.IsPriority,
+                        Priority = gp.Priority,
                         FailUsingCount = gp.FailUsingCount,
                         IsNotBotExists = bots.Count == 0
                     });
@@ -237,11 +237,7 @@ namespace SteamDigiSellerBot.Controllers
 
             return Ok(itemView);
         }
-        public class ReTime
-        {
-            public DateTime? InSetPriceProcess { get; set; }
-            public int Id { get; set; }
-        }
+
 
         [HttpPost, Route("items/add"), ValidationActionFilter]
         public async Task<IActionResult> Item(AddItemRequest model)
@@ -256,7 +252,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
-                    item.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
+                    item.SetDefaultIsProcessing();
                     await _itemRepository.AddAsync(db, item); 
                 }
                 else
@@ -295,7 +291,7 @@ namespace SteamDigiSellerBot.Controllers
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
                 var result = await _itemRepository.GetByIdAsync(db, info.Id);
                 var mappedResult = _mapper.Map<ItemViewModel>(result);
-                mappedResult.InSetPriceProcess = false;
+                mappedResult.IsProcessing = false;
                 //await Task.Delay(5000);
                 return Ok(mappedResult);
             }
@@ -316,7 +312,7 @@ namespace SteamDigiSellerBot.Controllers
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map(model, item);
-                editedItem.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
+                editedItem.IsProcessing = DateTime.UtcNow.AddMinutes(10);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
@@ -330,7 +326,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 var result = await _itemRepository.GetByIdAsync(db, id);
                 var mappedResult = _mapper.Map<ItemViewModel>(result);
-                mappedResult.InSetPriceProcess = false;
+                mappedResult.IsProcessing = false;
                 return Ok(mappedResult);
             }
 
@@ -341,7 +337,7 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> BulkChangeAction(BulkActionRequest request, CancellationToken cancellationToken)
         {
             User user = await _userManager.GetUserAsync(User);
-            await _itemBulkUpdateService.UpdateAsync(
+            _itemBulkUpdateService.UpdateAsync(
                 new ItemBulkUpdateCommand(
                     request.SteamPercent,
                     request.IncreaseDecreaseOperator,
@@ -350,14 +346,14 @@ namespace SteamDigiSellerBot.Controllers
                     user),
                 cancellationToken);
 
-            return Ok();
+            return Ok(request.Ids);
         }
 
         [HttpPost, Route("items/bulk/pricebasis"), ValidationActionFilter]
         public async Task<IActionResult> BulkPriceBasisAction(BulkPriceBasisRequest  request, CancellationToken cancellationToken)
         {
             User user = await _userManager.GetUserAsync(User);
-            await _priceBasisBulkUpdateService.UpdateAsync(
+            _priceBasisBulkUpdateService.UpdateAsync(
                 new PriceBasisBulkUpdateCommand(request.SteamCurrencyId, request.Ids, user), 
                 cancellationToken);
             return Ok();

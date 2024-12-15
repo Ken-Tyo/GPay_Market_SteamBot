@@ -427,7 +427,7 @@ const products = () => {
           let additionalInfo = i.isFixedPrice
             ? `${getDiffPriceInPercent()}%`
             : `${i.steamPercent}% ${i.addPrice} rub`;
-          console.log(i);
+
           let rowRenderer = () => (
             <tr key={i.id} className={activeRow} style={{ width: "100%" }}>
               <td>
@@ -493,7 +493,7 @@ const products = () => {
                         {i.name}
                       </span>
                     </div>
-                      <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
+                    <div>{i.digiSellerIds && i.digiSellerIds.join(",")}</div>
                   </div>
                 </div>
               </td>
@@ -680,7 +680,7 @@ const products = () => {
             </tr>
           );
 
-          if (i.inSetPriceProcess) {
+          if (i.isProcessing) {
             rowRenderer = isLoadingRender;
           }
           return rowRenderer();
@@ -820,14 +820,7 @@ const products = () => {
           toggleItemAdditionalInfoModal(false);
         }}
         onSave={(russianText, englishText) => {
-          var goods = items
-            .filter((i) => selectedItems.includes(i.id))
-            .map((x) => {
-              return {
-                digiSellerIds: x.digiSellerIds,
-                itemId: x.id,
-              };
-            });
+          var goods = items.filter((i) => selectedItems.includes(i.id));
 
           var updateItemInfoesCommands = {
             description: editItemMainInfoModalIsOpen
@@ -860,6 +853,7 @@ const products = () => {
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
           apiUpdateItemInfoes(updateItemInfoesCommands);
+          setSelectedItem([]);
         }}
         itemInfoTemplates={itemInfoTemplates}
       />
@@ -912,6 +906,7 @@ const products = () => {
             increaseDecreaseVal,
             selectedItems
           );
+          setSelectedItems([]);
         }}
       />
       <BulkPriceBasisEdit
@@ -922,6 +917,7 @@ const products = () => {
         onSave={(val) => {
           toggleBulkEditPriceBasisModal(false);
           apiChangePriceBasisBulk(val, selectedItems);
+          setSelectedItems([]);
         }}
         selectedCount={selectedItems.length}
       />

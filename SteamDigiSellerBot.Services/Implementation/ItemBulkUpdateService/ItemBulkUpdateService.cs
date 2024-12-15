@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using SteamDigiSellerBot.Database.Contexts;
 using SteamDigiSellerBot.Database.Entities;
 using SteamDigiSellerBot.Database.Models;
@@ -20,33 +22,45 @@ namespace SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService
         private readonly IItemNetworkService _itemNetworkService;
         private readonly UserManager<User> _userManager;
         private readonly DatabaseContext _databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> _contextFactory;
 
         public ItemBulkUpdateService(
             IItemRepository itemRepository,
             IItemNetworkService itemNetworkService,
             UserManager<User> userManager,
-            DatabaseContext databaseContext)
+            DatabaseContext databaseContext,
+            IDbContextFactory<DatabaseContext> contextFactory)
         {
             _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
             _itemNetworkService = itemNetworkService ?? throw new ArgumentNullException(nameof(itemNetworkService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+            _contextFactory = contextFactory;
         }
 
         public async Task UpdateAsync(ItemBulkUpdateCommand bulkUpdateCommand, CancellationToken cancellationToken)
         {
+            await using var db = _contextFactory.CreateDbContext();
             HashSet<int> idHashSet = bulkUpdateCommand.Ids?.ToHashSet() ?? new HashSet<int>();
             List<Item> items = await _itemRepository
                 .ListAsync(_databaseContext, i => (idHashSet.Count == 0 || idHashSet.Contains(i.Id)) && !i.IsDeleted);
 
-            foreach (Item item in items)
+            try
             {
-                CalculateAndFillPercent(item, bulkUpdateCommand);
-                await _itemRepository.UpdateFieldAsync(_databaseContext, item, i => i.SteamPercent);
+                foreach (Item item in items)
+                {
+                    CalculateAndFillPercent(item, bulkUpdateCommand);
+                    await _itemRepository.UpdateFieldAsync(db, item, i => i.SteamPercent);
+                }
+            }
+            catch(Exception e)
+            {
+
             }
 
             await _itemNetworkService.GroupedItemsByAppIdAndSetPrices(
                 items, bulkUpdateCommand.user.Id);
+
         }
 
         private void CalculateAndFillPercent(Item item, ItemBulkUpdateCommand bulkUpdateCommand)

@@ -508,3 +508,11 @@ WHERE (pub->>'creator_clan_account_id')::BIGINT IS NOT NULL;
 
 11.12.2024 gpay 2-50
 ALTER TABLE "Items" ADD column "InSetPriceProcess" TIMESTAMP null;
+
+12,12.2024 46-иерархия-разработать-зеленый-приоритет-для-регионов-последовательность-работы-запасных-ботов
+alter table "GamePrices" add "Priority" int default 0;
+update "GamePrices" set "Priority" = 2
+where "IsPriority" ='true';
+
+15.12.2024 gpay 2-50
+ALTER TABLE public."Items" RENAME COLUMN "InSetPriceProcess" TO "IsProcessing";

@@ -49,6 +49,7 @@ namespace SteamDigiSellerBot.Services.Implementation
                     sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
                     await Task.Delay(TimeSpan.FromSeconds(1));
                     sess = sess.Where(x => !ProcessOnAdd.Contains(x.Id)).ToList();
+                    sess.ForEach(x=> BanOnAdd.Add(x.Id));
                     if (sess.Count > 0)
                         _logger.LogInformation(
                             $"SendGameGSQ GS ID {sess.Select(x => x.Id.ToString()).Aggregate((a, b) => a + "," + b)}");

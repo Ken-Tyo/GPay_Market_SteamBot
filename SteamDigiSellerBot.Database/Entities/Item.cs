@@ -11,7 +11,7 @@ namespace SteamDigiSellerBot.Database.Entities
     {
         public bool Active { get; set; }
 
-        public DateTime? InSetPriceProcess { get; set; }
+        public DateTime? IsProcessing { get; set; }
         public bool IsDeleted { get; set; }
 
         public decimal CurrentDigiSellerPrice { get; set; }
@@ -96,6 +96,11 @@ namespace SteamDigiSellerBot.Database.Entities
         public Item()
         {
             Active = true;
+        }
+
+        public void SetDefaultIsProcessing()
+        {
+            IsProcessing = DateTime.UtcNow.AddMinutes(3);
         }
     }
 }

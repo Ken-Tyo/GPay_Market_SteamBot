@@ -106,8 +106,32 @@ ORDER BY g.""AppId""";
             await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
 
+        /// <summary>
+        /// Подготовка к SetPrice. Уведомление о том, что идет процесс SetPrice
+        /// </summary>
+        private async Task SaveSetPriceStartInfo(DatabaseContext db, List<Item> dbItems)
+        {
+            //db.Items.UpdateRange(dbItems);
+            int i = 0;
+            int commitI = 30;
+            foreach (var item in dbItems)
+            {
+                item.SetDefaultIsProcessing();
+                db.Attach(item);
+                db.Entry(item).Property(e => e.IsProcessing).IsModified = true;
+                i++;
+                if (i % commitI == 0)
+                {
+                    await SaveChangesAsync(db);
+                }
+            }
+            await SaveChangesAsync(db);
+        }
         public async Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId, bool reUpdate = false, Dictionary<int, decimal> prices = null, bool manualUpdate = true)
         {
+            await using var db = _contextFactory.CreateDbContext();
+            await SaveSetPriceStartInfo(db, items);
+
             var groupedItems =
                 items
                 .GroupBy(x => x.AppId)
@@ -393,8 +417,17 @@ ORDER BY g.""AppId""";
                 }
             }
         }
+        private async Task SaveChangesAsync(DatabaseContext db)
+        {
+            requestLocker = true;
+            await db.SaveChangesAsync();
+            await Task.Delay(50);
+            requestLocker = false;
+        }
+
 
         bool requestLocker = false;
+
         /// <summary>
         /// This method performs a number of operations to set prices for goods and update information in the database.
         /// </summary>
@@ -423,17 +456,21 @@ ORDER BY g.""AppId""";
                 // Из базы данных извлекаются элементы dbItems, включая связанные цены игр, которые соответствуют appId и содержатся в items
                 while (requestLocker)
                     await Task.Delay(25);
-                
-                try
+
+                async Task PrepareItems()
                 {
                     dbItems = await db.Items.Include(i => i.GamePrices)
                         .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
                 }
+                
+                try
+                {
+                    await PrepareItems();
+                }
                 catch
                 {
                     await Task.Delay(1000);
-                    dbItems = await db.Items.Include(i => i.GamePrices)
-                        .Where(i => i.AppId == appId && items.Contains(i.SubId)).AsSplitQuery().ToListAsync();
+                    await PrepareItems();
                 }
 
                 var currencyForParse = allCurrencies;
@@ -480,8 +517,7 @@ ORDER BY g.""AppId""";
                             }
 
                             var priceDown = item.CurrentDigiSellerPrice>0 ? finalPrice / item.CurrentDigiSellerPrice : 1;
-                            if (!manualUpdate && item.CurrentDigiSellerPrice != 0 &&
-                                priceDown < 0.08M && !(priceDown is >= 0.048M and <= 0.052M))
+                            if (!manualUpdate && item.CurrentDigiSellerPrice != 0 && priceDown <= 0.039M)
                             {
                                 _logger.LogWarning(
                                     $"SetPrices: Установка стоимости на товар {appId} - {item.Id} в {finalPrice} со скидкой до {(priceDown * 100):0.0}%");
@@ -566,16 +602,13 @@ ORDER BY g.""AppId""";
                         db.Entry(item).State = EntityState.Modified;
                     }
 
-                    item.InSetPriceProcess = null;
+                    item.IsProcessing = null;
                     // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
                     if (db.ChangeTracker.HasChanges())
                     {
                         while (requestLocker)
                             await Task.Delay(100);
-                        requestLocker = true;
-                        await db.SaveChangesAsync();
-                        await Task.Delay(50);
-                        requestLocker = false;
+                        SaveChangesAsync(db);
                     }
                 }
 

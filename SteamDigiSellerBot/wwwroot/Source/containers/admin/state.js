@@ -352,11 +352,32 @@ export const apiSetItemActiveStatus = async (ids) => {
     idParam = ids.join(",");
   }
 
-  if (!ids || ids.length > 1) setItemsLoading(true);
+  //if (!ids || ids.length > 1) setItemsLoading(true);
 
   let res = await fetch(`/items/SetActive?ids=${idParam}`);
-  await apiFetchItems();
-  if (!ids || ids.length > 1) setItemsLoading(false);
+  var newData = state.get().items;
+  var includesCounter = 0;
+  const idsCount = ids.length;
+
+  for (var item of newData) {
+    if (ids.includes(item.id)) {
+      item.active = !item.active;
+      includesCounter++;
+    }
+
+    if (includesCounter >= idsCount) {
+      break;
+    }
+  }
+
+  state.set((value) => {
+    return {
+      ...value,
+      items: newData,
+    };
+  });
+  //await apiFetchItems();
+  //if (!ids || ids.length > 1) setItemsLoading(false);
 };
 
 export const apiDeleteItem = async (id) => {
@@ -378,8 +399,12 @@ export const apiBulkDeleteItem = async (Ids) => {
       Ids,
     }),
   });
+  var data = state.get().items;
 
-  await apiFetchItems();
+  var result = data.filter((e) => !Ids.includes(e.id));
+  setItems(result);
+  //await apiFetchItems();
+
   return res.ok;
 };
 
@@ -529,7 +554,7 @@ export const apiChangeItem = async (item) => {
   //setItemsLoading(true);
   toggleEditItemModal(false);
   var newData = state.get().items;
-  newData.find((e) => e.id === item.id).InSetPriceProcess = true;
+  newData.find((e) => e.id === item.id).isProcessing = true;
   state.set((value) => {
     return {
       ...value,
@@ -540,28 +565,23 @@ export const apiChangeItem = async (item) => {
   let res = fetch(`/items/edit/${item.id}`, {
     method: "POST",
     body: mapToFormData(item),
-  }).then((resp) => {
-    var newData = state.get().items;
-    var oldItem = newData.find((e) => e.id === item.id);
-    oldItem.inSetPriceProcess = false;
-    Object.assign(oldItem, resp.json());
-    state.set((value) => {
-      return {
-        ...value,
-        items: [...newData],
-      };
-    });
+  }).then(async (resp) => {
+    setItemProcessingState(newData, false, await resp.json());
   });
+};
 
-  var newData = state.get().items;
-  newData.find((e) => e.id === item.id).inSetPriceProcess = true;
+const setItemProcessingState = (items, boolState, newItem) => {
+  var oldItem = items.find((e) => e.id === newItem.id);
+
+  oldItem.isProcessing = boolState;
+  Object.assign(oldItem, newItem);
+
   state.set((value) => {
     return {
       ...value,
-      items: [...newData],
+      items: [...items],
     };
   });
-
 };
 
 export const apiCreateItem = async (item) => {
@@ -577,7 +597,7 @@ export const apiCreateItem = async (item) => {
     var newItem = await res.json();
     //await apiFetchItems();
     var newData = state.get().items;
-    newData.inSetPriceProcess = true;
+    newData.isProcessing = true;
     newData.push(newItem);
 
     state.set((value) => {
@@ -591,26 +611,18 @@ export const apiCreateItem = async (item) => {
       method: "POST",
       body: mapToFormData({ Id: newItem.id }),
     }).then((e) => {
-      var oldItem = newData.find((e) => e.id === newItem.id);
-      oldItem.inSetPriceProcess = false;
-      Object.assign(oldItem, e.json());
-      state.set((value) => {
-        return {
-          ...value,
-          items: [...newData],
-        };
-      });
+      setItemProcessingState(newData, false, newItem);
     });
 
-    var oldItem = newData.find((e) => e.id === item.id);
-    oldItem.inSetPriceProcess = false;
-    Object.assign(oldItem, await resSetPrice.json());
-    state.set((value) => {
-      return {
-        ...value,
-        items: [...newData],
-      };
-    });
+    // var oldItem = newData.find((e) => e.id === item.id);
+    // oldItem.isProcessing = false;
+    // Object.assign(oldItem, await resSetPrice.json());
+    // state.set((value) => {
+    //   return {
+    //     ...value,
+    //     items: [...newData],
+    //   };
+    // });
   } else {
     toggleEditItemModal(true);
   }
@@ -827,15 +839,37 @@ export const toggleOrderCreationInfoModal = async (isOpen) => {
     };
   });
 };
+const setItemsBulkToLoading = (Ids) => {
+  var newData = state.get().items;
+  var includesCounter = 0;
+  const idsCount = Ids.length;
 
+  for (var item of newData) {
+    if (Ids.includes(item.id)) {
+      item.isProcessing = true;
+      includesCounter++;
+    }
+
+    if (includesCounter >= idsCount) {
+      break;
+    }
+  }
+
+  state.set((value) => {
+    return {
+      ...value,
+      items: newData,
+    };
+  });
+};
 export const apiChangeItemBulk = async (
   SteamPercent,
   IncreaseDecreaseOperator,
   IncreaseDecreasePercent,
   Ids
 ) => {
-  setItemsLoading(true);
-  setStateProp("changeItemBulkResponse", { loading: true });
+  //setItemsLoading(true);
+  //setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/change`, {
     method: "POST",
     body: mapToFormData({
@@ -845,13 +879,15 @@ export const apiChangeItemBulk = async (
       Ids,
     }),
   });
-  setStateProp("changeItemBulkResponse", { loading: false });
-  await apiFetchItems();
+
+  setItemsBulkToLoading(Ids);
+  //setStateProp("changeItemBulkResponse", { loading: false });
+  //await apiFetchItems();
 };
 
 export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
-  setItemsLoading(true);
-  setStateProp("changeItemBulkResponse", { loading: true });
+  //setItemsLoading(true);
+  //setStateProp("changeItemBulkResponse", { loading: true });
   let res = await fetch(`/items/bulk/pricebasis`, {
     method: "POST",
     body: mapToFormData({
@@ -859,8 +895,9 @@ export const apiChangePriceBasisBulk = async (SteamCurrencyId, Ids) => {
       Ids,
     }),
   });
-  setStateProp("changeItemBulkResponse", { loading: false });
-  await apiFetchItems();
+  setItemsBulkToLoading(Ids);
+  //setStateProp("changeItemBulkResponse", { loading: false });
+  //await apiFetchItems();
 };
 
 export const apiChangeDigisellerData = async (data) => {
@@ -969,15 +1006,14 @@ export const apiGetSteamRegions = async () => {
 };
 
 export const apiGetPublishers = async () => {
-    let publishers = state.get().publishers;
-    if (publishers && publishers.length > 0)
-        return;
+  let publishers = state.get().publishers;
+  if (publishers && publishers.length > 0) return;
 
-    let res = await fetch(`/game/publishers`);
-    let data = await res.json();
+  let res = await fetch(`/game/publishers`);
+  let data = await res.json();
 
-    publishers = data;
-    setStateProp("publishers", publishers);
+  publishers = data;
+  setStateProp("publishers", publishers);
 };
 
 export const apiSetGameSessionStatus = async (gSesId, statusId) => {
@@ -1157,26 +1193,35 @@ export const apiDeleteItemInfoTemplate = async (itemInfoTemplateId) => {
 export const apiUpdateItemInfoes = async (itemInfoesValues) => {
   toggleItemMainInfoModal(false);
   toggleItemAdditionalInfoModal(false);
-  setItemsLoading(true);
-  setStateProp("changeItemBulkResponse", { loadingItemInfo: true });
+  //setItemsLoading(true);
+  //setStateProp("changeItemBulkResponse", { loadingItemInfo: true });
   try {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
+
+    var data = state.get().items;
+
+    itemInfoesValues.goods.forEach((e) => (e.isProcessing = true));
 
     const options = {
       method: "PATCH",
       headers: headers,
       body: JSON.stringify(itemInfoesValues),
     };
-
+    itemInfoesValues.goods = itemInfoesValues.goods.map((x) => {
+      return {
+        digiSellerIds: x.digiSellerIds,
+        itemId: x.id,
+      };
+    });
     let res = await fetch(`/iteminfo`, options);
     if (res.ok) {
-      await apiFetchItems();
+      //await apiFetchItems();
     }
   } finally {
-    setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
-    setItemsLoading(false);
+    //setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
+    //setItemsLoading(false);
   }
 };
 

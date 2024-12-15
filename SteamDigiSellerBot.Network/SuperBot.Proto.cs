@@ -290,6 +290,7 @@ namespace SteamDigiSellerBot.Network
                 //добаляем в корзину
                 bool errorRepeat = false;
             cartRepeat:
+            _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} сбор корзины");
                 try
                 {
                     var ShoppingCart = await AddToCart_Proto(countryCode, subId, isBundle,
@@ -362,6 +363,7 @@ namespace SteamDigiSellerBot.Network
                     {
                         errorRepeat = true;
                         await Task.Delay(TimeSpan.FromSeconds(15));
+                        goto cartRepeat;
                     }
                 }
 
@@ -386,7 +388,7 @@ namespace SteamDigiSellerBot.Network
                 _logger.LogWarning($"BOT {Bot.UserName} SendGame {comment} start transaction");
                 var result = await StartTransaction(gifteeAccountId, receiverName, comment, countryCode, "-1",
                     sessionId, res);
-                if ((result.errCode is 7 or 3 or 8 or 9 or 57)   && retryCount > 0)
+                if ((result.errCode is 7 or 3 or 5 or 8 or 9 or 57)   && retryCount > 0)
                 {
                     var attemptsCount = _bot.Attempt_Add(DateTimeOffset.UtcNow.ToUniversalTime(),false);
                     if (attemptsCount < 10)
