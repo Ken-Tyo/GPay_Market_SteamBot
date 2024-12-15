@@ -3,10 +3,8 @@ import Button from '../../../../shared/button';
 import ModalBase from '../../../../shared/modalBase';
 import TextBox from '../textbox';
 import Switch from '../switch';
-import Select from './../select';
-import { paramToName, permissionsGetValueActions, permissionsSetValueActions } from '../rules'
+import { initial, paramToName, permissionsGetValueActions, permissionsSetValueActions } from '../rules'
 import css from './styles.scss';
-import { state } from '../../../../../containers/admin/state';
 
 const ModalRulesEdit = ({
   isOpen,
@@ -16,7 +14,7 @@ const ModalRulesEdit = ({
 }) => {
   if (!isOpen) {
     return;
-  }
+  }  
 
   const initial = [{}];
   const [errors, setErrors] = useState([]);
@@ -126,7 +124,7 @@ const ModalRulesEdit = ({
             }}
             style={{
               backgroundColor: '#9A7AA9',
-              margin: '32px auto 0 auto',
+              margin: '32px auto 28px auto',
               width: '334px',
             }}
           />
