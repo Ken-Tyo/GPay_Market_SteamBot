@@ -289,10 +289,11 @@ namespace SteamDigiSellerBot.Controllers
                 }
 
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
+                //await Task.Delay(5000);
                 var result = await _itemRepository.GetByIdAsync(db, info.Id);
                 var mappedResult = _mapper.Map<ItemViewModel>(result);
                 mappedResult.IsProcessing = false;
-                //await Task.Delay(5000);
+                
                 return Ok(mappedResult);
             }
 

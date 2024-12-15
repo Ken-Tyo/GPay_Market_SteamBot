@@ -610,8 +610,8 @@ export const apiCreateItem = async (item) => {
     let resSetPrice = fetch(`/items/setPrice`, {
       method: "POST",
       body: mapToFormData({ Id: newItem.id }),
-    }).then((e) => {
-      setItemProcessingState(newData, false, newItem);
+    }).then(async (e) => {
+      setItemProcessingState(newData, false, await e.json());
     });
 
     // var oldItem = newData.find((e) => e.id === item.id);
