@@ -533,7 +533,7 @@ export const apiChangeItem = async (item) => {
   //setItemsLoading(true);
   toggleEditItemModal(false);
   var newData = state.get().items;
-  newData.find((e) => e.id === item.id).InSetPriceProcess = true;
+  newData.find((e) => e.id === item.id).isProcessing = true;
   state.set((value) => {
     return {
       ...value,
@@ -544,25 +544,21 @@ export const apiChangeItem = async (item) => {
   let res = fetch(`/items/edit/${item.id}`, {
     method: "POST",
     body: mapToFormData(item),
-  }).then((resp) => {
-    var newData = state.get().items;
-    var oldItem = newData.find((e) => e.id === item.id);
-    oldItem.inSetPriceProcess = false;
-    Object.assign(oldItem, resp.json());
-    state.set((value) => {
-      return {
-        ...value,
-        items: [...newData],
-      };
-    });
+  }).then(async (resp) => {
+    setItemProcessingState(newData, false, await resp.json());
   });
+};
 
-  var newData = state.get().items;
-  newData.find((e) => e.id === item.id).inSetPriceProcess = true;
+const setItemProcessingState = (items, boolState, newItem) => {
+  var oldItem = items.find((e) => e.id === newItem.id);
+
+  oldItem.isProcessing = boolState;
+  Object.assign(oldItem, newItem);
+
   state.set((value) => {
     return {
       ...value,
-      items: [...newData],
+      items: [...items],
     };
   });
 };
@@ -580,7 +576,7 @@ export const apiCreateItem = async (item) => {
     var newItem = await res.json();
     //await apiFetchItems();
     var newData = state.get().items;
-    newData.inSetPriceProcess = true;
+    newData.isProcessing = true;
     newData.push(newItem);
 
     state.set((value) => {
@@ -594,26 +590,18 @@ export const apiCreateItem = async (item) => {
       method: "POST",
       body: mapToFormData({ Id: newItem.id }),
     }).then((e) => {
-      var oldItem = newData.find((e) => e.id === newItem.id);
-      oldItem.inSetPriceProcess = false;
-      Object.assign(oldItem, e.json());
-      state.set((value) => {
-        return {
-          ...value,
-          items: [...newData],
-        };
-      });
+      setItemProcessingState(newData, false, newItem);
     });
 
-    var oldItem = newData.find((e) => e.id === item.id);
-    oldItem.inSetPriceProcess = false;
-    Object.assign(oldItem, await resSetPrice.json());
-    state.set((value) => {
-      return {
-        ...value,
-        items: [...newData],
-      };
-    });
+    // var oldItem = newData.find((e) => e.id === item.id);
+    // oldItem.isProcessing = false;
+    // Object.assign(oldItem, await resSetPrice.json());
+    // state.set((value) => {
+    //   return {
+    //     ...value,
+    //     items: [...newData],
+    //   };
+    // });
   } else {
     toggleEditItemModal(true);
   }
@@ -837,7 +825,7 @@ const setItemsBulkToLoading = (Ids) => {
 
   for (var item of newData) {
     if (Ids.includes(item.id)) {
-      item.inSetPriceProcess = true;
+      item.isProcessing = true;
       includesCounter++;
     }
 
@@ -1184,26 +1172,42 @@ export const apiDeleteItemInfoTemplate = async (itemInfoTemplateId) => {
 export const apiUpdateItemInfoes = async (itemInfoesValues) => {
   toggleItemMainInfoModal(false);
   toggleItemAdditionalInfoModal(false);
-  setItemsLoading(true);
-  setStateProp("changeItemBulkResponse", { loadingItemInfo: true });
+  //setItemsLoading(true);
+  //setStateProp("changeItemBulkResponse", { loadingItemInfo: true });
   try {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     headers.append("Content-Length", JSON.stringify(itemInfoesValues).length);
 
+    var data = state.get().items;
+
+    itemInfoesValues.goods.forEach((e) => (e.isProcessing = true));
+
+    //items = Array(400).fill(items[0]);
+    state.set((value) => {
+      return {
+        ...value,
+        items: [...itemInfoesValues.goods],
+      };
+    });
     const options = {
       method: "PATCH",
       headers: headers,
       body: JSON.stringify(itemInfoesValues),
     };
-
+    itemInfoesValues.goods = itemInfoesValues.goods.map((x) => {
+      return {
+        digiSellerIds: x.digiSellerIds,
+        itemId: x.id,
+      };
+    });
     let res = await fetch(`/iteminfo`, options);
     if (res.ok) {
-      await apiFetchItems();
+      //await apiFetchItems();
     }
   } finally {
-    setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
-    setItemsLoading(false);
+    //setStateProp("changeItemBulkResponse", { loadingItemInfo: false });
+    //setItemsLoading(false);
   }
 };
 

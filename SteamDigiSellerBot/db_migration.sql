@@ -513,3 +513,6 @@ ALTER TABLE "Items" ADD column "InSetPriceProcess" TIMESTAMP null;
 alter table "GamePrices" add "Priority" int default 0;
 update "GamePrices" set "Priority" = 2
 where "IsPriority" ='true';
+
+15.12.2024 gpay 2-50
+ALTER TABLE public."Items" RENAME COLUMN "InSetPriceProcess" TO "IsProcessing";

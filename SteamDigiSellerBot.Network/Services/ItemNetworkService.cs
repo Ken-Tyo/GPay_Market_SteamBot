@@ -116,9 +116,9 @@ ORDER BY g.""AppId""";
             int commitI = 30;
             foreach (var item in dbItems)
             {
-                item.SetDefaultInSetPriceProcess();
+                item.SetDefaultIsProcessing();
                 db.Attach(item);
-                db.Entry(item).Property(e => e.InSetPriceProcess).IsModified = true;
+                db.Entry(item).Property(e => e.IsProcessing).IsModified = true;
                 i++;
                 if (i % commitI == 0)
                 {
@@ -602,7 +602,7 @@ ORDER BY g.""AppId""";
                         db.Entry(item).State = EntityState.Modified;
                     }
 
-                    item.InSetPriceProcess = null;
+                    item.IsProcessing = null;
                     // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
                     if (db.ChangeTracker.HasChanges())
                     {

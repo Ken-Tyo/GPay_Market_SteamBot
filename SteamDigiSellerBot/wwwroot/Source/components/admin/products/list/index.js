@@ -680,7 +680,7 @@ const products = () => {
             </tr>
           );
 
-          if (i.inSetPriceProcess) {
+          if (i.isProcessing) {
             rowRenderer = isLoadingRender;
           }
           return rowRenderer();
@@ -820,14 +820,7 @@ const products = () => {
           toggleItemAdditionalInfoModal(false);
         }}
         onSave={(russianText, englishText) => {
-          var goods = items
-            .filter((i) => selectedItems.includes(i.id))
-            .map((x) => {
-              return {
-                digiSellerIds: x.digiSellerIds,
-                itemId: x.id,
-              };
-            });
+          var goods = items.filter((i) => selectedItems.includes(i.id));
 
           var updateItemInfoesCommands = {
             description: editItemMainInfoModalIsOpen

@@ -29,9 +29,9 @@ namespace SteamDigiSellerBot.MappingProfiles
                     var csp = source.GetPrice()?.CurrentSteamPrice ?? 9999;
                     return csp;
                 }))
-                .ForMember(x => x.InSetPriceProcess, x => x.MapFrom((source, target) =>
+                .ForMember(x => x.IsProcessing, x => x.MapFrom((source, target) =>
                 {
-                    return source.InSetPriceProcess != null && DateTime.UtcNow < source.InSetPriceProcess;
+                    return source.IsProcessing != null && DateTime.UtcNow < source.IsProcessing;
                 }))
                 .ForMember(x => x.SteamCountryCodeId, x => x.MapFrom(s => s.Region.Id))
                 .ForMember(x => x.DiscountEndTime, x => x.MapFrom(s => s.DiscountEndTimeUtc))

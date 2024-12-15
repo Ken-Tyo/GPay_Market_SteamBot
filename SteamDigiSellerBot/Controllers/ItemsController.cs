@@ -252,7 +252,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 if (oldItem == null) // Проверяется, что существующий товар не найден.
                 {
-                    item.SetDefaultInSetPriceProcess();
+                    item.SetDefaultIsProcessing();
                     await _itemRepository.AddAsync(db, item); 
                 }
                 else
@@ -291,7 +291,7 @@ namespace SteamDigiSellerBot.Controllers
                 await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
                 var result = await _itemRepository.GetByIdAsync(db, info.Id);
                 var mappedResult = _mapper.Map<ItemViewModel>(result);
-                mappedResult.InSetPriceProcess = false;
+                mappedResult.IsProcessing = false;
                 //await Task.Delay(5000);
                 return Ok(mappedResult);
             }
@@ -312,7 +312,7 @@ namespace SteamDigiSellerBot.Controllers
                 User user = await _userManager.GetUserAsync(User);
 
                 Item editedItem = _mapper.Map(model, item);
-                editedItem.InSetPriceProcess = DateTime.UtcNow.AddMinutes(10);
+                editedItem.IsProcessing = DateTime.UtcNow.AddMinutes(10);
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
@@ -326,7 +326,7 @@ namespace SteamDigiSellerBot.Controllers
 
                 var result = await _itemRepository.GetByIdAsync(db, id);
                 var mappedResult = _mapper.Map<ItemViewModel>(result);
-                mappedResult.InSetPriceProcess = false;
+                mappedResult.IsProcessing = false;
                 return Ok(mappedResult);
             }
 
