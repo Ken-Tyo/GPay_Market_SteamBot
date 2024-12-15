@@ -260,8 +260,6 @@ namespace SteamDigiSellerBot.Controllers
                     throw new Exception("Данный товар уже добавлен. Отредактируйте его.");
                 }
 
-                //await _itemNetworkService.SetPrices(item.AppId, new List<Item>() { item }, user.Id, true);
-                //await Task.Delay(1000);
                 var result = await _itemRepository.GetByAppIdAndSubId(db, item.AppId, item.SubId);
                 var mappedResult = _mapper.Map<ItemViewModel>(result);
                 return Ok(mappedResult);
