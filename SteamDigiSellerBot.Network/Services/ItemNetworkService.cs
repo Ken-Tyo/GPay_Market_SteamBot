@@ -419,10 +419,16 @@ ORDER BY g.""AppId""";
         }
         private async Task SaveChangesAsync(DatabaseContext db)
         {
-            requestLocker = true;
-            await db.SaveChangesAsync();
-            await Task.Delay(50);
-            requestLocker = false;
+            try
+            {
+                requestLocker = true;
+                await db.SaveChangesAsync();
+                await Task.Delay(50);
+            }
+            finally
+            {
+                requestLocker = false;
+            }
         }
 
 
@@ -446,6 +452,9 @@ ORDER BY g.""AppId""";
 
             try
             {
+                if (items?.Count == 1)
+                    _logger.LogInformation($"{items.First()} {nameof(SetPrices)} фаза 1");
+
                 await using var db = _contextFactory.CreateDbContext();
                 db.Database.SetCommandTimeout(TimeSpan.FromMinutes(1));
                 var currencyData = await _currencyDataRepository.GetCurrencyData(true);
@@ -489,6 +498,8 @@ ORDER BY g.""AppId""";
                 //before update Digiseller price
                 var digiSellerEnable = Boolean.Parse(_configuration.GetSection("digiSellerEnable").Value);
                 var itemsToDigisellerUpdate = new List<Item>();
+                if (items?.Count == 1)
+                    _logger.LogInformation($"{items.First()} {nameof(SetPrices)} фаза 2");
                 foreach (Item item in dbItems)
                 {
                     var currentSteamPrice =
@@ -544,7 +555,8 @@ ORDER BY g.""AppId""";
                     }
 
                     var digiSellerPriceWithAllSales = item.DigiSellerPriceWithAllSales;
-
+                    if (items?.Count == 1)
+                        _logger.LogInformation($"{items.First()} {nameof(SetPrices)} фаза 3");
                     var ids = ListItemsId(item.DigiSellerIds, _logger);
                     if (item.IsFixedPrice)
                     {
@@ -601,25 +613,34 @@ ORDER BY g.""AppId""";
                         item.Name = digiItem?.Product?.Name ?? "Error";
                         db.Entry(item).State = EntityState.Modified;
                     }
-
+                    if (items?.Count == 1)
+                        _logger.LogInformation($"{items.First()} {nameof(SetPrices)} фаза 4");
                     item.IsProcessing = null;
                     // else TODO: можно ли предусмотреть возможность подгрузки старых items, если вошли в лимит по запросам?
                     if (db.ChangeTracker.HasChanges())
                     {
                         while (requestLocker)
-                            await Task.Delay(100);
-                        SaveChangesAsync(db);
+                            await Task.Delay(100); 
+                        await SaveChangesAsync(db);
                     }
                 }
+
+                if (items?.Count == 1)
+                    _logger.LogInformation($"{items.First()} {nameof(SetPrices)} фаза 5");
 
                 if (digiSellerEnable)
                 {
                     if (sendToDigiSeller)
                         await _digiSellerNetworkService.SetDigiSellerPrice(itemsToDigisellerUpdate, aspNetUserId);
+
+                    if (items?.Count == 1)
+                        _logger.LogInformation($"{items.First()} {nameof(SetPrices)} фаза 6");
                     return itemsToDigisellerUpdate;
                 }
                 else
                     return new();
+
+                
             }
             catch (Exception ex)
             {

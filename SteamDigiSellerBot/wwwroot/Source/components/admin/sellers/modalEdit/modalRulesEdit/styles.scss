@@ -20,15 +20,15 @@ $percent-back: #512068;
         text-align: center;
         font-size: 18px;
         display: block;
-        margin-top: 30px;
+        margin: 30px 0 20px 0;
     }
 
     .switchWrapper {
         margin: 0 62px 0 85px;
-        max-height: 550px;
+        max-height: 502px;
         overflow-y: scroll;
         padding-right: 38px;
-        padding-top: 28px;
+        padding-bottom: 30px;
 
         &::-webkit-scrollbar {
             width: 14px;
@@ -64,7 +64,7 @@ $percent-back: #512068;
     }
 
     .switchWrapper > div:first-child {
-        margin-top: 20px;
+        margin-top: 0;
     }
 
     &::-webkit-scrollbar {
