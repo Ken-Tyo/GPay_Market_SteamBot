@@ -353,7 +353,7 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> BulkPriceBasisAction(BulkPriceBasisRequest  request, CancellationToken cancellationToken)
         {
             User user = await _userManager.GetUserAsync(User);
-            await _priceBasisBulkUpdateService.UpdateAsync(
+            _priceBasisBulkUpdateService.UpdateAsync(
                 new PriceBasisBulkUpdateCommand(request.SteamCurrencyId, request.Ids, user), 
                 cancellationToken);
             return Ok();

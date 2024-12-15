@@ -853,6 +853,7 @@ const products = () => {
           toggleItemMainInfoModal(false);
           toggleItemAdditionalInfoModal(false);
           apiUpdateItemInfoes(updateItemInfoesCommands);
+          setSelectedItem([]);
         }}
         itemInfoTemplates={itemInfoTemplates}
       />

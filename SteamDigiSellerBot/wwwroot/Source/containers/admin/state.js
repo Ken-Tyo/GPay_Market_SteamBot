@@ -352,11 +352,32 @@ export const apiSetItemActiveStatus = async (ids) => {
     idParam = ids.join(",");
   }
 
-  if (!ids || ids.length > 1) setItemsLoading(true);
+  //if (!ids || ids.length > 1) setItemsLoading(true);
 
   let res = await fetch(`/items/SetActive?ids=${idParam}`);
-  await apiFetchItems();
-  if (!ids || ids.length > 1) setItemsLoading(false);
+  var newData = state.get().items;
+  var includesCounter = 0;
+  const idsCount = ids.length;
+
+  for (var item of newData) {
+    if (ids.includes(item.id)) {
+      item.active = !item.active;
+      includesCounter++;
+    }
+
+    if (includesCounter >= idsCount) {
+      break;
+    }
+  }
+
+  state.set((value) => {
+    return {
+      ...value,
+      items: newData,
+    };
+  });
+  //await apiFetchItems();
+  //if (!ids || ids.length > 1) setItemsLoading(false);
 };
 
 export const apiDeleteItem = async (id) => {
@@ -1183,13 +1204,6 @@ export const apiUpdateItemInfoes = async (itemInfoesValues) => {
 
     itemInfoesValues.goods.forEach((e) => (e.isProcessing = true));
 
-    //items = Array(400).fill(items[0]);
-    state.set((value) => {
-      return {
-        ...value,
-        items: [...itemInfoesValues.goods],
-      };
-    });
     const options = {
       method: "PATCH",
       headers: headers,
