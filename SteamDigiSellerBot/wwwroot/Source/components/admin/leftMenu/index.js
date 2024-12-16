@@ -4,7 +4,7 @@ import gamePad from "../../../icons/gamepad.svg";
 import robot from "../../../icons/robot.svg";
 import cart from "../../../icons/cart.svg";
 import settings from "../../../icons/settings.svg";
-import sellers from '../../../icons/sellers.svg';
+import sellers from "../../../icons/sellers.svg";
 import MenuItem from "./menuItem";
 import BotStats from "./botStats";
 import { Route, RouterProvider, Outlet, Routes } from "react-router-dom";
@@ -38,6 +38,7 @@ import {
   setSelectedBot,
   setStateProp,
   state,
+  switchItemsLoading,
 } from "../../../containers/admin/state";
 import css from "./styles.scss";
 import ConfirmModal from "../../shared/modalConfirm";
@@ -164,6 +165,9 @@ const leftMenu = () => {
                     >
                       <div className={css.title}>Фильтр отображения</div>
                     </Section>
+                    <button onClick={() => switchItemsLoading()}>
+                      Загрузка
+                    </button>
                   </>
                 ) : null
               }

@@ -607,12 +607,12 @@ export const apiCreateItem = async (item) => {
       };
     });
 
-    let resSetPrice = fetch(`/items/setPrice`, {
+    let resSetPrice = await fetch(`/items/setPrice`, {
       method: "POST",
       body: mapToFormData({ Id: newItem.id }),
-    }).then(async (e) => {
-      setItemProcessingState(newData, false, await e.json());
     });
+
+    setItemProcessingState(newData, false, await resSetPrice.json());
 
     // var oldItem = newData.find((e) => e.id === item.id);
     // oldItem.isProcessing = false;
@@ -634,6 +634,16 @@ export const setItemsLoading = (isOn) => {
     return {
       ...value,
       itemsLoading: isOn,
+    };
+  });
+};
+
+export const switchItemsLoading = () => {
+  var prevState = state.get().itemsLoading;
+  state.set((value) => {
+    return {
+      ...value,
+      itemsLoading: !prevState,
     };
   });
 };

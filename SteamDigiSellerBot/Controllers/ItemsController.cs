@@ -26,6 +26,7 @@ using SteamDigiSellerBot.Services.Implementation.ItemBulkUpdateService;
 using System.Threading;
 using Newtonsoft.Json;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
+using SteamKit2;
 
 namespace SteamDigiSellerBot.Controllers
 {
@@ -301,6 +302,8 @@ namespace SteamDigiSellerBot.Controllers
         [HttpPost, Route("items/edit/{id}"), ValidationActionFilter]
         public async Task<IActionResult> Item(int id, AddItemRequest model)
         {
+            var requestStart = DateTime.UtcNow;
+            _logger.LogInformation($"Start items/edit/{{id}} Item.Id:{id}");
             Item item = await _itemRepository.GetByIdAsync(db, id);
             
             if (item.IsDeleted)
@@ -315,18 +318,34 @@ namespace SteamDigiSellerBot.Controllers
 
                 await _itemRepository.ReplaceAsync(db, item, editedItem);
 
-                 await _itemNetworkService.SetPrices(
+                var itemsForUpdate = new List<Item>() { item };
+                var resultList =  await _itemNetworkService.SetPrices(
                     item.AppId,
-                    new List<Item>() { item },
+                    itemsForUpdate,
                     user.Id,
                     setName: true,
                     onlyBaseCurrency: false);
                 //await Task.Delay(5000);
 
-                var result = await _itemRepository.GetByIdAsync(db, id);
-                var mappedResult = _mapper.Map<ItemViewModel>(result);
-                mappedResult.IsProcessing = false;
-                return Ok(mappedResult);
+                // var result = await _itemRepository.GetByIdAsync(db, id);
+                var requestFinish = DateTime.UtcNow;
+                _logger.LogInformation($"Finish items/edit/{{id}} Item.Id:{id}");
+                if (resultList.Count > 0)
+                {
+                    var mappedResult = _mapper.Map<ItemViewModel>(resultList.Single());
+                    mappedResult.IsProcessing = false;
+                    return Ok(mappedResult);
+
+                }
+                else
+                {
+                    var msg = $"Что произошло при обновлении цен items/edit/{{id}} у Item id:{id} Старт:{requestStart} Финиш:{requestFinish}";
+                    _logger.LogError(msg);
+                    var ara = _mapper.Map<ItemViewModel>(editedItem);
+                    ara.IsProcessing = false;
+                    return BadRequest(ara);
+                }
+                
             }
 
             return BadRequest();

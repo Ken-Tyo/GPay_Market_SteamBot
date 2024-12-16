@@ -54,7 +54,11 @@ const list = ({
             </tr>
           </thead>
 
-          <tbody className="scroll-container" ref={ref}>
+          <tbody
+            style={{ visibility: isLoading ? "collapse" : "visible" }}
+            className="scroll-container"
+            ref={ref}
+          >
             {
               <ViewportList
                 viewportRef={ref}
