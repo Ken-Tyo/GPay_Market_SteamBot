@@ -68967,11 +68967,6 @@ var leftMenu = function leftMenu() {
                 className: leftMenu_styles.title,
                 children: "\u0424\u0438\u043B\u044C\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
               })
-            }), /*#__PURE__*/(0,jsx_runtime.jsx)("button", {
-              onClick: function onClick() {
-                return switchItemsLoading();
-              },
-              children: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430"
             })]
           }) : null
         }), /*#__PURE__*/(0,jsx_runtime.jsx)(Route, {

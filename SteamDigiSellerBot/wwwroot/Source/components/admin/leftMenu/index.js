@@ -165,9 +165,7 @@ const leftMenu = () => {
                     >
                       <div className={css.title}>Фильтр отображения</div>
                     </Section>
-                    <button onClick={() => switchItemsLoading()}>
-                      Загрузка
-                    </button>
+                    {/* <button onClick={() => switchItemsLoading()}>Загрузка</button> */}
                   </>
                 ) : null
               }
