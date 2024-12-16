@@ -71,18 +71,45 @@ namespace SteamDigiSellerBot.Controllers
         public async Task<IActionResult> BotsList()
         {
             List<Bot> bots = await _steamBotRepository.ListAsync(db);
-            bots.ForEach(e =>
-            {
-                e.Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(e.Region);
-                e.Password = CryptographyUtilityService.Decrypt(e.Password);
-                e.ProxyStr = CryptographyUtilityService.Decrypt(e.ProxyStr);
-            });
 
-            return Ok(bots
+            var response = MapToDto(bots);
+
+            return Ok(response
                 .OrderByDescending(b => b.IsON)
                 .ThenBy(b => b.Region)
                 .ThenByDescending(b => b.Balance)
                 .ThenBy(b => b.UserName));
+        }
+
+        private List<BotDto> MapToDto(List<Bot> bots)
+        {
+            return bots.Select(b => new BotDto
+            {
+                Id = b.Id,
+                
+                SteamId = b.SteamId,
+                PersonName = b.PersonName,
+                Region = SteamHelper.MapCountryCodeToNameGroupCountryCode(b.Region),
+                UserAgent = b.UserAgent,
+                IsON = b.IsON,
+                IsReserve = b.IsReserve,
+                State = b.State,
+                AvatarUrl = b.AvatarUrl,
+                IsProblemRegion = b.IsProblemRegion,
+                Balance = b.Balance,
+                RemainingSumToGift = b.RemainingSumToGift,
+                TotalPurchaseSumUSD = b.TotalPurchaseSumUSD,
+                SendedGiftsSum = b.SendedGiftsSum,
+                MaxSendedGiftsSum = b.MaxSendedGiftsSum,
+                SteamCurrencyId = b.SteamCurrencyId,
+                LastTimeUpdated = b.LastTimeUpdated,
+                
+                VacGames = b.VacGames?.ToArray(),
+                UserName = b.UserName,
+                Password = CryptographyUtilityService.Decrypt(b.Password),
+                ProxyStr = CryptographyUtilityService.Decrypt(b.ProxyStr),
+                GameSendLimitAddParam = b.GameSendLimitAddParam
+            }).ToList();
         }
 
         [HttpPost, Route("bots/add"), ValidationActionFilter]
