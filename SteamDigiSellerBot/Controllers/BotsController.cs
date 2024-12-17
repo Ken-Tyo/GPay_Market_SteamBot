@@ -103,9 +103,9 @@ namespace SteamDigiSellerBot.Controllers
                 MaxSendedGiftsSum = b.MaxSendedGiftsSum,
                 SteamCurrencyId = b.SteamCurrencyId,
                 LastTimeUpdated = b.LastTimeUpdated,
-                
                 VacGames = b.VacGames?.ToArray(),
                 UserName = b.UserName,
+                // Эти поля тоже не передавать на клиент. В новом API сделать сохранение пароля и прокси как отдельные операции PATCH /bots/{id}/password, PATCH bots/{id}/proxy как с reserved и ison
                 Password = CryptographyUtilityService.Decrypt(b.Password),
                 ProxyStr = CryptographyUtilityService.Decrypt(b.ProxyStr),
                 GameSendLimitAddParam = b.GameSendLimitAddParam
