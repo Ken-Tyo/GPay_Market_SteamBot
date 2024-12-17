@@ -36,7 +36,7 @@ namespace SteamDigiSellerBot.Network.Services
         Task GroupedItemsByAppIdAndSetPrices(List<Item> items, string aspNetUserId,bool reUpdate=false, Dictionary<int,decimal> prices=null, bool manualUpdate=true);
         Task GroupedItemsByAppIdAndSendCurrentPrices(List<int> itemsId, string aspNetUserId);
 
-        Task SetPrices(string appId, List<Item> items, string aspNetUserId, 
+        Task<List<Item>> SetPrices(string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller = true);
 
         Task UpdateItemsInfoesAsync(
@@ -98,13 +98,14 @@ ORDER BY g.""AppId""";
             _gameAppsRepository = gameAppsRepository ?? throw new ArgumentNullException(nameof(gameAppsRepository));
         }
 
-        public async Task SetPrices(
+        public async Task<List<Item>> SetPrices(
             string appId, List<Item> items, string aspNetUserId, 
             bool setName = false, bool onlyBaseCurrency = false, bool sendToDigiSeller=true)
         {
             var itemsSet = items.Select(i => i.SubId).ToHashSet();
-            await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
+            return await SetPrices(appId, itemsSet, aspNetUserId, setName, onlyBaseCurrency, sendToDigiSeller);
         }
+
 
         /// <summary>
         /// Подготовка к SetPrice. Уведомление о том, что идет процесс SetPrice
