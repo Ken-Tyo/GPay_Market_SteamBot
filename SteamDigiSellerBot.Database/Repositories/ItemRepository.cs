@@ -222,7 +222,7 @@ namespace SteamDigiSellerBot.Database.Repositories
 
                             if ((targetGamePrice?.CurrentSteamPrice).HasValue && (baseGamePrice?.CurrentSteamPrice).HasValue)
                             {
-                                if (targetGamePrice.IsPriceWithError || baseGamePrice.IsPriceWithError)
+                                if (targetGamePrice.IsPriceWithError || baseGamePrice.IsPriceWithError || targetGamePrice.CurrentSteamPrice <= 0 || baseGamePrice.CurrentSteamPrice <= 0)
                                 {
                                     continue;
                                 }
@@ -230,7 +230,7 @@ namespace SteamDigiSellerBot.Database.Repositories
                                 var targetRubPrice = ExchangeHelper.Convert(targetGamePrice.CurrentSteamPrice, currencies[targetGamePrice.SteamCurrencyId], rub);
                                 var baseRubPrice = ExchangeHelper.Convert(baseGamePrice.CurrentSteamPrice, currencies[baseGamePrice.SteamCurrencyId], rub);
 
-
+                                
                                 var diffPrice = (((targetRubPrice / baseRubPrice) * 100) - 100);
                                 debugResult.Add((diffPrice, baseGamePrice.Priority));
                                 if (compareFunc(diffPrice, targetDiff))
